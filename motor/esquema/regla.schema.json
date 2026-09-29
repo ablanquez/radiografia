@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ablanquez/radiografia/blob/main/motor/esquema/regla.schema.json",
+  "title": "Ficha de regla",
+  "description": "Una regla de un paquete: qué detecta, cuánto pesa, por qué, de dónde sale y con qué ejemplos se prueba.",
+  "$comment": "[DOC] JSON Schema 2020-12, la versión vigente (https://json-schema.org/specification). Precedente doctrinal, mirado y no copiado: las reglas de Vale (https://docs.vale.sh/topics/styles) — nuestro «detector» hace el papel de su «extends» y nuestra «fuente» el de su «link». [DOC] El $id es la URL del repositorio (aprobado por Antonio en la primera parada del 3.1): es un identificador, no una dirección que se descargue — el validador no tiene loadSchema y no hace ninguna llamada de red. [PROPIO] additionalProperties: false en toda la ficha salvo dentro de «parametros»: el JSON se edita a mano en Git y una errata en una clave no puede pasar en silencio. Claves en español sin tildes; valores de los enum con tildes (decisión B, 3.1).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "familia",
+    "detector",
+    "parametros",
+    "peso",
+    "severidad",
+    "informativa",
+    "explicacion",
+    "sugerencia",
+    "excepciones",
+    "fuente",
+    "origenLista",
+    "nivelEvidencia",
+    "ejemplos"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "$comment": "[PROPIO] Minúsculas, cifras y guiones: el id va tal cual en la URL /reglas/<id> del catálogo (punto 7 del plan). Que no se repita dentro del paquete lo comprueba validar.ts: JSON Schema no compara un dato con otro dato (uniqueItems compara reglas enteras, no un campo)."
+    },
+    "familia": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "$comment": "El id de una de las familias de cabecera.familias. Que esté declarada lo comprueba validar.ts, por el mismo motivo que la unicidad del id."
+    },
+    "detector": {
+      "enum": ["patrón", "estructural", "estadístico"],
+      "$comment": "Los tres tipos del plan (punto 1 del alcance). Es el papel del «extends» de Vale: qué clase de comprobación hace la regla."
+    },
+    "parametros": {
+      "type": "object",
+      "additionalProperties": true,
+      "$comment": "[PROPIO] Lo que el detector necesita para ejecutarse (lista, expresión, métrica…). Contenido LIBRE POR AHORA, y es el único sitio de la ficha con additionalProperties: true. En el punto 4 se cerrará su forma por detector con if/then y fixtures nuevos."
+    },
+    "peso": {
+      "type": "number",
+      "$comment": "Puede ser NEGATIVO: atenuante humano que resta (D6, D14; requisito firmado el 29/09). En una regla o una familia informativa no puntúa, pero se escribe igual."
+    },
+    "severidad": {
+      "enum": ["baja", "media", "alta"],
+      "$comment": "[PROPIO] Decisión C de Antonio (3.1): no son errores, son señales. No se toma el level de Vale (suggestion/warning/error)."
+    },
+    "informativa": {
+      "type": "boolean",
+      "$comment": "true = se señala y se explica, no puntúa (decisión 6 del 29/09: familia «canal», reglas de contexto, avisos de norma). La misma marca existe a nivel de familia, en cabecera.familias."
+    },
+    "explicacion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sugerencia": {
+      "type": "string",
+      "minLength": 1
+    },
+    "excepciones": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "$comment": "Los falsos positivos conocidos, en texto. Puede estar vacía."
+    },
+    "fuente": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["titulo", "url"],
+        "properties": {
+          "titulo": { "type": "string", "minLength": 1 },
+          "url": {
+            "type": "string",
+            "pattern": "^https?://\\S+$",
+            "$comment": "[PROPIO] Patrón y no «format: uri»: [DOC] https://ajv.js.org/guide/formats.html — «From version 7 Ajv does not include formats defined by JSON Schema specification», harían falta ajv-formats y otra dependencia para comprobar solo esto."
+          }
+        }
+      },
+      "$comment": "El papel del «link» de Vale. Al menos una, salvo que nivelEvidencia sea «sin fuente» (ver el if/then de abajo)."
+    },
+    "origenLista": {
+      "type": ["string", "null"],
+      "minLength": 1,
+      "$comment": "Decisión 4 del 29/09: cada ficha declara de dónde sale su lista («inventario propio a partir de X, sin medición en español»). null EXPLÍCITO cuando la regla no usa lista (decisión D, 3.1): el campo se escribe siempre."
+    },
+    "nivelEvidencia": {
+      "enum": ["medido en español", "medido en inglés", "anecdótico", "sin fuente", "norma"],
+      "$comment": "«sin fuente» se QUEDA en el enum (hallazgo 1, 3.1): este esquema es del motor y sirve también paquetes de terceros sin fuente, como la guía de estilo de una empresa. Lo que CLAUDE.md prohíbe es que lo use el paquete RadiografIA, y eso lo vigilará un juez del punto 5, no este esquema. «norma» es [PROPIO] (hallazgo 2, 3.1): para el paquete «español correcto», cuyas reglas no están medidas ni son anécdota, sino norma RAE."
+    },
+    "ejemplos": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["positivos", "negativos"],
+      "properties": {
+        "positivos": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 },
+          "$comment": "Textos en los que la regla DEBE dispararse."
+        },
+        "negativos": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 },
+          "$comment": "Textos en los que la regla NO debe dispararse."
+        }
+      },
+      "$comment": "Son documentación y test a la vez (plan, punto 3 del alcance): al menos uno de cada."
+    }
+  },
+  "if": {
+    "required": ["nivelEvidencia"],
+    "properties": { "nivelEvidencia": { "not": { "const": "sin fuente" } } }
+  },
+  "then": {
+    "properties": { "fuente": { "type": "array", "minItems": 1 } }
+  }
+}

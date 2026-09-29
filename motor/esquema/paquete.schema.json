@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ablanquez/radiografia/blob/main/motor/esquema/paquete.schema.json",
+  "title": "Paquete de reglas",
+  "description": "Una cabecera que dice qué paquete es y qué familias trae, y la lista de sus reglas.",
+  "$comment": "[DOC] JSON Schema 2020-12, la versión vigente (https://json-schema.org/specification). Un paquete = una carpeta de estilos de Vale (https://docs.vale.sh/topics/styles), aquí en un solo JSON. El $ref a regla.schema.json se resuelve contra este $id; los dos esquemas se cargan juntos en validar.ts y no se descarga nada. [PROPIO] additionalProperties: false también aquí, por lo mismo que en la ficha.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["cabecera", "reglas"],
+  "properties": {
+    "cabecera": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nombre", "version", "idioma", "descripcion", "autor", "licencia", "familias"],
+      "properties": {
+        "nombre": { "type": "string", "minLength": 1 },
+        "version": {
+          "type": "string",
+          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+          "$comment": "[DOC] La expresión que semver.org propone para ECMAScript, copiada tal cual: https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string"
+        },
+        "idioma": {
+          "type": "string",
+          "pattern": "^[a-z]{2,3}(-[A-Za-z0-9]{1,8})*$",
+          "$comment": "Etiqueta de idioma BCP 47 ([DOC] RFC 5646, https://www.rfc-editor.org/rfc/rfc5646): subetiqueta primaria de 2-3 letras y subetiquetas de 1-8 caracteres. [PROPIO] Es una simplificación de la gramática completa; la v1 solo usa «es»."
+        },
+        "descripcion": { "type": "string", "minLength": 1 },
+        "autor": { "type": "string", "minLength": 1 },
+        "licencia": {
+          "type": "string",
+          "minLength": 1,
+          "$comment": "Identificador SPDX, p. ej. «Apache-2.0» ([DOC] https://spdx.org/licenses/). [PROPIO] No se contrasta con la lista SPDX: sería una dependencia más o una copia que envejece."
+        },
+        "familias": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "nombre", "informativa"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+                "$comment": "Lo que cada regla escribe en su campo «familia»."
+              },
+              "nombre": {
+                "type": "string",
+                "minLength": 1,
+                "$comment": "[PROPIO] Hallazgo 4 (3.1): el nombre que se enseña («Puntuación y formato»), distinto del id sin tildes."
+              },
+              "informativa": {
+                "type": "boolean",
+                "$comment": "Una familia informativa se señala y no puntúa, entera (decisión 6 del 29/09: la familia «canal»)."
+              }
+            }
+          }
+        }
+      }
+    },
+    "reglas": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "regla.schema.json" }
+    }
+  }
+}
