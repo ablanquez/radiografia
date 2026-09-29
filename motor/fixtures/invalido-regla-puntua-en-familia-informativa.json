@@ -1,0 +1,86 @@
+{
+  "$schema": "https://raw.githubusercontent.com/ablanquez/radiografia/main/motor/esquema/paquete.schema.json",
+  "cabecera": {
+    "nombre": "Fixture mínimo válido",
+    "version": "0.1.0",
+    "idioma": "es",
+    "descripcion": "Paquete mínimo para los jueces del validador: una regla con la forma de RadiografIA y otra con la de «español correcto». No es un paquete real.",
+    "autor": "Antonio Blánquez Cabeza",
+    "licencia": "Apache-2.0",
+    "familias": [
+      {
+        "id": "discurso",
+        "nombre": "Discurso",
+        "informativa": false
+      },
+      {
+        "id": "ortotipografia",
+        "nombre": "Ortotipografía",
+        "informativa": true
+      }
+    ]
+  },
+  "reglas": [
+    {
+      "id": "d6-referencia-interna",
+      "familia": "discurso",
+      "detector": "patrón",
+      "parametros": {},
+      "peso": -1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Una referencia concreta a una tabla o figura del propio texto («véase la Tabla 2») casi no aparece en texto generado: es un indicio humano y resta.",
+      "sugerencia": "Nada que cambiar: es un rasgo de texto escrito por una persona.",
+      "excepciones": [
+        "Un texto generado al que se le pide expresamente que cite sus propias tablas."
+      ],
+      "fuente": [
+        {
+          "titulo": "Pham, IJAL 15(3), 2026 — metadiscurso en artículos humanos y de ChatGPT",
+          "url": "https://vm113.upi.edu/index.php/ijal/article/download/101/55"
+        }
+      ],
+      "origenLista": "inventario propio a partir de Pham (2026), sin medición en español",
+      "nivelEvidencia": "medido en inglés",
+      "ejemplos": {
+        "positivos": [
+          "Como se ve en la Tabla 2, la muestra se redujo a la mitad."
+        ],
+        "negativos": [
+          "La muestra se redujo a la mitad."
+        ]
+      }
+    },
+    {
+      "id": "meses-en-mayuscula",
+      "familia": "ortotipografia",
+      "detector": "patrón",
+      "parametros": {},
+      "peso": 0,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "En español los meses y los días de la semana se escriben con minúscula; la mayúscula es un calco del inglés.",
+      "sugerencia": "Escribe el mes o el día en minúscula, salvo a principio de frase o dentro del nombre de una festividad.",
+      "excepciones": [
+        "Inicio de frase.",
+        "Nombres de festividades."
+      ],
+      "fuente": [
+        {
+          "titulo": "RAE, Diccionario panhispánico de dudas: mayúsculas",
+          "url": "https://www.rae.es/dpd/may%C3%BAsculas"
+        }
+      ],
+      "origenLista": "lista cerrada de los doce meses y los siete días de la semana; la norma, del DPD",
+      "nivelEvidencia": "norma",
+      "ejemplos": {
+        "positivos": [
+          "La reunión es el próximo Lunes, 3 de Octubre."
+        ],
+        "negativos": [
+          "La reunión es el próximo lunes, 3 de octubre."
+        ]
+      }
+    }
+  ]
+}
