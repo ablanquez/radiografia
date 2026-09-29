@@ -27,10 +27,10 @@
 | Sintaxis | 16 | 1 | 3 | 2 | 5 (POS/parse) | 5 |
 | Puntuación y formato | 25 | 6 | 4 | 10 | 0 | 5 |
 | Estadística | 16 | 0 | 5 | 5 | 1 | 5 |
-| Discurso | 14 | 5 | 5 | 0 | 1 (D12) | 3 |
-| **Total** | **89** (82 tras fusionar duplicados) | **18** | **21** | **17** | **9** | **24** |
+| Discurso | 18 | 4 | 8 | 2 (atenuantes) | 0 | 4 |
+| **Total** | **93** (85 tras fusionar duplicados) | **17** | **24** | **19** | **8** | **25** |
 
-Solo **14 de 89** tienen medición directa en español (L2–L7, S1, S9, S10,
+Solo **14 de 93** tienen medición directa en español (L2–L7, S1, S9, S10,
 P1, P2, P14–P16, E13 vía ROBOT-TALK/Juzek/Gargova). El resto es traslado
 del inglés, norma RAE o anécdota, y la ficha de cada regla lo dirá.
 
@@ -142,20 +142,24 @@ marcar con ≥ 2 métricas fuera del p1–p99; validar FPR ≤ 5 %.
 
 | ID | Patrón | Doc. | Evidencia | Detector | Necesita | FP | v1 |
 |---|---|---|---|---|---|---|---|
-| D1 | Cierre de plantilla en el último párrafo («En conclusión / En resumen…») | EN medido (100 % ensayos GPT) | Media-fuerte | Estructural | regex | Alto | P (calibrar por género) |
-| D2 | Repertorio pobre de conectores (pocos tipos, repetidos) | EN medido (d = 0,98); ES cualitativo | Media | Estadístico | lista conectores | Medio | P |
-| D3 | Pocos marcadores epistémicos («creo», «quizá», «en mi opinión») | EN medido (d = 1,53) | Fuerte EN | Estadístico | lista | Alto | P (peso bajo en informativo) |
-| D4 | Ausencia de 1.ª persona y automenciones | EN (Reinhart; Pham) | Media-fuerte | Estadístico | regex | Alto | P (peso bajo en informativo) |
-| D5 | Marcadores de encuadre en posición inicial («En primer lugar», «A continuación», «En este sentido») | EN (Pham) | Media | Estructural | lista | Medio | m |
-| D6 | Escasez de reformulación y referencia interna | EN (Pham) | Media | Estadístico | lista | Medio | m |
-| D7 | Puffery de significancia («papel crucial», «marca un hito», «legado duradero») | EN anecd. | Anecdótica | Patrón | lista propia | Alto | m |
-| D8 | Análisis superficial en gerundio final («…, destacando su importancia») | EN (Wikipedia; Reinhart) | Media | Estructural | regex | Medio | P (=S4) |
-| D9 | Atribuciones vagas («los expertos coinciden», «diversos estudios») | EN anecd.; sobregeneralización medida | Media | Patrón | lista | Alto | m |
-| D10 | Rangos falsos | EN anecd. | Anecdótica | Patrón | juicio | Medio | ✗ |
-| D11 | «Retos y perspectivas de futuro», «a pesar de los desafíos…» | EN anecd. | Anecdótica | Estructural | lista | Medio | m |
-| D12 | Positividad léxica elevada | EN medido (+37–54 %) | Media-fuerte | Estadístico | **léxico de emociones ES** | Alto | ? |
-| D13 | Sobregeneralización | EN medido (OR 4,85) | Fuerte | Semántico | no viable | — | ✗ |
-| D14 | Ausencia de clichés y coloquialismos | EN anecd. | Anecdótica | Ausencia | lista | Alto | ✗ |
+| D1 | Último párrafo que empieza por «En conclusión / En resumen / En definitiva / Para concluir» | EN medido (Herbold 100 % de 180) | Media-fuerte | Estructural + patrón | regex al último párrafo | Alto: escolar, L2 | P (poco peso; calibrar por género) |
+| D2 | **Diversidad** de marcadores baja (tipos/ocurrencias; mismo marcador ≥ 3 veces) — la IA usa MENOS y repetidos, no más | EN medido (d = 0,98); ES cualitativo (UCM) | Media | Estadístico | lista propia (taxonomía Portolés) | Medio: L2 repite | P |
+| D3 | Ausencia de marcadores epistémicos («creo», «en mi opinión», «quizá») en argumentativo > 300 palabras | EN medido (d = 1,01–1,53) | **Fuerte** (ausencia) | Estadístico | lista | Medio: impersonal | P (solo opinión/argumentativo, combinada) |
+| D4 | Automenciones = 0 (yo/nosotros, -mos) en opinión o académico | EN medido (Pham 0,00 vs 2,14; Jiang & Hyland) | **Fuerte** (ausencia) | Estadístico | lista + persona verbal | Alto: impersonal | P (idem) |
+| D5 | Secuencia de encuadre completa («En primer lugar… Por último») y encuadre inicial | EN medido (Pham ×1,9; Corpus Pragmatics) | Media | Patrón | lista | **Alto**: L2, escolar | m |
+| D6 | Referencia interna concreta («véase la Tabla 2») → **atenuante humano** (resta) | EN medido (Pham) | Media | Patrón | regex | Bajo | **peso negativo** |
+| D7 | Puffery de significancia («papel crucial», «marca un hito») | EN anecd. | Anecdótica | Patrón | lista propia | Medio | m |
+| D8 | → fusionado en S4 (gerundio evaluativo final) | — | — | — | — | — | (S4) |
+| D9 | Atribuciones vagas («los expertos coinciden», «diversos estudios») sin nombre ni cifra cerca | EN anecd. (3 vs 1) | Anecdótica | Patrón | regex + ventana | Medio: periodismo | m |
+| D10 | Rangos falsos | EN anecd. | Anecdótica | Patrón | regex + lista | Medio | ✗ |
+| D11 | «Retos y futuro»: «a pesar de… enfrenta desafíos» + cierre optimista | EN anecd. (1 vs 0) | Anecdótica | Patrón | regex | Bajo-medio | m |
+| D12 | Positividad y «confianza» altas | EN medido (Abdulhai +37–54 %; Muñoz-Ortiz) | Media-fuerte | Estadístico | **léxico ES sin licencia compatible verificada** | Alto | ✗ (salvo léxico nuevo) |
+| D13 | Sobregeneralización (genérico en presente tras síntesis) | EN medido (OR 4,85; 26–73 %) | Fuerte | Patrón débil | POS tiempo + lista | Alto | ✗ |
+| D14 | Coloquialismos, modismos, anécdota en 1.ª persona → **atenuante humano** (resta) | ES cualitativo (UCM); EN medido (Abdulhai) | Cualitativa/medida | Patrón | lista de modismos | Bajo | **peso negativo** |
+| D15 | Solapamiento alto de lemas entre oraciones adyacentes | ES cualitativo (UCM) | Cualitativa | Estadístico | lematizador ligero | Medio: técnico | m |
+| D16 | Ratio de pronombres anafóricos baja | ES cualitativo (UCM) | Cualitativa | Estadístico | lista | Medio | m |
+| D17 | Resumen interno en cada sección («En resumen,» ≥ 2 veces a mitad) | EN (Wikipedia, **histórico**) | Anecdótica, en desuso | Estructural | regex + segmentación | Medio | m (peso mínimo) |
+| D18 | Neutralización de postura en argumentativo | EN medido (ECA ≈70 % más neutrales) | Media | Estadístico | lista epistémicos + actitud | Alto: informativo | m |
 
 ## Decisiones que esta lista deja abiertas (para Antonio)
 
@@ -198,7 +202,9 @@ marcar con ≥ 2 métricas fuera del p1–p99; validar FPR ≤ 5 %.
 8. **Relanzar con el módulo** — **HECHO para estadística el 29/09**
    (informe en `informes/estadistica-modulo.md`, 81 fuentes; fusionado en
    `estadistica.md`, E13–E16 añadidas, el «23 % de bigramas» retirado por
-   mal citado). **Pendiente discurso.**
+   mal citado). **HECHO para discurso el 29/09** (informe en
+   `informes/discurso-modulo.md`, 84 fuentes; fusionado en `discurso.md`,
+   D15–D18 añadidas, D6 y D14 convertidas en atenuantes).
 
 ## Hallazgos del módulo que afectan a decisiones firmadas (29/09)
 
@@ -213,3 +219,14 @@ marcar con ≥ 2 métricas fuera del p1–p99; validar FPR ≤ 5 %.
 - **Licencias**: listas de frecuencia CC BY-SA 4.0 → ficheros de datos
   aparte del código Apache 2.0, con atribución; afecta a NOTICES y a la
   estructura del repo (`/data/`).
+- **Decisión 3 (léxico de emociones)** — del informe de discurso: ningún
+  léxico en español con licencia compatible verificada (EmoLex solo no
+  comercial y traducción automática; SEL/SAL/LiLaH NO CONSTA). → **D12
+  fuera de la v1** salvo hallazgo en el punto 3-4. Pendiente de que
+  Antonio lo confirme.
+- **Requisito nuevo para el esquema (punto 3)**: reglas con **peso
+  negativo** (atenuantes humanos D6, D14) y **nivel de evidencia** visible
+  en ficha e interfaz («medido en inglés», «anecdótico», «sin datos en
+  español»).
+- **Decisión 4** reforzada: DPDE «only online», licencia NO CONSTA;
+  Portolés/Martín Zorraquino solo como taxonomía.
