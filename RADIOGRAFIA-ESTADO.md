@@ -7,16 +7,15 @@ El ejecutor reporta descubrimientos; no toca este fichero.
 
 ## ESTADO ACTUAL — 29 de septiembre de 2026
 
-**⭐ PUNTOS 1 Y 2 CERRADOS (29/09).** El 1: repo público
-`ablanquez/radiografia` con plan firmado, CLAUDE.md, licencia Apache 2.0,
-README v0, estado y bitácora vacía. El 2: las cinco familias investigadas
-con el módulo de investigación (`docs/investigacion/`: léxico, sintaxis,
-puntuación-formato, estadística, discurso; dos informes brutos en
-`informes/`), lista consolidada `CANDIDATAS.md` con **93 candidatas (85
-tras fusionar duplicados) y solo 14 medidas en español**, y las 8
-decisiones de Antonio firmadas (§5). No existe código, no existe ninguna
-regla, no existe pantalla. Bitácora vacía. **Siguiente: punto 3, esquema
-del paquete y de la ficha — primer encargo a Claude Code.**
+**⭐ PUNTOS 1 Y 2 CERRADOS (29/09). PUNTO 3 casi cerrado (29/09):** existe
+el primer código, `motor/` — esquema del paquete y de la ficha (JSON
+Schema 2020-12), validador con errores legibles y cuatro comprobaciones
+posteriores, 1 fixture válido + 11 inválidos, validador **standalone**
+para el navegador (65 KB, sin Ajv), NOTICES con guardián; **21 jueces en
+verde** vistos en rojo antes; bitácora nº1 escrita y cerrada. Diez commits
+locales de Claude Code sobre `a1c4c90`, **sin push**. Queda del punto 3 la
+casilla de las librerías (POS, silabeo, frecuencias): encargo 3.3. No hay
+motor de análisis, no hay ninguna regla real, no hay pantalla.
 
 ## 1 · Identidad
 
@@ -32,6 +31,12 @@ del paquete y de la ficha — primer encargo a Claude Code.**
 
 - Astro estático, sin backend. TypeScript. Reglas en JSON por paquetes,
   validadas con esquema. Nada sale del navegador.
+- **Motor** (`motor/`, paquete npm propio, se prueba sin Astro): JSON
+  Schema 2020-12; Ajv 8 (`Ajv2020`) en Node para jueces y para generar el
+  validador standalone; `node --test` sobre `.ts` sin transpilar (type
+  stripping estable en Node 24.19); `tsc --noEmit` con typescript 5.9.3 y
+  las bases `@tsconfig/node24` + `node-ts`; esbuild solo en desarrollo
+  para empaquetar el standalone. El navegador **no lleva Ajv**.
 - Librerías que entran al navegador (decisión con la doc en el punto 3):
   etiquetador POS del español, silabeador, listas de frecuencia. No hay
   librería JS/TS madura de estadística del español: el motor implementa
@@ -50,7 +55,8 @@ antes del verde, push = despliegue, bitácora por la skill
 
 ## 4 · El plan
 
-`PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1 y 2 (29/09). Abierto: el 3.
+`PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1 y 2 (29/09). Abierto: el 3,
+a falta de la casilla de librerías (3.3).
 
 ## 5 · Decisiones
 
@@ -107,9 +113,34 @@ antes del verde, push = despliegue, bitácora por la skill
 - 29/09 — Hallazgo que rige las reglas de discurso: «la IA abusa de
   conectores» no tiene respaldo; lo medido es menos densidad (Herbold
   d = 0,98) y repertorio escaso y repetido. La ficha de D2 lo dirá.
+- 29/09 — **Decisiones técnicas del punto 3** (encargos 3.1 y 3.2; cada
+  una con [DOC] en la cabecera del fichero que la aplica): JSON Schema
+  2020-12 + Ajv2020; `node --test` con type stripping; TS 5.9.3 [PROPIO,
+  prudencia frente a la 7]; severidad `baja|media|alta` [PROPIO: son
+  señales, no errores]; `"norma"` en el enum de evidencia; campo
+  `parametros` libre hasta el punto 4; `nombre` visible por familia;
+  `"sin fuente"` permitido por el esquema porque sirve a paquetes de
+  terceros — lo que lo prohíbe en RadiografIA es un juez del punto 5;
+  `$schema` opcional [DOC VS Code]; `$id` a la URL raw; `formats: {uri:
+  true}` [DOC Ajv strict-mode]; standalone empaquetado con esbuild porque
+  la opción `unicode` de Ajv está obsoleta [fuente de Ajv]; el juez de
+  «nada por resolver» mira el metafile de esbuild, no el texto.
 
 ## 6 · Cabos abiertos
 
+- Para el punto 6 (de los encargos 3.1/3.2): `validar.ts` compila Ajv al
+  importarse → separar formateador y comprobaciones posteriores en un
+  módulo sin Ajv; el navegador usa `validador.standalone.js` (65 KB, sobre
+  todo los esquemas con `$comment`: valorar quitarlos en build); el aviso
+  MIT de `ucs2length` viaja con él. Ya anotado en la casilla del punto 6.
+- Zonas sin juez para 3.3: rama «sin fuente» + `fuente: []` aceptada;
+  ejecución directa de `npm run generar`.
+- El guardián del NOTICES de **Desplázame** lee ficheros dentro del
+  `describe` y tiene el mismo agujero de la bitácora nº1 (resumen `fail 0`
+  con juez roto). Llevar a su cierre.
+- `postinstall` de esbuild no aprobado (funciona sin él; npm 11 lo
+  bloquea por defecto). `@esbuild/win32-x64` sin fichero LICENSE: NO
+  CONSTA en su ficha.
 - `.gitattributes` con `*.woff2 -text` (y hermanos) ANTES de que entre la
   primera fuente autoalojada en el punto 10 — herencia de la nº40 de
   Desplazame. Propuesto el 29/09 como casilla del punto 10; Antonio aún

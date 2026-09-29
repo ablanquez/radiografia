@@ -184,14 +184,40 @@ que llega con citas de fuentes leídas; no se redacta nada antes.
 
 Todo lo demás cuelga de aquí. Se cierra antes de escribir el motor.
 
-- [ ] Esquema del paquete: cabecera (nombre, versión, idioma,
-      descripción, autor) + lista de reglas. Formato de esquema decidido
-      con la doc ([DOC] JSON Schema)
-- [ ] Esquema de la ficha: id, familia, detector, peso (puede ser
-      **negativo**), severidad, explicación, sugerencia, excepciones,
-      ejemplos positivos y negativos, **fuente, origen de la lista, nivel
-      de evidencia**, y marca **informativa** (regla o familia que no
-      puntúa). Requisitos firmados el 29/09 en `CANDIDATAS.md`
+- [x] Esquema del paquete: cabecera (nombre, versión semver, idioma BCP 47,
+      descripción, autor, licencia SPDX, familias con id/nombre/informativa)
+      + reglas[]; `$schema` opcional en la raíz ([DOC] VS Code); `$id` a la
+      URL raw del repo. **JSON Schema 2020-12 con Ajv2020** [DOC]. Encargos
+      3.1 y 3.2, 29/09 (`10b22e7`, `38cbb34`)
+- [x] Esquema de la ficha: id kebab, familia, detector (patrón | estructural
+      | estadístico), **parametros** (libre hasta el punto 4), peso (puede
+      ser negativo), severidad baja/media/alta [PROPIO], informativa,
+      explicación, sugerencia, excepciones, fuente[], origenLista | null,
+      nivelEvidencia (medido en español | medido en inglés | anecdótico |
+      sin fuente | norma), ejemplos positivos/negativos ≥ 1; `if/then`:
+      con evidencia hay fuente. `additionalProperties: false`
+- [x] Validador (`motor/src/validar.ts`, Ajv 8.20 + `formats: {uri: true}`)
+      con errores legibles «regla · campo · motivo», y cuatro comprobaciones
+      posteriores al esquema (ids únicos, familia declarada, familias
+      únicas, regla informativa en familia informativa). Visto en ROJO con
+      cada fixture roto antes del verde; contraprueba en los specs
+- [x] Fixtures: 1 válido (una regla RadiografIA con peso negativo y una
+      «español correcto» informativa) + **11 inválidos**, cada uno a un
+      solo diff del válido; 21 jueces con `node --test` sobre .ts (type
+      stripping estable en Node 24.19 [DOC]); `tsc --noEmit` limpio
+- [x] Validador **standalone** para el navegador (decisión con doc: Ajv
+      en el navegador exige `unsafe-eval` en la CSP; Ajv genera la función
+      en build, empaquetada con esbuild porque la opción `unicode` está
+      obsoleta): `npm run generar` → `motor/dist/validador.standalone.js`,
+      65.023 bytes, sin nada por resolver (juez sobre el metafile de
+      esbuild) y equivalente al vivo sobre los 12 fixtures
+- [x] `THIRD-PARTY-NOTICES.md` con guardián (`notices.spec.ts`): ajv;
+      typescript 5.9.3, @types/node 24, bases de tsconfig, esbuild +
+      @esbuild/win32-x64; 31 transitivas. README releido (seis familias,
+      dos paquetes, ficha completa, «Estado» sin afirmaciones caducadas)
+- [x] Bitácora nº1 (29/09): el resumen de `node --test` dijo `fail 0` con
+      un juez roto por leer ficheros dentro del `describe`. El guardián de
+      Desplázame tiene el mismo agujero (a su cierre)
 - [ ] Decisión con la doc de las **librerías** que entran al navegador:
       etiquetador POS del español (candidata es-compromise, MIT,
       «work-in-progress»), silabeador (silabea, MIT), listas de
@@ -200,9 +226,12 @@ Todo lo demás cuelga de aquí. Se cierra antes de escribir el motor.
       licencia y calidad medidos; ficha en NOTICES. Sin léxico de
       emociones (D12 fuera)
 - [ ] Validador con mensajes de qué regla y qué campo fallan, visto en
-      ROJO con paquetes rotos a propósito
-- [ ] Un paquete de ejemplo mínimo válido y tres inválidos como fixtures.
-      **PUNTO 3 CERRADO**
+      ROJO con paquetes rotos a propósito → HECHO arriba (3.1/3.2)
+- [ ] Un paquete de ejemplo mínimo válido y tres inválidos como fixtures
+      → HECHO arriba (1 + 11). Zonas sin juez que quedan para 3.3: la rama
+      «sin fuente» con `fuente: []` debe aceptarse; la ejecución directa de
+      `npm run generar` sobre `motor/dist/`.
+      **PUNTO 3 CERRADO** cuando 3.3 (librerías) esté hecho
 
 ## 4 — El motor
 
@@ -250,7 +279,12 @@ Fuente citada en cada ficha (sale del punto 2 y de `CANDIDATAS.md`).
 Astro, sin diseño todavía: funciona, no luce.
 
 - [ ] Proyecto Astro creado, 200 comprobado con contraprueba, visto en
-      Chrome
+      Chrome. Al importar el motor: **separar formateador y comprobaciones
+      posteriores en un módulo sin Ajv** (`validar.ts` compila Ajv al
+      cargarse y arrastraría 1 MB al navegador); el navegador usa
+      `validador.standalone.js` (65 KB, sobre todo los esquemas con sus
+      `$comment`: valorar quitarlos en build). El aviso MIT de `ucs2length`
+      (Ajv) viaja con ese fichero
 - [ ] Área de texto + botón «Pon tu texto a contraluz»
 - [ ] Subrayados por familia sobre el texto
 - [ ] Medidor global con desglose por familia
