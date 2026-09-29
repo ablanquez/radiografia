@@ -4,8 +4,8 @@ La licencia Apache 2.0 cubre **el código y los paquetes de reglas** de Radiogra
 lo ajeno**, que conserva sus propias condiciones. Aquí está, una por una, con lo que sabemos y lo
 que no.
 
-> ℹ️ **Estado a 29/09/2026.** Lo ajeno es software y datos. Software (§ 1): **siete**
-> dependencias declaradas en [`motor/package.json`](motor/package.json) —dos de ejecución y
+> ℹ️ **Estado a 29/09/2026.** Lo ajeno es software y datos. Software (§ 1): **seis**
+> dependencias declaradas en [`motor/package.json`](motor/package.json) —una de ejecución y
 > cinco de desarrollo—, el árbol que arrastran y **un fichero de código ajeno incorporado** al
 > repositorio (§ 1.5). Datos (§ 2): las carpetas de [`data/`](data/), **aparte del código
 > Apache 2.0**, cada una con su licencia al lado.
@@ -31,7 +31,6 @@ Las que van en `dependencies` de [`motor/package.json`](motor/package.json).
 | Paquete | Versión | Licencia | Para qué |
 |---|---|---|---|
 | `ajv` | 8.20.0 | MIT | El validador de JSON Schema: comprueba cada paquete de reglas contra `motor/esquema/` (clase `Ajv2020`, draft 2020-12), en vivo en Node y, en build, genera el validador standalone |
-| `es-compromise` | 0.3.1 | MIT | Etiquetado gramatical (POS) del español por reglas, «work-in-progress»; base de `motor/src/pos.ts`. Si entra en la v1 lo decide su medida contra UD Spanish-AnCora (encargo 3.3) |
 
 > **Lo que viajará al navegador — y lo que no.** `ajv` entero **no** viajará: el navegador
 > llevará `motor/dist/validador.standalone.js`, la función de validación que
@@ -39,9 +38,13 @@ Las que van en `dependencies` de [`motor/package.json`](motor/package.json).
 > en build y no se versiona). Dentro de ese fichero, lo ajeno es **una función de Ajv**,
 > `ajv/dist/runtime/ucs2length.js` (MIT, © Evgeny Poberezkin), y el código que Ajv genera a
 > partir de nuestros esquemas. `fast-uri` **no** está dentro (comprobado el 29/09: ninguna
-> aparición en el fichero empaquetado). `es-compromise`, si entra, viaja entero: empaquetado para
-> navegador sin minificar, **390.993 bytes** (esbuild, 29/09). Cuando el punto 6 los sirva, sus
-> avisos MIT tendrán que viajar con ellos: cómo, **NO CONSTA** hasta que exista el build.
+> aparición en el fichero empaquetado). Cuando el punto 6 lo sirva, el aviso MIT de Ajv tendrá que
+> viajar con él: cómo, **NO CONSTA** hasta que exista el build.
+>
+> ⚠️ **Aquí estuvo `es-compromise` 0.3.1** (MIT, etiquetado gramatical), del 29/09 hasta el cierre
+> del encargo 3.3: se midió contra UD Spanish-AnCora, no llegó al umbral y se retiró con su capa
+> y su lista de pronombres. La medida, en
+> [`docs/investigacion/pos-medida.md`](docs/investigacion/pos-medida.md).
 
 ### 1.2 · Dependencias de desarrollo
 
@@ -55,24 +58,21 @@ No se distribuyen: no viajan al navegador. Se listan igualmente, una a una.
 | `@tsconfig/node-ts` | 23.6.4 | MIT | La base de `tsconfig` para ejecutar TypeScript con borrado de tipos |
 | `esbuild` | 0.28.2 | MIT | Empaqueta el validador standalone en un solo fichero sin dependencias (`npm run generar`). Su binario, en § 1.4 |
 
-**Mirado una a una (29/09/2026):** el `LICENSE` de cada una de las siete declaradas, abierto en
+**Mirado una a una (29/09/2026):** el `LICENSE` de cada una de las seis declaradas, abierto en
 `motor/node_modules/`, dice lo mismo que su campo `license`: MIT (Evgeny Poberezkin) en `ajv`;
-MIT (Spencer Kelly) en `es-compromise`; Apache License 2.0 en `typescript`; MIT (Microsoft
-Corporation) en `@types/node` y en las dos bases de `@tsconfig`; MIT (Evan Wallace) en el
-`LICENSE.md` de `esbuild`.
+Apache License 2.0 en `typescript`; MIT (Microsoft Corporation) en `@types/node` y en las dos
+bases de `@tsconfig`; MIT (Evan Wallace) en el `LICENSE.md` de `esbuild`.
 
 ### 1.3 · El árbol transitivo — existe, y no se lista aquí
 
-Las siete declaradas arrastran **treinta y cinco** dependencias transitivas en el lock. No se
+Las seis declaradas arrastran **treinta y una** dependencias transitivas en el lock. No se
 enumeran una a una aquí: la lista que manda es [`motor/package-lock.json`](motor/package-lock.json),
 versionado precisamente para eso. Cada entrada trae su versión, su origen y su licencia.
 
-⚠️ **De esas treinta y cinco, veintiséis son los binarios de esbuild, uno por sistema**
+⚠️ **De esas treinta y una, veintiséis son los binarios de esbuild, uno por sistema**
 (`@esbuild/win32-x64`, `@esbuild/linux-x64`, `@esbuild/darwin-arm64`…). El lock los apunta todos
 como opcionales y npm **instala solo el del sistema en que corre**: en esta máquina, uno (§ 1.4).
 `npm ls --all` enseña los otros veinticinco como `UNMET OPTIONAL DEPENDENCY`, y es lo esperado.
-Las cuatro que trae `es-compromise` (`compromise`, `efrt`, `suffix-thumb`, `grad-school`) son
-MIT, todas de Spencer Kelly: abierto su `LICENSE` el 29/09.
 
 ```bash
 cd motor
@@ -84,9 +84,9 @@ npm ls --all       # el árbol entero
 
 | Licencia | Paquetes |
 |---|---|
-| MIT | 34 |
+| MIT | 30 |
 | BSD-3-Clause | 1 |
-| **Total** | **35** |
+| **Total** | **31** |
 
 ### 1.4 · El binario de esbuild
 
@@ -137,12 +137,12 @@ la cabecera, el resto es el original.
 
 ### 1.7 · Resumen de compatibilidad
 
-**Las siete declaradas son MIT o Apache-2.0**, y el código incorporado, MIT: permisivas, sin
+**Las seis declaradas son MIT o Apache-2.0**, y el código incorporado, MIT: permisivas, sin
 copyleft, compatibles con la Apache 2.0 de este proyecto sin condición añadida. En el árbol
-transitivo, treinta y cuatro son MIT y una BSD-3-Clause (§ 1.6). Nada bloquea.
+transitivo, treinta son MIT y una BSD-3-Clause (§ 1.6). Nada bloquea.
 
 > **Y lo que este documento no garantiza:** el reparto de § 1.3 sale del campo `license` que
-> cada paquete declara en el `package-lock.json`. **Las siete declaradas sí se han abierto una a
+> cada paquete declara en el `package-lock.json`. **Las seis declaradas sí se han abierto una a
 > una.** De las transitivas instaladas se miró la primera línea de cada `LICENSE` el 29/09 y
 > coincide con su campo; `@esbuild/win32-x64` no trae `LICENSE` (§ 1.4); de los veinticinco
 > binarios de esbuild que no se instalan aquí solo consta lo que dice el lock. El texto entero de
@@ -161,8 +161,8 @@ sin ficha ni una ficha sin carpeta: lo vigila `motor/src/notices.spec.ts`.
 
 | Fichero | Obra | Titular | Licencia | Para qué |
 |---|---|---|---|---|
-| `ancora-ud-dev-100.json` | UD Spanish-AnCora r2.18, `es_ancora-ud-dev.conllu` (commit `197cca3`), las 100 primeras frases con sus UPOS | Taulé, Martí y Recasens (AnCora, CLiC-UB); conversión a UD de Martínez Alonso y Zeman | **CC BY 4.0** | Referencia de oro de DESARROLLO: para ajustar el etiquetador POS |
-| `ancora-ud-test-100.json` | Ídem, `es_ancora-ud-test.conllu`, las 100 primeras frases | Ídem | **CC BY 4.0** | Referencia de oro de PRUEBA: para medirlo una sola vez, con todo congelado |
+| `ancora-ud-dev-100.json` | UD Spanish-AnCora r2.18, `es_ancora-ud-dev.conllu` (commit `197cca3`), las 100 primeras frases con sus UPOS | Taulé, Martí y Recasens (AnCora, CLiC-UB); conversión a UD de Martínez Alonso y Zeman | **CC BY 4.0** | Referencia de oro de DESARROLLO: con ella se ajustó el etiquetador POS |
+| `ancora-ud-test-100.json` | Ídem, `es_ancora-ud-test.conllu`, las 100 primeras frases | Ídem | **CC BY 4.0** | Referencia de oro de PRUEBA: con ella se midió una sola vez, con todo congelado. No llegó al umbral y el POS quedó fuera de la v1 (`docs/investigacion/pos-medida.md`); los dos ficheros se conservan para la v1.1 |
 
 - Licencia comprobada en el `LICENSE.txt` del treebank en ese mismo commit, copiado en
   [`data/referencia/LICENSE-CC-BY-4.0.md`](data/referencia/LICENSE-CC-BY-4.0.md), donde está
@@ -187,14 +187,3 @@ sin ficha ni una ficha sin carpeta: lo vigila `motor/src/notices.spec.ts`.
   a la oleada de texto generado.
 - **Viajará al navegador** cuando la usen las reglas: su atribución CC BY-SA tendrá que viajar
   con ella. Cómo, **NO CONSTA** hasta que exista el build (punto 6).
-
-### 2.3 · `data/pos/` — pronombres de UD Spanish-AnCora (entrenamiento), recuento
-
-| Fichero | Obra | Titular | Licencia | Para qué |
-|---|---|---|---|---|
-| `pronombres-ancora-train.json` | Recuento sobre UD Spanish-AnCora r2.18, `es_ancora-ud-train.conllu` (commit `197cca3`): las 52 formas que son PRON en ≥ 95 % de sus apariciones, con sus cifras | Taulé, Martí y Recasens (AnCora, CLiC-UB); conversión a UD de Martínez Alonso y Zeman | **CC BY 4.0** | Lista cerrada de pronombres de la capa POS de `motor/src/pos.ts` |
-
-- No copia frases del corpus: son **cifras por forma**. Atribución, cita y qué se hizo en
-  [`data/pos/LICENSE-CC-BY-4.0.md`](data/pos/LICENSE-CC-BY-4.0.md).
-- **Viajaría al navegador** con el etiquetador si el POS entra en la v1 (lo decide su medida
-  sobre el fichero de prueba, encargo 3.3); su atribución tendría que viajar con él.

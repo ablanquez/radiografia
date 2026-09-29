@@ -7,7 +7,7 @@
  *   node herramientas/extraer-ancora.ts <fichero.conllu> <salida.json>
  *
  * La referencia es AJENA a la librería que se juzga: sale de la anotación
- * manual del treebank, no de es-compromise.
+ * manual del treebank, no del etiquetador.
  *
  * [DOC] Formato CoNLL-U — https://universaldependencies.org/format.html:
  *    diez columnas separadas por tabulador (ID, FORM, LEMMA, UPOS, XPOS,
@@ -20,8 +20,9 @@
  * [DOC] Etiquetas UPOS — https://universaldependencies.org/u/pos/index.html:
  *    ADJ ADP ADV AUX CCONJ DET INTJ NOUN NUM PART PRON PROPN PUNCT SCONJ SYM
  *    VERB X. Aquí se guardan TAL CUAL: el paso al conjunto reducido
- *    (ADJ, ADV, PRON, VERB, NOUN, OTRO) se hace al evaluar (src/pos.ts), para
- *    que la referencia no se ajuste a nada.
+ *    (ADJ, ADV, PRON, VERB, NOUN, OTRO) se hace al evaluar, para que la
+ *    referencia no se ajuste a nada (en el 3.3 lo hacía src/pos.ts, retirado
+ *    con el POS; ver docs/investigacion/pos-medida.md).
  *
  * [PROPIO] La unidad que se guarda es el token del texto (lo que se ve), y
  *    dentro de él sus palabras sintácticas con su UPOS: un token normal tiene

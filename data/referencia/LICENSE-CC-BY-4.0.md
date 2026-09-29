@@ -63,9 +63,12 @@ ficheros de origen de arriba.
 ## Para qué se usa
 
 Como **referencia de oro** para medir el etiquetador morfosintáctico que
-llevaría el navegador (`motor/src/pos.spec.ts`): el de DESARROLLO para
-ajustarlo, el de PRUEBA para medirlo una sola vez con todo congelado
-(encargo 3.3). No viajan al navegador ni se usan para analizar textos.
+llevaría el navegador: el de DESARROLLO para ajustarlo, el de PRUEBA para
+medirlo una sola vez con todo congelado (encargo 3.3). El etiquetador medido
+(es-compromise con una capa propia) no llegó al umbral y se retiró; la medida,
+en `docs/investigacion/pos-medida.md`. Los dos ficheros se conservan para
+volver a medir en la v1.1. No viajan al navegador ni se usan para analizar
+textos.
 
 ## Sin garantías ni respaldo
 
