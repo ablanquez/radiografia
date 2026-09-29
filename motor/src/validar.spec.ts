@@ -27,6 +27,14 @@ function cargar(fichero: string): unknown {
 }
 
 /**
+ * Los que se tienen que aceptar. `valido-sin-fuente.json` (encargo 3.3) es la
+ * otra rama del if/then de la ficha: con nivelEvidencia «sin fuente», la lista
+ * de fuentes puede ir vacía (el esquema es del motor y sirve a paquetes de
+ * terceros; que RadiografIA no la use lo vigilará un juez del punto 5).
+ */
+const VALIDOS = ['valido.json', 'valido-sin-fuente.json'] as const;
+
+/**
  * Lo que cada inválido tiene que decir: qué regla (o `null` si el error es de
  * la cabecera; `id: null` si la regla no tiene id) y qué campo. Y, cuando hace
  * falta para que el error se entienda, qué tiene que nombrar el mensaje.
@@ -109,17 +117,20 @@ describe('validarPaquete', () => {
    * Ningún fixture sin juez: si entra uno nuevo en la carpeta y nadie lo añade
    * aquí, esto se pone rojo en vez de dejarlo sin mirar.
    */
-  test('la carpeta de fixtures tiene exactamente los doce que se juzgan', () => {
-    assert.equal(INVALIDOS.length, 11, 'once inválidos, más el válido');
-    const esperados = ['valido.json', ...INVALIDOS.map((c) => c.fichero)].sort();
+  test('la carpeta de fixtures tiene exactamente los trece que se juzgan', () => {
+    assert.equal(VALIDOS.length, 2, 'dos válidos');
+    assert.equal(INVALIDOS.length, 11, 'once inválidos');
+    const esperados = [...VALIDOS, ...INVALIDOS.map((c) => c.fichero)].sort();
     assert.deepEqual(readdirSync(FIXTURES).sort(), esperados);
   });
 
-  test('acepta el paquete válido, sin ningún error', () => {
-    const resultado = validarPaquete(cargar('valido.json'));
-    assert.deepEqual(resultado.errores, []);
-    assert.equal(resultado.valido, true);
-  });
+  for (const fichero of VALIDOS) {
+    test(`acepta ${fichero}, sin ningún error`, () => {
+      const resultado = validarPaquete(cargar(fichero));
+      assert.deepEqual(resultado.errores, []);
+      assert.equal(resultado.valido, true);
+    });
+  }
 
   /**
    * La clave `$schema` de la raíz: el motor la acepta y la ignora. El esquema la

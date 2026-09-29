@@ -4,7 +4,7 @@
  * El navegador no llevará Ajv: llevará la función de validación que
  * `generar-validador.ts` genera en build. Estos jueces la generan en un
  * directorio temporal y comprueban que es EL MISMO validador que el de Ajv en
- * vivo, sobre los doce fixtures, y que no depende de nada en ejecución.
+ * vivo, sobre los trece fixtures, y que no depende de nada en ejecución.
  *
  *   1. Equivalencia de esquema: mismo veredicto y, en los inválidos de
  *      esquema, mismos errores tras el mismo formateador. Los cuatro inválidos
@@ -32,7 +32,9 @@
  */
 import { test, describe, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs';
+import { execSync } from 'node:child_process';
+import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -80,18 +82,18 @@ async function standalone(): Promise<ValidadorDeEsquema> {
 
 function fixtures(): { nombre: string; dato: unknown }[] {
   const nombres = readdirSync(FIXTURES).sort();
-  assert.equal(nombres.length, 12, 'los doce fixtures: si cambia, que alguien mire este juez');
+  assert.equal(nombres.length, 13, 'los trece fixtures: si cambia, que alguien mire este juez');
   return nombres.map((nombre) => ({ nombre, dato: JSON.parse(readFileSync(new URL(nombre, FIXTURES), 'utf8')) }));
 }
 
 describe('el validador standalone es el mismo que el de Ajv en vivo', () => {
-  test('1 · equivalencia de esquema sobre los doce fixtures', async () => {
+  test('1 · equivalencia de esquema sobre los trece fixtures', async () => {
     const validador = await standalone();
     for (const { nombre, dato } of fixtures()) {
       const enVivo = validarEsquema(dato);
       const generadoEnBuild = validarEsquema(dato, validador);
       assert.deepEqual(generadoEnBuild, enVivo, nombre);
-      const debeAceptar = nombre === 'valido.json' || DEL_PASO_2.includes(nombre);
+      const debeAceptar = nombre.startsWith('valido') || DEL_PASO_2.includes(nombre);
       assert.equal(enVivo.valido, debeAceptar, `${nombre}: el esquema en vivo tenía que ${debeAceptar ? 'aceptarlo' : 'rechazarlo'}`);
     }
   });
@@ -110,5 +112,27 @@ describe('el validador standalone es el mismo que el de Ajv en vivo', () => {
     const [[nombre, salida]] = salidas as [[string, Metafile['outputs'][string]]];
     assert.deepEqual(salida.imports, [], `${nombre} importa desde fuera: ${JSON.stringify(salida.imports)}`);
     assert.ok(!codigo.includes('import '), `lleva «import »: ${codigo.match(/.{0,40}import .{0,60}/)?.[0]}`);
+  });
+
+  /**
+   * 4 · El script de verdad (encargo 3.3): los jueces de arriba llaman a la
+   * función en un temporal; este ejecuta `npm run generar` como proceso hijo,
+   * tal como se lanzará en build, y mira lo que deja en motor/dist/.
+   *
+   * [DOC] https://nodejs.org/api/child_process.html («Spawning .bat and .cmd
+   *    files on Windows»): npm es un .cmd en Windows y no se puede lanzar con
+   *    execFile; la doc da `exec` (que pasa por cmd.exe) como vía, y desaconseja
+   *    spawn con `shell` (DEP0190). Comando fijo, sin nada que venga de fuera.
+   * [PROPIO] Se borra antes el fichero de salida (es salida de build y no se
+   *    versiona), para que lo que se juzga lo haya escrito ESTA ejecución.
+   */
+  test('4 · `npm run generar` deja motor/dist/validador.standalone.js, y no vacío', () => {
+    const motor = fileURLToPath(new URL('..', import.meta.url));
+    const salida = fileURLToPath(new URL('../dist/validador.standalone.js', import.meta.url));
+    rmSync(salida, { force: true });
+    const consola = execSync('npm run generar', { cwd: motor, encoding: 'utf8', stdio: 'pipe' });
+    assert.match(consola, /generado: /, `el script no dijo que generara: ${consola}`);
+    assert.ok(existsSync(salida), `no existe ${salida}`);
+    assert.ok(statSync(salida).size > 0, `${salida} está vacío`);
   });
 });
