@@ -28,5 +28,7 @@
        Node: https://nodejs.org/api/esm.html#json-modules). */
     "resolveJsonModule": true
   },
-  "include": ["src/**/*.ts"]
+  /* [PROPIO] herramientas/: scripts que se ejecutan a mano para preparar datos
+     de referencia (encargo 3.3). No son el motor, pero tsc los revisa igual. */
+  "include": ["src/**/*.ts", "herramientas/**/*.ts"]
 }
