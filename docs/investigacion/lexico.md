@@ -265,8 +265,10 @@ La dirección del efecto **no es consistente**: depende del modelo, la
 temperatura y, sobre todo, del grupo humano de comparación.
 - Reviriego et al., «Playing with words» (Machine Learning with
   Applications 18, 2024; UPM): GPT-3.5 «tends to use fewer distinct words
-  and lower lexical richness than humans»; GPT-4 cierra la brecha y a veces
-  la supera.
+  and lower lexical richness than humans». Que GPT-4 «cierra la brecha y a
+  veces la supera» lo dice un resumen del *Stanford Daily* («The great
+  smoothing», 8/03/2026; periódico estudiantil, no revisión académica), no
+  el artículo.
   https://www.researchgate.net/publication/373141924_Playing_with_Words_Comparing_the_Vocabulary_and_Lexical_Richness_of_ChatGPT_and_Humans
 - Martínez et al. (ACM TIST, 2024): la diversidad varía con la temperatura.
 - Kendro et al. (Int. J. Applied Linguistics, 2026;
