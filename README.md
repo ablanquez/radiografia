@@ -40,8 +40,11 @@ investigación de las familias en [`docs/investigacion/`](docs/investigacion/)
 y el primer código: la carpeta [`motor/`](motor/) con el **esquema del
 paquete y de la ficha de regla** (JSON Schema 2020-12) y un **validador**
 que dice qué regla y qué campo fallan, probado con un paquete válido y
-uno roto a propósito por cada error que tiene que saber nombrar. No hay
-todavía motor de análisis, no hay ninguna regla real y no hay pantalla.
+uno roto a propósito por cada error que tiene que saber nombrar. Y los
+primeros **datos de terceros** en [`data/`](data/): una lista de
+frecuencias del español y un corpus de referencia para medir el etiquetado
+gramatical. No hay todavía motor de análisis, no hay ninguna regla real y
+no hay pantalla.
 Todo lo que se afirma más arriba es lo que se va a construir, en el orden
 de la [hoja de ruta](#hoja-de-ruta).
 
@@ -84,8 +87,22 @@ Código y paquetes de reglas: **[Apache 2.0](LICENSE)** · © 2026
 **Antonio Blánquez Cabeza** — [antonioblanquez.es](https://antonioblanquez.es)
 
 Las dependencias de terceros van una por una, con su licencia, en
-[`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md). Hoy solo hay software
-(las del motor); ningún dato de terceros.
+[`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md).
 
 Las fuentes de cada regla (estudios, guías, corpus) se citan en su ficha y
 en el catálogo.
+
+### Datos de terceros
+
+Los datos ajenos **no están bajo la Apache 2.0**: viven en [`data/`](data/),
+una carpeta por conjunto, cada una con su licencia y su atribución al lado.
+
+- [`data/frecuencias/`](data/frecuencias/): las 20.000 formas más frecuentes
+  del español, de **wordfreq** (Robyn Speer), bajo **CC BY-SA 4.0**
+  ([atribución](data/frecuencias/LICENSE-CC-BY-SA-4.0.md)).
+- [`data/referencia/`](data/referencia/): 100 frases de **UD Spanish-AnCora**
+  (Universal Dependencies) con sus etiquetas gramaticales, bajo **CC BY 4.0**
+  ([atribución](data/referencia/LICENSE-CC-BY-4.0.md)). Sirven para medir, no
+  viajan al navegador.
+
+El detalle, en la § 2 de [`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md).
