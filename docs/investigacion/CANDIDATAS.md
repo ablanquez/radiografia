@@ -170,6 +170,13 @@ marcar con ≥ 2 métricas fuera del p1–p99; validar FPR ≤ 5 %.
    entran L6/L7/S10, S6, S11 y el filtrado de S4/S12; la librería se elige
    con la doc en el punto 3-4 (tamaño, licencia, calidad; ficha en
    NOTICES; medir coste de carga).
+   **RESULTADO 29/09 (encargo 3.3): NO ENTRA en la v1.** es-compromise,
+   único POS en JS puro para español, medido contra UD Spanish-AnCora con
+   capa propia: ADJ 72,5 %, ADV 91,2 %, PRON 66,9 % de cobertura en test
+   frente al 85 % exigido. Medida en `pos-medida.md`. Las reglas L6, L7,
+   S10, S6, S11, E4, E16 y el filtrado POS de S4/S12 pasan a la nevera
+   (v1.1). Sus filas en las tablas de arriba quedan con «?» como registro
+   de que dependen de POS.
 3. **Léxico de emociones en español** para D12 — **FIRMADO 29/09
    (intención a)**: entra si existe con licencia compatible; se decide con
    la doc en el punto 3-4.

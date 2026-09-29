@@ -1,7 +1,7 @@
 # PLAN — 005 RadiografIA
 
 Estado a 29/09/2026: **FIRMADO por Antonio el 29/09/2026**, publicado en
-`73ef265`. **PUNTOS 1 y 2 CERRADOS el 29/09.** Se tacha lo hecho y lo
+`73ef265`. **PUNTOS 1, 2 y 3 CERRADOS el 29/09.** Se tacha lo hecho y lo
 nuevo se añade en su punto, y solo por decisión de Antonio.
 
 Origen: BRAINSTORMING (1), 28-29/09/2026, y las decisiones de Antonio
@@ -218,20 +218,38 @@ Todo lo demás cuelga de aquí. Se cierra antes de escribir el motor.
 - [x] Bitácora nº1 (29/09): el resumen de `node --test` dijo `fail 0` con
       un juez roto por leer ficheros dentro del `describe`. El guardián de
       Desplázame tiene el mismo agujero (a su cierre)
-- [ ] Decisión con la doc de las **librerías** que entran al navegador:
-      etiquetador POS del español (candidata es-compromise, MIT,
-      «work-in-progress»), silabeador (silabea, MIT), listas de
-      frecuencia (wordfreq / FrequencyWords, datos **CC BY-SA 4.0 en
-      `/data/` aparte del código Apache**, con atribución). Tamaño,
-      licencia y calidad medidos; ficha en NOTICES. Sin léxico de
-      emociones (D12 fuera)
-- [ ] Validador con mensajes de qué regla y qué campo fallan, visto en
+- [x] Decisión con la doc de las **librerías** que entran al navegador
+      (encargo 3.3, 29/09), todas MEDIDAS contra referencias ajenas:
+      · **POS**: es-compromise (único etiquetador JS puro para español) medido
+        contra UD Spanish-AnCora (CC BY 4.0): PRON 33 % de cobertura; con
+        una capa propia (listas cerradas + reglas de contexto con cita
+        NGLE) afinada en dev y medida UNA vez en test: ADJ 72,5 %, ADV
+        91,2 %, PRON 66,9 % → **no llega al 85 %; POS FUERA DE LA v1**,
+        retirado del árbol (401 KB). Medida completa en
+        `docs/investigacion/pos-medida.md`. A la nevera: L6, L7, S10, S6,
+        S11, E4, E16 y el filtrado POS de S4/S12. Transformers.js: sin
+        modelo ONNX de español; descartado con datos.
+      · **Silabeo**: silabea (MIT) medido contra 60 palabras de la
+        Ortografía RAE: 57/60 (fallan prefijos sub- y tungs-, como `todo`).
+        Su paquete npm arrastraba mocha/chai con 6 vulnerabilidades →
+        **incorporado sin modificar** en `motor/src/terceros/silabea.cjs`
+        con su MIT y guardián por sha256 (NOTICES §1.5).
+      · **Frecuencias**: wordfreq 3.1.1 exportado a `data/frecuencias/`
+        (20.000 formas, Zipf; datos CC BY-SA 4.0 con LICENSE aparte y
+        NOTICES §2 con guardián). Foto hasta 2021: anterior a la oleada
+        LLM. SUBTLEX-ESP dentro: NO CONSTA.
+      · `data/referencia/`: 100 frases dev + 100 test de AnCora UD (CC BY
+        4.0) conservadas para la v1.1.
+      · Sin léxico de emociones (D12 fuera). `npm audit`: 0.
+- [x] Validador con mensajes de qué regla y qué campo fallan, visto en
       ROJO con paquetes rotos a propósito → HECHO arriba (3.1/3.2)
-- [ ] Un paquete de ejemplo mínimo válido y tres inválidos como fixtures
-      → HECHO arriba (1 + 11). Zonas sin juez que quedan para 3.3: la rama
-      «sin fuente» con `fuente: []` debe aceptarse; la ejecución directa de
-      `npm run generar` sobre `motor/dist/`.
-      **PUNTO 3 CERRADO** cuando 3.3 (librerías) esté hecho
+- [x] Fixtures → HECHO arriba (2 válidos + 11 inválidos). Las dos zonas
+      sin juez del 3.2 cubiertas en 3.3 («sin fuente» aceptado; `npm run
+      generar` como proceso hijo). Bitácora nº2 (29/09): `grep -c $'\r'`
+      dentro de `$( )` en Git Bash cuenta líneas, no CR.
+      Suite final: **91 jueces, 88 en verde, 3 `todo`**, `tsc` limpio, 6
+      dependencias declaradas y 31 transitivas.
+      **PUNTO 3 CERRADO (29/09)**
 
 ## 4 — El motor
 

@@ -7,15 +7,17 @@ El ejecutor reporta descubrimientos; no toca este fichero.
 
 ## ESTADO ACTUAL — 29 de septiembre de 2026
 
-**⭐ PUNTOS 1 Y 2 CERRADOS (29/09). PUNTO 3 casi cerrado (29/09):** existe
-el primer código, `motor/` — esquema del paquete y de la ficha (JSON
-Schema 2020-12), validador con errores legibles y cuatro comprobaciones
-posteriores, 1 fixture válido + 11 inválidos, validador **standalone**
-para el navegador (65 KB, sin Ajv), NOTICES con guardián; **21 jueces en
-verde** vistos en rojo antes; bitácora nº1 escrita y cerrada. Diez commits
-locales de Claude Code sobre `a1c4c90`, **sin push**. Queda del punto 3 la
-casilla de las librerías (POS, silabeo, frecuencias): encargo 3.3. No hay
-motor de análisis, no hay ninguna regla real, no hay pantalla.
+**⭐ PUNTOS 1, 2 Y 3 CERRADOS (29/09).** Existe el motor base en `motor/`:
+esquema del paquete y de la ficha (JSON Schema 2020-12), validador con
+errores legibles y cuatro comprobaciones posteriores, 2 fixtures válidos +
+11 inválidos, validador standalone para el navegador (65 KB, sin Ajv),
+silabeador incorporado (silabea, 57/60 contra la RAE), lista de
+frecuencias de wordfreq en `data/` (CC BY-SA aparte), referencias de
+AnCora UD; NOTICES con tres guardianes (software, datos, código
+incorporado). **91 jueces: 88 en verde, 3 `todo`**, `tsc` limpio, `npm
+audit` 0. Dos bitácoras escritas y cerradas. **POS medido y FUERA de la v1**
+(`docs/investigacion/pos-medida.md`). No hay motor de análisis, no hay
+ninguna regla real, no hay pantalla. **Siguiente: punto 4, el motor.**
 
 ## 1 · Identidad
 
@@ -37,10 +39,12 @@ motor de análisis, no hay ninguna regla real, no hay pantalla.
   stripping estable en Node 24.19); `tsc --noEmit` con typescript 5.9.3 y
   las bases `@tsconfig/node24` + `node-ts`; esbuild solo en desarrollo
   para empaquetar el standalone. El navegador **no lleva Ajv**.
-- Librerías que entran al navegador (decisión con la doc en el punto 3):
-  etiquetador POS del español, silabeador, listas de frecuencia. No hay
-  librería JS/TS madura de estadística del español: el motor implementa
-  las fórmulas con su fuente (`estadistica.md` §1).
+- Librerías del navegador (decididas con medida, 29/09): **sin
+  etiquetador POS** (es-compromise no llega; ver §5); silabeo con
+  `silabea` incorporado (MIT, `motor/src/terceros/`); frecuencias de
+  wordfreq 3.1.1 en `data/frecuencias/` (CC BY-SA 4.0, foto hasta 2021).
+  No hay librería JS/TS madura de estadística del español: el motor
+  implementa las fórmulas con su fuente (`estadistica.md` §1).
 - Datos con licencia CC BY-SA (listas de frecuencia) van en `/data/`
   aparte del código Apache, con atribución y ficha en NOTICES.
 - Despliegue en Hostinger compartido; el cómo, NO CONSTA hasta el
@@ -55,8 +59,7 @@ antes del verde, push = despliegue, bitácora por la skill
 
 ## 4 · El plan
 
-`PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1 y 2 (29/09). Abierto: el 3,
-a falta de la casilla de librerías (3.3).
+`PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1, 2 y 3 (29/09). Abierto: el 4.
 
 ## 5 · Decisiones
 
@@ -125,6 +128,21 @@ a falta de la casilla de librerías (3.3).
   true}` [DOC Ajv strict-mode]; standalone empaquetado con esbuild porque
   la opción `unicode` de Ajv está obsoleta [fuente de Ajv]; el juez de
   «nada por resolver» mira el metafile de esbuild, no el texto.
+- 29/09 — **POS fuera de la v1** (encargo 3.3). es-compromise, único
+  etiquetador JS puro para español, medido contra UD Spanish-AnCora: con
+  capa propia afinada en dev y medida una vez en test, ADJ 72,5 %, ADV
+  91,2 %, PRON 66,9 % de cobertura frente al 85 % exigido. Retirado del
+  árbol; medida en `docs/investigacion/pos-medida.md`. Transformers.js
+  descartado con datos (sin modelo ONNX de español; licencias NO CONSTA).
+  Reglas a la nevera: L6, L7, S10, S6, S11, E4, E16, filtrado POS de
+  S4/S12. Modifica la decisión 2 del cierre del punto 2 («entran las
+  librerías que hagan falta»): entran las que **miden** por encima del
+  umbral; esta no.
+- 29/09 — silabea incorporado sin modificar (MIT) en vez de instalado por
+  npm, porque su paquete arrastra mocha/chai con vulnerabilidades. NOTICES
+  §1.5 «código de terceros incorporado» con guardián por sha256.
+- 29/09 — Datos de terceros viven en `data/` con su LICENSE al lado y
+  ficha en NOTICES §2 con guardián; nunca mezclados con el código Apache.
 
 ## 6 · Cabos abiertos
 
@@ -133,14 +151,15 @@ a falta de la casilla de librerías (3.3).
   módulo sin Ajv; el navegador usa `validador.standalone.js` (65 KB, sobre
   todo los esquemas con `$comment`: valorar quitarlos en build); el aviso
   MIT de `ucs2length` viaja con él. Ya anotado en la casilla del punto 6.
-- Zonas sin juez para 3.3: rama «sin fuente» + `fuente: []` aceptada;
-  ejecución directa de `npm run generar`.
 - El guardián del NOTICES de **Desplázame** lee ficheros dentro del
   `describe` y tiene el mismo agujero de la bitácora nº1 (resumen `fail 0`
   con juez roto). Llevar a su cierre.
 - `postinstall` de esbuild no aprobado (funciona sin él; npm 11 lo
   bloquea por defecto). `@esbuild/win32-x64` sin fichero LICENSE: NO
   CONSTA en su ficha.
+- `estadistica.md` §2 decía que wordfreq incluye SUBTLEX-ESP: el README de
+  wordfreq no lo lista (solo US, UK, CH, DE, NL). Corregido a NO CONSTA el
+  29/09.
 - `.gitattributes` con `*.woff2 -text` (y hermanos) ANTES de que entre la
   primera fuente autoalojada en el punto 10 — herencia de la nº40 de
   Desplazame. Propuesto el 29/09 como casilla del punto 10; Antonio aún
@@ -154,6 +173,10 @@ a falta de la casilla de librerías (3.3).
 
 ## Nevera
 
+- **POS y sus reglas** (L6, L7, S10, S6, S11, E4, E16; filtrado de S4/S12):
+  v1.1. Dos vías que la medida dejó a la vista sin probar: «que» tras
+  determinante (810/810 PRON en AnCora train) y participios como ADJ.
+  Referencias dev/test conservadas en `data/referencia/`.
 - D12, positividad/emoción: entra si aparece un léxico en español con
   licencia compatible (SEL si Sidorov publica licencia; TRUNAJOD lo
   empaqueta bajo MIT sin que conste permiso).
