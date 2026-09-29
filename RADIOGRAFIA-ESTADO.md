@@ -7,9 +7,11 @@ El ejecutor reporta descubrimientos; no toca este fichero.
 
 ## ESTADO ACTUAL — 29 de septiembre de 2026
 
-Proyecto recién nacido. Plan firmado por Antonio el 29/09; punto 1
-(cimientos) en marcha. No existe código, no existe ninguna regla, no
-existe pantalla. Bitácora vacía.
+**⭐ PUNTO 1 CERRADO (29/09): repo público `ablanquez/radiografia` en
+GitHub con plan firmado, CLAUDE.md, licencia Apache 2.0, README v0,
+estado y bitácora vacía. Verificado por el ojo de Antonio.** No existe
+código, no existe ninguna regla, no existe pantalla. Bitácora vacía.
+Siguiente: punto 2, investigación de las cinco familias.
 
 ## 1 · Identidad
 
@@ -18,7 +20,7 @@ existe pantalla. Bitácora vacía.
   negativo».
 - Analiza estilo; no demuestra autoría. La nota va en la interfaz, en el
   informe y en el README.
-- Repo: `ablanquez/radiografia` (público) — pendiente de crear.
+- Repo: https://github.com/ablanquez/radiografia (público, creado 29/09).
   Carpeta local: `F:\01_PROYECTOS\005_RADIOGRAFIA`.
 
 ## 2 · Stack (firme)
@@ -37,7 +39,7 @@ antes del verde, push = despliegue, bitácora por la skill
 
 ## 4 · El plan
 
-`PLAN-RADIOGRAFIA.md`, 11 puntos. Abierto: el 1. Cerrados: ninguno.
+`PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrado: el 1 (29/09). Abierto: el 2.
 
 ## 5 · Decisiones
 
@@ -53,10 +55,20 @@ antes del verde, push = despliegue, bitácora por la skill
   historial, subida de archivos, corpus de calibración con cifras.
 - 29/09 — `.gitignore` de la plantilla oficial de Astro (`examples/basics`)
   + `.env.local` y `.env.*.local` [PROPIO, disciplina de la casa].
+- 29/09 — Licencia: Apache 2.0 para código y paquetes de reglas, un solo
+  `LICENSE` (choosealicense.com/non-software: las licencias de software
+  sirven para obras editadas y versionadas como fuente). Apéndice sin
+  rellenar y copyright en el README, como en la casa.
+- 29/09 — Nombre del repo `ablanquez/radiografia`, patrón de la casa
+  (minúsculas, sin tildes); subdominio previsto
+  `radiografia.antonioblanquez.es`.
 
 ## 6 · Cabos abiertos
 
-- Ninguno todavía.
+- `.gitattributes` con `*.woff2 -text` (y hermanos) ANTES de que entre la
+  primera fuente autoalojada en el punto 10 — herencia de la nº40 de
+  Desplázame. Propuesto el 29/09 como casilla del punto 10; Antonio aún
+  no ha dicho si entra en el plan.
 
 ## Nevera
 

@@ -1,7 +1,7 @@
 # PLAN — 005 RadiografIA
 
-Estado a 29/09/2026: **FIRMADO por Antonio el 29/09/2026**, aún sin
-publicar (entra en el primer commit). Se tacha lo hecho y lo nuevo se
+Estado a 29/09/2026: **FIRMADO por Antonio el 29/09/2026**, publicado en
+`73ef265`. **PUNTO 1 CERRADO el 29/09.** Se tacha lo hecho y lo nuevo se
 añade en su punto, y solo por decisión de Antonio.
 
 Origen: BRAINSTORMING (1), 28-29/09/2026, y las decisiones de Antonio
@@ -106,19 +106,30 @@ La v1 entrega, y solo entrega, esto:
 
 ## 1 — Cimientos
 
-- [ ] Carpeta `F:\01_PROYECTOS\005_RADIOGRAFIA`, VS Code dentro
-- [ ] `CLAUDE.md` en la raíz (PARTE A del taller + PARTE B con el stack:
-      Astro estático, sin backend)
-- [ ] `git init`, identidad `ablanquez` verificada, `.gitignore` antes del
-      primer commit
-- [ ] `docs/BITACORA.md` vacía · `RADIOGRAFIA-ESTADO.md` v0
-- [ ] Licencia decidida con el modelo de la casa (Apache 2.0 para el
-      código; lo que pida el paquete de reglas se decide con la doc)
-- [ ] LICENSE y README generados partiendo de Desplázame
-- [ ] `THIRD-PARTY-NOTICES.md` en cuanto entre la primera dependencia,
-      con su juez (`notices.spec`)
-- [ ] Remoto creado con `gh`, push de los primeros commits, verificado
-      por Antonio en GitHub. **PUNTO 1 CERRADO**
+- [x] Carpeta `F:\01_PROYECTOS\005_RADIOGRAFIA` creada, VS Code dentro (29/09)
+- [x] `CLAUDE.md` en la raíz: PARTE A copiada literal de Desplázame, PARTE B
+      escrita solo desde el plan firmado (29/09)
+- [x] `git init`, identidad `ablanquez` + correo noreply verificados y `gh`
+      con sesión antes del primer commit
+- [x] `.gitignore` antes del primer commit: la plantilla oficial
+      `withastro/astro/examples/basics` [DOC] + `.env.local` y
+      `.env.*.local` [PROPIO, disciplina de la casa]
+- [x] `docs/BITACORA.md` creada vacía con la cabecera de la casa ·
+      `RADIOGRAFIA-ESTADO.md` v0 colocado
+- [x] Primer commit `73ef265` (plan, CLAUDE.md, estado, bitácora)
+- [x] Licencia DECIDIDA con la doc (choosealicense.com/non-software [DOC]):
+      **Apache 2.0 para código Y paquetes de reglas**, un solo `LICENSE`.
+      El de Desplázame revisado entero: 202 líneas, idéntico al canónico
+      (`diff` vacío), apéndice sin rellenar como en la casa; copiado con
+      sha256 idéntico
+- [x] README v0 partiendo del de Desplázame, recortado a lo que hoy es
+      cierto (sección «Estado»: no hay código, reglas ni pantalla).
+      Copyright en el README, como en la casa. Commit `efcaaac`
+- [x] Remoto `ablanquez/radiografia` (público) creado con
+      `gh repo create --source --push` [DOC]; `origin/main` en `efcaaac`
+- [x] Verificado por Antonio en GitHub con sus ojos: 2 commits, README
+      renderizado, licencia Apache-2.0 detectada (29/09).
+      **PUNTO 1 CERRADO**
 
 ## 2 — Investigación de las cinco familias
 
