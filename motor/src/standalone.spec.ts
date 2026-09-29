@@ -81,7 +81,8 @@ async function standalone(): Promise<ValidadorDeEsquema> {
 }
 
 function fixtures(): { nombre: string; dato: unknown }[] {
-  const nombres = readdirSync(FIXTURES).sort();
+  // Solo los ficheros de la raíz, que son los paquetes (fixtures/referencia/ es de otros jueces).
+  const nombres = readdirSync(FIXTURES, { withFileTypes: true }).filter((e) => e.isFile()).map((e) => e.name).sort();
   assert.equal(nombres.length, 13, 'los trece fixtures: si cambia, que alguien mire este juez');
   return nombres.map((nombre) => ({ nombre, dato: JSON.parse(readFileSync(new URL(nombre, FIXTURES), 'utf8')) }));
 }

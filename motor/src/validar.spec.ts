@@ -121,7 +121,10 @@ describe('validarPaquete', () => {
     assert.equal(VALIDOS.length, 2, 'dos válidos');
     assert.equal(INVALIDOS.length, 11, 'once inválidos');
     const esperados = [...VALIDOS, ...INVALIDOS.map((c) => c.fichero)].sort();
-    assert.deepEqual(readdirSync(FIXTURES).sort(), esperados);
+    // Solo los FICHEROS de la raíz: los paquetes. Las subcarpetas (fixtures/referencia/)
+    // guardan datos de referencia de otros jueces (encargo 3.3).
+    const paquetes = readdirSync(FIXTURES, { withFileTypes: true }).filter((e) => e.isFile()).map((e) => e.name);
+    assert.deepEqual(paquetes.sort(), esperados);
   });
 
   for (const fichero of VALIDOS) {

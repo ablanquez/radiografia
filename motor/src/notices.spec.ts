@@ -23,6 +23,16 @@
  *      y cada ficha su carpeta: ni una más ni una menos
  *   6. cada carpeta bajo data/ lleva al lado su LICENSE-*.md
  *
+ * Y el CÓDIGO de terceros incorporado (§ 1.5; encargo 3.3, silabea), contra
+ * motor/src/terceros/:
+ *   7. cada fichero ajeno tiene su fila en § 1.5 y cada fila su fichero (los
+ *      .d.cts / .d.ts son tipos nuestros, no código ajeno)
+ *   8. cada fichero empieza por su aviso de licencia, su sha256 es el de la
+ *      tabla y, quitada la cabecera, el resto tiene el sha256 del original
+ *   [PROPIO] Las huellas se calculan con los finales de línea normalizados a
+ *   LF: con core.autocrlf, git los reescribe al sacar el fichero en Windows
+ *   (medido el 29/09 con node, byte a byte: docs/BITACORA.md).
+ *
  * Vive en la suite del motor porque es donde hay un `node --test`, no porque
  * sea código del motor. Lee por rutas relativas a ESTE fichero, no al `cwd`.
  *
@@ -30,10 +40,13 @@
  */
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 
 const NOTICES = new URL('../../THIRD-PARTY-NOTICES.md', import.meta.url);
 const DATOS = new URL('../../data/', import.meta.url);
+const TERCEROS = new URL('./terceros/', import.meta.url);
+const RAIZ = new URL('../../', import.meta.url);
 const PACKAGE = new URL('../package.json', import.meta.url);
 const LOCK = new URL('../package-lock.json', import.meta.url);
 
@@ -168,6 +181,56 @@ describe('los datos de terceros de data/ tienen ficha y licencia al lado', () =>
     for (const carpeta of carpetas()) {
       const licencias = readdirSync(new URL(`${carpeta}/`, DATOS)).filter((f) => /^LICENSE-.+\.md$/.test(f));
       assert.ok(licencias.length > 0, `data/${carpeta}/ no tiene ningún LICENSE-*.md`);
+    }
+  });
+});
+
+describe('el código de terceros incorporado es el que dice § 1.5', () => {
+  interface Fila {
+    fichero: string;
+    licencia: string;
+    shaFichero: string;
+    shaOriginal: string;
+  }
+
+  const sha256 = (texto: string): string => createHash('sha256').update(texto).digest('hex');
+  const enLF = (texto: string): string => texto.replaceAll('\r\n', '\n');
+
+  function filas(): Fila[] {
+    const { texto } = leer();
+    const inicio = texto.indexOf('### 1.5 · ');
+    assert.ok(inicio >= 0, 'falta la sección § 1.5');
+    const resto = texto.slice(inicio + 4);
+    const seccion = resto.slice(0, resto.search(/^#{2,3} /m));
+    return [...seccion.matchAll(/^\| `([^`]+)` \|[^|]+\|[^|]+\| ([^|]+?) \| `([0-9a-f]{64})` \| `([0-9a-f]{64})` \|/gm)].map((m) => ({
+      fichero: m[1]!,
+      licencia: m[2]!,
+      shaFichero: m[3]!,
+      shaOriginal: m[4]!,
+    }));
+  }
+
+  test('7 · cada fichero de motor/src/terceros/ tiene su fila en § 1.5, y cada fila su fichero', () => {
+    const ajenos = readdirSync(TERCEROS)
+      .filter((f) => !/\.d\.c?ts$/.test(f))
+      .map((f) => `motor/src/terceros/${f}`)
+      .sort();
+    assert.ok(ajenos.length > 0, 'no hay ningún fichero en motor/src/terceros/');
+    assert.deepEqual(filas().map((f) => f.fichero).sort(), ajenos);
+  });
+
+  test('8 · cada fichero empieza por su aviso, y sus huellas son las de la tabla', () => {
+    for (const fila of filas()) {
+      const ruta = new URL(fila.fichero, RAIZ);
+      assert.ok(existsSync(ruta), `no existe ${fila.fichero}`);
+      const contenido = enLF(readFileSync(ruta, 'utf8'));
+      const fin = contenido.indexOf('*/\n');
+      assert.ok(contenido.startsWith('/*') && fin > 0, `${fila.fichero} no empieza por un comentario de cabecera`);
+      const cabecera = contenido.slice(0, fin + 3);
+      assert.ok(cabecera.includes(`${fila.licencia} License`), `la cabecera de ${fila.fichero} no trae el texto de la licencia ${fila.licencia}`);
+      assert.ok(cabecera.includes('Copyright (c)'), `la cabecera de ${fila.fichero} no trae el aviso de copyright`);
+      assert.equal(sha256(contenido), fila.shaFichero, `sha256 de ${fila.fichero}`);
+      assert.equal(sha256(contenido.slice(fin + 3)), fila.shaOriginal, `sha256 de ${fila.fichero} sin su cabecera (el original)`);
     }
   });
 });

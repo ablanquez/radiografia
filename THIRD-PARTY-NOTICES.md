@@ -6,16 +6,18 @@ que no.
 
 > ℹ️ **Estado a 29/09/2026.** Lo ajeno es software y datos. Software (§ 1): **siete**
 > dependencias declaradas en [`motor/package.json`](motor/package.json) —dos de ejecución y
-> cinco de desarrollo— y el árbol que arrastran. Datos (§ 2): las carpetas de
-> [`data/`](data/), **aparte del código Apache 2.0**, cada una con su licencia al lado.
+> cinco de desarrollo—, el árbol que arrastran y **un fichero de código ajeno incorporado** al
+> repositorio (§ 1.5). Datos (§ 2): las carpetas de [`data/`](data/), **aparte del código
+> Apache 2.0**, cada una con su licencia al lado.
 >
 > Las **fuentes de cada regla** (estudios, guías, corpus) no van aquí: se citan en la ficha de
 > la regla y en el catálogo. Lo propio (logo, marca) irá en `PROCEDENCIA.md`.
 >
 > ⭐ **Las cifras y las tablas de este documento las vigila un juez**:
 > [`motor/src/notices.spec.ts`](motor/src/notices.spec.ts) las compara con `motor/package.json`,
-> `motor/package-lock.json` y las carpetas de `data/`. Si entra o sale una dependencia o una
-> carpeta de datos y nadie toca este fichero, la suite del motor se pone roja. Es la herencia de Desplázame, donde la cifra de la cabecera se quedó
+> `motor/package-lock.json`, el código incorporado y las carpetas de `data/`. Si entra o sale
+> una dependencia, un fichero ajeno o una carpeta de datos y nadie toca este fichero, la suite
+> del motor se pone roja. Es la herencia de Desplázame, donde la cifra de la cabecera se quedó
 > vieja tres veces seguidas antes de que alguien escribiera el guion que cuenta.
 
 ---
@@ -104,16 +106,40 @@ paquete aparte, según el sistema.
   No se ha aprobado (decisión de Antonio, 3.2). `esbuild` funciona sin él: `npm run generar` y
   los jueces del standalone lo ejecutan.
 
-### 1.5 · La que no es MIT
+### 1.5 · Código de terceros incorporado
+
+Código ajeno **copiado al repositorio**, no instalado por npm. Va sin modificar, con su aviso de
+licencia íntegro en cabecera. Las huellas se calculan sobre el texto con finales de línea LF
+(git los reescribe al sacar el fichero en Windows) y las vigila `motor/src/notices.spec.ts`:
+que el fichero existe, que empieza por su aviso, que su sha256 es el de esta tabla y que, quitada
+la cabecera, el resto es el original.
+
+| Fichero | Obra | Titular | Licencia | sha256 del fichero | sha256 del original |
+|---|---|---|---|---|---|
+| `motor/src/terceros/silabea.cjs` | silabea 1.0.0, `index.js` (commit `72251f7`, igual al del paquete npm) | Nicolás Cofré Méndez (silabajs) y Javier Arce (silabea) | MIT | `f7d2c68f157d9fec2e52a991a22b3e711d538f2fc2e8cac9e1c98c932ef7f3bc` | `64fc02c009a903917ad6264ab5fe06f41fbd49dea44f398ac2014183b84fe28c` |
+
+- **Por qué copiado:** el paquete npm declara `mocha` y `chai` como dependencias de ejecución,
+  sin usarlas (su `index.js` no hace ningún `require`), y arrastraban **6 vulnerabilidades, 3
+  críticas** (`npm audit`, 29/09). Decisión de Antonio en la parada del 3.3. Desde entonces,
+  `npm audit`: 0.
+- **Es `.cjs`, no `.js`:** el original es CommonJS (`module.exports = silabaJS`) y `motor/` es
+  `"type": "module"`; con `.js` no cargaría sin tocar el código.
+- **Medido: 57 de 60** palabras silabeadas como la RAE (`motor/src/silabas.spec.ts`, fixture
+  `motor/fixtures/referencia/silabas-referencia.json`). Falla en los prefijos `sub-`
+  (`subrayar`, `sublunar`) y en `tungsteno`.
+- Empaquetado para navegador sin minificar: **16.215 bytes** (esbuild, 29/09, antes de copiarlo).
+
+### 1.6 · La que no es MIT
 
 | Paquete | Licencia | Qué tiene de distinto |
 |---|---|---|
 | `fast-uri` 3.1.8 (la trae `ajv`) | **BSD-3-Clause** | Permisiva. Pide conservar su aviso de copyright y su lista de condiciones al redistribuir, también en binario. Y prohíbe usar el nombre de sus autores para promocionar lo derivado. Hoy no se redistribuye: no está dentro del validador empaquetado (§ 1.1) |
 
-### 1.6 · Resumen de compatibilidad
+### 1.7 · Resumen de compatibilidad
 
-**Las siete declaradas son MIT o Apache-2.0**: permisivas, sin copyleft, compatibles con la Apache 2.0 de este proyecto sin condición añadida. En el árbol
-transitivo, treinta y cuatro son MIT y una BSD-3-Clause (§ 1.5). Nada bloquea.
+**Las siete declaradas son MIT o Apache-2.0**, y el código incorporado, MIT: permisivas, sin
+copyleft, compatibles con la Apache 2.0 de este proyecto sin condición añadida. En el árbol
+transitivo, treinta y cuatro son MIT y una BSD-3-Clause (§ 1.6). Nada bloquea.
 
 > **Y lo que este documento no garantiza:** el reparto de § 1.3 sale del campo `license` que
 > cada paquete declara en el `package-lock.json`. **Las siete declaradas sí se han abierto una a
