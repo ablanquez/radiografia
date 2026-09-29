@@ -1,365 +1,440 @@
 # Investigación — Familia ESTADÍSTICA
 
-> Punto 2 del `PLAN-RADIOGRAFIA.md`. Investigación realizada el 29/09/2026
-> **a mano por la conversación de estrategia con búsqueda y lectura web**
-> (el módulo de investigación no estuvo disponible). Menos amplia que las
-> tres anteriores; los huecos son más y están declarados. Cada afirmación
-> lleva su fuente con URL. Lo ya medido en `lexico.md` (§4, diversidad) y
-> `sintaxis.md` (§1, longitud de frase) se cita por referencia, no se
-> repite.
+> Punto 2 del `PLAN-RADIOGRAFIA.md`. **Investigación manual del 29/09/2026
+> fusionada con el informe del módulo de investigación del 29/09/2026**
+> (`informes/estadistica-modulo.md`, 81 fuentes). Lo manual se conserva
+> donde tenía fuente; lo del módulo se añade con sus URL; lo que el módulo
+> contradijo está corregido y marcado. Cada afirmación lleva fuente. Lo
+> ya medido en `lexico.md` §4 y `sintaxis.md` §1 se cita por referencia.
 >
 > Regla de esta familia: **sin fuente no hay candidata.**
 >
 > Esta familia fija dos decisiones del plan: el **umbral de longitud
-> mínima** (§5) y el **método de calibración por género** (§6).
+> mínima** (§5, FIRMADO 29/09) y el **método de calibración por género**
+> (§6).
 
 ## Resumen
 
-Las métricas de texto entero sin modelo (diversidad léxica, repetición,
-compresibilidad, perfil de frecuencias) tienen tres verdades incómodas con
-fuente:
+Ninguna métrica de texto entero sin modelo (diversidad léxica, Zipf,
+repetición, compresión) tiene una **dirección de efecto estable entre
+estudios**. Cuatro verdades con fuente:
 
-1. **Todas dependen de la longitud.** Solo MATTR, MTLD y HD-D son estables,
+1. **Todas dependen de la longitud.** Solo MATTR, MTLD y HD-D son estables
    y a partir de ~50–100 tokens (Zenker & Kyle 2021; Koizumi 2012; McCarthy
-   & Jarvis 2010). El TTR bruto no se usa.
-2. **La dirección del efecto humano/LLM no es fija** (ya visto en
-   `lexico.md` §4): depende de modelo, temperatura y del grupo humano de
-   comparación. En español, Gargova 2026 mide MTLD 60,08 humano vs 81,95
-   LLM y densidad léxica 0,391 vs 0,455 (agregado de tres idiomas; ver
-   `sintaxis.md` §1).
-3. **Las baselines estadísticas puras rinden por debajo de las neuronales
-   pero no son azar**: en PAN 2024, la compresión PPMd da 0,544 de media
-   (Binoculars 0,741); en PAN 2025, 0,758 (Binoculars 0,818; TF-IDF SVM
-   0,978 en validación). Un SVM sobre n-gramas TF-IDF **sí** compite.
+   & Jarvis 2010). Tweedie & Baayen 1998: casi todas las «constantes»
+   varían con N; «Only K is constant across all text lengths». Shaib 2024:
+   la longitud es un «important confounder».
+2. **La dirección no es fija.** Menos diversidad en LLM: Reviriego (GPT-3.5),
+   Muñoz-Ortiz (noticias, MTLD y STTR: «human texts exhibit the highest
+   lexical diversity»), Alonso Simón (**español**: TTR +2,3–2,8 % en
+   humanos). Más diversidad en LLM: Kendro 2026 (cuatro modelos ChatGPT,
+   «substantially higher levels of lexical diversity than human-generated
+   texts for all six measures», MATTR η²p = 0,571). Causas: versión del
+   modelo, grupo humano de comparación (estudiantes vs periodistas),
+   métrica (TTR, MTLD y MATTR discrepan sobre el mismo corpus), lemas vs
+   formas, individual vs colectivo.
+3. **Las baselines sin modelo ordenan pero no cortan**: PPMd (compresión)
+   en PAN 2026 da ROC-AUC 0,783 con **FPR 0,728**; el sistema
+   léxico-lingüístico ikr3, AUC 0,814 con **FPR 1,000**. Sin calibración,
+   marcan como IA a casi todos los humanos.
+4. **Lo único medido en español**: TTR, densidad léxica (dependiente del
+   dominio) y hápax en ROBOT-TALK (180 textos, efectos pequeños). Nada de
+   rep-n, compresión, Zipf ni longitud de palabra en español.
 
-Consecuencia para el motor: esta familia da el **contexto de calibración**
-(género, longitud) y unas pocas señales de peso medio (repetición de
-n-gramas, ratio de compresión, MTLD/MATTR contra base del género). Nunca
-veredicto.
-
-**Propuesta de umbral de longitud mínima (§5)**: menos de 100 palabras →
-«texto insuficiente», sin análisis; 100–299 → análisis con aviso «resultado
-poco fiable»; ≥ 300 → análisis completo. Con fuentes en §5. **Decisión de
-Antonio.**
+Consecuencia para el motor: **ninguna regla de esta familia lleva umbral
+absoluto tomado de la literatura inglesa**. Se calcula la métrica, se
+compara con **percentiles humanos por género y por tramo de longitud**, y
+se marca la **distancia al rango humano** (por arriba o por abajo), no
+«baja diversidad = IA». Señales débiles y combinables; nunca veredicto.
 
 ---
 
 ## 1. Diversidad léxica: índices, fórmulas y estabilidad
 
-### Fuentes originales
+### Fórmulas con fuente
 - **MTLD, vocd-D, HD-D**: McCarthy & Jarvis, *Behavior Research Methods*
-  42(2):381–392, 2010, DOI 10.3758/BRM.42.2.381.
-  https://www.mendeley.com/catalogue/5e75898b-ba01-36ae-9b96-b465302e2845/
-  MTLD = «the mean length of sequential word strings in a text that
-  maintain a given TTR value» (factor 0,72; algunas implementaciones usan
-  0,720 o 0,732). HD-D: para cada tipo, probabilidad de aparecer en una
-  muestra de **42 tokens**; suma de probabilidades (McCarthy & Jarvis 2007;
-  Bestgen 2023 recomienda mantener 42:
-  https://arxiv.org/pdf/2307.04626).
-  Conclusión de los autores: usar MTLD, vocd-D (o HD-D) y Maas juntos, no
-  un solo índice.
-- **MATTR**: Covington & McFall 2010, ventana móvil (típicamente 50
-  tokens). Referencia vía TAALED: https://github.com/LCR-ADS-Lab/TAALED
-- **Yule's K, Herdan C, hapax**: **no buscados en esta pasada** (hueco).
-  esTS (Python, §9) los implementa «por las fórmulas publicadas».
+  42(2):381–392, 2010, DOI 10.3758/BRM.42.2.381. MTLD = «the mean length of
+  sequential word strings in a text that maintain a given TTR value»,
+  factor 0,72 («0.72 being the default that we use here following
+  previous work», Muñoz-Ortiz, https://arxiv.org/pdf/2308.09067); valor
+  final = media de las pasadas adelante y atrás. HD-D: probabilidad de
+  cada tipo en una muestra de **42 tokens**; Bestgen 2023 recomienda
+  mantener 42 (https://arxiv.org/pdf/2307.04626). Los autores aconsejan
+  usar MTLD, vocd-D/HD-D y Maas juntos.
+- **MATTR**: Covington & McFall 2010 (citado en Kendro,
+  https://arxiv.org/pdf/2508.00086); ventana deslizante típica de 50
+  palabras que avanza de una en una (ACL SRW 2025, 2025.acl-srw.95).
+- **Herdan C** = log V / log N (quanteda `textstat_lexdiv`, citando
+  «Herdan, 1960, as cited in Tweedie & Baayen, 1998; sometimes referred to
+  as LogTTR»). **Yule's K** = 10⁴ × [−1/N + Σᵢ V(i,N)·(i/N)²] («Yule, 1944,
+  as presented in Tweedie & Baayen, 1998, Eq. 16»); K mide repetición.
+  **Guiraud R** = V/√N; **CTTR** = V/√(2N). Fuente: quanteda.io.
+- **Tweedie & Baayen 1998**, *Computers and the Humanities* 32:323–352, DOI
+  10.1023/A:1001749303137: «two main families of constants, one measuring
+  lexical richness and one measuring lexical repetition»; «Only K is
+  constant across all text lengths».
+- **Hápax** (operacionalización del único estudio español): «palabras con
+  frecuencia 1/vocabulario único»; dis legómena, frecuencia 2 (Alonso
+  Simón et al., RAEL 23, Tabla 2).
 
 ### Estabilidad frente a la longitud
 - **Zenker & Kyle 2021**, *Assessing Writing* 47:100505,
   https://www.sciencedirect.com/science/article/abs/pii/S1075293520300660
-  4.542 ensayos L2. «MATTR and two versions of MTLD are highly stable
-  indices for analyzing short texts». «MATTR performs particularly well,
-  maintaining a high degree of stability across all text lengths». HD-D:
-  correlación con longitud r = 0,064 (negligible). MTLD-MA-Wrap y Maas
-  inestables en las longitudes más cortas.
-- **TAALED** (herramienta de Kyle), tabla de recomendación:
-  «Use with confidence: MATTR (50), MTLD-Original (50)» — mínimo 50
-  tokens; «MTLD values stabilized at roughly 100 tokens».
-- **Koizumi 2012**, *Vocabulary Learning and Instruction* 1(1):
-  http://www.vli-journal.org/issues/01.1/issue01.1.10.pdf
-  Textos de 50–200 tokens: «MTLD is least affected by text length, but
-  that even this measure of LD should be used with texts of at least 100
-  tokens».
-- **Bestgen 2023** («The twofold length problem», arXiv 2307.04626): HD-D
-  es el menos afectado globalmente, seguido de MATTR y MTLD; para
+  4.542 ensayos L2: «MATTR and two versions of MTLD are highly stable
+  indices for analyzing short texts»; «MATTR performs particularly well».
+  HD-D: r = 0,064 con longitud. TAALED (https://github.com/LCR-ADS-Lab/TAALED):
+  «Use with confidence: MATTR (50), MTLD-Original (50)»; «MTLD values
+  stabilized at roughly 100 tokens».
+- **Koizumi 2012**, http://www.vli-journal.org/issues/01.1/issue01.1.10.pdf:
+  «MTLD is least affected by text length, but […] should be used with
+  texts of at least 100 tokens».
+- **Bestgen 2023** (arXiv 2307.04626): HD-D el menos afectado; para
   estimación local, MATTR y MTLD.
-- **Treffers-Daller (Reading)**: recorta a 200 tokens para comparar; MTLD
-  validado por McCarthy & Jarvis en 200–666 palabras.
-  https://centaur.reading.ac.uk/54410/3/Backtobasics_accepted.pdf
+- **Shaib et al. 2024** (arXiv 2403.00553): longitud como «important
+  confounder». **PATTR** (arXiv 2507.15092): CR y MATTR «favor shorter
+  responses».
 
-### Humano vs LLM
-- Ya en `lexico.md` §4 (Reviriego 2024; Martínez 2024; Kendro 2026;
-  Fredrick & Craven 2025; Liang 2023). No se repite.
-- Español: Gargova et al. 2026 (`sintaxis.md` §1): MTLD 60,08 vs 81,95;
-  densidad léxica 0,391 vs 0,455; agregado de tres idiomas.
-- **Nada nuevo medido en español en esta pasada** (hueco).
+### Humano vs LLM (medido)
+| Estudio | Idioma / corpus | Resultado | Dirección |
+|---|---|---|---|
+| Kendro, Maloney & Jarvis, *IJAL* 2026 (doi 10.1111/ijal.70115; arXiv 2508.00086) | EN, ensayo; 240 humanos L1/L2 vs ChatGPT 3.5, 4, o4-mini, 4.5 | «substantially higher levels of lexical diversity than human-generated texts for all six measures»; MATTR F = 476,585, η²p = 0,571; los modelos nuevos divergen más | LLM > humano |
+| Kendro et al., CogSci (escholarship 18n5k7c6), preliminar | EN; ChatGPT 3.5/4, Claude, Bard | «texts created by LLMs demonstrate less variation than human-written text» | contradice la versión 2026 |
+| Reviriego et al., *MLWA* 18:100602, 2024 (arXiv 2308.07462) | EN, 3 datasets | GPT-3.5 «fewer distinct words»; GPT-4 «similar… in some cases even larger» | depende del modelo |
+| Muñoz-Ortiz et al., *AI Review* 2024 (arXiv 2308.09067) | EN, noticias, modelos base | MTLD y STTR (segmentos de 1.000 tokens, lemas): «human texts exhibit the highest lexical diversity, closely followed by LLaMa» | humano > LLM |
+| **Alonso Simón et al., RAEL 23, 2025** (doi 10.58859/rael.v23i1.666) | **ES**, ROBOT-TALK, 180 textos | TTR «a favor de los humanos… (+2,3% y +2,8%)»; densidad léxica dependiente del dominio; hápax como variable | humano > LLM (efecto pequeño) |
+| arXiv 2506.01407 | EN, noticias | «Human writers use roughly twice as many different lexical entries as each LLM»; el «autor colectivo LLM» supera al humano | depende de la agregación |
+| ACL SRW 2025 (homogeneización 2018→2024) | EN, noticias | MTLD 214,45→254,65; MATTR 0,88011→0,88121 (cambio «negligible») | las métricas discrepan entre sí |
+| Gargova et al. 2026 (`sintaxis.md` §1) | ES/EN/BG agregado | MTLD 60,08 vs 81,95; densidad léxica 0,391 vs 0,455 | LLM > humano |
+
+- Réplica 2026 sobre AuTexTification (arXiv 2603.15034): la diversidad
+  léxica es el rasgo **no probabilístico más fuerte** (+0,035 de
+  importancia por permutación), un orden de magnitud por debajo de las
+  probabilidades de modelo (+0,299). Sin modelo, la señal existe pero es
+  débil. AuTexTification (arXiv 2309.11285): 52.191 textos ES; mejor
+  sistema 70,77 macro-F1 en español vs 80,91 en inglés; «cross-domain MGT
+  detection is easier in English than in Spanish».
+- Lo demás humano vs LLM: `lexico.md` §4.
 
 ---
 
-## 2. Distribuciones de frecuencia y listas del español
+## 2. Distribuciones de frecuencia y ley de Zipf
 
-### Listas abiertas (inventario con licencia)
+- **Holtzman et al. 2020** (ICLR; arXiv 1904.09751): coeficiente de Zipf
+  humano = **0,93**, igual al del muestreo puro (0,93). La diferencia la
+  producen la decodificación (beam/greedy aplanan el vocabulario) y la
+  repetición: «Sampling with temperatures lower than 0.9 severely increase
+  repetition». → Con decodificación moderna el exponente global **no
+  separa** humano de LLM.
+- **Findings EMNLP 2025** («Zipf's and Heaps' laws for tokens and
+  LLM-generated texts»): «Heaps' and Zipf's laws only hold for
+  LLM-generated texts in a narrow model-dependent» rango de temperatura.
+- **arXiv 2508.17715** (Zipf de dos regímenes, 9 datasets, Llama 2 y
+  Qwen2.5): los LLM tienen α₁ menor (cabeza) y «consistently larger α₂
+  values in the extended vocabulary» (cola más empinada, menos palabras
+  raras) «regardless of temperature»; excepción SCIDOCS. **Señal más
+  prometedora sin modelo; solo medida en inglés.**
+- **arXiv 2607.17228** («Literary Non-Style»): pendientes log-log por
+  n-grama, humano −1,553 / −0,830 / −0,432 / −0,201 vs LLM −2,046 /
+  −1,029 / −0,609 / −0,395; «For 1-grams, the curves… look very
+  similar». La diferencia crece con n.
+- Contraevidencia: arXiv 2407.00322, discrepancias de exponente «below
+  0.03». Caso extremo: corpus de agentes Moltbook (arXiv 2602.10131),
+  exponente 1,70 por plantillas y duplicación.
+- **Perfil por bandas top-1k/5k en texto LLM: NO ENCONTRADO** en ningún
+  idioma. Los autores revisados por Alonso Simón se contradicen («las
+  máquinas utilizan palabras muy frecuentes» vs «tienden a usar palabras
+  poco comunes»).
+- **Densidad léxica en español (medido, RAEL)**: dependiente del dominio;
+  «GPT-3.5 presenta una densidad léxica mayor en comparación con los
+  humanos» en un dominio y lo contrario en artículos. Exige POS.
+
+### Listas de frecuencia del español (licencias)
 | Lista | Fuente | Licencia | Uso en proyecto Apache 2.0 |
 |---|---|---|---|
-| **wordfreq** (Speer) — español, 7 fuentes (Wikipedia, subtítulos, noticias, libros, web, Twitter, Reddit), snapshot ~2021 | https://github.com/rspeer/wordfreq | Código Apache 2.0; **datos CC BY-SA 4.0**; SUBTLEX incluido con permiso de Brysbaert («credit the SUBTLEX authors», «freely available data») | Sí, con atribución y ShareAlike sobre los datos derivados. Es Python: habría que **exportar** la lista a JSON |
-| **FrequencyWords** (Hermit Dave, OpenSubtitles 2016/2018) — `es_50k.txt`, formato `palabra frecuencia` | https://github.com/hermitdave/FrequencyWords | Código MIT; **contenido CC BY-SA 4.0** | Sí, con atribución a OpenSubtitles y ShareAlike |
-| **SUBTLEX-ESP** (Cuetos, Glez-Nosti, Barbón & Brysbaert 2011), 41 M palabras de subtítulos 1990–2009 | https://osf.io/xp6sz/ · https://eric.ed.gov/?id=EJ954706 | En OSF figura «Other» con un `license.txt` (**no leído**); el artículo en ResearchGate es CC BY-NC-ND | ⚠️ NO CONSTA sin leer el license.txt; la vía segura es wordfreq |
-| **CREA / CORPES XXI** (RAE) | https://www.rae.es/banco-de-datos/corpes-xxi — CORPES 1.5 (junio 2026): ~420.000 documentos, 455 M formas | Consulta en línea; **descarga masiva no ofrecida**; condiciones de uso no consultadas | No como base descargable; sí como referencia manual |
-| **Corpus del Español** (Davies, Web/Dialects, 2.000 M palabras, 21 países) | https://www.corpusdata.org/spanish.asp | **De pago** («when you purchase the data») | No |
-
-### Perfil de bandas, Zipf, densidad léxica
-- Densidad léxica humano vs LLM: solo el dato agregado de Gargova
-  (`sintaxis.md`). Perfil de bandas (top-1.000 / top-5.000 / fuera): **no
-  encontrado ningún estudio LLM que lo mida** (hueco). Exponente de Zipf en
-  LLM vs humano: **no buscado** (hueco).
+| **wordfreq** (Speer): ES con Wikipedia, OpenSubtitles 2018 + SUBTLEX, NewsCrawl, GlobalVoices, Google Books, OSCAR, Twitter, Reddit; snapshot hasta 2021 (SUNSET.md, sept. 2024) | https://github.com/rspeer/wordfreq | Código Apache 2.0; **datos CC BY-SA 4.0** («may be redistributed under a Creative Commons Attribution-ShareAlike 4.0 license»); SUBTLEX con permiso de Brysbaert («credit the SUBTLEX authors») | Sí: **fichero de datos aparte** con atribución y BY-SA; exportar a JSON |
+| **FrequencyWords** (Hermit Dave, OpenSubtitles) | https://github.com/hermitdave/FrequencyWords | «MIT License for code. CC-by-sa-4.0 for content.» | Sí, datos aparte con BY-SA |
+| **SUBTLEX-ESP** (Cuetos et al. 2011) | https://osf.io/xp6sz/ | OSF: «Other» + `license.txt` **no leído** | ⚠️ No redistribuir hasta leerlo; vía segura: wordfreq |
+| **CORPES XXI / CREA** (RAE) | https://www.rae.es/banco-de-datos/corpes-xxi | Sin licencia propia; el aviso legal de la RAE (https://www.rae.es/aviso-legal) prohíbe la «reproducción ni total ni parcial» | No redistribuir sin permiso escrito; solo consulta |
+| **Corpus del Español** (Davies) | https://www.corpusdata.org/spanish.asp | De pago | No |
 
 ---
 
 ## 3. Repetición y compresibilidad
 
-- **Survey de detección** (Wu et al., arXiv 2310.14724):
-  https://arxiv.org/pdf/2310.14724 — cita un método de 2021 basado en
-  n-gramas de orden alto repetidos, y un hallazgo: «only 23% of bigrams in
-  texts generated by ChatGPT are unique»; su algoritmo identificó 98 de 100
-  artículos académicos escritos por LLM. (El survey no da la fuente
-  primaria en el fragmento leído; ⏳ PENDIENTE de localizarla.)
-- **Shaib et al., «Standardizing the measurement of text diversity»**,
-  arXiv 2403.00553: https://arxiv.org/html/2403.00553v2
-  «compression ratio—a measure of document compression relative to
-  original size—is a fast, easy to compute score that is sufficient to
-  capture the information in all token/type ratio related alternatives».
-  ⚠️ «compression ratios (and all scores considered) are moderately to
-  strongly correlated with text length». Combinación suficiente: ratio de
-  compresión + self-repetition de n-gramas largos (n ≥ 4) + Self-BLEU.
-- **Shaib et al., «Syntactic templates»**, arXiv 2407.00211:
-  https://arxiv.org/pdf/2407.00211 — CR-POS: ratio de compresión gzip sobre
-  la secuencia de etiquetas POS; «Higher compression ratios imply more
-  redundancy». Requiere POS.
-- **OpenTuringBench** (arXiv 2504.11369): https://arxiv.org/pdf/2504.11369
-  Usa como estadísticos: ratio de compresión, diversidad de n-gramas
-  (únicos/total para n = 1..k), self-repetition (n-gramas de una frase que
-  reaparecen en las demás). Definiciones operativas reutilizables.
-- **rep-n en texto humano** (vía arXiv 2504.12608, citando a Welleck et
-  al.): rep-2, rep-3, rep-4 humanos = 3,92, 0,88, 0,28. Cifras de
-  referencia para inglés; en español, **nada** (hueco).
-- **ZipPy** (Thinkst): https://github.com/thinkst/zippy — detección por
-  ratio de compresión (LZMA/zlib/Brotli) con diccionario sembrado con
-  texto de IA. Necesita un corpus semilla; no es una regla sin datos.
-- **Holtzman 2020, Jiang 2023 (compresores)**: **no leídos** (hueco).
+- **Welleck et al. 2019** (arXiv 1908.04319), leído en tabla: seq-rep-4
+  humano = **0,005–0,006** (Wikitext-103) vs GPT-2 greedy 0,506 y MLE
+  greedy 0,460. Tokens únicos: humano 17,7k vs 11,8k–13,3k. Pero «At higher
+  levels of p and k… continuations contain more unique tokens than that
+  of humans». → rep-n discrimina la **degeneración greedy** (modelos
+  antiguos o locales mal configurados), **no los chatbots comerciales con
+  muestreo**.
+- **Holtzman 2020**: repetición humana 0,28 % vs ~28,94 % con beam 16
+  (cifra de beam solo en resumen secundario, alphaxiv).
+- ⚠️ **CORRECCIÓN del manual**: el «23 % de bigramas únicos» que citaba
+  del survey 2310.14724 procede de **xFakeSci (arXiv 2308.11767)**, cuya
+  frase literal es «ChatGPT contributed merely 23% of the bigram
+  content»: **solapamiento de redes de bigramas con abstracts de
+  PubMed**, no unicidad por texto. Dato mal citado en circulación; **no
+  sirve como umbral**.
+- **M4** (arXiv 2305.14902, Tabla 9): conteos de corpus sin normalizar
+  (144.523 unigramas únicos humanos vs 45.275 ChatGPT en Wikipedia); no
+  interpretable como tasa.
+- **Shaib et al. 2024** (arXiv 2403.00553; IJCNLP 2025 demo, paquete
+  Python `diversity`): CR = tamaño original / comprimido con gzip («High
+  CRs imply more redundancy»); «Compression ratio for part of speech
+  sequences is the score that identifies the most differences between
+  human and model-generated text»; evaluado «on English texts».
+  **Importante**: el CR de Shaib se calcula sobre **conjuntos concatenados
+  de salidas**, no sobre un texto individual. Combinación suficiente: CR +
+  self-repetition de n ≥ 4 + Self-BLEU; todas correlacionan con longitud.
+- **Shaib «Syntactic templates»** (arXiv 2407.00211): CR-POS sobre la
+  secuencia de etiquetas; requiere POS.
+- **OpenTuringBench** (arXiv 2504.11369): definiciones operativas de
+  ratio de compresión, diversidad de n-gramas y self-repetition.
+- **Jiang et al. 2023** (Findings ACL, 2023.findings-acl.426): gzip + kNN
+  con NCD para **clasificación temática**; no es detector de IA. Réplica
+  informal crítica (Lior Sinai): no supera TF-IDF + LR.
+- **PAN, baseline PPMd CBC (compresión, sin modelo)**:
+  - PAN 2024 (texto emparejado): ROC-AUC 0,795, media 0,77; Binoculars
+    0,972 / 0,965 (https://ceur-ws.org/Vol-3740/paper-243.pdf).
+  - PAN 2025: media 0,758; Binoculars 0,818; TF-IDF SVM 0,978 en
+    validación (https://pan.webis.de/clef25/pan25-web/generated-content-analysis.html).
+  - **PAN 2026** (texto único, LLM imitando autores; ensayo, noticias,
+    ficción): PPMd ROC-AUC 0,783, media 0,814, **FPR 0,728**, FNR 0,066.
+    Binoculars (Llama-3.1): AUC 0,764, FPR 0,125, FNR 0,414. TF-IDF SVM:
+    AUC 0,711, FPR 0,069, FNR 0,651. Equipo ikr3 («lexical + linguistic
+    LR»): AUC 0,814 con **FPR 1,000**.
+    https://pan.webis.de/clef26/pan26-web/generated-content-analysis.html
+  - Lectura: sin modelo se **ordena** (AUC 0,78–0,81) pero el punto de
+    corte no se transfiere. Justifica la calibración de §6.
+- **ZipPy** (https://github.com/thinkst/zippy): compresión sembrada con
+  corpus de IA; necesita semilla.
+- **rep-n, CR o entropía medidos en español: NO ENCONTRADO.**
 
 ---
 
 ## 4. Longitud de palabra y de frase
 
-- Longitud de frase y su dispersión: ya en `sintaxis.md` §1 (Muñoz-Ortiz,
-  Herbold, ROBOT-TALK, Gargova, Zamaraeva). Sin cifras nuevas aquí.
-- Longitud de palabra en sílabas y caracteres humano vs LLM: **no
-  encontrado** (hueco). Solo indirectamente vía índices de legibilidad
-  (`sintaxis.md` §8).
+- Frase: `sintaxis.md` §1.
+- Palabra: AuTexTification usó «Average Word Length» como rasgo (arXiv
+  2311.12373) sin cifras extraíbles; la survey de Terčon (arXiv
+  2510.05136) lista «word length» sin cifra para español. **Cifras humano
+  vs LLM en español: NO ENCONTRADO.**
 
 ---
 
-## 5. Umbral de longitud mínima — fuentes y propuesta
+## 5. Umbral de longitud mínima — fuentes y decisión
 
-### Lo que dicen las métricas
-- MATTR y MTLD: mínimo **50 tokens** con confianza (TAALED / Zenker & Kyle
-  2021); MTLD estabiliza «at roughly 100 tokens»; Koizumi 2012: «at least
-  100 tokens». McCarthy & Jarvis validaron en 100–2.000 tokens (Koizumi:
-  «previous studies on D and MTLD examined the impact of length of texts
-  of 100 tokens or more»).
-- HD-D: muestra de 42 tokens por definición; estable en Zenker & Kyle.
-- TTR bruto: inestable siempre; no se usa.
+### Métricas
+- MATTR y MTLD: mínimo 50 tokens con confianza (TAALED / Zenker & Kyle);
+  MTLD estabiliza ~100 (TAALED; Koizumi). HD-D: 42 por definición. TTR
+  bruto: inestable siempre.
 
-### Lo que dicen los detectores
-- **Turnitin** (FAQ oficial):
-  https://guides.turnitin.com/hc/en-us/articles/28477544839821-Turnitin-s-AI-writing-detection-capabilities-FAQ
-  «Increased the minimum word count from 150 to 300 words» — «Based on our
-  data and testing». Máximo 30.000. Solo prosa larga: no listas, tablas,
-  código ni respuestas cortas. Advertencia (vía theairankings.com, citando
-  la FAQ): en documentos de unos cientos de palabras la predicción es
-  «mostly all or nothing».
-- **GPTZero**: el texto pegado «must have more than 250 characters»
-  (TechRepublic, secundaria:
-  https://www.techrepublic.com/article/how-to-use-gptzero-check-ai-generated-text/).
-  Fuente primaria no localizada.
-- Originality, Copyleaks, Winston: **no buscados** (hueco).
-
-### Lo que dicen los estudios de detección vs longitud
-- **arXiv 2603.23146** («Why AI-generated text detection fails»,
-  https://arxiv.org/html/2603.23146v2): falsos negativos con media de 177
-  palabras frente a 243 en aciertos; **falsos positivos con media de 221
-  palabras frente a 421 en verdaderos negativos**; modas de 14 y 34
-  palabras. «detectors should apply minimum text-length thresholds».
-- **Fraser et al. 2024** (arXiv 2406.15583, https://arxiv.org/pdf/2406.15583):
-  los métodos estadísticos y estilísticos «require on the order of at
-  least 100 words for accurate classification».
-- **M4** (arXiv 2305.14902): F1 cae al bajar de 1.000 a 125 caracteres.
-- **EnsemJudge** (arXiv 2603.27949, chino): la ganancia por longitud se
-  vuelve marginal por encima de ~500 caracteres.
-- **arXiv 2608.26694**: con documentos < 500 caracteres, «FPR rises by
-  more than an order of magnitude».
-- AuTexTification 2023, textos de 20–100 tokens: ~70 macro-F1 en español
-  (`sintaxis.md` §5).
-
-### Propuesta (para decisión de Antonio)
-| Palabras | Comportamiento | Fuente que lo sostiene |
+### Detectores comerciales (fuente primaria salvo indicación)
+| Herramienta | Mínimo publicado | Fuente |
 |---|---|---|
-| < 100 | «Texto insuficiente»: no se analiza | Fraser (≥ ~100 palabras); Koizumi (MTLD ≥ 100 tokens); 2603.23146 (FP concentrados en textos cortos) |
-| 100–299 | Se analiza con aviso «resultado poco fiable»; familia estadística con peso reducido o desactivada | Turnitin subió de 150 a 300 «based on data»; «all or nothing» bajo unos cientos |
-| ≥ 300 | Análisis completo | Turnitin 300; TAALED/Zenker & Kyle (todas las métricas estables) |
+| Turnitin | 300 palabras de prosa larga (máx. 30.000); subido de 150 «based on our data and testing»; «all or nothing» bajo unos cientos; soporta inglés, español, japonés y árabe | https://guides.turnitin.com/hc/en-us/articles/28477544839821 · https://helpcenter.turnitin.com/hc/en-us/articles/46468418712461 |
+| GPTZero | 250 caracteres (~50 palabras) | https://gptzero.me/news/gptzero-ai-detection-benchmarking-the-industry-standard-in-accuracy-transparency-and-fairness/ |
+| Originality.ai | 100 palabras (web); sin mínimo en API: «accuracy is decreased for texts below 100 words» | https://help.originality.ai/en/article/minimum-word-counts-for-scans-1lyfqtb/ |
+| Copyleaks | 350 caracteres (extensión); 255 (web) | https://help.copyleaks.com/s/article/WhatistheminimumcharactercountneededforacheckwiththeAIDetector681cd27608aae |
+| Winston AI | 500 caracteres (web); 300 (API); «aim for 300 words or more» | https://help.gowinston.ai/understanding-winston-ai/what-types-of-content-can-i-scan-with-winston-ai |
 
-[PROPIO] la partición en tres tramos; cada frontera tiene fuente. Contar
-**palabras**, no tokens de subword, porque las fuentes de diversidad
-léxica hablan de tokens-palabra.
+Conflicto: la Tabla 2 de Fraser et al. (JAIR 2025) y una reseña de GPTZero
+dan otras cifras (Winston 600, GPTZero 300). Prevalecen las páginas de
+cada proveedor.
+
+### Estudios de detección vs longitud
+- **Fraser, Dawkins & Kiritchenko** (arXiv 2406.15583; JAIR 82, 2025):
+  Li et al. 2024, «approximately 120 words are sufficient» para
+  clasificadores estadísticos y finetuned; He et al. 2024, ~200 palabras
+  para ChatGPT-turbo y GPT-4; de 256 a 64 palabras, «a 10% drop in
+  accuracy» con nucleus; ArguGPT: RoBERTa cae 2 % en ensayos completos y
+  13 % a nivel de frase. Todo con detectores **con** modelo.
+- **arXiv 2603.23146**: FN media 177 palabras vs 243 en aciertos; **FP
+  media 221 vs 421**; modas 14 y 34; «detectors should apply minimum
+  text-length thresholds».
+- **M4**: F1 cae de 1.000 a 125 caracteres. **EnsemJudge** (chino):
+  ganancia marginal por encima de ~500 caracteres. **arXiv 2608.26694**:
+  bajo 500 caracteres, «FPR rises by more than an order of magnitude».
+- AuTexTification (20–100 tokens): ~70 macro-F1 en español.
+- **Curva precisión–longitud para métricas sin modelo en español: NO
+  ENCONTRADO.**
+
+### Decisión — FIRMADA por Antonio el 29/09/2026
+| Palabras | Comportamiento | Fuentes |
+|---|---|---|
+| < 100 | «Texto insuficiente»: no se analiza | Originality (< 100 pierde precisión); Fraser (−10 % de 256 a 64); Koizumi/TAALED (MTLD ≥ 100; MATTR-50 sin dos ventanas); 2603.23146 (FP en textos cortos) |
+| 100–299 | Análisis con aviso «resultado poco fiable»; estadística con peso reducido: solo MATTR y rep-n contra percentiles del mismo tramo | Li et al. ~120 y He et al. ~200 bastan para detectores con modelo; sin modelo son más débiles (PPMd AUC 0,78 vs 0,99) |
+| ≥ 300 | Análisis completo | Turnitin 300 (con soporte de español); Winston «300 words or more»; todas las métricas estables |
+
+Se cuentan **palabras de prosa**: excluir viñetas, tablas y código antes
+de medir, como hace Turnitin (guía de Arcadia reproduciendo su doc:
+https://helpdesk.arcadia.edu/hc/en-us/articles/46219290783117). Zipf por
+texto solo con ≥ 1.000 tokens: **propuesta sin fuente** del módulo; no se
+calcula por debajo.
 
 ---
 
 ## 6. Calibración por género y corpus de referencia
 
-### Corpus abiertos en español (inventario con licencia)
-| Corpus | Contenido | Licencia | Sirve como base humana pre-2022 |
-|---|---|---|---|
-| **Spanish Billion Words** (Cardellino 2016) | ~1.500 M palabras: Wikipedia ES, Wikisource, Wikibooks, AnCora, SenSem, Europarl, OPUS, Tibidabo, IULA | **CC BY-SA 4.0** (https://crscardellino.github.io/SBWCE/ · https://huggingface.co/datasets/crscardellino/spanish_billion_words) | Sí: fechado 2016, mezcla enciclopédico + parlamentario + técnico; **sin etiqueta de género por documento** |
-| **spanish-corpora** (Cañete, 3.000 M) | Compilación en Zenodo | Repo MIT; licencias de cada subcorpus NO CONSTA | Solo tras revisar cada fuente |
-| **OSCAR** (Common Crawl 2018) | Web filtrada por idioma | Empaquetado CC0; el texto es Common Crawl sin derechos de los autores de OSCAR; acceso con formulario; excepción TDM en Francia (https://huggingface.co/datasets/oscar-corpus/oscar) | Con cautela legal; género = «web» sin etiqueta |
-| **Wikipedia ES** (dumps) | Enciclopédico | CC BY-SA (parte de SBWC) | Sí, un solo género |
-| **AnCora-ES** | 500.000 palabras, periodístico | NO CONSTA en esta pasada | Género prensa, pequeño |
-| **CORPES XXI** | 455 M formas, todos los géneros y países, hasta 2026 | Consulta en línea, sin descarga | Como referencia manual de frecuencias, no como corpus de calibración |
-| **ROBOT-TALK** (humanos) | 3 géneros, 2023–25 | NO CONSTA (`sintaxis.md` §5) | Solo si la UCM lo cede; mejor para **validar** que para calibrar |
-| **Corpus del Español** (Davies) | 2.000 M, 21 países | De pago | No |
+### Método (con fuente)
+- La revisión de ScienceDirect (S1546221826000482) describe **MCP**: «a
+  small calibration set of human-authored texts to derive multiscale
+  quantiles… tailored to varying text lengths» para controlar la FPR.
+  Es el patrón: **cuantiles humanos por género × tramo de longitud**.
+- Propuesta del módulo (marcada por él como opinión razonada, no medida):
+  estratificar por género (noticias, académico, opinión/reseña, narrativa)
+  y por tramos (100–199, 200–299, 300–599, 600+); guardar percentiles
+  1/5/50/95/99 por celda; marcar cuando **≥ 2 métricas independientes
+  caen fuera del p1–p99 humano**; validar con textos humanos apartados
+  con objetivo **FPR ≤ 5 %** (PAN 2026 da 0,73 sin calibrar). Shaib obliga
+  a normalizar por longitud.
+- **Tablas de referencia MTLD/MATTR por género en español: NO
+  ENCONTRADAS.** Habrá que construirlas.
 
-### Método
-- Ningún trabajo encontrado que publique **tablas de referencia de
-  MTLD/MATTR por género en español** (hueco).
-- Método [PROPIO, sobre fuentes]: por género, calcular la distribución de
-  cada métrica en muestras humanas de ≥ 300 palabras; umbral = percentil
-  (p95 o p05 según dirección) o z-score contra media y DT del género;
-  publicar la tabla en el catálogo con fecha y corpus. Shaib 2024 obliga a
-  **normalizar por longitud** o a comparar solo textos de longitud
-  parecida, porque compresión y diversidad correlacionan con longitud.
+### Corpus abiertos en español (licencias)
+| Corpus | Contenido | Licencia | Uso |
+|---|---|---|---|
+| **Spanish Billion Words** (Cardellino 2016) | ~1.500 M palabras: Wikipedia, Wikisource, Wikibooks, AnCora, SenSem, Europarl, OPUS, Tibidabo, IULA | **CC BY-SA 4.0** (https://crscardellino.github.io/SBWCE/); derechos de origen no depurados por el autor | Base humana pre-2022; sin etiqueta de género por documento |
+| **AnCora-ES** | 500.000 palabras, periodístico | **CC BY 4.0** en Zenodo (10.5281/zenodo.4762030) y UD_Spanish-AnCora **vs GPL** en ELRA-W0326 y HF CLiC-UB: conflicto | Usar la versión Zenodo/UD (CC BY) |
+| **OSCAR** | Common Crawl filtrado | Empaquetado CC0; texto sin derechos de los autores; acceso con formulario; excepción TDM (Francia) | Con cautela legal |
+| **Wikipedia ES** | Enciclopédico | CC BY-SA | Un solo género |
+| **CORPES XXI** | 455 M formas, todos los géneros | Aviso legal RAE: sin reproducción | Referencia manual, no corpus |
+| **ROBOT-TALK** (humanos) | 765 textos, 398.501 tokens, 3 géneros, 2023–24 | **NO CONSTA**; pedir acceso a la UCM | Validar, no calibrar |
+| **PAN 2024–2026** | Ensayo, noticias, ficción (EN) | «contains copyrighted material… No redistribution allowed» | Solo evaluación local |
+| spanish-corpora (Cañete), CC-News, AuTexTification | — | NO VERIFICADO | Verificar antes de usar |
 
 ---
 
 ## 7. Estilometría clásica trasladable
 
-- **PAN 2024, Voight-Kampff** (Bevendorff et al.,
-  https://ceur-ws.org/Vol-3740/paper-225.pdf ·
-  https://pan.webis.de/clef24/pan24-web/generated-content-analysis.html):
-  43 sistemas (30 participantes + 13 baselines). Baselines sin modelo:
-  **PPMd Compression-based Cosine** (Sculley & Brodley 2006; Halvani 2017)
-  media 0,544; **Authorship Unmasking** 0,651 (en otra tabla). Binoculars
-  (Falcon 7B) 0,741. «Twelve of the systems beat the best baseline».
-- **PAN 2025** (https://pan.webis.de/clef25/pan25-web/generated-content-analysis.html):
-  baselines en validación: **TF-IDF SVM** (top-1000 1–4-gramas) mean
-  0,978; Binoculars 0,877; PPMd 0,786 (ROC-AUC). En test: Binoculars 0,818,
-  PPMd 0,758; «7 beat the strongest baseline (TF-IDF SVM)». El overview
-  llama a la compresión «a more conservative lower baseline».
-- **PAN 2026** (https://pan.webis.de/clef26/pan26-web/generated-content-analysis.html):
-  PPMd mean 0,814 pero **FPR 0,728**; Binoculars mean 0,738, FPR 0,125.
-  → La compresión detecta con muchísimos falsos positivos.
-- **McGovern et al., «Your LLMs are leaving fingerprints»** (arXiv
-  2405.14057, https://arxiv.org/pdf/2405.14057): un GradientBoost con
-  n-gramas de caracteres, palabras y POS compite con redes profundas en
-  cinco datasets (Outfox: 0,877 humano, 0,936 ChatGPT, 0,920 Claude).
-- **PUCP-Metrix** (Villegas & Sobrevilla, PUCP, arXiv 2511.17402,
-  https://arxiv.org/html/2511.17402v2): **182 métricas lingüísticas para
-  español** (diversidad, complejidad, cohesión, legibilidad), evaluado en
-  detección de texto generado «showing competitive performance compared to
-  an existing repository and strong neural baselines». Python; licencia
-  NO CONSTA. **Es la referencia española más cercana a este proyecto** y
-  hay que leerlo entero en el punto 3 (⏳ PENDIENTE).
-- IberAuTexTification 2024 baselines superficiales: `sintaxis.md` §5.
+- **PAN 2024** (https://ceur-ws.org/Vol-3740/paper-225.pdf): 43 sistemas;
+  PPMd CBC 0,544; Authorship Unmasking 0,651; Binoculars 0,741; 12
+  sistemas baten la mejor baseline.
+- **PAN 2025**: TF-IDF SVM (top-1000 1–4-gramas) 0,978 en validación;
+  Binoculars 0,877; PPMd 0,786; «7 beat the strongest baseline».
+- **PAN 2026**: ver §3 (PPMd FPR 0,728; ikr3 FPR 1,000).
+- **arXiv 2508.16385**: ChatGPT-3.5 muestra rasgos de autoría
+  estilométrica no humanos (300 textos EN, LOCNESS y Wikipedia).
+- **McGovern et al. 2024** (arXiv 2405.14057): GradientBoost con
+  n-gramas de caracteres, palabras y POS compite con redes profundas
+  (Outfox 0,877/0,936/0,920). No releído por el módulo.
+- **PUCP-Metrix** (arXiv 2511.17402): 182 métricas para español, evaluado
+  en detección de texto generado; licencia NO CONSTA. **Leer entero en el
+  punto 3.** **esTS/pyests**: silabeo por reglas, legibilidad, diversidad
+  (TTR, MATTR, MSTTR, MTLD, HD-D, Simpson, Yule, entropía, Zipf, Heaps),
+  morfología con spaCy. Ambos Python; referencias de implementación.
 
 ---
 
 ## 8. Falsos positivos
 
-- **Textos cortos**: 2603.23146 (FP media 221 palabras; moda 34);
-  2608.26694 (FPR ×10 bajo 500 caracteres). Resuelto por el umbral de §5.
-- **Vocabulario restringido / técnico**: 2603.23146: «false positives in
-  technical and domain-specific texts reveal that constrained vocabularies
-  can resemble AI-generated patterns».
-- **No nativos**: Liang 2023 (`lexico.md` §5): léxico limitado → baja
-  perplejidad/diversidad → marcado como IA.
-- **Compresión**: PAN 2026, FPR 0,728 de la baseline PPMd.
-- **Longitud como confusor**: Shaib 2024, todas las métricas de diversidad
-  correlacionan con longitud; Fraser 2024: si el corpus de entrenamiento
-  no controla longitud, el detector «tends to misclassify longer
-  human-written text as AIGT».
-- Recetas, jurídico, listas: sin fuente específica (hueco); cubierto por
-  «vocabulario restringido».
+- **Umbral de fábrica**: PPMd FPR 0,728 y ikr3 FPR 1,000 (PAN 2026).
+- **Textos cortos**: 2603.23146 (FP media 221, moda 34); 2608.26694 (FPR
+  ×10 bajo 500 caracteres). Resuelto por §5.
+- **Vocabulario restringido / técnico**: 2603.23146: «constrained
+  vocabularies can resemble AI-generated patterns». Winston declara no
+  aptos «Boilerplate legal text», tablas y datos estructurados; Turnitin
+  excluye listas, viñetas, código, poesía.
+- **Traducción**: Winston: «translation alone can significantly alter AI
+  detection scores».
+- **No nativos**: en Kendro 2026 la diversidad humana **no difería entre
+  L1 y L2** (tranquilizador para diversidad léxica). Para detectores con
+  modelo: Liang 2023, ~60 % de FP en ensayos TOEFL (`lexico.md` §5).
+- **Longitud como confusor**: Shaib 2024; Fraser 2024 (detector sesgado
+  por longitud si el corpus no la controla).
 
 ---
 
-## 9. Herramientas (inventario, no decisión)
+## 9. Herramientas (inventario con licencia; no decisión)
 
-| Herramienta | Qué hace | Lenguaje | Licencia | Estado |
-|---|---|---|---|---|
-| **silabea** (fork de silabajs, Cofré/Arce) | Silabeo del español por reglas, tónica, hiatos, diptongos | JS (npm `@javier/silabea`) | MIT | https://npmjs.com/package/silabea — sirve para Fernández-Huerta/IFSZ en navegador |
-| **TAALED** (Kyle) | MATTR, MTLD (varias), HD-D, con recomendaciones de mínimo | Python | NO CONSTA | Referencia de implementación |
-| **lexical-diversity** (Python, jennafrens) | TTR, root, log, Maas, MSTTR, MATTR, HD-D, MTLD | Python | NO CONSTA | Referencia de fórmulas |
-| **textstat** | Fernández-Huerta, Szigriszt-Pazos, Gutiérrez de Polini, Crawford para español | Python | NO CONSTA | Referencia de fórmulas |
-| **esTS / pyests** | Estadística completa del español: silabeo por reglas, legibilidad (FH, IFSZ+INFLESZ, µ, SOL, LIX, RIX), diversidad (TTR, MATTR, MSTTR, MTLD, HD-D, Simpson, Yule, entropía, Zipf, Heaps), morfología con spaCy | Python | NO CONSTA | https://pypi.org/project/pyests/ — la referencia más completa en español; **portar fórmulas a TS** |
-| **PUCP-Metrix** | 182 métricas español | Python | NO CONSTA | Ver §7 |
-| **wordfreq** | Frecuencias español | Python | Apache 2.0 + CC BY-SA datos | Exportar lista a JSON |
-| **ZipPy** | Compresión sembrada | Python | NO CONSTA | Concepto reutilizable |
-| text-readability (JS), lexical-diversity (npm), stopwords-es, compromise (¿es?), natural | — | JS | — | **No verificados en esta pasada** (hueco) |
+| Paquete | Licencia | Español | Nota |
+|---|---|---|---|
+| **silabea** (fork de silabajs) | MIT | Silabeador por reglas, tónica, hiatos, diptongos | https://github.com/javierarce/silabea — sin publicaciones desde hace ~8 años |
+| **stopwords-es / stopwords-iso** | MIT | Sí | «free to use this collection any way you like»; fuentes subyacentes NO CONSTA |
+| **es-compromise** | MIT | POS por reglas | «work-in-progress» (https://github.com/nlp-compromise/es-compromise); compromise núcleo solo inglés |
+| **natural** | MIT | `PorterStemmerEs` | incluye licencia WordNet y un stemmer alemán BSD-4; empaquetado en navegador no verificado |
+| **text-readability** (clearnote01) | ISC (npm) / MIT (repo) | NO CONSTA si trae Fernández-Huerta o Szigriszt | port de textstat centrado en inglés |
+| lexical-diversity (npm), syllable-es, hyphenopoly | NO CONSTA | — | no verificados |
+| **wordfreq**, **FrequencyWords** | Apache 2.0 / MIT código; **CC BY-SA 4.0 datos** | Sí | exportar listas a `/data/*.json` con licencia y atribución aparte |
+| TAALED, lexical-diversity (Python), textstat, esTS, PUCP-Metrix | NO CONSTA | Referencias de fórmulas | Python |
+| **CompressionStream** (API nativa del navegador) | — | — | gzip/deflate sin librería |
 
-Hallazgo para el punto 3-4: **no existe una librería JS/TS madura de
-estadística del español**; todo lo bueno está en Python (esTS,
-PUCP-Metrix, TAALED). El motor tendrá que **implementar las fórmulas** (con
-sus fuentes) y usar solo silabeo (silabea, MIT) y listas de frecuencia
-exportadas (wordfreq/FrequencyWords, CC BY-SA con atribución).
+Hallazgo para el punto 3-4: **no hay librería JS/TS madura de estadística
+del español**; el motor implementa las fórmulas (§1) con sus fuentes y toma
+de fuera solo silabeo (silabea), POS (es-compromise, con reservas) y
+listas de frecuencia (datos BY-SA aparte del código Apache).
 
 ---
 
 ## 10. CANDIDATAS A REGLA — familia estadística
 
-| # | Métrica | Idioma documentado | Evidencia | Dirección LLM | Necesita | Mín. palabras | Riesgo FP |
+| # | Métrica | Idioma documentado | Evidencia | Dirección | Necesita | Mín. palabras | Riesgo FP |
 |---|---|---|---|---|---|---|---|
-| E1 | MATTR (ventana 50) contra base del género | Inglés (Zenker & Kyle; TAALED); español solo agregado (Gargova) | Fuerte en estabilidad; dirección inconsistente | **Inconsistente** (ver lexico §4) | Conteo | 50 (100 recomendado) | Alto: no nativos, técnico |
-| E2 | MTLD contra base del género | Idem | Idem | Inconsistente | Conteo | 100 | Alto |
-| E3 | HD-D (42) | Inglés | Fuerte en estabilidad | Inconsistente | Conteo + combinatoria | 50 | Alto |
-| E4 | Densidad léxica (contenido/total) | Español agregado (Gargova 0,391 vs 0,455) | Media | LLM mayor | Lista de palabras función | 100 | Medio: académico denso |
-| E5 | Repetición de n-gramas (rep-3, rep-4; diversidad de n-gramas) | Inglés (survey 2310.14724: 23 % bigramas únicos; OpenTuringBench) | Media | LLM mayor | Conteo | 100 | Medio: recetas, jurídico, instrucciones |
-| E6 | Self-repetition de n-gramas ≥ 4 entre frases | Inglés (Shaib 2024) | Media | LLM mayor | Conteo | 200 | Medio |
-| E7 | Ratio de compresión (deflate/gzip en navegador) | Inglés (Shaib 2024; PAN: PPMd 0,544–0,814 con FPR 0,728) | Media; correlaciona con longitud | LLM mayor (más comprimible) | Conteo (API `CompressionStream`, sin librería) | 300 y normalizar por longitud | **Alto** (PAN 2026 FPR 0,728) |
-| E8 | Perfil de bandas de frecuencia (top-1k / top-5k / fuera) | Sin fuente LLM | Sin fuente | — | Lista de frecuencias (wordfreq/FrequencyWords) | 300 | Alto |
-| E9 | Ratio de palabras función | Sin fuente LLM directa (Muñoz-Ortiz PRON/AUX en sintaxis) | Anecdótica | Inconsistente | Lista cerrada | 100 | Medio |
-| E10 | Exponente de Zipf | Sin fuente en esta pasada | Sin fuente | — | Conteo | 500+ | Alto |
-| E11 | Yule's K / Herdan / hapax | Sin fuente LLM | Sin fuente | — | Conteo | 200 | Alto |
-| E12 | Índices de legibilidad (FH, IFSZ) | Español (fórmulas validadas; no como detector) — `sintaxis.md` §8 | Contexto | — | Silabeador | 100 | No es señal |
+| E1 | MATTR (ventana 50) contra percentiles del género × tramo | EN (Kendro η²p 0,571; Zenker & Kyle); ES solo agregado | Fuerte en estabilidad; dirección contradictoria | **Bidireccional** (distancia al rango humano) | conteo | 100 (≥ 2 ventanas); fiable ≥ 300 | Medio |
+| E2 | MTLD (0,72) contra percentiles | EN | Contradictoria (ACL SRW) | Bidireccional | conteo | 300 | Medio |
+| E3 | HD-D (42) | EN | Fuerte en estabilidad | Bidireccional | conteo + combinatoria | 50 | Medio |
+| E4 | Densidad léxica (contenido/total) | **ES** (RAEL, dependiente del dominio); agregado (Gargova) | Débil, depende del dominio | Variable | POS o lista de palabras función | 300 | Alto |
+| E5 | Repetición de n-gramas (rep-3/4, diversidad de n-gramas) | EN (Welleck: seq-rep-4 humano 0,005; solo greedy) — **el «23 %» retirado** | Fuerte solo para degeneración greedy | LLM ↑ (degeneración) | conteo | 300 | Bajo para bucles; alto en técnico y listas |
+| E6 | Self-repetition n ≥ 4 entre frases | EN (Shaib 2024) | Media | LLM ↑ | conteo | 200 | Medio |
+| E7 | Ratio de compresión gzip (texto individual) | EN a nivel de conjunto (Shaib); PAN PPMd FPR 0,728 | Moderada; correlaciona con longitud | LLM más comprimible | `CompressionStream` | 300 + base por longitud | **Alto** |
+| E8 | Perfil de bandas de frecuencia | Sin fuente LLM | Sin fuente | — | frec | 300 | Alto |
+| E9 | Ratio de palabras función | Anecd. | Anecdótica | ↕ | lista | 100 | Medio |
+| E10 | Exponente de Zipf global | EN (Holtzman 0,93 = muestreo; 2407.00322 < 0,03) | **No separa** con decodificación moderna | — | conteo | 1.000 (sin fuente) | Alto |
+| E11 | Yule's K / Herdan C / hápax | Fórmulas (Tweedie & Baayen; quanteda); hápax variable en RAEL | Teórica; K constante con N | NO CONSTA | conteo del espectro de frecuencias | 300 | Medio (K) / alto (C) |
+| E12 | Índices de legibilidad (FH, IFSZ) | **ES** fórmulas | Contexto | — | sil | 100 | No es señal |
+| **E13** | TTR crudo por tramos de longitud fija | **ES** (RAEL: +2,3–2,8 % humano) | Débil | Humano > LLM | conteo | solo con longitud fija por tramo | Alto (depende de N) |
+| **E14** | Zipf α₂ (cola del vocabulario extendido) | EN (arXiv 2508.17715, 9 datasets) | Moderada, consistente, «regardless of temperature» | LLM cola más empinada | conteo + ajuste log-log | NO CONSTA (≥ 1.000 propuesto) | Alto en textos cortos |
+| **E15** | Pendiente Zipf de n-gramas (n ≥ 2) | EN (arXiv 2607.17228, literario) | Un estudio | LLM más empinada | conteo de n-gramas | NO CONSTA | Medio |
+| **E16** | CR de secuencias POS | EN (Shaib: mejor discriminador) | Moderada | LLM ↑ | POS (es-compromise) | 300 | Medio |
 
 **Lectura para el paquete v1:**
-- **Contexto, no señal**: E1, E2, E3, E12. Se muestran («MATTR 0,71; base
-  del género 0,68 ± 0,04») y sirven para explicar, no puntúan salvo
-  desviación extrema calibrada.
-- **Señal de peso medio, con calibración por género**: E4, E5, E6.
-- **Señal de peso bajo o desactivada hasta validar**: E7 (FPR
-  documentado), E9.
-- **Fuera de la v1** (sin fuente): E8, E10, E11.
-- Todo condicionado al umbral de §5.
+- **Contexto, no señal** (se muestran con su percentil, no puntúan salvo
+  desviación extrema calibrada): E1, E2, E3, E12, E13.
+- **Señal de peso medio, calibrada por género × tramo, bidireccional
+  donde toque**: E4 (con POS), E5, E6, E16 (con POS).
+- **Peso bajo o desactivada hasta validar FPR ≤ 5 %**: E7, E14, E15.
+- **Fuera de la v1**: E8, E9, E10, E11 (sin cifra humano vs LLM).
+- Regla general: **ninguna con umbral absoluto**; todas contra percentiles
+  humanos (§6); marcar cuando ≥ 2 métricas independientes caen fuera del
+  rango.
 
 ---
 
-## 11. Huecos (buscado y no encontrado, o no buscado en esta pasada)
+## 11. Hallazgos que afectan a decisiones firmadas
 
-- Fórmulas y fuentes originales de Yule's K, Herdan C, hapax ratio.
-- Exponente de Zipf humano vs LLM.
-- Perfil de bandas de frecuencia en texto LLM.
-- rep-n y compresión **en español**: ninguna cifra.
-- Fuente primaria del «23 % de bigramas únicos» citado por el survey.
-- Holtzman 2020; Jiang et al. 2023 (compresores): no leídos.
-- Mínimos publicados de Originality, Copyleaks, Winston; fuente primaria
-  del mínimo de GPTZero.
+- **Umbral 100/300**: el módulo llega a la misma propuesta por vías
+  independientes. Añade «contar solo prosa» (excluir viñetas, tablas,
+  código): requisito para el esquema/motor del punto 3-4.
+- **Decisión 2 (POS)**: refuerza; E4, E16 y la densidad léxica española lo
+  necesitan. es-compromise (MIT) es candidata, marcada «work-in-progress».
+- **Nueva regla de diseño para el punto 3-4** (propuesta del módulo,
+  opinión razonada): calibración por percentiles p1–p99 humanos por
+  género × tramo; ≥ 2 métricas fuera para marcar; validación con FPR ≤ 5 %.
+  No cambia ninguna decisión firmada; se lleva al plan como criterio de
+  cierre del punto 5 (paquete v1).
+- **Licencias**: las listas de frecuencia son CC BY-SA 4.0 → van como
+  ficheros de datos aparte del código Apache 2.0, con atribución. Afecta
+  al NOTICES y a la estructura del repo (`/data/`).
+
+---
+
+## 12. Huecos (buscado y no encontrado)
+
+- rep-n, ratio de compresión, entropía y exponente de Zipf medidos en
+  español humano vs LLM.
+- Perfil de bandas top-1k/5k en texto LLM (cualquier idioma).
+- Longitud de palabra y su varianza humano vs LLM en español.
 - Tablas de referencia MTLD/MATTR por género en español.
-- Licencias: SUBTLEX-ESP (license.txt no leído), AnCora, spanish-corpora
-  por subcorpus, PUCP-Metrix, esTS, TAALED, textstat.
-- Condiciones de uso de CORPES XXI.
-- Librerías JS: text-readability, lexical-diversity (npm), stopwords-es,
-  compromise/natural para español: no verificadas.
-- Longitud de palabra humano vs LLM en español.
-- Nada nuevo medido en español para diversidad léxica más allá de lo ya
-  citado en léxico y sintaxis.
-- **Caducidad y método**: esta pasada es manual y más estrecha que las
-  tres anteriores; conviene relanzar la investigación con el módulo cuando
-  vuelva a estar disponible y fusionar lo que aporte.
+- Curva precisión–longitud para métricas sin modelo.
+- Contenido de `license.txt` de SUBTLEX-ESP; condiciones de CORPES XXI;
+  licencias de ROBOT-TALK, AuTexTification, PUCP-Metrix, esTS, TAALED.
+- Licencias de lexical-diversity (npm), syllable-es, hyphenopoly; si
+  text-readability trae fórmulas del español.
+- Fuente primaria del «≥ 1.000 tokens para Zipf»: no existe.
+- Relectura primaria por el módulo de Zenker & Kyle, Koizumi, Bestgen,
+  McGovern, PUCP-Metrix, esTS, OpenTuringBench, EnsemJudge, 2603.23146 y
+  2608.26694: NO CONSTA (se mantienen de la pasada manual).
+- Caducidad: evidencia inglesa con modelos 2023–2025; los modelos nuevos
+  cambian la dirección (Kendro 2026); los mínimos comerciales son
+  declaraciones de producto.
