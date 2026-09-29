@@ -40,11 +40,23 @@ investigación de las familias en [`docs/investigacion/`](docs/investigacion/)
 y el primer código: la carpeta [`motor/`](motor/) con el **esquema del
 paquete y de la ficha de regla** (JSON Schema 2020-12) y un **validador**
 que dice qué regla y qué campo fallan, probado con un paquete válido y
-uno roto a propósito por cada error que tiene que saber nombrar. Y los
-primeros **datos de terceros** en [`data/`](data/): una lista de
-frecuencias del español y un corpus de referencia para medir el etiquetado
-gramatical. No hay todavía motor de análisis, no hay ninguna regla real y
-no hay pantalla.
+uno roto a propósito por cada error que tiene que saber nombrar.
+
+Las piezas de apoyo que las reglas necesitarán están **medidas contra
+referencias ajenas**, no dadas por buenas:
+
+- **Silabeo**: 57 de 60 palabras silabeadas como la *Ortografía* de la RAE
+  (falla en los prefijos *sub-* y en *tungsteno*).
+- **Frecuencias**: las 20.000 formas más frecuentes del español
+  ([`data/frecuencias/`](data/frecuencias/)).
+- **Etiquetado gramatical** (adjetivos, adverbios, pronombres): medido contra
+  el corpus UD Spanish-AnCora y **no llega** al umbral fijado (adjetivos
+  72,5 %, pronombres 66,9 %, adverbios 91,2 %, sobre frases que no se miraron
+  al ajustarlo). Queda **fuera de la v1**, y con él las reglas que lo
+  necesitaban.
+
+No hay todavía motor de análisis, no hay ninguna regla real y no hay
+pantalla.
 Todo lo que se afirma más arriba es lo que se va a construir, en el orden
 de la [hoja de ruta](#hoja-de-ruta).
 
@@ -100,9 +112,13 @@ una carpeta por conjunto, cada una con su licencia y su atribución al lado.
 - [`data/frecuencias/`](data/frecuencias/): las 20.000 formas más frecuentes
   del español, de **wordfreq** (Robyn Speer), bajo **CC BY-SA 4.0**
   ([atribución](data/frecuencias/LICENSE-CC-BY-SA-4.0.md)).
-- [`data/referencia/`](data/referencia/): 100 frases de **UD Spanish-AnCora**
-  (Universal Dependencies) con sus etiquetas gramaticales, bajo **CC BY 4.0**
-  ([atribución](data/referencia/LICENSE-CC-BY-4.0.md)). Sirven para medir, no
-  viajan al navegador.
+- [`data/referencia/`](data/referencia/): 100 + 100 frases de **UD
+  Spanish-AnCora** (Universal Dependencies) con sus etiquetas gramaticales,
+  bajo **CC BY 4.0** ([atribución](data/referencia/LICENSE-CC-BY-4.0.md)).
+  Sirven para medir, no viajan al navegador.
+- [`data/pos/`](data/pos/): un recuento de pronombres del mismo corpus, bajo
+  **CC BY 4.0** ([atribución](data/pos/LICENSE-CC-BY-4.0.md)).
 
 El detalle, en la § 2 de [`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md).
+Y hay un fichero de código ajeno copiado tal cual, el silabeador
+**silabea** (MIT), con su licencia en cabecera: § 1.5 del mismo documento.
