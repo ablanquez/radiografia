@@ -1,0 +1,32 @@
+{
+  /* [DOC] https://github.com/tsconfig/bases — la base «node-ts» está «meant to
+     be used in conjunction with other Node.js configurations», y la doc
+     enseña a combinarla con la de la versión de Node en un `extends` doble.
+     Aquí: node24 (la versión instalada, v24.19.0) + node-ts.
+
+     [DOC] https://nodejs.org/api/typescript.html — Node 24 ejecuta este
+     TypeScript BORRANDO TIPOS (estable desde v24.12.0), sin compilar. Las tres
+     opciones que node-ts trae —rewriteRelativeImportExtensions,
+     erasableSyntaxOnly, verbatimModuleSyntax— son las que esa página
+     recomienda: con ellas `tsc` rechaza lo que Node no sabría borrar (enum,
+     namespace con código, parameter properties) y exige `import type`.
+
+     [PROPIO] typescript 5.9.3 y no la 7 (decisión de Antonio en la primera
+     parada del 3.1): la base exige TS ≥ 5.8 y la 7 queda fuera del encargo. */
+  "extends": ["@tsconfig/node24/tsconfig.json", "@tsconfig/node-ts/tsconfig.json"],
+  "compilerOptions": {
+    /* [DOC] nodejs.org/api/typescript.html: «The noEmit option is optional—use
+       it if you only execute *.ts files». Aquí `tsc` solo revisa; no genera
+       nada. Y con rewriteRelativeImportExtensions activa,
+       allowImportingTsExtensions vale true por defecto
+       ([DOC] https://www.typescriptlang.org/tsconfig/#allowImportingTsExtensions),
+       que es lo que deja escribir `./validar.ts` con su extensión. */
+    "noEmit": true,
+
+    /* [DOC] https://www.typescriptlang.org/tsconfig/#resolveJsonModule — los
+       esquemas se importan como JSON (`with { type: 'json' }`, estable en
+       Node: https://nodejs.org/api/esm.html#json-modules). */
+    "resolveJsonModule": true
+  },
+  "include": ["src/**/*.ts"]
+}
