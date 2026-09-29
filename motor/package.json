@@ -4,10 +4,11 @@
   "private": true,
   "type": "module",
   "license": "Apache-2.0",
-  "description": "El motor de RadiografIA. Hoy solo valida un paquete de reglas contra su esquema.",
+  "description": "El motor de RadiografIA. Hoy valida un paquete de reglas contra su esquema y genera el validador standalone que llevará el navegador.",
   "scripts": {
     "test": "node --test \"src/**/*.spec.ts\"",
-    "tipos": "tsc --noEmit"
+    "tipos": "tsc --noEmit",
+    "generar": "node src/generar-validador.ts"
   },
   "engines": {
     "node": ">=24.12.0"
