@@ -34,6 +34,7 @@
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
+import { basename } from 'node:path';
 
 export interface TokenDeReferencia {
   forma: string;
@@ -112,8 +113,8 @@ if (entrada !== undefined && salida !== undefined) {
       treebank: 'UD_Spanish-AnCora',
       version: 'r2.18',
       commit: '197cca385e0e7db1b1fe26a5772dade1b6fbbee8',
-      fichero: 'es_ancora-ud-dev.conllu',
-      url: 'https://raw.githubusercontent.com/UniversalDependencies/UD_Spanish-AnCora/197cca385e0e7db1b1fe26a5772dade1b6fbbee8/es_ancora-ud-dev.conllu',
+      fichero: basename(entrada),
+      url: `https://raw.githubusercontent.com/UniversalDependencies/UD_Spanish-AnCora/197cca385e0e7db1b1fe26a5772dade1b6fbbee8/${basename(entrada)}`,
       sha256: createHash('sha256').update(bytes).digest('hex'),
       licencia: 'CC BY 4.0 (LICENSE-CC-BY-4.0.md, al lado de este fichero)',
       extraido: 'Las 100 primeras frases del fichero, en orden: texto, y por token su forma, su posición en el texto y las UPOS de sus palabras sintácticas. Sin lemas, rasgos ni dependencias.',

@@ -157,11 +157,12 @@ una su `LICENSE-*.md` con la atribución que exige su licencia, el enlace canón
 cambió. Aquí va la ficha de cada carpeta; el detalle está en su `LICENSE-*.md`. Ni una carpeta
 sin ficha ni una ficha sin carpeta: lo vigila `motor/src/notices.spec.ts`.
 
-### 2.1 · `data/referencia/` — UD Spanish-AnCora, 100 frases
+### 2.1 · `data/referencia/` — UD Spanish-AnCora, 100 + 100 frases
 
 | Fichero | Obra | Titular | Licencia | Para qué |
 |---|---|---|---|---|
-| `ancora-ud-dev-100.json` | UD Spanish-AnCora r2.18, `es_ancora-ud-dev.conllu` (commit `197cca3`), las 100 primeras frases con sus UPOS | Taulé, Martí y Recasens (AnCora, CLiC-UB); conversión a UD de Martínez Alonso y Zeman | **CC BY 4.0** | Referencia de oro para **medir** el etiquetador POS |
+| `ancora-ud-dev-100.json` | UD Spanish-AnCora r2.18, `es_ancora-ud-dev.conllu` (commit `197cca3`), las 100 primeras frases con sus UPOS | Taulé, Martí y Recasens (AnCora, CLiC-UB); conversión a UD de Martínez Alonso y Zeman | **CC BY 4.0** | Referencia de oro de DESARROLLO: para ajustar el etiquetador POS |
+| `ancora-ud-test-100.json` | Ídem, `es_ancora-ud-test.conllu`, las 100 primeras frases | Ídem | **CC BY 4.0** | Referencia de oro de PRUEBA: para medirlo una sola vez, con todo congelado |
 
 - Licencia comprobada en el `LICENSE.txt` del treebank en ese mismo commit, copiado en
   [`data/referencia/LICENSE-CC-BY-4.0.md`](data/referencia/LICENSE-CC-BY-4.0.md), donde está
