@@ -14,7 +14,7 @@
 
 ---
 
-## [2026-09-29] 🔴 ABIERTA — `grep -c $'\r'` dentro de `"$( )"` cuenta todas las líneas, no los CR
+## [2026-09-29] ✅ CERRADA — `grep -c $'\r'` dentro de `"$( )"` cuenta todas las líneas, no los CR
 
 **Categoría:** instrumento de medida
 **Síntoma:** en el encargo 3.3 se afirmó a Antonio que `silabea/index.js` «viene con finales de línea CRLF», y se escribió en la cabecera de `motor/src/terceros/silabea.cjs` (sin commit). El fichero es LF puro.
@@ -27,9 +27,9 @@ node → CR: 0 LF: 720
 ```
 La misma forma fue la prueba de «suite verde sobre un clon CRLF» en el cierre del 3.1: `CRLF en clon: 85 líneas con CR en valido.json`, con `valido.json` de 85 líneas. Suelto, `grep -c $'\r'` sí da `0` sobre el fichero LF.
 **Cómo se cazó:** instrumento — el sha256 del «original normalizado a LF» salió idéntico al del original sin normalizar, imposible si tuviera CR; se contaron los bytes con node.
-**Causa raíz:** ⏳ PENDIENTE
-**Arreglo aplicado:** ⏳ PENDIENTE
-**Commit:** ⏳ PENDIENTE
+**Causa raíz:** dentro de una sustitución de comando entre comillas dobles, en este Git Bash (GNU bash 5.2.37, msys; GNU grep 3.0), `grep -c $'\r'` recibe un patrón que casa con todas las líneas: reproducido sobre un fichero LF de dos líneas, `echo "x$(grep -c $'\r' f)x"` da `x2x`, y suelto da `0`. En qué se convierte exactamente el patrón: **NO CONSTA** (`od` no lo dejó ver y no se investigó más: se cambió de instrumento). Nadie había visto funcionar ese escape antes de usarlo como prueba.
+**Arreglo aplicado:** los CR se cuentan con node, byte a byte (0x0D). La cabecera de `motor/src/terceros/silabea.cjs` dice ahora «el código de debajo es su index.js byte a byte (LF, como el original)» en vez de «de CRLF a LF»; el guardián de § 1.5 (`motor/src/notices.spec.ts`, juez 8) normaliza a LF antes de calcular huellas, porque el checkout con `core.autocrlf=true` sí mete CR (medido con node: 86/86). La afirmación hecha a Antonio se corrige en el reporte del 3.3.
+**Commit:** `9e81141`
 **Ley que sale de aquí:** los bytes de un fichero se cuentan leyendo bytes (node, `od`), no con un patrón de shell cuyo escape no se ha visto funcionar; y una cifra igual al número de líneas es sospechosa por sí sola.
 **Traza:** comandos de verificación del ejecutor (cierre del 3.1 y encargo 3.3); `motor/src/terceros/silabea.cjs` (cabecera). Re-medido con node el clon del 3.1 (`clon3`): `valido.json` CR 86 / LF 86 con `core.autocrlf=true` — aquella afirmación era cierta, pero no estaba medida.
 
