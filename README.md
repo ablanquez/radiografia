@@ -35,9 +35,13 @@ tu empresa. Se cargan paquetes propios desde el ordenador, se combinan, y
 ## Estado
 
 **En construcción.** Hoy (29/09/2026) existe el plan firmado, la
-configuración del repositorio y este README. No hay código, no hay
-ninguna regla y no hay pantalla. Todo lo que se afirma más arriba es lo
-que se va a construir, en el orden de la [hoja de ruta](#hoja-de-ruta).
+investigación de las familias en [`docs/investigacion/`](docs/investigacion/)
+y el primer código: la carpeta [`motor/`](motor/) con el **esquema del
+paquete y de la ficha de regla** (JSON Schema 2020-12) y un **validador**
+que dice qué regla y qué campo fallan, probado con un paquete válido y
+cinco rotos a propósito. No hay todavía motor de análisis, no hay ninguna
+regla real y no hay pantalla. Todo lo que se afirma más arriba es lo que
+se va a construir, en el orden de la [hoja de ruta](#hoja-de-ruta).
 
 ## Cómo está pensado
 
@@ -65,8 +69,9 @@ El plan completo, con sus casillas, está en
 Código y paquetes de reglas: **[Apache 2.0](LICENSE)** · © 2026
 **Antonio Blánquez Cabeza** — [antonioblanquez.es](https://antonioblanquez.es)
 
-Cuando entre la primera dependencia de terceros, sus condiciones irán una
-por una en `THIRD-PARTY-NOTICES.md`. Hoy no hay ninguna.
+Las dependencias de terceros van una por una, con su licencia, en
+[`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md). Hoy solo hay software
+(las del motor); ningún dato de terceros.
 
 Las fuentes de cada regla (estudios, guías, corpus) se citan en su ficha y
 en el catálogo.
