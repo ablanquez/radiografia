@@ -3,7 +3,10 @@
  * fallan (encargo 3.1; punto 3 del plan).
  *
  * Dos pasos:
- *   1. El esquema (paquete.schema.json + regla.schema.json).
+ *   1. El esquema (paquete.schema.json + regla.schema.json), con una función
+ *      de validación ENCHUFABLE (encargo 3.2): la de Ajv compilada aquí en
+ *      vivo, o la standalone que el navegador llevará sin Ajv
+ *      (generar-validador.ts). Los mensajes salen del mismo formateador.
  *   2. Lo que el esquema no puede ver: ids de regla únicos, ids de familia
  *      únicos, familia declarada, y que una regla de una familia informativa
  *      sea informativa (encargo 3.2: el motor no puntúa reglas de familias
@@ -53,7 +56,7 @@
  *    formado no se puede leer `id` ni `familia` con garantías.
  */
 import { Ajv2020 } from 'ajv/dist/2020.js';
-import type { ErrorObject } from 'ajv/dist/2020.js';
+import type { ErrorObject, Options } from 'ajv/dist/2020.js';
 import esquemaPaquete from '../esquema/paquete.schema.json' with { type: 'json' };
 import esquemaRegla from '../esquema/regla.schema.json' with { type: 'json' };
 
@@ -73,25 +76,48 @@ export interface ResultadoDeValidacion {
 }
 
 /** Lo que el paso 2 lee, cuando el esquema ya garantizó la forma. */
-interface PaqueteConForma {
+export interface PaqueteConForma {
   cabecera: { familias: { id: string; informativa: boolean }[] };
   reglas: { id: string; familia: string; informativa: boolean }[];
 }
 
-const ajv = new Ajv2020({ allErrors: true, formats: { uri: true } });
-ajv.addSchema(esquemaRegla);
-// El tipo que se le da aquí es el que el type guard de Ajv deja en `paquete`
-// cuando el esquema da verde: el paso 2 lo lee sin cast.
-const validarEsquema = ajv.compile<PaqueteConForma>(esquemaPaquete);
+/**
+ * Una función de validación de esquema con la forma de las de Ajv: la que se
+ * compila aquí en vivo, o la standalone que genera `generar-validador.ts` para
+ * el navegador. Dice sí o no y deja sus errores en `errors`.
+ */
+export interface ValidadorDeEsquema {
+  (dato: unknown): boolean;
+  errors?: ErrorObject[] | null;
+}
 
-export function validarPaquete(paquete: unknown): ResultadoDeValidacion {
-  if (!validarEsquema(paquete)) {
-    const errores = (validarEsquema.errors ?? [])
-      .filter((e) => e.keyword !== 'if')
-      .map((e) => desdeAjv(e, paquete));
-    return { valido: false, errores };
-  }
-  const errores = comprobarCoherencia(paquete);
+/**
+ * Las opciones de Ajv. Las MISMAS para el validador en vivo y para el que se
+ * genera en build (generar-validador.ts las importa de aquí): si divergieran,
+ * los dos dejarían de ser equivalentes y standalone.spec.ts se pondría rojo.
+ */
+export const OPCIONES_AJV = { allErrors: true, formats: { uri: true } } satisfies Options;
+
+const ajv = new Ajv2020({ ...OPCIONES_AJV });
+ajv.addSchema(esquemaRegla);
+const validadorEnVivo: ValidadorDeEsquema = ajv.compile(esquemaPaquete);
+
+/**
+ * Paso 1 solo: el esquema, con el validador que se le enchufe (por defecto, el
+ * de Ajv en vivo), y sus errores traducidos a regla + campo.
+ */
+export function validarEsquema(paquete: unknown, validador: ValidadorDeEsquema = validadorEnVivo): ResultadoDeValidacion {
+  if (validador(paquete)) return { valido: true, errores: [] };
+  const errores = (validador.errors ?? []).filter((e) => e.keyword !== 'if').map((e) => desdeAjv(e, paquete));
+  return { valido: false, errores };
+}
+
+/** Los dos pasos: el esquema y, si da verde, las comprobaciones que el esquema no puede hacer. */
+export function validarPaquete(paquete: unknown, validador: ValidadorDeEsquema = validadorEnVivo): ResultadoDeValidacion {
+  const esquema = validarEsquema(paquete, validador);
+  if (!esquema.valido) return esquema;
+  // El esquema acaba de dar verde: la forma que lee el paso 2 está garantizada.
+  const errores = comprobarCoherencia(paquete as PaqueteConForma);
   return { valido: errores.length === 0, errores };
 }
 
