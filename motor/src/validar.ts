@@ -4,7 +4,11 @@
  *
  * Dos pasos:
  *   1. El esquema (paquete.schema.json + regla.schema.json).
- *   2. Lo que el esquema no puede ver: ids únicos y familia declarada.
+ *   2. Lo que el esquema no puede ver: ids de regla únicos, ids de familia
+ *      únicos, familia declarada, y que una regla de una familia informativa
+ *      sea informativa (encargo 3.2: el motor no puntúa reglas de familias
+ *      informativas, y una regla que dijera lo contrario sería una mentira
+ *      de la ficha).
  *
  * [DOC] https://ajv.js.org/json-schema.html#draft-2020-12 — «To use
  *    draft-2020-12 schemas you need to import a different Ajv class»: Ajv2020.
@@ -39,7 +43,12 @@
  * [PROPIO] Los mensajes en castellano de las palabras clave que usan nuestros
  *    esquemas; si aparece otra, sale el mensaje de Ajv tal cual.
  * [PROPIO] Los errores de `if` se omiten: repiten el error de dentro del
- *    `then`, que es el que nombra el campo.
+ *    `then`, que es el que nombra el campo. Pero el error del `then`, solo, no
+ *    dice por qué se exige algo que en otra regla sería válido: POR_QUE_THEN
+ *    le añade la condición, buscándola por su `schemaPath` exacto (visto al
+ *    ejecutar: `regla.schema.json/then/properties/fuente/minItems`). Si el
+ *    esquema cambia de sitio esa condición, el juez que exige «nivelEvidencia»
+ *    en el mensaje se pone rojo.
  * [PROPIO] El paso 2 solo corre si el paso 1 dio verde: sobre un paquete mal
  *    formado no se puede leer `id` ni `familia` con garantías.
  */
@@ -65,8 +74,8 @@ export interface ResultadoDeValidacion {
 
 /** Lo que el paso 2 lee, cuando el esquema ya garantizó la forma. */
 interface PaqueteConForma {
-  cabecera: { familias: { id: string }[] };
-  reglas: { id: string; familia: string }[];
+  cabecera: { familias: { id: string; informativa: boolean }[] };
+  reglas: { id: string; familia: string; informativa: boolean }[];
 }
 
 const ajv = new Ajv2020({ allErrors: true, formats: { uri: true } });
@@ -96,7 +105,8 @@ function desdeAjv(e: ErrorObject, paquete: unknown): ErrorDeValidacion {
   if (e.keyword === 'additionalProperties') ruta.push(String(e.params['additionalProperty']));
 
   const valor = leer(paquete, ruta);
-  const mensaje = mensajeEnCastellano(e, valor);
+  const porQue = POR_QUE_THEN[e.schemaPath];
+  const mensaje = mensajeEnCastellano(e, valor) + (porQue === undefined ? '' : ` ${porQue}`);
 
   if (ruta[0] === 'reglas' && typeof ruta[1] === 'number') {
     const indice = ruta[1];
@@ -105,6 +115,11 @@ function desdeAjv(e: ErrorObject, paquete: unknown): ErrorDeValidacion {
   }
   return crear(null, rutaATexto(ruta), mensaje);
 }
+
+/** La condición de cada `then` de los esquemas, por el `schemaPath` de su error. */
+const POR_QUE_THEN: Readonly<Record<string, string>> = {
+  'regla.schema.json/then/properties/fuente/minItems': '(porque nivelEvidencia no es "sin fuente")',
+};
 
 /** `/reglas/1/ejemplos/negativos` → `['reglas', 1, 'ejemplos', 'negativos']` (RFC 6901: ~1 es «/», ~0 es «~»). */
 function punteroARuta(puntero: string): (string | number)[] {
@@ -177,9 +192,21 @@ function mensajeEnCastellano(e: ErrorObject, valor: unknown): string {
 
 function comprobarCoherencia(paquete: PaqueteConForma): ErrorDeValidacion[] {
   const errores: ErrorDeValidacion[] = [];
-  const primeraVez = new Map<string, number>();
-  const familias = paquete.cabecera.familias.map((f) => f.id);
 
+  // Las familias: cada id una sola vez. Si se repite, manda la primera.
+  const familias = new Map<string, { indice: number; informativa: boolean }>();
+  paquete.cabecera.familias.forEach((familia, indice) => {
+    const anterior = familias.get(familia.id);
+    if (anterior === undefined) {
+      familias.set(familia.id, { indice, informativa: familia.informativa });
+    } else {
+      errores.push(
+        crear(null, `cabecera.familias[${indice}].id`, `el id "${familia.id}" ya lo usa cabecera.familias[${anterior.indice}]`),
+      );
+    }
+  });
+
+  const primeraVez = new Map<string, number>();
   paquete.reglas.forEach((regla, indice) => {
     const anterior = primeraVez.get(regla.id);
     if (anterior === undefined) {
@@ -188,13 +215,22 @@ function comprobarCoherencia(paquete: PaqueteConForma): ErrorDeValidacion[] {
       errores.push(crear({ indice, id: regla.id }, 'id', `el id "${regla.id}" ya lo usa reglas[${anterior}]`));
     }
 
-    if (!familias.includes(regla.familia)) {
-      const declaradas = familias.map((f) => `"${f}"`).join(', ');
+    const familia = familias.get(regla.familia);
+    if (familia === undefined) {
+      const declaradas = [...familias.keys()].map((f) => `"${f}"`).join(', ');
       errores.push(
         crear(
           { indice, id: regla.id },
           'familia',
           `la familia "${regla.familia}" no está declarada en cabecera.familias (declaradas: ${declaradas})`,
+        ),
+      );
+    } else if (familia.informativa && !regla.informativa) {
+      errores.push(
+        crear(
+          { indice, id: regla.id },
+          'informativa',
+          `vale false, pero la familia "${regla.familia}" es informativa y el motor no puntúa sus reglas: tiene que ser true`,
         ),
       );
     }
