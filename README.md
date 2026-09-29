@@ -53,12 +53,12 @@ referencias ajenas**, no dadas por buenas:
   el corpus UD Spanish-AnCora y **no llega** al umbral fijado (adjetivos
   72,5 %, pronombres 66,9 %, adverbios 91,2 %, sobre frases que no se miraron
   al ajustarlo). Queda **fuera de la v1**, y con él las reglas que lo
-  necesitaban.
+  necesitaban; su código se retiró. La medida entera, en
+  [`docs/investigacion/pos-medida.md`](docs/investigacion/pos-medida.md).
 
 No hay todavía motor de análisis, no hay ninguna regla real y no hay
-pantalla.
-Todo lo que se afirma más arriba es lo que se va a construir, en el orden
-de la [hoja de ruta](#hoja-de-ruta).
+pantalla. Todo lo que se afirma más arriba es lo que se va a construir, en
+el orden de la [hoja de ruta](#hoja-de-ruta).
 
 ## Cómo está pensado
 
@@ -116,8 +116,6 @@ una carpeta por conjunto, cada una con su licencia y su atribución al lado.
   Spanish-AnCora** (Universal Dependencies) con sus etiquetas gramaticales,
   bajo **CC BY 4.0** ([atribución](data/referencia/LICENSE-CC-BY-4.0.md)).
   Sirven para medir, no viajan al navegador.
-- [`data/pos/`](data/pos/): un recuento de pronombres del mismo corpus, bajo
-  **CC BY 4.0** ([atribución](data/pos/LICENSE-CC-BY-4.0.md)).
 
 El detalle, en la § 2 de [`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md).
 Y hay un fichero de código ajeno copiado tal cual, el silabeador
