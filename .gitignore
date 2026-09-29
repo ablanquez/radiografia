@@ -1,6 +1,12 @@
 ﻿# build output
 dist/
 
+# El validador standalone del motor (npm run generar, en motor/). Se regenera
+# en build y no se versiona. La línea `dist/` de arriba ya lo cubría (sin barra
+# inicial vale a cualquier profundidad); esta lo deja dicho por su nombre, por
+# si un día `dist/` se acota a la raíz para Astro.
+motor/dist/
+
 # generated types
 .astro/
 
