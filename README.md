@@ -28,9 +28,10 @@ mano, con su explicación, su sugerencia y sus ejemplos, y se puede leer una
 por una en el catálogo.
 
 El motor **no sabe nada de «IA»**. Aplica un **paquete de reglas** en JSON.
-RadiografIA es el primer paquete; el segundo puede ser la guía de estilo de
-tu empresa. Se cargan paquetes propios desde el ordenador, se combinan, y
-**nada sale del navegador**: ni el texto ni las reglas.
+RadiografIA es el primer paquete y «español correcto» el segundo; el
+siguiente puede ser la guía de estilo de tu empresa. Se cargan paquetes
+propios desde el ordenador, se combinan, y **nada sale del navegador**: ni
+el texto ni las reglas.
 
 ## Estado
 
@@ -39,20 +40,33 @@ investigación de las familias en [`docs/investigacion/`](docs/investigacion/)
 y el primer código: la carpeta [`motor/`](motor/) con el **esquema del
 paquete y de la ficha de regla** (JSON Schema 2020-12) y un **validador**
 que dice qué regla y qué campo fallan, probado con un paquete válido y
-cinco rotos a propósito. No hay todavía motor de análisis, no hay ninguna
-regla real y no hay pantalla. Todo lo que se afirma más arriba es lo que
-se va a construir, en el orden de la [hoja de ruta](#hoja-de-ruta).
+uno roto a propósito por cada error que tiene que saber nombrar. No hay
+todavía motor de análisis, no hay ninguna regla real y no hay pantalla.
+Todo lo que se afirma más arriba es lo que se va a construir, en el orden
+de la [hoja de ruta](#hoja-de-ruta).
 
 ## Cómo está pensado
 
 - **Astro estático, sin backend.** Todo corre en el navegador.
-- **Cinco familias de reglas**: léxico, sintaxis, puntuación y formato,
-  estadística, discurso. Cada familia nace de una investigación con fuentes
-  antes de escribir su primera regla.
+- **Seis familias de reglas**: léxico, sintaxis, puntuación y formato,
+  estadística, discurso y **canal** (Markdown residual, Unicode invisible,
+  emojis: artefactos de copiar desde un asistente). Canal es
+  **informativa**: se señala y se explica, pero no suma al medidor. Cada
+  familia sale de la investigación con fuentes de
+  [`docs/investigacion/`](docs/investigacion/), hecha antes de escribir su
+  primera regla.
+- **Dos paquetes incluidos**: RadiografIA y **«español correcto»**, siete
+  avisos de norma RAE (calcos y traducción, no estilo IA) que se combinan
+  con el primero desde el desplegable.
 - **Tres tipos de detector**: patrón, estructural, estadístico.
-- **Ficha por regla**: id, familia, detector, peso, severidad, explicación,
-  sugerencia, excepciones, ejemplos positivos y negativos. Los ejemplos son
-  la documentación y son los tests.
+- **Ficha por regla**: id, familia, detector y sus parámetros, peso (que
+  puede ser **negativo**: un atenuante humano resta), severidad, si es
+  **informativa**, explicación, sugerencia, excepciones, **fuentes**,
+  **origen de la lista** («inventario propio…» cuando lo es), **nivel de
+  evidencia** (medido en español, medido en inglés, anecdótico, sin fuente
+  o norma) y ejemplos positivos y negativos. Los ejemplos son la
+  documentación y serán los tests. El esquema está en
+  [`motor/esquema/`](motor/esquema/).
 - **Catálogo público** con una página por regla.
 - **Informe PDF** desde la propia página.
 - **Las reglas se editan en Git.** No hay CMS.
