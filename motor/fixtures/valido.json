@@ -1,4 +1,5 @@
 {
+  "$schema": "https://raw.githubusercontent.com/ablanquez/radiografia/main/motor/esquema/paquete.schema.json",
   "cabecera": {
     "nombre": "Fixture mínimo válido",
     "version": "0.1.0",

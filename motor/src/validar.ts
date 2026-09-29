@@ -20,6 +20,19 @@
  *    los errores de una vez; cada error trae `instancePath` (puntero JSON al
  *    dato), `keyword` y `params` (`missingProperty`, `allowedValues`, `limit`,
  *    `additionalProperty`…). De ahí salen la regla y el campo.
+ * [DOC] `formats: { uri: true }` — el `$schema` de la raíz del paquete lleva
+ *    `"format": "uri"` como ANOTACIÓN para el editor, y el motor no lo comprueba:
+ *    · https://ajv.js.org/guide/formats.html — «From version 7 Ajv does not
+ *      include formats defined by JSON Schema specification»; sin definirlo,
+ *      compilar el esquema lanza `unknown format "uri" ignored in schema at
+ *      path "#/properties/%24schema"` (visto en la suite el 29/09).
+ *    · https://ajv.js.org/strict-mode.html («Unknown formats») — «to have some
+ *      format ignored pass `true` as its definition».
+ *    · JSON Schema 2020-12, validación §7.2.1
+ *      (https://json-schema.org/draft/2020-12/json-schema-validation#section-7.2.1)
+ *      — la aserción de format «MUST be disabled by default».
+ *    Sin ajv-formats (decisión de Antonio, parada del 3.2): sería una dependencia
+ *    más y mete un `require()` en el código standalone.
  * [DOC] https://nodejs.org/api/esm.html#json-modules — los esquemas se
  *    importan como JSON con `with { type: 'json' }`, estable en Node 24. Nada
  *    se descarga: el validador no tiene `loadSchema`.
@@ -56,7 +69,7 @@ interface PaqueteConForma {
   reglas: { id: string; familia: string }[];
 }
 
-const ajv = new Ajv2020({ allErrors: true });
+const ajv = new Ajv2020({ allErrors: true, formats: { uri: true } });
 ajv.addSchema(esquemaRegla);
 // El tipo que se le da aquí es el que el type guard de Ajv deja en `paquete`
 // cuando el esquema da verde: el paso 2 lo lee sin cast.

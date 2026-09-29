@@ -71,6 +71,30 @@ describe('validarPaquete', () => {
     assert.equal(resultado.valido, true);
   });
 
+  /**
+   * La clave `$schema` de la raíz: el motor la acepta y la ignora. El esquema la
+   * anota como `format: "uri"` para el editor, pero Ajv no comprueba el formato
+   * (`formats: { uri: true }`, ver la cabecera de validar.ts): solo exige texto.
+   */
+  test('la clave $schema es opcional y solo se exige que sea texto', () => {
+    const conSchema = (valor: unknown): unknown => ({ ...(cargar('valido.json') as object), $schema: valor });
+
+    assert.deepEqual(validarPaquete(conSchema('esto no es una uri')).errores, [], 'un texto que no es URI pasa');
+    assert.deepEqual(
+      validarPaquete(conSchema('https://raw.githubusercontent.com/ablanquez/radiografia/main/motor/esquema/paquete.schema.json')).errores,
+      [],
+      'una URL pasa',
+    );
+    const conNumero = validarPaquete(conSchema(42));
+    assert.equal(conNumero.valido, false, '42 no pasa');
+    assert.deepEqual(
+      conNumero.errores.map((e) => [e.regla, e.campo]),
+      [[null, '$schema']],
+    );
+    const { $schema: _quitado, ...sinSchema } = cargar('valido.json') as Record<string, unknown>;
+    assert.deepEqual(validarPaquete(sinSchema).errores, [], 'y sin $schema también pasa: es opcional');
+  });
+
   for (const caso of INVALIDOS) {
     test(`rechaza ${caso.fichero} nombrando regla y campo`, () => {
       const resultado = validarPaquete(cargar(caso.fichero));

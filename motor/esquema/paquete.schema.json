@@ -1,13 +1,18 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/ablanquez/radiografia/blob/main/motor/esquema/paquete.schema.json",
+  "$id": "https://raw.githubusercontent.com/ablanquez/radiografia/main/motor/esquema/paquete.schema.json",
   "title": "Paquete de reglas",
   "description": "Una cabecera que dice qué paquete es y qué familias trae, y la lista de sus reglas.",
-  "$comment": "[DOC] JSON Schema 2020-12, la versión vigente (https://json-schema.org/specification). Un paquete = una carpeta de estilos de Vale (https://docs.vale.sh/topics/styles), aquí en un solo JSON. El $ref a regla.schema.json se resuelve contra este $id; los dos esquemas se cargan juntos en validar.ts y no se descarga nada. [PROPIO] additionalProperties: false también aquí, por lo mismo que en la ficha.",
+  "$comment": "[DOC] JSON Schema 2020-12, la versión vigente (https://json-schema.org/specification). Un paquete = una carpeta de estilos de Vale (https://docs.vale.sh/topics/styles), aquí en un solo JSON. El $ref a regla.schema.json se resuelve contra este $id; los dos esquemas se cargan juntos en validar.ts y no se descarga nada. [PROPIO] El $id es la URL raw del fichero en GitHub (encargo 3.2): no necesita resolver para validar, pero si alguien la abre, que llegue al JSON y no a la página HTML de GitHub. [PROPIO] additionalProperties: false también aquí, por lo mismo que en la ficha.",
   "type": "object",
   "additionalProperties": false,
   "required": ["cabecera", "reglas"],
   "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri",
+      "$comment": "[DOC] https://code.visualstudio.com/docs/languages/json («Mapping in the JSON»): VS Code asocia un JSON a su esquema con la clave \"$schema\" en el propio fichero, y avisa de que no es parte de la especificación y de que un validador puede rechazarla. [PROPIO] Opcional, en la RAÍZ del paquete (encargo 3.2): el motor la acepta y la ignora. El \"format\": \"uri\" es una ANOTACIÓN para el editor, no se comprueba: JSON Schema 2020-12, validación §7.2.1 (https://json-schema.org/draft/2020-12/json-schema-validation#section-7.2.1), la aserción de format «MUST be disabled by default»; y Ajv lo ignora con formats: { uri: true } (ver la cabecera de validar.ts)."
+    },
     "cabecera": {
       "type": "object",
       "additionalProperties": false,

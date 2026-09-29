@@ -1,9 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/ablanquez/radiografia/blob/main/motor/esquema/regla.schema.json",
+  "$id": "https://raw.githubusercontent.com/ablanquez/radiografia/main/motor/esquema/regla.schema.json",
   "title": "Ficha de regla",
   "description": "Una regla de un paquete: qué detecta, cuánto pesa, por qué, de dónde sale y con qué ejemplos se prueba.",
-  "$comment": "[DOC] JSON Schema 2020-12, la versión vigente (https://json-schema.org/specification). Precedente doctrinal, mirado y no copiado: las reglas de Vale (https://docs.vale.sh/topics/styles) — nuestro «detector» hace el papel de su «extends» y nuestra «fuente» el de su «link». [DOC] El $id es la URL del repositorio (aprobado por Antonio en la primera parada del 3.1): es un identificador, no una dirección que se descargue — el validador no tiene loadSchema y no hace ninguna llamada de red. [PROPIO] additionalProperties: false en toda la ficha salvo dentro de «parametros»: el JSON se edita a mano en Git y una errata en una clave no puede pasar en silencio. Claves en español sin tildes; valores de los enum con tildes (decisión B, 3.1).",
+  "$comment": "[DOC] JSON Schema 2020-12, la versión vigente (https://json-schema.org/specification). Precedente doctrinal, mirado y no copiado: las reglas de Vale (https://docs.vale.sh/topics/styles) — nuestro «detector» hace el papel de su «extends» y nuestra «fuente» el de su «link». [PROPIO] El $id es la URL raw del fichero en GitHub (encargo 3.2; en el 3.1 era la de la página github.com/…/blob/…, que sirve HTML): es un identificador, no una dirección que se descargue — el validador no tiene loadSchema y no hace ninguna llamada de red —, pero si alguien la abre, llega al JSON. [PROPIO] additionalProperties: false en toda la ficha salvo dentro de «parametros»: el JSON se edita a mano en Git y una errata en una clave no puede pasar en silencio. Claves en español sin tildes; valores de los enum con tildes (decisión B, 3.1).",
   "type": "object",
   "additionalProperties": false,
   "required": [
