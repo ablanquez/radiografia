@@ -4,8 +4,8 @@ La licencia Apache 2.0 cubre **el código y los paquetes de reglas** de Radiogra
 lo ajeno**, que conserva sus propias condiciones. Aquí está, una por una, con lo que sabemos y lo
 que no.
 
-> ℹ️ **Estado a 29/09/2026.** Hoy lo ajeno es solo software: **cinco** dependencias declaradas
-> en [`motor/package.json`](motor/package.json) —una de ejecución y cuatro de desarrollo— y el
+> ℹ️ **Estado a 29/09/2026.** Hoy lo ajeno es solo software: **seis** dependencias declaradas
+> en [`motor/package.json`](motor/package.json) —una de ejecución y cinco de desarrollo— y el
 > árbol que arrastran. No hay todavía datos de terceros: cuando entren las listas de frecuencia
 > (CC BY-SA 4.0, en `/data/`, aparte del código), tendrán aquí su sección.
 >
@@ -28,12 +28,16 @@ Las que van en `dependencies` de [`motor/package.json`](motor/package.json).
 
 | Paquete | Versión | Licencia | Para qué |
 |---|---|---|---|
-| `ajv` | 8.20.0 | MIT | El validador de JSON Schema: comprueba cada paquete de reglas contra `motor/esquema/` (clase `Ajv2020`, draft 2020-12) |
+| `ajv` | 8.20.0 | MIT | El validador de JSON Schema: comprueba cada paquete de reglas contra `motor/esquema/` (clase `Ajv2020`, draft 2020-12), en vivo en Node y, en build, genera el validador standalone |
 
-> **Lo que esta tabla NO dice:** si `ajv` acabará dentro del JavaScript que descarga el
-> navegador y cómo. Hoy no hay *build* ni interfaz (llegan en el punto 6): **NO CONSTA**. Cuando
-> viaje al navegador, sus avisos de licencia tendrán que viajar con él (MIT, y BSD-3-Clause de
-> `fast-uri`, § 1.4).
+> **Lo que viajará al navegador — y lo que no.** `ajv` entero **no** viajará: el navegador
+> llevará `motor/dist/validador.standalone.js`, la función de validación que
+> `motor/src/generar-validador.ts` genera con Ajv y empaqueta con esbuild (encargo 3.2; se genera
+> en build y no se versiona). Dentro de ese fichero, lo ajeno es **una función de Ajv**,
+> `ajv/dist/runtime/ucs2length.js` (MIT, © Evgeny Poberezkin), y el código que Ajv genera a
+> partir de nuestros esquemas. `fast-uri` **no** está dentro (comprobado el 29/09: ninguna
+> aparición en el fichero empaquetado). Cuando el punto 6 lo sirva, el aviso MIT de Ajv tendrá que
+> viajar con él: cómo, **NO CONSTA** hasta que exista el build.
 
 ### 1.2 · Dependencias de desarrollo
 
@@ -45,17 +49,23 @@ No se distribuyen: no viajan al navegador. Se listan igualmente, una a una.
 | `@types/node` | 24.19.0 | MIT | Los tipos de Node 24 (`node:test`, `node:fs`) para que `tsc` pueda revisar |
 | `@tsconfig/node24` | 24.0.5 | MIT | La base de `tsconfig` para Node 24 |
 | `@tsconfig/node-ts` | 23.6.4 | MIT | La base de `tsconfig` para ejecutar TypeScript con borrado de tipos |
+| `esbuild` | 0.28.2 | MIT | Empaqueta el validador standalone en un solo fichero sin dependencias (`npm run generar`). Su binario, en § 1.4 |
 
-**Mirado una a una (29/09/2026):** el `LICENSE` de cada una de las cinco declaradas, abierto en
+**Mirado una a una (29/09/2026):** el `LICENSE` de cada una de las seis declaradas, abierto en
 `motor/node_modules/`, dice lo mismo que su campo `license`: MIT (Evgeny Poberezkin) en `ajv`;
 Apache License 2.0 en `typescript`; MIT (Microsoft Corporation) en `@types/node` y en las dos
-bases de `@tsconfig`.
+bases de `@tsconfig`; MIT (Evan Wallace) en el `LICENSE.md` de `esbuild`.
 
 ### 1.3 · El árbol transitivo — existe, y no se lista aquí
 
-Las cinco declaradas arrastran **cinco** dependencias transitivas. No se enumeran una a una
-aquí: la lista que manda es [`motor/package-lock.json`](motor/package-lock.json), versionado
-precisamente para eso. Cada entrada trae su versión, su origen y su licencia.
+Las seis declaradas arrastran **treinta y una** dependencias transitivas en el lock. No se
+enumeran una a una aquí: la lista que manda es [`motor/package-lock.json`](motor/package-lock.json),
+versionado precisamente para eso. Cada entrada trae su versión, su origen y su licencia.
+
+⚠️ **De esas treinta y una, veintiséis son los binarios de esbuild, uno por sistema**
+(`@esbuild/win32-x64`, `@esbuild/linux-x64`, `@esbuild/darwin-arm64`…). El lock los apunta todos
+como opcionales y npm **instala solo el del sistema en que corre**: en esta máquina, uno (§ 1.4).
+`npm ls --all` enseña los otros veinticinco como `UNMET OPTIONAL DEPENDENCY`, y es lo esperado.
 
 ```bash
 cd motor
@@ -67,23 +77,43 @@ npm ls --all       # el árbol entero
 
 | Licencia | Paquetes |
 |---|---|
-| MIT | 4 |
+| MIT | 30 |
 | BSD-3-Clause | 1 |
-| **Total** | **5** |
+| **Total** | **31** |
 
-### 1.4 · La que no es MIT
+### 1.4 · El binario de esbuild
+
+`esbuild` es un programa nativo: el paquete npm es un envoltorio y el ejecutable llega en un
+paquete aparte, según el sistema.
+
+| Paquete | Versión | Licencia | Qué es |
+|---|---|---|---|
+| `@esbuild/win32-x64` | 0.28.2 | MIT | El ejecutable `esbuild.exe` para Windows de 64 bits, el que usa esta máquina |
+
+- **No trae fichero de licencia.** El paquete solo tiene `README.md`, `esbuild.exe` y
+  `package.json`, donde declara `"license": "MIT"` y el mismo repositorio que `esbuild`
+  (`github.com/evanw/esbuild`), cuyo `LICENSE.md` es el MIT de § 1.2. El texto de la licencia
+  dentro del propio paquete: **NO CONSTA**.
+- **npm 11 no ejecutó el `postinstall` de `esbuild`** (`node install.js`): lo bloquea hasta que
+  alguien lo apruebe (`npm warn allow-scripts … esbuild@0.28.2 (postinstall: node install.js)`).
+  No se ha aprobado. `esbuild` funciona sin él: `npm run generar` y los jueces del standalone lo
+  ejecutaron el 29/09.
+
+### 1.5 · La que no es MIT
 
 | Paquete | Licencia | Qué tiene de distinto |
 |---|---|---|
-| `fast-uri` 3.1.8 (la trae `ajv`) | **BSD-3-Clause** | Permisiva. Pide conservar su aviso de copyright y su lista de condiciones al redistribuir, también en binario: cuenta cuando `ajv` viaje al navegador (§ 1.1). Y prohíbe usar el nombre de sus autores para promocionar lo derivado |
+| `fast-uri` 3.1.8 (la trae `ajv`) | **BSD-3-Clause** | Permisiva. Pide conservar su aviso de copyright y su lista de condiciones al redistribuir, también en binario. Y prohíbe usar el nombre de sus autores para promocionar lo derivado. Hoy no se redistribuye: no está dentro del validador empaquetado (§ 1.1) |
 
-### 1.5 · Resumen de compatibilidad
+### 1.6 · Resumen de compatibilidad
 
-**Las cinco declaradas son MIT o Apache-2.0**: permisivas, sin copyleft, compatibles con la
-Apache 2.0 de este proyecto sin condición añadida. En el árbol transitivo, cuatro son MIT y una
-BSD-3-Clause (§ 1.4). Nada bloquea.
+**Las seis declaradas son MIT o Apache-2.0**: permisivas, sin copyleft, compatibles con la
+Apache 2.0 de este proyecto sin condición añadida. En el árbol transitivo, treinta son MIT y una
+BSD-3-Clause (§ 1.5). Nada bloquea.
 
 > **Y lo que este documento no garantiza:** el reparto de § 1.3 sale del campo `license` que
-> cada paquete declara en el `package-lock.json`. **Las cinco declaradas sí se han abierto una a
-> una.** De las transitivas se miró la primera línea de cada `LICENSE` el 29/09 y coincide con su
-> campo; el texto entero de cada una **NO CONSTA** como leído.
+> cada paquete declara en el `package-lock.json`. **Las seis declaradas sí se han abierto una a
+> una.** De las transitivas instaladas se miró la primera línea de cada `LICENSE` el 29/09 y
+> coincide con su campo; `@esbuild/win32-x64` no trae `LICENSE` (§ 1.4); de los veinticinco
+> binarios de esbuild que no se instalan aquí solo consta lo que dice el lock. El texto entero de
+> cada una **NO CONSTA** como leído.

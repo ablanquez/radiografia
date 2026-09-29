@@ -31,11 +31,19 @@ const NOTICES = new URL('../../THIRD-PARTY-NOTICES.md', import.meta.url);
 const PACKAGE = new URL('../package.json', import.meta.url);
 const LOCK = new URL('../package-lock.json', import.meta.url);
 
-/** Los números que el documento escribe con letra, en negrita. */
+/**
+ * Los números que el documento escribe con letra, en negrita. En femenino,
+ * porque lo que cuenta son «dependencias» (una, veintiuna, treinta y una).
+ */
 const EN_LETRA: Readonly<Record<string, number>> = {
   una: 1, dos: 2, tres: 3, cuatro: 4, cinco: 5, seis: 6, siete: 7, ocho: 8, nueve: 9, diez: 10,
   once: 11, doce: 12, trece: 13, catorce: 14, quince: 15, dieciséis: 16, diecisiete: 17,
   dieciocho: 18, diecinueve: 19, veinte: 20,
+  veintiuna: 21, veintidós: 22, veintitrés: 23, veinticuatro: 24, veinticinco: 25,
+  veintiséis: 26, veintisiete: 27, veintiocho: 28, veintinueve: 29, treinta: 30,
+  'treinta y una': 31, 'treinta y dos': 32, 'treinta y tres': 33, 'treinta y cuatro': 34,
+  'treinta y cinco': 35, 'treinta y seis': 36, 'treinta y siete': 37, 'treinta y ocho': 38,
+  'treinta y nueve': 39, cuarenta: 40,
 };
 
 interface Fila {
@@ -52,7 +60,8 @@ interface EntradaLock {
 /** El número en letra que precede a `frase`, en negrita: «**cinco** dependencias declaradas». */
 function cifraDicha(texto: string, frase: string): number {
   // El `> ` de una cita puede partir la frase en dos líneas: se tolera.
-  const patron = new RegExp(`\\*\\*([a-zé]+)\\*\\*[\\s>]+${frase.replaceAll(' ', '[\\s>]+')}`);
+  // [a-zéó ]: las cifras compuestas llevan espacios («treinta y una») y tildes («veintidós»).
+  const patron = new RegExp(`\\*\\*([a-zéó ]+)\\*\\*[\\s>]+${frase.replaceAll(' ', '[\\s>]+')}`);
   const dicho = patron.exec(texto);
   assert.ok(dicho, `el NOTICES tiene que decir en negrita cuántas «${frase}» hay`);
   const cuantas = EN_LETRA[dicho[1]!];
