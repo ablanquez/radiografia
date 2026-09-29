@@ -219,11 +219,15 @@ marcar con ≥ 2 métricas fuera del p1–p99; validar FPR ≤ 5 %.
 - **Licencias**: listas de frecuencia CC BY-SA 4.0 → ficheros de datos
   aparte del código Apache 2.0, con atribución; afecta a NOTICES y a la
   estructura del repo (`/data/`).
-- **Decisión 3 (léxico de emociones)** — del informe de discurso: ningún
-  léxico en español con licencia compatible verificada (EmoLex solo no
-  comercial y traducción automática; SEL/SAL/LiLaH NO CONSTA). → **D12
-  fuera de la v1** salvo hallazgo en el punto 3-4. Pendiente de que
-  Antonio lo confirme.
+- **Decisión 3 (léxico de emociones)** — **CERRADA 29/09: D12 fuera de
+  la v1.** Ningún léxico en español con licencia compatible verificada:
+  EmoLex solo no comercial y traducción automática; SAL y LiLaH NO
+  CONSTA; SEL (Sidorov, CIC-IPN) buscado a fondo: se distribuye desde
+  cic.ipn.mx/~sidorov sin licencia publicada (NO CONSTA), aunque la
+  librería TRUNAJOD (MIT) lo empaqueta entero — precedente de
+  redistribución, no licencia. Antonio no va a pedir permiso por correo
+  para una demo. Nevera: si aparece un léxico con licencia, D12 se
+  reabre.
 - **Requisito nuevo para el esquema (punto 3)**: reglas con **peso
   negativo** (atenuantes humanos D6, D14) y **nivel de evidencia** visible
   en ficha e interfaz («medido en inglés», «anecdótico», «sin datos en

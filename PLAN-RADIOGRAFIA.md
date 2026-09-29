@@ -1,8 +1,8 @@
 # PLAN — 005 RadiografIA
 
 Estado a 29/09/2026: **FIRMADO por Antonio el 29/09/2026**, publicado en
-`73ef265`. **PUNTO 1 CERRADO el 29/09.** Se tacha lo hecho y lo nuevo se
-añade en su punto, y solo por decisión de Antonio.
+`73ef265`. **PUNTOS 1 y 2 CERRADOS el 29/09.** Se tacha lo hecho y lo
+nuevo se añade en su punto, y solo por decisión de Antonio.
 
 Origen: BRAINSTORMING (1), 28-29/09/2026, y las decisiones de Antonio
 del 29/09 al cerrar el plan. Lo que no está en «Alcance cerrado» está en
@@ -18,13 +18,24 @@ La v1 entrega, y solo entrega, esto:
 
 1. **Motor de reglas** que no sabe nada de «IA»: aplica un **paquete de
    reglas** en JSON. Tres tipos de detector: patrón, estructural,
-   estadístico. Puntuación normalizada por longitud.
-2. **Paquete RadiografIA v1**: reglas en cinco familias — léxico,
-   sintaxis, puntuación y formato, estadística, discurso — cada una
-   nacida de una **investigación a fondo con fuentes** (Regla Cero).
+   estadístico. Puntuación normalizada por longitud. Una regla o familia
+   puede ser **informativa** (se señala, no puntúa) y una regla puede
+   tener **peso negativo** (atenuante humano). Se cuentan solo **palabras
+   de prosa** (sin viñetas, tablas ni código). [decisiones del 29/09]
+2. **Paquete RadiografIA v1**: reglas en **seis** familias — léxico,
+   sintaxis, puntuación y formato, estadística, discurso y **canal**
+   (informativa: Markdown residual, Unicode invisible, emojis) — cada una
+   nacida de una **investigación a fondo con fuentes** (Regla Cero). Más
+   un **segundo paquete incluido, «español correcto»**: siete avisos de
+   norma RAE (pasiva por refleja, posesivo por artículo, punto dentro de
+   comillas, Title Case, meses en mayúscula, cifras a la inglesa, moneda
+   antepuesta), combinable desde el desplegable; nada más en la v1.
 3. **Ficha por regla**: id, familia, detector, peso, severidad,
-   explicación, sugerencia, excepciones, ejemplos positivos y negativos.
-   Los ejemplos son a la vez documentación y test automático.
+   explicación, sugerencia, excepciones, ejemplos positivos y negativos,
+   **fuente, origen de la lista** («inventario propio» cuando lo sea) y
+   **nivel de evidencia** («medido en español», «medido en inglés»,
+   «anecdótico»), visibles en el catálogo y en la interfaz. Los ejemplos
+   son a la vez documentación y test automático.
 4. **Analizador**: pegas texto → subrayados por familia, medidor de
    estilo IA, explicación y sugerencia por señal.
 5. **Catálogo público de reglas**: página por regla con URL propia,
@@ -44,8 +55,10 @@ La v1 entrega, y solo entrega, esto:
    si lo marca, no se retoca: se documenta como falso positivo.
 10. **Nota «analiza estilo, no demuestra autoría»** visible en la
     interfaz, en el informe y en el README.
-11. **Longitud mínima**: por debajo del umbral, «texto insuficiente» en
-    vez de puntuación. El umbral sale del punto 2 con fuente.
+11. **Longitud mínima** — FIRMADA 29/09 con fuentes (`estadistica.md`
+    §5): **< 100 palabras** «texto insuficiente», sin análisis; **100–299**
+    análisis con aviso «resultado poco fiable» y estadística con peso
+    reducido; **≥ 300** análisis completo.
 12. **Edición de reglas vía Git**, sin CMS.
 13. **Desplegado** en Hostinger (estático), repo público desde el primer
     commit, README y release v1.0.0.
@@ -63,7 +76,11 @@ La v1 entrega, y solo entrega, esto:
   texto).
 - **Corpus de calibración con cifras de acierto medidas**: la v1 publica
   con «un conjunto de reglas honesto y el motor preparado para crecer»;
-  la calibración crece después.
+  la calibración crece después. (Matiz del 29/09: la v1 SÍ calibra las
+  reglas estadísticas por percentiles humanos y valida FPR ≤ 5 %, punto
+  5; lo que queda fuera es publicar cifras de acierto en detección.)
+- **Positividad / emoción (D12)**: ningún léxico de emociones en español
+  con licencia compatible verificada (29/09). Nevera.
 
 ## Reglas que cruzan todo el plan
 
@@ -139,13 +156,29 @@ en `docs/investigacion/<familia>.md`: qué patrones existen, con qué fuente
 excepciones conocidas provocan falsos positivos, y qué candidatas a regla
 salen de ahí con su tipo de detector. Sin fuente no hay candidata.
 
-- [ ] Léxico
-- [ ] Sintaxis
-- [ ] Puntuación y formato
-- [ ] Estadística (incluye el umbral de longitud mínima, con fuente)
-- [ ] Discurso
-- [ ] Lista consolidada de candidatas a regla, con familia, detector y
-      fuente, VISTA por Antonio. **PUNTO 2 CERRADO**
+- [x] Léxico (módulo de investigación; `lexico.md`, 18 candidatas; `57de2bb`)
+- [x] Sintaxis (módulo; `sintaxis.md`, 16; `9c07b01`)
+- [x] Puntuación y formato (módulo; `puntuacion-formato.md`, 25; `7893d31`)
+- [x] Estadística: primero a mano (el módulo dejó de funcionar en esta
+      conversación), después relanzada con el módulo desde otra
+      conversación y fusionada (`estadistica.md`, 16; informe bruto en
+      `informes/`; el «23 % de bigramas» retirado por mal citado; umbral
+      de longitud con fuente; `f39314f` + `de6ffe3`)
+- [x] Discurso: ídem (`discurso.md`, 18; hallazgo: «la IA abusa de
+      conectores» no tiene respaldo, usa menos y repetidos; atenuantes
+      humanos; `dfe2c6b`)
+- [x] Lista consolidada `CANDIDATAS.md`: 93 candidatas (85 tras fusionar
+      duplicados), **solo 14 medidas en español**; VISTA por Antonio y con
+      sus 8 decisiones firmadas el 29/09: umbral 100/300 · POS y librerías
+      que hagan falta · D12 fuera por falta de léxico con licencia ·
+      listas propias declaradas · 7 pares fusionados · familia «canal»
+      informativa · paquete «español correcto» aparte · calibración por
+      percentiles como cierre del punto 5. **PUNTO 2 CERRADO**
+
+Lección del punto 2 (a la báscula de la casa): tres veces se fabricaron
+borradores sin fuentes antes de tener el informe, y una vez se descartó
+un informe real por confundirlo con ellos. La marca del informe real es
+que llega con citas de fuentes leídas; no se redacta nada antes.
 
 ## 3 — Esquema del paquete y de la ficha de regla
 
@@ -154,8 +187,18 @@ Todo lo demás cuelga de aquí. Se cierra antes de escribir el motor.
 - [ ] Esquema del paquete: cabecera (nombre, versión, idioma,
       descripción, autor) + lista de reglas. Formato de esquema decidido
       con la doc ([DOC] JSON Schema)
-- [ ] Esquema de la ficha: id, familia, detector, peso, severidad,
-      explicación, sugerencia, excepciones, ejemplos positivos y negativos
+- [ ] Esquema de la ficha: id, familia, detector, peso (puede ser
+      **negativo**), severidad, explicación, sugerencia, excepciones,
+      ejemplos positivos y negativos, **fuente, origen de la lista, nivel
+      de evidencia**, y marca **informativa** (regla o familia que no
+      puntúa). Requisitos firmados el 29/09 en `CANDIDATAS.md`
+- [ ] Decisión con la doc de las **librerías** que entran al navegador:
+      etiquetador POS del español (candidata es-compromise, MIT,
+      «work-in-progress»), silabeador (silabea, MIT), listas de
+      frecuencia (wordfreq / FrequencyWords, datos **CC BY-SA 4.0 en
+      `/data/` aparte del código Apache**, con atribución). Tamaño,
+      licencia y calidad medidos; ficha en NOTICES. Sin léxico de
+      emociones (D12 fuera)
 - [ ] Validador con mensajes de qué regla y qué campo fallan, visto en
       ROJO con paquetes rotos a propósito
 - [ ] Un paquete de ejemplo mínimo válido y tres inválidos como fixtures.
@@ -168,10 +211,13 @@ Sin interfaz. Solo funciones y jueces.
 - [ ] Carga y valida un paquete
 - [ ] Detector de patrón (lista de frases / regex)
 - [ ] Detector estructural (frase y párrafo)
-- [ ] Detector estadístico (texto entero contra umbral)
-- [ ] Puntuación: normalizada por longitud, con acumulación por familia
-- [ ] Longitud mínima: «texto insuficiente» por debajo del umbral, con
-      juez en ambos lados del borde
+- [ ] Detector estadístico (texto entero contra **percentiles humanos por
+      género × tramo de longitud**, nunca umbral absoluto)
+- [ ] Puntuación: normalizada por longitud, con acumulación por familia;
+      reglas informativas no suman; atenuantes restan
+- [ ] Longitud mínima 100/300 sobre **palabras de prosa** (sin viñetas,
+      tablas ni código): «texto insuficiente» bajo 100, aviso entre 100 y
+      299, con juez en ambos lados de cada borde
 - [ ] Combinación de varios paquetes con origen en cada señal
 - [ ] Jueces alimentados por los ejemplos de las fichas: cada ejemplo
       positivo dispara, cada negativo no. Vistos en rojo antes del verde.
@@ -180,13 +226,21 @@ Sin interfaz. Solo funciones y jueces.
 ## 5 — Paquete RadiografIA v1
 
 Una tanda por familia, cada regla con su ficha completa y sus ejemplos.
-Fuente citada en cada ficha (sale del punto 2).
+Fuente citada en cada ficha (sale del punto 2 y de `CANDIDATAS.md`).
 
 - [ ] Léxico
 - [ ] Sintaxis
 - [ ] Puntuación y formato
 - [ ] Estadística
 - [ ] Discurso
+- [ ] Canal (informativa)
+- [ ] Paquete «español correcto» (7 reglas de norma RAE)
+- [ ] **Calibración** (FIRMADA 29/09): percentiles 1/5/50/95/99 de cada
+      métrica estadística en textos humanos por género y tramo de
+      longitud, con corpus de licencia compatible (Spanish Billion Words
+      CC BY-SA, AnCora CC BY); se marca solo con ≥ 2 métricas fuera del
+      p1–p99; **validación con textos humanos apartados: FPR ≤ 5 %** o no
+      se cierra el punto
 - [ ] El paquete pasa el validador y todos sus ejemplos pasan los jueces
 - [ ] El eslogan y los textos de la propia web pasan por el motor: si los
       marca, se cambian (dicho en el brainstorming). **PUNTO 5 CERRADO**
@@ -216,7 +270,8 @@ Astro, sin diseño todavía: funciona, no luce.
 
 ## 8 — Cargador de paquetes
 
-- [ ] Desplegable con los paquetes incluidos
+- [ ] Desplegable con los paquetes incluidos (RadiografIA y «español
+      correcto»)
 - [ ] Cargar JSON propio desde el ordenador; nada sale del navegador
       (comprobado: cero peticiones al cargar y analizar)
 - [ ] Error de validación legible: regla y campo
