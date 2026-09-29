@@ -187,3 +187,14 @@ sin ficha ni una ficha sin carpeta: lo vigila `motor/src/notices.spec.ts`.
   a la oleada de texto generado.
 - **Viajará al navegador** cuando la usen las reglas: su atribución CC BY-SA tendrá que viajar
   con ella. Cómo, **NO CONSTA** hasta que exista el build (punto 6).
+
+### 2.3 · `data/pos/` — pronombres de UD Spanish-AnCora (entrenamiento), recuento
+
+| Fichero | Obra | Titular | Licencia | Para qué |
+|---|---|---|---|---|
+| `pronombres-ancora-train.json` | Recuento sobre UD Spanish-AnCora r2.18, `es_ancora-ud-train.conllu` (commit `197cca3`): las 52 formas que son PRON en ≥ 95 % de sus apariciones, con sus cifras | Taulé, Martí y Recasens (AnCora, CLiC-UB); conversión a UD de Martínez Alonso y Zeman | **CC BY 4.0** | Lista cerrada de pronombres de la capa POS de `motor/src/pos.ts` |
+
+- No copia frases del corpus: son **cifras por forma**. Atribución, cita y qué se hizo en
+  [`data/pos/LICENSE-CC-BY-4.0.md`](data/pos/LICENSE-CC-BY-4.0.md).
+- **Viajaría al navegador** con el etiquetador si el POS entra en la v1 (lo decide su medida
+  sobre el fichero de prueba, encargo 3.3); su atribución tendría que viajar con él.
