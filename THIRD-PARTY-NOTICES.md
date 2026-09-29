@@ -4,18 +4,18 @@ La licencia Apache 2.0 cubre **el código y los paquetes de reglas** de Radiogra
 lo ajeno**, que conserva sus propias condiciones. Aquí está, una por una, con lo que sabemos y lo
 que no.
 
-> ℹ️ **Estado a 29/09/2026.** Hoy lo ajeno es solo software: **seis** dependencias declaradas
-> en [`motor/package.json`](motor/package.json) —una de ejecución y cinco de desarrollo— y el
-> árbol que arrastran. No hay todavía datos de terceros: cuando entren las listas de frecuencia
-> (CC BY-SA 4.0, en `/data/`, aparte del código), tendrán aquí su sección.
+> ℹ️ **Estado a 29/09/2026.** Lo ajeno es software y datos. Software (§ 1): **seis**
+> dependencias declaradas en [`motor/package.json`](motor/package.json) —una de ejecución y
+> cinco de desarrollo— y el árbol que arrastran. Datos (§ 2): las carpetas de
+> [`data/`](data/), **aparte del código Apache 2.0**, cada una con su licencia al lado.
 >
 > Las **fuentes de cada regla** (estudios, guías, corpus) no van aquí: se citan en la ficha de
 > la regla y en el catálogo. Lo propio (logo, marca) irá en `PROCEDENCIA.md`.
 >
 > ⭐ **Las cifras y las tablas de este documento las vigila un juez**:
-> [`motor/src/notices.spec.ts`](motor/src/notices.spec.ts) las compara con `motor/package.json`
-> y `motor/package-lock.json`. Si entra o sale una dependencia y nadie toca este fichero, la
-> suite del motor se pone roja. Es la herencia de Desplázame, donde la cifra de la cabecera se
+> [`motor/src/notices.spec.ts`](motor/src/notices.spec.ts) las compara con `motor/package.json`,
+> `motor/package-lock.json` y las carpetas de `data/`. Si entra o sale una dependencia o una
+> carpeta de datos y nadie toca este fichero, la suite del motor se pone roja. Es la herencia de Desplázame, donde la cifra de la cabecera se
 > quedó vieja tres veces seguidas antes de que alguien escribiera el guion que cuenta.
 
 ---
@@ -117,3 +117,42 @@ BSD-3-Clause (§ 1.5). Nada bloquea.
 > coincide con su campo; `@esbuild/win32-x64` no trae `LICENSE` (§ 1.4); de los veinticinco
 > binarios de esbuild que no se instalan aquí solo consta lo que dice el lock. El texto entero de
 > cada una **NO CONSTA** como leído.
+
+---
+
+## 2 · Datos de terceros
+
+Viven en [`data/`](data/), **aparte del código Apache 2.0**: una carpeta por conjunto, y en cada
+una su `LICENSE-*.md` con la atribución que exige su licencia, el enlace canónico y qué se
+cambió. Aquí va la ficha de cada carpeta; el detalle está en su `LICENSE-*.md`. Ni una carpeta
+sin ficha ni una ficha sin carpeta: lo vigila `motor/src/notices.spec.ts`.
+
+### 2.1 · `data/referencia/` — UD Spanish-AnCora, 100 frases
+
+| Fichero | Obra | Titular | Licencia | Para qué |
+|---|---|---|---|---|
+| `ancora-ud-dev-100.json` | UD Spanish-AnCora r2.18, `es_ancora-ud-dev.conllu` (commit `197cca3`), las 100 primeras frases con sus UPOS | Taulé, Martí y Recasens (AnCora, CLiC-UB); conversión a UD de Martínez Alonso y Zeman | **CC BY 4.0** | Referencia de oro para **medir** el etiquetador POS |
+
+- Licencia comprobada en el `LICENSE.txt` del treebank en ese mismo commit, copiado en
+  [`data/referencia/LICENSE-CC-BY-4.0.md`](data/referencia/LICENSE-CC-BY-4.0.md), donde está
+  también la cita que pide y lo que se cambió.
+- ⚠️ AnCora circula también con GPL (ELRA-W0326, Hugging Face CLiC-UB). Lo de aquí sale **solo**
+  de la versión de Universal Dependencies, que es CC BY 4.0.
+- **No viaja al navegador**: es un dato de prueba.
+
+### 2.2 · `data/frecuencias/` — wordfreq, español, 20.000 formas
+
+| Fichero | Obra | Titular | Licencia | Para qué |
+|---|---|---|---|---|
+| `es-wordfreq.json` | wordfreq 3.1.1, lista `best` (= `large`) del español: las 20.000 formas más frecuentes con su frecuencia Zipf | Robyn Speer; datos de Wikipedia, OpenSubtitles 2018, NewsCrawl, GlobalVoices, Google Books Ngrams, OSCAR, Twitter y Reddit | **CC BY-SA 4.0** | Lista de frecuencias para las reglas estadísticas (se usará desde el punto 4) |
+
+- Atribución completa —a la autora, a cada fuente que wordfreq declara y la nota SUBTLEX que
+  exige— en [`data/frecuencias/LICENSE-CC-BY-SA-4.0.md`](data/frecuencias/LICENSE-CC-BY-SA-4.0.md).
+- ⚠️ **CompartirIgual**: quien la redistribuya, o redistribuya una obra derivada, lo hace bajo
+  CC BY-SA 4.0. Por eso vive aparte del código Apache 2.0.
+- ⚠️ SUBTLEX-ESP **no** figura entre las listas SUBTLEX que el README de wordfreq dice incluir
+  (US, UK, CH, DE, NL): que la lista española lleve datos SUBTLEX, **NO CONSTA**.
+- Los datos de wordfreq son una foto «up through 2021» (`SUNSET.md` del repositorio): anteriores
+  a la oleada de texto generado.
+- **Viajará al navegador** cuando la usen las reglas: su atribución CC BY-SA tendrá que viajar
+  con ella. Cómo, **NO CONSTA** hasta que exista el build (punto 6).

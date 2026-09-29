@@ -18,6 +18,11 @@
  *   3. versión y licencia de cada fila          ↔ motor/package-lock.json
  *   4. la cifra de transitivas de § 1.3         ↔ motor/package-lock.json
  *
+ * Y desde el encargo 3.3, los DATOS de terceros (§ 2), contra la carpeta data/:
+ *   5. cada carpeta bajo data/ tiene su ficha «### 2.x · `data/<carpeta>/`»,
+ *      y cada ficha su carpeta: ni una más ni una menos
+ *   6. cada carpeta bajo data/ lleva al lado su LICENSE-*.md
+ *
  * Vive en la suite del motor porque es donde hay un `node --test`, no porque
  * sea código del motor. Lee por rutas relativas a ESTE fichero, no al `cwd`.
  *
@@ -25,9 +30,10 @@
  */
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 
 const NOTICES = new URL('../../THIRD-PARTY-NOTICES.md', import.meta.url);
+const DATOS = new URL('../../data/', import.meta.url);
 const PACKAGE = new URL('../package.json', import.meta.url);
 const LOCK = new URL('../package-lock.json', import.meta.url);
 
@@ -140,5 +146,28 @@ describe('el THIRD-PARTY-NOTICES no puede envejecer solo', () => {
       (ruta) => ruta !== '' && !declaradas.has(ruta.replace(/^.*node_modules\//, '')),
     );
     assert.equal(cifraDicha(texto, 'dependencias transitivas'), transitivas.length);
+  });
+});
+
+describe('los datos de terceros de data/ tienen ficha y licencia al lado', () => {
+  /** Las carpetas de primer nivel bajo data/. */
+  function carpetas(): string[] {
+    return readdirSync(DATOS, { withFileTypes: true })
+      .filter((e) => e.isDirectory())
+      .map((e) => e.name)
+      .sort();
+  }
+
+  test('5 · cada carpeta de data/ tiene su ficha en § 2, y cada ficha su carpeta', () => {
+    const { texto } = leer();
+    const fichas = [...texto.matchAll(/^### 2\.\d+ · `data\/([^`/]+)\/`/gm)].map((m) => m[1]!).sort();
+    assert.deepEqual(fichas, carpetas(), 'fichas «### 2.x · `data/<carpeta>/`» frente a carpetas de data/');
+  });
+
+  test('6 · cada carpeta de data/ lleva al lado su LICENSE-*.md', () => {
+    for (const carpeta of carpetas()) {
+      const licencias = readdirSync(new URL(`${carpeta}/`, DATOS)).filter((f) => /^LICENSE-.+\.md$/.test(f));
+      assert.ok(licencias.length > 0, `data/${carpeta}/ no tiene ningún LICENSE-*.md`);
+    }
   });
 });
