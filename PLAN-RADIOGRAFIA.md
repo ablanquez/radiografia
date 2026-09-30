@@ -1,8 +1,9 @@
 # PLAN — 005 RadiografIA
 
 Estado a 29/09/2026: **FIRMADO por Antonio el 29/09/2026**, publicado en
-`73ef265`. **PUNTOS 1, 2 y 3 CERRADOS el 29/09.** Se tacha lo hecho y lo
-nuevo se añade en su punto, y solo por decisión de Antonio.
+`73ef265`. **PUNTOS 1, 2 y 3 CERRADOS el 29/09; PUNTO 4 CERRADO el 30/09.**
+Se tacha lo hecho y lo nuevo se añade en su punto, y solo por decisión de
+Antonio.
 
 Origen: BRAINSTORMING (1), 28-29/09/2026, y las decisiones de Antonio
 del 29/09 al cerrar el plan. Lo que no está en «Alcance cerrado» está en
@@ -280,8 +281,25 @@ Sin interfaz. Solo funciones y jueces.
       motor y el paso 2 rechaza la escrita por el autor. Ñ y ü protegidas
       (solo se quita U+0301, Ortografía RAE 2010); «ámbito frase exige
       regex» en el paso 2
-- [ ] Detector estadístico (texto entero contra **percentiles humanos por
-      género × tramo de longitud**, nunca umbral absoluto)
+- [x] Detector estadístico (`detector-estadistico.ts`, 4.3, 30/09): texto
+      entero contra **percentiles humanos por género × tramo**, nunca
+      umbral absoluto. Corrección del 4.1: género y tramo salen de la
+      ficha (son entradas del análisis); la regla lleva métrica, dirección
+      y percentil (p95/p99); los percentiles viven en
+      `cabecera.calibracion` (métrica → género → tramo → p1/p5/p50/p95/p99
+      + n, corpus, fecha, método). Percentil **tipo 7 de Hyndman & Fan
+      1996** [DOC], el de R y NumPy. Registro de **11 métricas** con fórmula
+      citada y jueces a mano: frases-por-100-palabras, cv-longitud-frase,
+      ratio-comas-puntos, puntuacion-por-1000,
+      parentesis-comillas-puntoycoma-por-1000, ttr, mattr-50 (Covington &
+      McFall 2010, leído), mtld (TAALED `mtldo` como oráculo declarado;
+      McCarthy & Jarvis 2010 de pago, no leído; tres bordes distintos de
+      lexical_diversity documentados), hdd-42 (escala TTR, las dos
+      implementaciones coinciden), seq-rep-4 (Welleck 2019 ec. 10, leído),
+      ifsz (Barrio-Cantalejo 2008; Szigriszt 1993 da 207 y 62,3).
+      Fernández-Huerta FUERA: definición de F discrepante entre fuentes y
+      original inaccesible. Señal de texto por presencia; «sin
+      calibración» declarado; género de entrada, «general» por defecto
 - [x] Puntuación (`puntuar.ts`, 4.2): puntos por 1.000 palabras de prosa
       [DOC Biber, Conrad & Reppen 1998 cap. 6; pseudobibeR] con desglose
       paquete → familia → regla; `ultimo-parrafo` puntúa por PRESENCIA, no
@@ -301,8 +319,8 @@ Sin interfaz. Solo funciones y jueces.
 - [x] Jueces alimentados por los ejemplos de las fichas
       (`ejemplos.spec.ts`): cada positivo dispara, cada negativo no; cubre
       patrón y estructural sobre el paquete interno (10 reglas) y el
-      secundario. Suite 4.2: **209 jueces, 204 en verde, 5 `todo`**.
-      **PUNTO 4 CERRADO** cuando 4.3 (detector estadístico) esté hecho
+      secundario. Suite 4.3: **297 jueces, 292 en verde, 5 `todo`**.
+      **PUNTO 4 CERRADO (30/09)**
 
 ## 5 — Paquete RadiografIA v1
 

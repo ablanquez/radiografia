@@ -7,16 +7,15 @@ El ejecutor reporta descubrimientos; no toca este fichero.
 
 ## ESTADO ACTUAL — 30 de septiembre de 2026
 
-**⭐ PUNTOS 1, 2 Y 3 CERRADOS (29/09). PUNTO 4 CASI CERRADO (30/09, encargos
-4.1 y 4.2):** el motor analiza un texto de principio a fin con paquetes de
-prueba: segmenta (`Intl.Segmenter`, desplazamientos exactos, prosa según
-CommonMark), aplica el umbral 100/300, detecta **patrones** y
-**estructuras** (seis posiciones), **puntúa** por 1.000 palabras de prosa
-con desglose paquete → familia → regla (informativas aparte, atenuantes
-restan, presencia para el cierre de plantilla) y **combina paquetes** con
-origen en cada señal. **209 jueces: 204 en verde, 5 `todo`** (3 sílabas, 2
-ICU), `tsc` limpio. Falta del punto 4 solo el **detector estadístico**
-(4.3). No hay reglas reales ni pantalla.
+**⭐ PUNTOS 1, 2, 3 Y 4 CERRADOS (29-30/09).** El motor está completo y
+probado con paquetes de prueba: segmenta, aplica el umbral 100/300,
+detecta patrones, estructuras (seis posiciones) y estadísticas (11
+métricas contra percentiles por género × tramo que trae el paquete),
+puntúa por 1.000 palabras de prosa con desglose paquete → familia →
+regla, y combina paquetes con origen. **297 jueces: 292 en verde, 5
+`todo`**, `tsc` limpio. Standalone 156 KB (a revisar en el punto 6). No hay
+reglas reales ni pantalla. **Siguiente: punto 5, el paquete RadiografIA
+v1 y «español correcto», con calibración.**
 
 ## 1 · Identidad
 
@@ -58,8 +57,8 @@ antes del verde, push = despliegue, bitácora por la skill
 
 ## 4 · El plan
 
-`PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1, 2 y 3 (29/09). Abierto: el 4
-(4.1 y 4.2 hechos; 4.3 pendiente).
+`PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1, 2 y 3 (29/09), 4 (30/09).
+Abierto: el 5.
 
 ## 5 · Decisiones
 
@@ -164,12 +163,27 @@ antes del verde, push = despliegue, bitácora por la skill
   las anclas; el paso 2 rechaza `^` inicial o `$` final (paridad de
   barras). Cita corregida: el capítulo de Helsinki sobre longitud de
   texto es de **Liimatta 2024**, no de Laippala (error de la estrategia).
+- 30/09 — **Decisiones del 4.3**: género y tramo son entradas del
+  análisis, no de la ficha (corrección del 4.1); percentiles en
+  `cabecera.calibracion`, tipo 7 de Hyndman & Fan [DOC]; género «general»
+  obligatorio y por defecto [PROPIO]; señal estadística por presencia; la
+  regla «≥ 2 métricas fuera» va a los pesos del paquete, no al motor.
+  MTLD y HD-D con fuente primaria de pago no leída: TAALED como oráculo
+  declarado (sin copiar código, CC BY-NC-SA), contrastado con
+  lexical_diversity; MTLD sigue los bordes de TAALED `mtldo`. IFSZ con
+  206,835 (Barrio-Cantalejo) y la discrepancia de Szigriszt (207)
+  citada. **Fernández-Huerta fuera**: definición de F discrepante.
+  [PROPIO] en puntuación: «...» cuenta como un signo, un signo entre
+  cifras no cuenta, punto seguido de comillas o paréntesis cierra frase.
 
 ## 6 · Cabos abiertos
 
-- Para el 4.3 (abrir con ellos): rechazar dos paquetes con el mismo
-  `cabecera.nombre` en `analizar()`, con juez; `description` de
-  `motor/package.json` caducada.
+- Para el punto 5 (del 4.3): «…» (U+2026) no parte la frase y «...» sí
+  (ICU; afecta a métricas de frase e IFSZ); comillas curvas “ ” fuera de
+  los conjuntos de signos (decidir si entran en P15/P16); P15 sigue el
+  nombre y deja fuera dos puntos y barras; silabea cuenta una cifra como
+  una sílaba (IFSZ); Zenker & Kyle 2021 cerrado, el «≥ 50» viene de la doc
+  de TAALED.
 - Para el punto 5: `tildes:true` junta «pasó/paso» y «está/esta»; las
   listas de formas deben tenerlo en cuenta (usar `tildes:false` donde la
   tilde distinga).
