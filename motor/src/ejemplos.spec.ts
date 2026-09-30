@@ -5,8 +5,9 @@
  * negativo ninguna. El punto 5 lo reutilizará con las reglas reales: basta con
  * añadir su paquete a la lista.
  *
- * En el 4.1 solo existe el detector de patrón; una regla de otro detector hace
- * fallar su juez (no se salta en silencio).
+ * Desde el 4.2 juzga reglas de patrón y estructurales. El detector estadístico
+ * es del 4.3: una regla estadística hace fallar su juez (no se salta en
+ * silencio).
  *
  * ⚠️ Los paquetes se leen al cargar el fichero, fuera de los tests, porque de
  *    ellos salen los tests. Si uno no se puede leer, falla el fichero entero y
@@ -17,14 +18,28 @@ import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { analizarTexto } from './texto.ts';
-import { detectarPatron, type ReglaDePatron } from './detector-patron.ts';
+import { detectarPatron, type ParametrosPatron, type Senal } from './detector-patron.ts';
+import { detectarEstructural, type ParametrosEstructural } from './detector-estructural.ts';
 import { validarPaquete } from './validar.ts';
 
 const PAQUETES = ['paquete-prueba-interno.json'];
 
-interface ReglaConEjemplos extends ReglaDePatron {
-  detector: string;
-  ejemplos: { positivos: string[]; negativos: string[] };
+type ReglaConEjemplos = { id: string; ejemplos: { positivos: string[]; negativos: string[] } } & (
+  | { detector: 'patrón'; parametros: ParametrosPatron }
+  | { detector: 'estructural'; parametros: ParametrosEstructural }
+  | { detector: 'estadístico'; parametros: unknown }
+);
+
+function senales(regla: ReglaConEjemplos, ejemplo: string): Senal[] {
+  const texto = analizarTexto(ejemplo);
+  switch (regla.detector) {
+    case 'patrón':
+      return detectarPatron(regla, texto);
+    case 'estructural':
+      return detectarEstructural(regla, texto);
+    case 'estadístico':
+      assert.fail(`${regla.id}: el detector estadístico aún no existe (4.3)`);
+  }
 }
 
 for (const fichero of PAQUETES) {
@@ -38,18 +53,14 @@ for (const fichero of PAQUETES) {
     });
 
     for (const regla of paquete.reglas) {
-      const senales = (ejemplo: string) => {
-        assert.equal(regla.detector, 'patrón', `${regla.id}: el detector «${regla.detector}» aún no existe (4.2)`);
-        return detectarPatron(regla, analizarTexto(ejemplo));
-      };
       for (const ejemplo of regla.ejemplos.positivos) {
         test(`${regla.id} · positivo «${ejemplo}» → al menos una señal`, () => {
-          assert.ok(senales(ejemplo).length >= 1, `${regla.id} no dispara en «${ejemplo}»`);
+          assert.ok(senales(regla, ejemplo).length >= 1, `${regla.id} no dispara en «${ejemplo}»`);
         });
       }
       for (const ejemplo of regla.ejemplos.negativos) {
         test(`${regla.id} · negativo «${ejemplo}» → ninguna señal`, () => {
-          const s = senales(ejemplo);
+          const s = senales(regla, ejemplo);
           assert.equal(s.length, 0, `${regla.id} dispara en «${ejemplo}»: ${s.map((x) => x.fragmento).join(', ')}`);
         });
       }
