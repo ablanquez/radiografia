@@ -35,12 +35,23 @@ el texto ni las reglas.
 
 ## Estado
 
-**En construcción.** Hoy (29/09/2026) existe el plan firmado, la
+**En construcción.** Hoy (30/09/2026) existe el plan firmado, la
 investigación de las familias en [`docs/investigacion/`](docs/investigacion/)
-y el primer código: la carpeta [`motor/`](motor/) con el **esquema del
-paquete y de la ficha de regla** (JSON Schema 2020-12) y un **validador**
-que dice qué regla y qué campo fallan, probado con un paquete válido y
-uno roto a propósito por cada error que tiene que saber nombrar.
+y, en la carpeta [`motor/`](motor/):
+
+- el **esquema del paquete y de la ficha de regla** (JSON Schema 2020-12),
+  con los parámetros de cada tipo de detector ya cerrados, y un
+  **validador** que dice qué regla y qué campo fallan, probado con un
+  paquete válido y uno roto a propósito por cada error que tiene que saber
+  nombrar;
+- el **texto segmentado** en párrafos, frases y palabras, con sus posiciones
+  exactas sobre el original y cada párrafo marcado como prosa o no (viñetas,
+  tablas y código no cuentan);
+- el **umbral de longitud**: menos de 100 palabras de prosa, texto
+  insuficiente; de 100 a 299, resultado poco fiable; 300 o más, completo;
+- el **detector de patrón** (formas o expresiones regulares, por palabra o
+  por frase), probado con un paquete de prueba interno: cada ejemplo
+  positivo dispara y ningún negativo.
 
 Las piezas de apoyo que las reglas necesitarán están **medidas contra
 referencias ajenas**, no dadas por buenas:
@@ -56,9 +67,10 @@ referencias ajenas**, no dadas por buenas:
   necesitaban; su código se retiró. La medida entera, en
   [`docs/investigacion/pos-medida.md`](docs/investigacion/pos-medida.md).
 
-No hay todavía motor de análisis, no hay ninguna regla real y no hay
-pantalla. Todo lo que se afirma más arriba es lo que se va a construir, en
-el orden de la [hoja de ruta](#hoja-de-ruta).
+Faltan los detectores estructural y estadístico y la puntuación (el
+medidor). No hay ninguna regla real y no hay pantalla. Todo lo que se
+afirma más arriba es lo que se va a construir, en el orden de la
+[hoja de ruta](#hoja-de-ruta).
 
 ## Cómo está pensado
 
