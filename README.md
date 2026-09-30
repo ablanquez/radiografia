@@ -53,7 +53,9 @@ paquetes de prueba:
   más, completo;
 - los **detectores de patrón y estructural**: formas o expresiones regulares
   por palabra o por frase, y expresiones en una posición (principio o final
-  de frase o de párrafo, último párrafo, o en cualquier punto de un párrafo);
+  de frase o de párrafo, último párrafo, o en cualquier punto de un párrafo).
+  Miran solo la prosa, salvo las reglas que buscan formato pegado, que miran
+  también viñetas, encabezados y tablas; el código, nunca;
 - el **detector estadístico**: mide el texto entero con una métrica y la
   compara con los percentiles de textos humanos del mismo género y del mismo
   tramo de longitud, que trae el propio paquete; nunca con un umbral fijo. El
@@ -76,10 +78,11 @@ fuente en [`motor/src/metricas/`](motor/src/metricas/):
 - de puntuación: comas por punto, signos por cada 1.000 palabras y
   paréntesis, comillas y punto y coma por cada 1.000 palabras.
 
-Todo está probado con dos paquetes de prueba internos: cada ejemplo positivo
-dispara su regla y ningún negativo. Los percentiles de esos paquetes son
-inventados: los de verdad se miden con textos humanos al escribir las reglas
-reales.
+Todo está probado con dos paquetes de prueba internos y con el paquete real
+(abajo, [«Paquetes»](#paquetes)): cada ejemplo positivo dispara su regla y
+ningún negativo. Los percentiles de los paquetes de prueba son inventados:
+los de verdad se miden con textos humanos al escribir las reglas
+estadísticas.
 
 Las piezas de apoyo que las reglas necesitarán están **medidas contra
 referencias ajenas**, no dadas por buenas:
@@ -95,9 +98,26 @@ referencias ajenas**, no dadas por buenas:
   necesitaban; su código se retiró. La medida entera, en
   [`docs/investigacion/pos-medida.md`](docs/investigacion/pos-medida.md).
 
-No hay ninguna regla real y no hay pantalla: lo que promete la entrada de
-este README (subrayados, medidor, catálogo) es lo que se va a construir, en
-el orden de la [hoja de ruta](#hoja-de-ruta).
+No hay pantalla: lo que promete la entrada de este README (subrayados,
+medidor, catálogo) es lo que se va a construir, en el orden de la [hoja de
+ruta](#hoja-de-ruta).
+
+## Paquetes
+
+En [`paquetes/`](paquetes/):
+
+- **RadiografIA 0.1.0** ([`radiografia.json`](paquetes/radiografia.json)):
+  declara las seis familias y trae las dos primeras:
+  - **canal** (informativa: se señala y no suma): negrita y encabezados de
+    Markdown, viñetas con rótulo en negrita, separadores y tablas, el espacio
+    estrecho U+202F y los caracteres de ancho cero. Las de emojis y flechas
+    esperan fuente;
+  - **puntuación y formato**: la densidad de rayas y la raya con espacios.
+
+  Léxico, sintaxis, estadística y discurso están declaradas y vacías. Un
+  juez comprueba que ninguna regla va sin fuente, que el peso no pasa del
+  que permite su nivel de evidencia y que la familia canal no suma.
+- **«español correcto»**: pendiente.
 
 ## Cómo está pensado
 
