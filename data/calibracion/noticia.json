@@ -1,0 +1,527 @@
+{
+  "genero": "noticia",
+  "fecha": "2026-09-30",
+  "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+  "licencia": "CC BY 4.0 (verificada en el repositorio: LICENSE.txt y metadatos del README)",
+  "semilla": "radiografia-calibracion-2026",
+  "motor": {
+    "commit": "766066f6e667a9f6ada4e0bb506003c6827e9640",
+    "limpio": true
+  },
+  "metodo": "hyndman-fan-7",
+  "minimoPorCelda": 100,
+  "n": {
+    "calibracion": {
+      "100-299": 357,
+      "300-599": 354,
+      "600+": 109
+    },
+    "validacion": {
+      "100-299": 86,
+      "300-599": 98,
+      "600+": 21
+    }
+  },
+  "celdas": {
+    "frases-por-100-palabras": {
+      "100-299": {
+        "p1": 2.012899,
+        "p5": 2.33623,
+        "p50": 3.597122,
+        "p95": 5.835498,
+        "p99": 7.571559,
+        "n": 357,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "300-599": {
+        "p1": 1.874317,
+        "p5": 2.141093,
+        "p50": 3.183266,
+        "p95": 5.524199,
+        "p99": 6.73634,
+        "n": 354,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": 2.041331,
+        "p5": 2.103979,
+        "p50": 2.80112,
+        "p95": 5.099556,
+        "p99": 7.362557,
+        "n": 109,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    },
+    "cv-longitud-frase": {
+      "100-299": {
+        "p1": 0.07351,
+        "p5": 0.141024,
+        "p50": 0.385053,
+        "p95": 0.730476,
+        "p99": 0.878802,
+        "n": 357,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "300-599": {
+        "p1": 0.130254,
+        "p5": 0.174353,
+        "p50": 0.38716,
+        "p95": 0.623766,
+        "p99": 0.718903,
+        "n": 354,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": 0.154267,
+        "p5": 0.179347,
+        "p50": 0.352524,
+        "p95": 0.675054,
+        "p99": 0.731336,
+        "n": 109,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    },
+    "ratio-comas-puntos": {
+      "100-299": {
+        "p1": 0.364,
+        "p5": 0.526667,
+        "p50": 1.777778,
+        "p95": 3.5,
+        "p99": 4.362667,
+        "n": 357,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "300-599": {
+        "p1": 0.721169,
+        "p5": 0.92,
+        "p50": 2,
+        "p95": 3.415556,
+        "p99": 4.137222,
+        "n": 354,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": 0.764855,
+        "p5": 1.032,
+        "p50": 2.137931,
+        "p95": 3.46,
+        "p99": 3.854454,
+        "n": 109,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    },
+    "puntuacion-por-1000": {
+      "100-299": {
+        "p1": 61.2,
+        "p5": 75.842188,
+        "p50": 128,
+        "p95": 193.015588,
+        "p99": 225.191084,
+        "n": 357,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "300-599": {
+        "p1": 80.492695,
+        "p5": 89.701258,
+        "p50": 129.293457,
+        "p95": 187.250767,
+        "p99": 202.963164,
+        "n": 354,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": 84.145825,
+        "p5": 92.313673,
+        "p50": 123.978202,
+        "p95": 183.066443,
+        "p99": 222.725244,
+        "n": 109,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    },
+    "puntuacion-secundaria-por-1000": {
+      "100-299": {
+        "p1": 0,
+        "p5": 0,
+        "p50": 21.505376,
+        "p95": 67.84273,
+        "p99": 87.984963,
+        "n": 357,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "300-599": {
+        "p1": 0,
+        "p5": 5.77339,
+        "p50": 30.935975,
+        "p95": 76.424339,
+        "p99": 95.500185,
+        "n": 354,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": 0,
+        "p5": 2.318919,
+        "p50": 32.496307,
+        "p95": 75.263952,
+        "p99": 108.686511,
+        "n": 109,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    },
+    "ttr": {
+      "100-299": {
+        "p1": 0.496683,
+        "p5": 0.530283,
+        "p50": 0.615023,
+        "p95": 0.715754,
+        "p99": 0.75628,
+        "n": 357,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "300-599": {
+        "p1": 0.421779,
+        "p5": 0.443015,
+        "p50": 0.512911,
+        "p95": 0.592963,
+        "p99": 0.614864,
+        "n": 354,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": 0.39201,
+        "p5": 0.409473,
+        "p50": 0.460177,
+        "p95": 0.511428,
+        "p99": 0.556226,
+        "n": 109,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    },
+    "mattr-50": {
+      "100-299": {
+        "p1": 0.722814,
+        "p5": 0.744252,
+        "p50": 0.80165,
+        "p95": 0.850998,
+        "p99": 0.870499,
+        "n": 357,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "300-599": {
+        "p1": 0.735415,
+        "p5": 0.758285,
+        "p50": 0.79917,
+        "p95": 0.838006,
+        "p99": 0.854123,
+        "n": 354,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": 0.750699,
+        "p5": 0.769708,
+        "p50": 0.799646,
+        "p95": 0.829741,
+        "p99": 0.839462,
+        "n": 109,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    },
+    "mtld": {
+      "100-299": {
+        "p1": 44.704637,
+        "p5": 56.983683,
+        "p50": 82.549697,
+        "p95": 125,
+        "p99": 146.754323,
+        "n": 357,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "300-599": {
+        "p1": 51.329826,
+        "p5": 60.21121,
+        "p50": 83.889164,
+        "p95": 117.625308,
+        "p99": 135.166432,
+        "n": 354,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": 56.443901,
+        "p5": 66.734028,
+        "p50": 84.653097,
+        "p95": 110.274678,
+        "p99": 127.290408,
+        "n": 109,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    },
+    "hdd-42": {
+      "100-299": {
+        "p1": 0.728378,
+        "p5": 0.766249,
+        "p50": 0.812927,
+        "p95": 0.855173,
+        "p99": 0.87116,
+        "n": 357,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "300-599": {
+        "p1": 0.757979,
+        "p5": 0.773136,
+        "p50": 0.81325,
+        "p95": 0.850995,
+        "p99": 0.872253,
+        "n": 354,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": 0.789368,
+        "p5": 0.791467,
+        "p50": 0.818519,
+        "p95": 0.850823,
+        "p99": 0.861839,
+        "n": 109,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    },
+    "seq-rep-4": {
+      "100-299": {
+        "p1": 0,
+        "p5": 0,
+        "p50": 0,
+        "p95": 0.020438,
+        "p99": 0.035979,
+        "n": 357,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "300-599": {
+        "p1": 0,
+        "p5": 0,
+        "p50": 0.005623,
+        "p95": 0.029732,
+        "p99": 0.041527,
+        "n": 354,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": 0,
+        "p5": 0.00054,
+        "p50": 0.007772,
+        "p95": 0.02384,
+        "p99": 0.038167,
+        "n": 109,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    },
+    "ifsz": {
+      "100-299": {
+        "p1": 27.132741,
+        "p5": 29.95307,
+        "p50": 51.020417,
+        "p95": 67.250878,
+        "p99": 74.518871,
+        "n": 357,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "300-599": {
+        "p1": 23.299903,
+        "p5": 26.880062,
+        "p50": 45.24653,
+        "p95": 64.162539,
+        "p99": 70.19474,
+        "n": 354,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": 24.553141,
+        "p5": 28.339733,
+        "p50": 42.198265,
+        "p95": 62.497187,
+        "p99": 70.161512,
+        "n": 109,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    },
+    "nominalizaciones-por-1000": {
+      "100-299": {
+        "p1": 2.362869,
+        "p5": 10.294118,
+        "p50": 35.971223,
+        "p95": 71.667997,
+        "p99": 99.308642,
+        "n": 357,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "300-599": {
+        "p1": 9.412346,
+        "p5": 15.633749,
+        "p50": 38.383317,
+        "p95": 70.97561,
+        "p99": 85.452494,
+        "n": 354,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": 12.186747,
+        "p5": 16.140351,
+        "p50": 39.263804,
+        "p95": 69.276448,
+        "p99": 84.827285,
+        "n": 109,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    },
+    "pronombres-anaforicos-por-1000": {
+      "100-299": {
+        "p1": 32.894009,
+        "p5": 47.99569,
+        "p50": 82.644628,
+        "p95": 125.740952,
+        "p99": 146.689529,
+        "n": 357,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "300-599": {
+        "p1": 48.043933,
+        "p5": 57.50201,
+        "p50": 85.81657,
+        "p95": 118.463046,
+        "p99": 131.693919,
+        "n": 354,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": 53.658184,
+        "p5": 55.924695,
+        "p50": 87.552743,
+        "p95": 110.469719,
+        "p99": 120.71839,
+        "n": 109,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    },
+    "_total-radiografia": {
+      "100-299": {
+        "p1": 0,
+        "p5": 0,
+        "p50": 0,
+        "p95": 15.268858,
+        "p99": 26.661871,
+        "n": 357,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "300-599": {
+        "p1": 0,
+        "p5": 0,
+        "p50": 0,
+        "p95": 17.557794,
+        "p99": 25.822794,
+        "n": 354,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": -1.210526,
+        "p5": 0,
+        "p50": 2.024291,
+        "p95": 13.407954,
+        "p99": 19.061272,
+        "n": 109,
+        "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    }
+  },
+  "omitidas": [],
+  "notas": [
+    "Percentiles de los documentos de CALIBRACIÓN (sha256(\"semilla|id\") < 0,8); los de validación quedan para el FPR del 5.6.",
+    "Margen sobre el mínimo de 100 documentos de calibración por tramo: 100-299 +257 · 300-599 +254 · 600+ +9.",
+    "_total-radiografia: puntuacion.total de analizar() con paquetes/radiografia.json y el género «noticia»; sin reglas estadísticas todavía: se recalcula en el 5.6.",
+    "Frases por 100 palabras: AnCora da 28,56 palabras por frase en su anotación manual. La expectativa «4-6» del encargo 5.5 no tenía fuente; la de la investigación (docs/investigacion/sintaxis.md, Schaaff et al. 2023: ~27 palabras por frase, ~3,7 por 100) coincide con el corpus. Se acepta tal cual (decisión de Antonio, parada 2 del 5.5).",
+    "filtro del corpus: documento = # newdoc id; su texto, los # text de sus frases unidos por un espacio (r2.18 no trae # newpar: un párrafo por documento)",
+    "filtro del corpus: fuera el subcorpus 3LB-CAST (Cast3LB/Lexesp, corpus equilibrado: no consta que sea prensa; Taulé et al. 2008, § 2)",
+    "filtro del corpus: fuera los documentos de menos de 100 palabras de prosa (sin tramo de calibración)"
+  ]
+}
