@@ -1,0 +1,68 @@
+{
+  "$schema": "https://raw.githubusercontent.com/ablanquez/radiografia/main/motor/esquema/paquete.schema.json",
+  "cabecera": {
+    "nombre": "Paquete de prueba secundario del motor",
+    "version": "0.1.0",
+    "idioma": "es",
+    "descripcion": "Segundo paquete de PRUEBA del motor (encargo 4.2), para juzgar la combinación de paquetes: su familia se llama como una del paquete interno y una de sus reglas tiene el mismo id que una de aquel. NO tiene valor lingüístico.",
+    "autor": "Antonio Blánquez Cabeza",
+    "licencia": "Apache-2.0",
+    "familias": [
+      {
+        "id": "prueba",
+        "nombre": "Prueba del motor (secundario)",
+        "informativa": false
+      }
+    ]
+  },
+  "reglas": [
+    {
+      "id": "prueba-formas-palabra",
+      "familia": "prueba",
+      "detector": "patrón",
+      "parametros": {
+        "formas": ["enfoque", "paso"],
+        "ambito": "palabra",
+        "normalizar": {
+          "minusculas": true,
+          "tildes": true
+        }
+      },
+      "peso": 2,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Regla de prueba del motor, con el MISMO id que una del paquete interno y otras formas: sus señales tienen que distinguirse por el paquete.",
+      "sugerencia": "Ninguna: es una regla de prueba.",
+      "excepciones": [],
+      "fuente": [],
+      "origenLista": "lista de prueba del motor, sin valor lingüístico",
+      "nivelEvidencia": "sin fuente",
+      "ejemplos": {
+        "positivos": ["Es un enfoque nuevo.", "Dio un PASO al frente."],
+        "negativos": ["Es una idea nueva.", "Pasaron por delante."]
+      }
+    },
+    {
+      "id": "secundario-pero-inicial",
+      "familia": "prueba",
+      "detector": "estructural",
+      "parametros": {
+        "posicion": "inicio-frase",
+        "regex": "Pero\\b"
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Regla de prueba del motor (posición inicio-frase): «Pero» abre la frase.",
+      "sugerencia": "Ninguna: es una regla de prueba.",
+      "excepciones": [],
+      "fuente": [],
+      "origenLista": null,
+      "nivelEvidencia": "sin fuente",
+      "ejemplos": {
+        "positivos": ["Pero nadie lo sabía."],
+        "negativos": ["Nadie lo sabía, pero siguió."]
+      }
+    }
+  ]
+}

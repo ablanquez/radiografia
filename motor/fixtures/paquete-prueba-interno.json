@@ -4,7 +4,7 @@
     "nombre": "Paquete de prueba interno del motor",
     "version": "0.1.0",
     "idioma": "es",
-    "descripcion": "Paquete de PRUEBA del motor (encargo 4.1): dos reglas de patrón para juzgar el detector con sus ejemplos. NO es el paquete RadiografIA v1 ni tiene valor lingüístico.",
+    "descripcion": "Paquete de PRUEBA del motor (encargos 4.1 y 4.2): reglas de patrón y estructurales para juzgar los detectores y la puntuación con sus ejemplos, una informativa y un atenuante. NO es el paquete RadiografIA v1 ni tiene valor lingüístico.",
     "autor": "Antonio Blánquez Cabeza",
     "licencia": "Apache-2.0",
     "familias": [
@@ -12,6 +12,11 @@
         "id": "prueba",
         "nombre": "Prueba del motor",
         "informativa": false
+      },
+      {
+        "id": "canal",
+        "nombre": "Canal (prueba)",
+        "informativa": true
       }
     ]
   },
@@ -170,6 +175,58 @@
       "ejemplos": {
         "positivos": ["No solo llegó tarde. Sino que además se fue pronto.", "No solo es rápido, sino también barato."],
         "negativos": ["No solo llegó tarde.\nSino que además se fue pronto.", "Llegó tarde y se fue pronto."]
+      }
+    },
+    {
+      "id": "prueba-canal-negrita",
+      "familia": "canal",
+      "detector": "patrón",
+      "parametros": {
+        "regex": "\\*\\*[^*]+\\*\\*",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": false,
+          "tildes": false
+        }
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": true,
+      "explicacion": "Regla de prueba del motor (informativa, en una familia informativa): negrita de Markdown escrita tal cual. Lleva peso 1 para que se vea que, aun así, no suma.",
+      "sugerencia": "Ninguna: es una regla de prueba.",
+      "excepciones": [],
+      "fuente": [],
+      "origenLista": null,
+      "nivelEvidencia": "sin fuente",
+      "ejemplos": {
+        "positivos": ["Esto es **muy** importante.", "Hay dos **negritas** en **esta** frase."],
+        "negativos": ["Esto es muy importante.", "Un asterisco * suelto no es negrita."]
+      }
+    },
+    {
+      "id": "prueba-atenuante",
+      "familia": "prueba",
+      "detector": "patrón",
+      "parametros": {
+        "regex": "\\b(?:v[eé]ase|como se ve en) (?:la )?(?:tabla|figura) \\d+",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": true,
+          "tildes": false
+        }
+      },
+      "peso": -1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Regla de prueba del motor (atenuante, peso −1): una referencia a una tabla o figura numerada del propio texto. Resta.",
+      "sugerencia": "Ninguna: es una regla de prueba.",
+      "excepciones": [],
+      "fuente": [],
+      "origenLista": null,
+      "nivelEvidencia": "sin fuente",
+      "ejemplos": {
+        "positivos": ["Véase la tabla 2 para el detalle.", "Como se ve en la figura 3, el caudal bajó."],
+        "negativos": ["La tabla quedó en la cocina.", "Como se ve, el caudal bajó."]
       }
     }
   ]

@@ -22,7 +22,7 @@ import { detectarPatron, type ParametrosPatron, type Senal } from './detector-pa
 import { detectarEstructural, type ParametrosEstructural } from './detector-estructural.ts';
 import { validarPaquete } from './validar.ts';
 
-const PAQUETES = ['paquete-prueba-interno.json'];
+const PAQUETES = ['paquete-prueba-interno.json', 'paquete-prueba-secundario.json'];
 
 type ReglaConEjemplos = { id: string; ejemplos: { positivos: string[]; negativos: string[] } } & (
   | { detector: 'patrón'; parametros: ParametrosPatron }
