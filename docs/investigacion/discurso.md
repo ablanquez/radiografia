@@ -82,8 +82,19 @@ humanos.
 - **Coherencia vs marcadores**: r = −0,14 («the use of discourse markers
   is negatively correlated with logical coherence»).
 - **Cierre**: «identical beginnings of the concluding sections of all
-  ChatGPT essays ('In conclusion, [...]')» (100 % de 180); aperturas
+  ChatGPT essays ('In conclusion, [...]')» según el artículo; **los datos
+  de replicación (Zenodo 10.5281/zenodo.8343644, leídos el 30/09 en el
+  encargo 5.3) dan 166 de 180 (92 %)**, y 53 de 90 estudiantes (59 %)
+  abren el último párrafo con una fórmula de cierre; aperturas
   «very similar starting with a general statement».
+- **Corrección del 30/09 (fuentes primarias)**: los marcadores
+  epistémicos de Herbold son 14 regex de su código de replicación («I
+  think/believe/guess/assume», «it is believed», «in my opinion», «I would
+  say», «it seems», «it is clear»…); «maybe» no aparece, y «perhaps» y
+  «probably» están en `modals.csv` (la variable de los modales, no la de
+  d = 1,53). En sus propios datos, **30 de 90 ensayos humanos (L2) tienen
+  cero epistémicos** frente a 73/90 (GPT-3) y 90/90 (GPT-4): la ausencia
+  sola dispara en un tercio de esos humanos.
 - Hipótesis de los autores (opinión): «separating the different arguments
   into paragraphs, thereby reducing the need for discourse markers».
 - Sesgos: humanos L2, ensayos cortos, modelos de marzo de 2023; la Tabla 4

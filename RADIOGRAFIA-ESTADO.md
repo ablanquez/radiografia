@@ -8,12 +8,13 @@ El ejecutor reporta descubrimientos; no toca este fichero.
 ## ESTADO ACTUAL — 30 de septiembre de 2026
 
 **⭐ PUNTOS 1-4 CERRADOS (29-30/09). PUNTO 5 EN MARCHA (30/09):** el
-paquete real `paquetes/radiografia.json` 0.1.0 tiene tres familias
-rellenas: **canal** (6 informativas), **puntuación y formato** (P11, P12) y
-**léxico** (11 reglas; las cuatro de peso 3 con listas de Juzek 2026
-aprobadas por Antonio). **408 jueces: 403 en verde, 5 `todo`**, `tsc`
-limpio. Faltan discurso, sintaxis, «español correcto», estadística y
-calibración. No hay pantalla.
+paquete real `paquetes/radiografia.json` 0.1.0 tiene cuatro familias
+rellenas: **canal** (6 informativas), **puntuación y formato** (P11, P12),
+**léxico** (11) y **discurso** (10, con dos ausencias y dos atenuantes). El
+motor ganó en el 5.3 cuatro capacidades con precedente en Vale (mínimo,
+mínimo por coincidencia, ausencia, géneros). **493 jueces: 486 en verde,
+2 saltados con motivo, 5 `todo`**, `tsc` limpio. Faltan sintaxis,
+«español correcto», estadística y calibración. No hay pantalla.
 
 ## 1 · Identidad
 
@@ -56,7 +57,7 @@ antes del verde, push = despliegue, bitácora por la skill
 ## 4 · El plan
 
 `PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1, 2 y 3 (29/09), 4 (30/09).
-Abierto: el 5 (5.1 canal y puntuación, 5.2 léxico hechos).
+Abierto: el 5 (5.1 canal y puntuación, 5.2 léxico, 5.3 discurso hechos).
 
 ## 5 · Decisiones
 
@@ -198,9 +199,35 @@ Abierto: el 5 (5.1 canal y puntuación, 5.2 léxico hechos).
   ROBOT-TALK no mide esos lemas. **Versión del paquete: 0.1.0 hasta cerrar
   el punto 5; 1.0.0 en la release del punto 11.** Severidad «baja» en todas
   hasta que la calibración dé criterio.
+- 30/09 — **Decisiones del 5.3 (discurso)**: el punto 4 se amplía con
+  cuatro capacidades (mínimo en patrón, mínimo por coincidencia,
+  ausencia, géneros), parlamentadas y con precedente en Vale
+  (`occurrence`, `repetition`) [DOC docs.vale.sh]; escritas en el plan.
+  Las ausencias (D3, D4) solo en `opinion`/`academico` y tramo completo;
+  «general» nunca activa una regla con `generos`, y el paso 2 lo rechaza
+  en la lista. D4 a peso 1: el español es lengua de sujeto tácito (NGLE
+  §33.4a) y la medida de Pham (I, we, my, our) no se traslada sin POS.
+  D6 atenuante −2 solo con objetivo numerado o en primera persona; D14
+  −1 sin modismos (lista inabarcable). Fuera: D10, D12, D13, D17
+  (histórico según Wikipedia), D18 (= D3). D3 y D4 no se exigen
+  combinadas en el motor: pesos y calibración.
 
 ## 6 · Cabos abiertos
 
+- **Para la calibración (5.6), el primero**: la escala pesa las ausencias
+  mucho menos que las densidades (una ausencia = su peso una vez, 2
+  puntos; «Además» ×3 en 346 palabras = 17,34), y `discurso.md` §12 pide
+  «más peso a las ausencias que a las presencias». Decidir escala o
+  factor de presencia con datos. También: el juez de RadiografIA no
+  limita |peso| de un atenuante por su evidencia (abrir el 5.4 con esa
+  línea); una regla estadística con `generos` no tendría juez
+  (`ejemplos-estadisticos.spec.ts` analiza con «general»); D6 resta en
+  cualquier género aunque Pham es académico (declarado).
+- `discurso.md` corregido el 30/09 con las fuentes primarias: «In
+  conclusion» en 166/180 (92 %), no 100 %; 53/90 estudiantes también
+  cierran con fórmula; los epistémicos de Herbold son 14 regex de su código
+  (sin «maybe»; «perhaps» y «probably» son modales); 30/90 humanos con
+  cero epistémicos. NGLE leída vía web.archive.org (rae.es da 403).
 - Del 5.2 (30/09), para la calibración: solapes que suman dos veces
   («es importante destacar» en énfasis y en fórmula; «Cabe destacar» en
   énfasis y en conector). Límites declarados: «destacarlo» con enclítico

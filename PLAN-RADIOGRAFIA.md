@@ -23,6 +23,11 @@ La v1 entrega, y solo entrega, esto:
    puede ser **informativa** (se señala, no puntúa) y una regla puede
    tener **peso negativo** (atenuante humano). Se cuentan solo **palabras
    de prosa** (sin viñetas, tablas ni código). [decisiones del 29/09]
+   Ampliación del 30/09 (5.3, con precedente en Vale): una regla puede
+   exigir un **mínimo** de apariciones, señalar solo la **forma que se
+   repite** N veces, señalar una **ausencia** en el texto entero (solo con
+   ≥ 300 palabras de prosa) y **limitarse a ciertos géneros**, que quien
+   analiza elige.
 2. **Paquete RadiografIA v1**: reglas en **seis** familias — léxico,
    sintaxis, puntuación y formato, estadística, discurso y **canal**
    (informativa: Markdown residual, Unicode invisible, emojis) — cada una
@@ -323,6 +328,20 @@ Sin interfaz. Solo funciones y jueces.
       patrón y estructural sobre el paquete interno (10 reglas) y el
       secundario. Suite 4.3: **297 jueces, 292 en verde, 5 `todo`**.
       **PUNTO 4 CERRADO (30/09)**
+- [x] **Ampliación del 30/09 (encargo 5.3, parlamentada y escrita aquí
+      antes que en código)**: cuatro capacidades con precedente en Vale
+      [DOC docs.vale.sh/checks/occurrence y /repetition]: `minimo` también
+      en patrón; `minimoPorCoincidencia` (solo señala la forma que se
+      repite N veces; agrupa por texto en minúsculas sin bordes [PROPIO:
+      Vale `repetition` es la repetición seguida]); `ausencia` (una señal de
+      texto entero cuando hay menos coincidencias que `minimo`; puntúa por
+      presencia; no se juzga en tramo «poco-fiable» [PROPIO sobre Vale
+      `occurrence` min]); `generos` a nivel de regla (solo se evalúa en
+      esos géneros; «general» nunca la activa y el paso 2 lo rechaza en la
+      lista). `noAplicadas` con motivo (género primero, tramo después).
+      `ejemplos.spec.ts` salta las reglas con ausencia/generos;
+      `ejemplos-ausencia.spec.ts` las juzga con `analizar()` y género.
+      Standalone 168 KB, equivalente sobre 37 fixtures
 
 ## 5 — Paquete RadiografIA v1
 
@@ -352,7 +371,23 @@ Fuente citada en cada ficha (sale del punto 2 y de `CANDIDATAS.md`).
       excepciones de las fichas; la calibración dirá. Doble puntuación
       P11+P12 en una raya espaciada: para la calibración
 - [ ] Estadística
-- [ ] Discurso
+- [x] Discurso (5.3, 30/09): 10 reglas, prefijo `disc-`. Ninguna medida en
+      español. Peso 2: marcador repetido (D2, `minimoPorCoincidencia: 3`,
+      ocho conectores con procedencia PDTB; NO se puntúa la cantidad de
+      conectores sino la repetición) y **ausencia de epistémicos** (D3,
+      solo `opinion`/`academico` y tramo completo; Herbold d = 1,53; en sus
+      datos 30/90 humanos L2 también tienen cero). Peso 1 justificado:
+      cierre de plantilla (D1, 166/180 = 92 % en ChatGPT, 53/90 en
+      estudiantes), ausencia de automenciones (D4, sujeto tácito NGLE
+      §33.4a), encuadre ordinal (D5, `minimo: 2`), puffery (D7), atribución
+      vaga (D9), retos y futuro (D11). **Atenuantes**: referencia interna
+      concreta (D6, −2, solo con objetivo numerado o en 1.ª persona) y
+      anécdota en primera persona (D14, −1); listas leídas por Antonio.
+      Fuera con motivo: D10, D12, D13, D17 (histórico), D18 (= D3). A 5.6:
+      D15, D16. Fuentes primarias leídas: código de replicación de Herbold
+      (Zenodo), Pham, Wikipedia Signs entera. Texto de opinión de asistente:
+      7 reglas, 38,68; reescrito con yo/epistémicos/anécdota: 19,78;
+      AnCora «noticia»: 0 de discurso
 - [x] Canal (informativa) (5.1, 30/09): 6 reglas (negrita y encabezado
       Markdown, viñeta con negrita inicial, separador o tabla, U+202F,
       invisibles U+200B/2060/FEFF), todas peso 0 e informativas, con fuente
