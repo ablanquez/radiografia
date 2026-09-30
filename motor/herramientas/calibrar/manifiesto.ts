@@ -42,6 +42,8 @@ export interface Manifiesto {
   incidencias?: string[];
   /** Notas que calibrar.ts lleva al fichero de calibración del género. */
   notas?: string[];
+  /** Cuando los documentos salen de libros: los metadatos públicos de cada libro del que sale alguno. */
+  libros?: { id: number; titulo: string; autores: string; muerte: number; materias: string }[];
   semilla?: string;
   motor?: { commit: string; limpio: boolean };
   n: {

@@ -41,7 +41,14 @@ export interface CapitulosDeEpub {
 }
 
 const PARATEXTO =
-  /^\s*(pr[oó]logo|pr[eé]face|preface|dedicatoria|introducci[oó]n|introduction|advertencia|al lector|nota|notas|footnotes|[ií]ndice|index|contents|contenido|sumario|glosario|vocabulario|erratas|fe de erratas|colof[oó]n|ap[eé]ndice|bibliograf[ií]a)\b/iu;
+  /^\s*(pr[oó]logo|prefacio|pr[eé]face|preface|dedicatoria|introducci[oó]n|introduction|advertencia|aclaraci[oó]n|al lector|nota|notas|notes|footnotes|[ií]ndice|index|contents|contenido|sumario|glosario|vocabulario|vocabulary|abbreviations|exercises|ejercicios|erratas|fe de erratas|colof[oó]n|ap[eé]ndice|bibliograf[ií]a)\b/iu;
+
+/**
+ * [PROPIO] El principio de los anuncios del editor al final del libro (visto en
+ * pg29831: «OBRAS DEL MISMO AUTOR» y, detrás, un catálogo con precios). Desde la
+ * primera entrada así, todo queda fuera.
+ */
+const FINAL = /^\s*(obras del mismo autor|otras obras|obras de\b|obras publicadas|cat[aá]logo|publicaciones de|de venta en)/iu;
 
 /** Una entrada del índice que no es narración: prólogos, dedicatorias, notas, índices, glosarios. */
 export function esParatexto(etiqueta: string): boolean {
@@ -51,11 +58,13 @@ export function esParatexto(etiqueta: string): boolean {
 /**
  * Una división numerada: «Capítulo…», «Tranco…», «Parte…», «Libro…», «Tratado…»,
  * «Jornada…», «Canto…», o un número romano (en mayúsculas) o arábigo solo o
- * seguido de puntuación («XII», «I. La llegada», «3.»). [PROPIO] Si el índice
- * tiene alguna, lo que va antes de la primera es preliminar (portada, cartas,
- * poemas de dedicatoria), no narración.
+ * seguido de puntuación («XII», «I. La llegada», «3.»). Un romano de una sola
+ * letra solo vale si es I, V o X: «D.» o «M.» son abreviaturas («D. Armando
+ * Palacio Valdés», pg32364). [PROPIO] Si el índice tiene alguna, lo que va
+ * antes de la primera es preliminar (portada, cartas, poemas de dedicatoria),
+ * no narración.
  */
-const NUMERADA = /^\s*(?:(?:cap[ií]tulo|tranco|parte|libro|tratado|jornada|canto)\b|[IVXLCDM]+\s*(?:[.:\-–—]|$)|\d+\s*(?:[.:\-–—)]|$))/iu;
+const NUMERADA = /^[\s\-–—]*(?:(?:cap[ií]tulo|tranco|parte|libro|tratado|jornada|canto)\b|(?:[IVXLCDM]{2,}|[IVX])\s*(?:[.:\-–—]|$)|\d+\s*(?:[.:\-–—)]|$))/iu;
 const ROMANO_EN_MINUSCULA = /^\s*[ivxlcdm]+\s*(?:[.:\-–—]|$)/u;
 export function esDivisionNumerada(etiqueta: string): boolean {
   return NUMERADA.test(etiqueta) && !ROMANO_EN_MINUSCULA.test(etiqueta);
@@ -125,9 +134,14 @@ export function capitulosDeEpub(zip: ReadonlyMap<string, Buffer>): CapitulosDeEp
   const ordenadas = entradas.filter((e) => e.posicion >= 0).sort((a, b) => a.posicion - b.posicion);
   for (const e of entradas.filter((x) => x.posicion < 0)) salida.fuera.push({ orden: e.orden, etiqueta: e.etiqueta, motivo: 'su ancla no está en el libro' });
   const primeraNumerada = ordenadas.find((e) => esDivisionNumerada(e.etiqueta))?.posicion ?? -1;
+  const anunciosFinales = ordenadas.find((e) => FINAL.test(e.etiqueta))?.posicion ?? Infinity;
   ordenadas.forEach((e, i) => {
     if (/project gutenberg/i.test(e.etiqueta) || e.posicion >= fin) {
       salida.fuera.push({ orden: e.orden, etiqueta: e.etiqueta, motivo: 'licencia de Project Gutenberg' });
+      return;
+    }
+    if (e.posicion >= anunciosFinales) {
+      salida.fuera.push({ orden: e.orden, etiqueta: e.etiqueta, motivo: 'final: anuncios del editor u obras del autor' });
       return;
     }
     if (esParatexto(e.etiqueta)) {

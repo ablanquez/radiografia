@@ -29,12 +29,14 @@ describe('capitulosDeEpub', () => {
     ]);
   });
 
-  test('fuera, con su motivo: lo que va antes del primer capítulo numerado, el prólogo, las notas y la licencia de Gutenberg', () => {
+  test('fuera, con su motivo: lo que va antes del primer capítulo numerado, el prólogo, las notas, los anuncios finales y la licencia de Gutenberg', () => {
     assert.deepEqual(capitulosDeEpub(PRUEBA).fuera, [
       { orden: 1, etiqueta: 'EL LIBRO DE PRUEBA', motivo: 'preliminar: antes de la primera división numerada' },
       { orden: 2, etiqueta: 'PRÓLOGO', motivo: 'paratexto' },
       { orden: 5, etiqueta: 'FOOTNOTES:', motivo: 'paratexto' },
-      { orden: 6, etiqueta: 'THE FULL PROJECT GUTENBERG™ LICENSE', motivo: 'licencia de Project Gutenberg' },
+      { orden: 6, etiqueta: 'OBRAS DEL MISMO AUTOR', motivo: 'final: anuncios del editor u obras del autor' },
+      { orden: 7, etiqueta: 'EL OTRO LIBRO', motivo: 'final: anuncios del editor u obras del autor' },
+      { orden: 8, etiqueta: 'THE FULL PROJECT GUTENBERG™ LICENSE', motivo: 'licencia de Project Gutenberg' },
     ]);
   });
 
@@ -52,12 +54,12 @@ describe('capitulosDeEpub', () => {
 
 describe('esDivisionNumerada', () => {
   test('capítulos, trancos, partes y números: sí', () => {
-    for (const e of ['CAPÍTULO PRIMERO', 'Capitulo 3', 'TRANCO II', 'PARTE SEGUNDA', 'XII', 'I. La llegada', '3.', '14']) {
+    for (const e of ['CAPÍTULO PRIMERO', 'Capitulo 3', 'TRANCO II', 'PARTE SEGUNDA', 'XII', 'I. La llegada', '3.', '14', 'V', 'X.', 'IX', '-I-', '—XII—']) {
       assert.equal(esDivisionNumerada(e), true, e);
     }
   });
   test('títulos, aunque empiecen por letras de numeral romano: no', () => {
-    for (const e of ['MI VIDA', 'LA NOCHE', 'EL DIABLO COJUELO', 'Carta de recomendación', 'Soneto', 'i. nota']) {
+    for (const e of ['MI VIDA', 'LA NOCHE', 'EL DIABLO COJUELO', 'Carta de recomendación', 'Soneto', 'i. nota', 'D. ARMANDO PALACIO VALDÉS', 'M. Bergeret en París']) {
       assert.equal(esDivisionNumerada(e), false, e);
     }
   });
@@ -65,7 +67,7 @@ describe('esDivisionNumerada', () => {
 
 describe('esParatexto', () => {
   test('prólogos, dedicatorias, notas, índices y glosarios: sí', () => {
-    for (const e of ['PRÓLOGO', 'Prólogo del autor', 'DEDICATORIA DE ESTA EDICIÓN', 'NOTAS', 'FOOTNOTES:', 'ÍNDICE', 'Indice', 'Vocabulario', 'INTRODUCCIÓN', 'Advertencia', 'Al lector']) {
+    for (const e of ['PRÓLOGO', 'Prólogo del autor', 'DEDICATORIA DE ESTA EDICIÓN', 'NOTAS', 'FOOTNOTES:', 'ÍNDICE', 'Indice', 'Vocabulario', 'INTRODUCCIÓN', 'Advertencia', 'Al lector', 'ACLARACIÓN', 'Prefacio', 'ABBREVIATIONS', 'VOCABULARY', 'NOTES', 'EXERCISES']) {
       assert.equal(esParatexto(e), true, e);
     }
   });
