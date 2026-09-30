@@ -2,8 +2,8 @@
  * El juez de los ejemplos de las fichas (encargo 4.1; punto 4 del plan: «cada
  * ejemplo positivo dispara, cada negativo no»): por cada regla de cada
  * paquete de PAQUETES, cada ejemplo positivo produce al menos una señal y cada
- * negativo ninguna. El punto 5 lo reutilizará con las reglas reales: basta con
- * añadir su paquete a la lista.
+ * negativo ninguna. Desde el encargo 5.1 juzga también el paquete real,
+ * paquetes/radiografia.json (en la raíz del repo, junto a data/).
  *
  * Desde el 4.2 aplica a cada regla su detector con `detectar` de analizar.ts,
  * el mismo reparto que usa el motor: patrón y estructural. Cada ejemplo se
@@ -12,6 +12,9 @@
  * Las reglas ESTADÍSTICAS no pasan por aquí (encargo 4.3): sus ejemplos
  * necesitan el análisis entero —longitud de al menos 100 palabras de prosa,
  * tramo, calibración y género— y tienen su propio juez.
+ * [PROPIO] En el nombre de cada test, los saltos de línea y los caracteres
+ * invisibles del ejemplo se escriben a la vista (⏎, <U+202F>): si no, un
+ * positivo con U+202F y su negativo sin él se llamarían igual.
  *
  * ⚠️ Los paquetes se leen al cargar el fichero, fuera de los tests, porque de
  *    ellos salen los tests. Si uno no se puede leer, falla el fichero entero y
@@ -26,10 +29,21 @@ import { detectar } from './analizar.ts';
 import type { Paquete } from './paquete.ts';
 import { validarPaquete } from './validar.ts';
 
-const PAQUETES = ['paquete-prueba-interno.json', 'paquete-prueba-secundario.json'];
+const PAQUETES = [
+  new URL('../fixtures/paquete-prueba-interno.json', import.meta.url),
+  new URL('../fixtures/paquete-prueba-secundario.json', import.meta.url),
+  new URL('../../paquetes/radiografia.json', import.meta.url),
+];
 
-for (const fichero of PAQUETES) {
-  const paquete = JSON.parse(readFileSync(new URL(`../fixtures/${fichero}`, import.meta.url), 'utf8')) as Paquete;
+/** El ejemplo con sus saltos de línea y sus caracteres invisibles a la vista, para el nombre del test. */
+const aLaVista = (ejemplo: string): string =>
+  ejemplo.replace(/[\n\u00A0\u200B-\u200D\u2060\u202F\uFEFF]/g, (c) =>
+    c === '\n' ? '⏎' : `<U+${c.codePointAt(0)!.toString(16).toUpperCase().padStart(4, '0')}>`,
+  );
+
+for (const url of PAQUETES) {
+  const fichero = url.pathname.split('/').at(-1)!;
+  const paquete = JSON.parse(readFileSync(url, 'utf8')) as Paquete;
 
   describe(`los ejemplos de ${fichero}`, () => {
     test('el paquete es válido', () => {
@@ -39,14 +53,14 @@ for (const fichero of PAQUETES) {
     for (const regla of paquete.reglas.filter((r) => r.detector !== 'estadístico')) {
       const senales = (ejemplo: string) => detectar(regla, analizarTexto(ejemplo));
       for (const ejemplo of regla.ejemplos.positivos) {
-        test(`${regla.id} · positivo «${ejemplo}» → al menos una señal`, () => {
-          assert.ok(senales(ejemplo).length >= 1, `${regla.id} no dispara en «${ejemplo}»`);
+        test(`${regla.id} · positivo «${aLaVista(ejemplo)}» → al menos una señal`, () => {
+          assert.ok(senales(ejemplo).length >= 1, `${regla.id} no dispara en «${aLaVista(ejemplo)}»`);
         });
       }
       for (const ejemplo of regla.ejemplos.negativos) {
-        test(`${regla.id} · negativo «${ejemplo}» → ninguna señal`, () => {
+        test(`${regla.id} · negativo «${aLaVista(ejemplo)}» → ninguna señal`, () => {
           const s = senales(ejemplo);
-          assert.equal(s.length, 0, `${regla.id} dispara en «${ejemplo}»: ${s.map((x) => x.fragmento).join(', ')}`);
+          assert.equal(s.length, 0, `${regla.id} dispara en «${aLaVista(ejemplo)}»: ${s.map((x) => x.fragmento).join(', ')}`);
         });
       }
     }

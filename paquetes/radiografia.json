@@ -1,0 +1,314 @@
+{
+  "$schema": "https://raw.githubusercontent.com/ablanquez/radiografia/main/motor/esquema/paquete.schema.json",
+  "cabecera": {
+    "nombre": "RadiografIA",
+    "version": "0.1.0",
+    "idioma": "es",
+    "descripcion": "Reglas que señalan en un texto en español los rasgos de estilo que la investigación asocia a los textos generados con modelos de lenguaje. Cada regla dice de dónde sale y con qué nivel de evidencia. Analiza estilo; no demuestra autoría.",
+    "autor": "Antonio Blánquez Cabeza",
+    "licencia": "Apache-2.0",
+    "familias": [
+      {
+        "id": "lexico",
+        "nombre": "Léxico",
+        "informativa": false
+      },
+      {
+        "id": "sintaxis",
+        "nombre": "Sintaxis",
+        "informativa": false
+      },
+      {
+        "id": "puntuacion-formato",
+        "nombre": "Puntuación y formato",
+        "informativa": false
+      },
+      {
+        "id": "estadistica",
+        "nombre": "Estadística",
+        "informativa": false
+      },
+      {
+        "id": "discurso",
+        "nombre": "Discurso",
+        "informativa": false
+      },
+      {
+        "id": "canal",
+        "nombre": "Canal",
+        "informativa": true
+      }
+    ]
+  },
+  "reglas": [
+    {
+      "id": "canal-negrita-markdown",
+      "familia": "canal",
+      "detector": "patrón",
+      "parametros": {
+        "regex": "\\*\\*[^*\\n]+\\*\\*|__[^_\\n]+__",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": false,
+          "tildes": false
+        }
+      },
+      "peso": 0,
+      "severidad": "baja",
+      "informativa": true,
+      "explicacion": "Asteriscos dobles (**así**) o guiones bajos dobles (__así__) escritos tal cual: es la negrita de Markdown, el formato con el que responden los asistentes de chat, y al copiar la respuesta con su botón «Copiar» se pega sin convertir. Este rasgo indica que el texto se copió de un asistente sin limpiar; no dice nada de quién lo escribió. Medido en inglés (Freeburg, 2026): sin pedirles otra cosa, GPT-4o, Claude Sonnet 4 y GPT-4.1 dejan de 5,4 a 6,3 marcas de Markdown por cada 1.000 palabras, y GPT-5.4 ninguna. Cuando aparece dice mucho; cuando no aparece, no dice nada.",
+      "sugerencia": "Quita el formato Markdown: borra los asteriscos o los guiones bajos, o pega el texto como texto sin formato y pon la negrita con tu editor si la quieres.",
+      "excepciones": [
+        "Documentación técnica, notas o mensajes escritos en Markdown a propósito (GitHub, foros, wikis): ahí los asteriscos son el formato normal.",
+        "Nombres de código con dos guiones bajos a cada lado, como __init__."
+      ],
+      "fuente": [
+        {
+          "titulo": "Freeburg (2026), «The Last Fingerprint: How Markdown Training Shapes LLM Prose», arXiv 2603.27006 (preprint, en inglés)",
+          "url": "https://arxiv.org/html/2603.27006v1"
+        },
+        {
+          "titulo": "Wikipedia en inglés, «Signs of AI writing», sección «Use of Markdown» (leída por fragmentos indexados; la página no se pudo descargar)",
+          "url": "https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing"
+        },
+        {
+          "titulo": "llm2doc, guía para pegar respuestas de ChatGPT en Word: el botón «Copiar» lleva el Markdown crudo (proveedor de herramientas)",
+          "url": "https://llm2doc.app/guides/paste-chatgpt-into-word"
+        },
+        {
+          "titulo": "BytePlus: el botón «Copiar» de ChatGPT pone en el portapapeles el Markdown con los asteriscos (proveedor de herramientas)",
+          "url": "https://www.byteplus.com/en/topic/559200"
+        }
+      ],
+      "origenLista": null,
+      "nivelEvidencia": "medido en inglés",
+      "ejemplos": {
+        "positivos": [
+          "El informe llega el lunes y es **muy importante** leerlo antes de la reunión.",
+          "Hay que revisar __todas__ las facturas del trimestre."
+        ],
+        "negativos": [
+          "El informe llega el lunes y es muy importante leerlo antes de la reunión.",
+          "La cifra lleva un asterisco* porque es provisional."
+        ]
+      }
+    },
+    {
+      "id": "canal-encabezado-markdown",
+      "familia": "canal",
+      "detector": "estructural",
+      "parametros": {
+        "posicion": "inicio-parrafo",
+        "regex": "#{1,6} ",
+        "sobreNoProsa": true
+      },
+      "peso": 0,
+      "severidad": "baja",
+      "informativa": true,
+      "explicacion": "Una línea que empieza por una a seis almohadillas y un espacio (## Así) es un encabezado de Markdown sin convertir. Este rasgo indica que el texto se copió de un asistente sin limpiar; no dice nada de quién lo escribió. Medido en inglés (Freeburg, 2026): sin pedirles otra cosa, GPT-4o, Claude Sonnet 4 y GPT-4.1 dejan de 5,4 a 6,3 marcas de Markdown por cada 1.000 palabras, y GPT-5.4 ninguna. Cuando aparece dice mucho; cuando no aparece, no dice nada. Wikipedia también lo recoge: títulos de sección con almohadillas.",
+      "sugerencia": "Quita el formato Markdown: borra las almohadillas y deja el título como una línea normal, o dale formato de título con tu editor.",
+      "excepciones": [
+        "Documentación técnica, notas o ficheros escritos en Markdown a propósito.",
+        "Las almohadillas de un bloque de código (los comentarios de un script) no cuentan: el motor no mira el código.",
+        "Una etiqueta pegada a la palabra (#radiografia) no es un encabezado y no cuenta."
+      ],
+      "fuente": [
+        {
+          "titulo": "Freeburg (2026), «The Last Fingerprint: How Markdown Training Shapes LLM Prose», arXiv 2603.27006 (preprint, en inglés)",
+          "url": "https://arxiv.org/html/2603.27006v1"
+        },
+        {
+          "titulo": "Wikipedia en inglés, «Signs of AI writing», sección «Use of Markdown» (leída por fragmentos indexados; la página no se pudo descargar)",
+          "url": "https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing"
+        }
+      ],
+      "origenLista": null,
+      "nivelEvidencia": "medido en inglés",
+      "ejemplos": {
+        "positivos": [
+          "## Resumen del proyecto\nEl proyecto avanza según lo previsto."
+        ],
+        "negativos": [
+          "El proyecto avanza según lo previsto.",
+          "#radiografia fue la etiqueta más usada ayer.",
+          "```bash\n# instala las dependencias\nnpm install\n```"
+        ]
+      }
+    },
+    {
+      "id": "canal-vineta-con-negrita-inicial",
+      "familia": "canal",
+      "detector": "estructural",
+      "parametros": {
+        "posicion": "inicio-parrafo",
+        "regex": "[-*+•] \\*\\*[^*\\n]+\\*\\*",
+        "sobreNoProsa": true
+      },
+      "peso": 0,
+      "severidad": "baja",
+      "informativa": true,
+      "explicacion": "Una viñeta que empieza por un rótulo en negrita de Markdown (- **Plazos:** …) es la plantilla de lista con la que responden los asistentes, pegada sin convertir. Este rasgo indica que el texto se copió de un asistente sin limpiar; no dice nada de quién lo escribió. Anecdótico: Wikipedia lo describe como rasgo de texto generado —viñetas de más y negritas en casi todas las líneas—, sin cifras.",
+      "sugerencia": "Quita el formato Markdown: borra los asteriscos del rótulo, o convierte la lista en párrafos.",
+      "excepciones": [
+        "Presentaciones, apuntes y notas escritos en Markdown a propósito.",
+        "Solo mira viñetas de guion, asterisco, más o topo (-, *, +, •): una lista numerada con el rótulo en negrita («1. **Paso:**») no cuenta."
+      ],
+      "fuente": [
+        {
+          "titulo": "Wikipedia en inglés, «Signs of AI writing», sección «Use of Markdown» (leída por fragmentos indexados; la página no se pudo descargar)",
+          "url": "https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing"
+        },
+        {
+          "titulo": "MakeUseOf, sobre la guía de Wikipedia para detectar escritura con IA (viñetas y negritas en casi todas las líneas)",
+          "url": "https://www.makeuseof.com/wikipedia-best-ai-writing-detection-guide/"
+        }
+      ],
+      "origenLista": null,
+      "nivelEvidencia": "anecdótico",
+      "ejemplos": {
+        "positivos": [
+          "- **Presupuesto:** cerrado en marzo.\n- **Plazos:** sin cambios."
+        ],
+        "negativos": [
+          "- Presupuesto cerrado en marzo.\n- Plazos sin cambios.",
+          "El presupuesto, **cerrado en marzo**, no cambia."
+        ]
+      }
+    },
+    {
+      "id": "canal-separador-o-tabla",
+      "familia": "canal",
+      "detector": "estructural",
+      "parametros": {
+        "posicion": "inicio-parrafo",
+        "regex": "(---|\\*\\*\\*|\\|)",
+        "sobreNoProsa": true
+      },
+      "peso": 0,
+      "severidad": "baja",
+      "informativa": true,
+      "explicacion": "Una línea de tres guiones o de tres asteriscos (---) es un separador de Markdown, y una línea que empieza por una barra vertical (| Mes | Ventas |) es una fila de tabla de Markdown: los dos salen sin convertir al copiar la respuesta de un asistente, y cada fila de la tabla es una señal. Este rasgo indica que el texto se copió de un asistente sin limpiar; no dice nada de quién lo escribió. Anecdótico: Wikipedia cita los separadores «---», y las guías para pegar en Word, las barras de las tablas; sin cifras.",
+      "sugerencia": "Quita el formato Markdown: borra la línea de guiones, y rehaz la tabla con la herramienta de tablas de tu editor.",
+      "excepciones": [
+        "Documentación técnica y ficheros escritos en Markdown a propósito.",
+        "Texto pegado de un programa que separa las columnas con barras verticales."
+      ],
+      "fuente": [
+        {
+          "titulo": "Wikipedia en inglés, «Signs of AI writing», sección «Use of Markdown» (leída por fragmentos indexados; la página no se pudo descargar)",
+          "url": "https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing"
+        },
+        {
+          "titulo": "llm2doc, guía para pegar respuestas de ChatGPT en Word: el botón «Copiar» lleva el Markdown crudo (proveedor de herramientas)",
+          "url": "https://llm2doc.app/guides/paste-chatgpt-into-word"
+        }
+      ],
+      "origenLista": null,
+      "nivelEvidencia": "anecdótico",
+      "ejemplos": {
+        "positivos": [
+          "Primera parte del informe.\n---\nSegunda parte del informe.",
+          "| Mes | Ventas |\n|---|---|\n| Enero | 120 |"
+        ],
+        "negativos": [
+          "Primera parte del informe.\nSegunda parte del informe.",
+          "El marcador quedó 3 | 1 al descanso."
+        ]
+      }
+    },
+    {
+      "id": "canal-espacio-estrecho-u202f",
+      "familia": "canal",
+      "detector": "patrón",
+      "parametros": {
+        "regex": "\\u202F",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": false,
+          "tildes": false
+        },
+        "sobreNoProsa": true
+      },
+      "peso": 0,
+      "severidad": "baja",
+      "informativa": true,
+      "explicacion": "Un espacio estrecho de no separación (U+202F) donde iría un espacio normal. No se ve, pero algunos modelos de OpenAI (o3, o4-mini y GPT-5 sin razonamiento) lo han escrito en lugar del espacio corriente, en prosa, tablas y encabezados; OpenAI lo explicó como una rareza de su entrenamiento, no como una marca de agua. Este rasgo indica que el texto se copió de un asistente sin limpiar; no dice nada de quién lo escribió. Anecdótico: reproducible, pero va y viene con cada versión del modelo.",
+      "sugerencia": "Quita los caracteres invisibles: pega el texto como texto sin formato, o cambia los espacios estrechos por espacios normales con «buscar y reemplazar».",
+      "excepciones": [
+        "Tipografía francesa: el espacio estrecho va delante de ; : ! ?",
+        "Cifras: los miles separados con un espacio fino (10 000), como recomienda la RAE, se pueden escribir con este carácter, y el motor los señala igual.",
+        "Textos que vienen de un programa de maquetación.",
+        "Un U+202F entre dos frases o en el borde de un párrafo no se ve: el motor lo toma por un espacio y lo recorta."
+      ],
+      "fuente": [
+        {
+          "titulo": "Rumi (20/04/2025): o3 y o4-mini insertan U+202F en respuestas largas; OpenAI lo explica como «a quirk of large-scale reinforcement learning»",
+          "url": "https://www.rumidocs.com/newsroom/new-chatgpt-models-seem-to-leave-watermarks-on-text"
+        },
+        {
+          "titulo": "Foro de desarrolladores de OpenAI: GPT-5 sin razonamiento escribe U+202F en lugar del espacio normal",
+          "url": "https://community.openai.com/t/gpt-5-non-reasoning-outputs-u-202f-narrow-no-break-space-instead-of-normal-spaces-breaks-text-rendering-on-macos-apps/1362321"
+        }
+      ],
+      "origenLista": null,
+      "nivelEvidencia": "anecdótico",
+      "ejemplos": {
+        "positivos": [
+          "El informe\u202Fllega el lunes."
+        ],
+        "negativos": [
+          "El informe llega el lunes."
+        ]
+      }
+    },
+    {
+      "id": "canal-invisibles-unicode",
+      "familia": "canal",
+      "detector": "patrón",
+      "parametros": {
+        "regex": "[\\u200B\\u2060\\uFEFF]",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": false,
+          "tildes": false
+        }
+      },
+      "peso": 0,
+      "severidad": "baja",
+      "informativa": true,
+      "explicacion": "Caracteres de ancho cero en mitad del texto: el espacio de ancho cero (U+200B), la unión de palabras (U+2060) o la marca de orden de bytes (U+FEFF). No se ven, pero están. Las herramientas que «limpian» el texto de los asistentes los quitan; que los asistentes los escriban solo lo dicen esas herramientas, que son comerciales y no dan datos, y una prueba pequeña con ocho respuestas copiadas de ChatGPT no encontró ninguno. Si aparecen, el texto se copió de algún sitio sin limpiar —un asistente, una web, un PDF—; no dice nada de quién lo escribió. Anecdótico.",
+      "sugerencia": "Quita los caracteres invisibles: pega el texto como texto sin formato, o pásalo por un limpiador de texto plano.",
+      "excepciones": [
+        "Editores web, PDF y algunos procesadores de texto los meten solos.",
+        "Una marca de orden de bytes (U+FEFF) al principio del texto es normal en un fichero guardado en UTF-8, y no cuenta: en el borde de una frase o de un párrafo el motor la toma por un espacio y la recorta."
+      ],
+      "fuente": [
+        {
+          "titulo": "TextPurify, limpiador de texto: quita U+200B, U+202F, U+FEFF… (herramienta comercial; sus afirmaciones no están verificadas)",
+          "url": "https://textpurify.com/"
+        },
+        {
+          "titulo": "getgpt.app, «watermark»: quita caracteres invisibles de texto de ChatGPT (herramienta comercial; sus afirmaciones no están verificadas)",
+          "url": "https://getgpt.app/watermark"
+        },
+        {
+          "titulo": "depost.ai: ocho respuestas copiadas de ChatGPT, sin caracteres ocultos (anécdota en contra)",
+          "url": "https://depost.ai/blog/chatgpt-watermark"
+        }
+      ],
+      "origenLista": null,
+      "nivelEvidencia": "anecdótico",
+      "ejemplos": {
+        "positivos": [
+          "El informe llega\u200B el lunes.",
+          "La reunión\uFEFF empieza a las diez.",
+          "El plazo\u2060 vence mañana."
+        ],
+        "negativos": [
+          "El informe llega el lunes.",
+          "\uFEFFEl informe llega el lunes."
+        ]
+      }
+    }
+  ]
+}
