@@ -14,7 +14,7 @@
 
 ---
 
-## [2026-09-30] 🔴 ABIERTA — El filtro «fiction» de Gutenberg deja pasar la crítica literaria («Spanish fiction -- History and criticism»)
+## [2026-09-30] ✅ CERRADA — El filtro «fiction» de Gutenberg deja pasar la crítica literaria («Spanish fiction -- History and criticism»)
 
 **Categoría:** herramienta de calibración (extracción de corpus)
 **Síntoma:** los tres tomos de «Orígenes de la novela» de Menéndez Pelayo (pg70058, pg71733, pg76459) están en la muestra de narrativa-clasica: el tomo I es el estudio crítico («Reseña de la novela en la antigüedad clásica, griega y latina…»); el II y el III, la antología de textos que lo acompaña (diálogos lucianescos, coloquios, comedias en diálogo). En el catálogo hay 947 líneas con «History and criticism». Visto al releer las etiquetas de 600+, antes de hacer commit de los datos de narrativa.
@@ -34,15 +34,16 @@ filtrarLibro(pg71733 «Orígenes de la novela, Tomo II», Subjects «Spanish fic
 filtrarLibro(pg76459 «Orígenes de la novela, Tomo II», Subjects «Spanish fiction -- History and criticism») → {"dentro":true}
 ```
 **Cómo se cazó:** ojo humano (relectura de la muestra de 300-599 y 600+ a la parada de narrativa)
-**Causa raíz:** ⏳ PENDIENTE
-**Arreglo aplicado:** ⏳ PENDIENTE
-**Commit:** ⏳ PENDIENTE
+**Causa raíz:** `filtrarLibro` buscaba «fiction» como subcadena en todo el campo Subjects, y en los encabezamientos de materia «fiction» aparece también como TEMA de un libro de crítica («Spanish fiction -- History and criticism»), no solo como su forma. Los jueces tenían filas inventadas con «fiction» siempre como forma («Spanish fiction», «Satire -- Fiction»): ninguna con una subdivisión de crítica, así que no había caso que los contradijera.
+**Arreglo aplicado:** `motor/herramientas/calibrar/gutenberg.ts`, `esFiccion()`: un libro es ficción si algún encabezamiento suyo con «fiction» no lleva «-- History and criticism» (la única subdivisión de crítica en los encabezamientos con «fiction» de los libros en español del catálogo, contadas todas). Juez nuevo (fila 11 fuera, fila 12 dentro), en rojo antes del verde; contraprueba 3 de 3. Comprobado en el catálogo real: `filtrarLibro(pg70058…)`, `(pg71733…)` y `(pg76459…)` → `{"fuera":"crítica: «fiction» solo con «History and criticism»"}`, y salen exactamente esos tres (descarga del 30/09: «crítica…»: 3).
+**Commit:** 5b8a8f0
 **Ley que sale de aquí:** SIN LEY TODAVÍA
+Y al cerrar: un filtro por palabra clave se juzga con todas las formas en que esa palabra aparece en el dato real, no con las que imaginó quien escribió el juez.
 **Traza:** `motor/herramientas/calibrar/gutenberg.ts` (`filtrarLibro`); `motor/herramientas/calibrar/gutenberg.spec.ts`. Misma relectura que la reapertura de «Los capítulos de EPUB dejaban entrar…».
 
 ---
 
-## [2026-09-30] 🔴 ABIERTA — El texto alternativo de las imágenes del EPUB «noimages» entra en los capítulos con los jueces en verde
+## [2026-09-30] ✅ CERRADA — El texto alternativo de las imágenes del EPUB «noimages» entra en los capítulos con los jueces en verde
 
 **Categoría:** herramienta de calibración (extracción de corpus)
 **Síntoma:** en los EPUB «epub.noimages» de Gutenberg cada imagen es un `<span id="img_…">` con su texto alternativo, y ese texto queda dentro del capítulo: «Pie» y «Cabecera» como líneas sueltas en los capítulos de pg14995 («Los hombres de pro»); el nombre de la capitular pegado a la primera palabra en pg75382 («letra-a-iloPENAS» por «APENAS»). Hay 2.801 spans así en 157 de los 243 libros de la muestra. Visto al releer la muestra de 300-599 y 600+, antes de hacer commit de los datos de narrativa.
@@ -60,15 +61,16 @@ pg75382-013 dentro: línea 1: «letra-a-iloPENAS un asomo de razón ilumi»
 ```
 Y la revisión a mano declarada en el manifiesto («los 127 capítulos de 100-299 de la primera descarga completa, uno a uno») no lo señaló.
 **Cómo se cazó:** ojo humano (relectura de la muestra a la parada de narrativa)
-**Causa raíz:** ⏳ PENDIENTE
-**Arreglo aplicado:** ⏳ PENDIENTE
-**Commit:** ⏳ PENDIENTE
+**Causa raíz:** `epub.ts` no sabía que Ebookmaker, en los EPUB «noimages», cambia cada `<img>` por un `<span id="img_…">` con su texto alternativo, y `html.ts` quita etiquetas pero conserva su contenido: el texto alternativo quedaba como texto del libro. El fixture, hecho a imagen de pg12457, no tenía ninguna imagen, y la revisión a mano leía el arranque de los capítulos; «Pie» y «Cabecera» van en medio, entre párrafos.
+**Arreglo aplicado:** `motor/herramientas/calibrar/epub.ts`, `sinImagenes()`, antes de `lineasDeHtml`: fuera el texto alternativo, los pies (`class="caption"`) y el pie que lo repite justo detrás (pg15115); se queda la letra de una capitular salvo que detrás vaya ya la palabra entera («A» + «Aunque»). Un primer intento quitaba el `div` entero de la figura y se llevaba narración (pg42440): descartado antes del commit. Fixture y jueces en rojo antes del verde; contraprueba 8 de 8. Comprobado sobre la muestra que sale, no sobre los casos: en los 7.878 capítulos de los 243 libros, las líneas de texto de imagen («Cabecera», «Pie», «decoración», «flor», «barra», «letra-…», «ilop…») pasan de 493 a 0; `pg14995-013` ya no tiene «Pie» ni «Cabecera». Límites declarados en el manifiesto: «PENAS» (pg75382), «CCAPÍTULO» (pg62359) y la letra sola de una capitular en su propio bloque (31 líneas en 11 libros).
+**Commit:** 2f2cdea
 **Ley que sale de aquí:** SIN LEY TODAVÍA
+Y al cerrar: la relectura de un documento extraído cubre el documento entero, no su arranque; lo que se cuela vive en medio y al final.
 **Traza:** `motor/herramientas/calibrar/epub.ts` (`capitulosDeEpub`); `motor/herramientas/calibrar/html.ts` (`limpiarHtml`, `lineasDeHtml`).
 
 ---
 
-## [2026-09-30] 🔁 REABIERTA — Los capítulos de EPUB dejaban entrar anuncios, glosarios y preliminares con los jueces en verde
+## [2026-09-30] ✅ CERRADA — Los capítulos de EPUB dejaban entrar anuncios, glosarios y preliminares con los jueces en verde
 
 **Categoría:** herramienta de calibración (extracción de corpus)
 **Síntoma:** en el piloto de narrativa-clasica (40 EPUB de Gutenberg), entre los documentos del tramo 100-299 estaban el catálogo de anuncios del editor de pg29831 («OBRAS DEL MISMO AUTOR», «PSICOLOGÍA ALEMANA… 3,50 pesetas») y la «ACLARACIÓN» de pg32364; en 600+, un glosario inglés «ABBREVIATIONS» de 14.831 palabras (pg29731). Ningún dato publicado: se vio antes de calibrar.
@@ -87,14 +89,15 @@ pg29831 capítulos dentro: OBRAS DEL MISMO AUTOR · PSICOLOGÍA ALEMANA CONTEMPO
 **Cómo se cazó:** ojo humano (revisión a mano de los capítulos de 100-299 del piloto)
 **Causa raíz:** ~~el EPUB de prueba (`fixtures/prueba.epub`) solo tenía la estructura que se había visto en pg12457: ni abreviaturas con punto en el índice, ni anuncios del editor al final, ni paratextos en inglés. `NUMERADA` aceptaba cualquier letra romana suelta con punto («D.»), y ninguna regla miraba lo que va detrás del último capítulo. Los jueces pasaban porque no había caso que los contradijera.~~
 ~~Los jueces se escribieron contra un EPUB sintético hecho a imagen de un solo libro (pg12457), y las reglas de `epub.ts` (qué es paratexto, qué es división numerada, dónde empieza el libro) son listas de etiquetas: cada libro real con una etiqueta no prevista las burlaba sin que ningún juez lo supiera. **Por qué no aguantó el primer cierre:** se comprobó solo en los tres libros del síntoma, no releyendo la muestra resultante; con 240 libros salieron etiquetas nuevas del mismo tipo (portadas con el título, «TASA», «TABLA», letras espaciadas, años, escenas, plurales).~~
-⏳ PENDIENTE
+Las reglas de `epub.ts` deciden por la ETIQUETA de cada entrada del índice, una a una, y lo que no es narración llega también de formas que ninguna etiqueta delata: secciones anidadas en un prólogo que se llaman «I», «II»; prólogos con otro nombre («BREVE NOTICIA», «ANTES DE EMPEZAR»); teatro con título propio («EL RETABLO DE LAS MARAVILLAS», «JORNADA SEGUNDA»); ensayos dentro de libros de ficción; libros enteros en diálogo o de crítica (esto, del filtro del catálogo: entrada aparte); y, dentro del último capítulo, lo que va detrás de «FIN» (catálogo del editor, crítica, erratas), que no tiene entrada en el índice. Los jueces solo conocían lo que se había visto. **Por qué no aguantó el segundo cierre:** su relectura cubrió una parte de la muestra (100-299 entero y los capítulos SIN numerar de 300-599) y solo el arranque de cada capítulo; 600+, la mayor celda publicada, y los finales no se leyeron, y el informe dio por buena la parte leída.
 **Arreglo aplicado:** ~~`epub.ts`: los romanos de una sola letra solo valen si son I, V o X, y se aceptan los numerales entre guiones (`NUMERADA`); nueva regla `FINAL`, que deja fuera todo desde la primera entrada «obras del mismo autor», «catálogo»…; `PARATEXTO` añade aclaración, prefacio, notes, vocabulary, abbreviations y exercises. Fixture y jueces ampliados (anuncios finales, «D. ARMANDO…», «M. Bergeret…», «-I-»), en rojo antes del verde, con contraprueba de 5 de 5. Comprobado después en los tres libros del síntoma: `esDivisionNumerada('D. ARMANDO PALACIO VALDÉS') → false`; pg29831, «OBRAS DEL MISMO AUTOR», «PSICOLOGÍA ALEMANA…» y «CALDERÓN DE LA BARCA» → final; pg32364, «ACLARACIÓN» → paratexto; pg29731, «ABBREVIATIONS» → paratexto.~~
 ~~Lo de `27157be` y, además: `08bf5f9`, portada (la etiqueta empieza por el `dc:title` del OPF), tasa, privilegio, aprobación, tabla, codificación y ediciones como paratexto, letras espaciadas juntas antes de mirar, teatro («ESCENA», «SCENA», «ACTO»), los arábigos de cuatro cifras no son capítulo; `2d65c97`, plurales explícitos (advertencias, dedicatorias, aclaraciones) y proemio, obras citadas, significado de; `ef04f80`, en el descargador, un capítulo idéntico a uno ya tomado no entra dos veces. Comprobado, esta vez releyendo la muestra: los 104 capítulos de 100-299 y los 31 sin numerar de 300-599, uno a uno, y los casos de la reapertura con el código de `ef04f80`: `esDivisionNumerada('1872') → false | esParatexto('TASA') → true | esParatexto('D E D I C A T O R I A') → true | esParatexto('ADVERTENCIAS') → true`; pg62691 «El criticón» → portada; pg2000 «TASA» → paratexto; pg49756 «ESCENA…» → teatro. Quedan dentro, declarados en el manifiesto, 13 capítulos de 100-299 y 3-4 de 300-599 que no son narración y ninguna regla general separa.~~
-⏳ PENDIENTE
-**Commit:** ~~27157be~~ 27157be, 08bf5f9, 2d65c97, ef04f80
+Lo anterior y, además: `754510b`, lo que el índice anida en un prólogo (prefacio, introducción, proemio, advertencia, «al lector») es prólogo, 23 secciones en 6 libros; `aef73fc`, `recortarFinal()`: dentro del capítulo, desde una marca de fin sola en su línea o desde una línea corta que abre el catálogo del editor, todo fuera (145 capítulos recortados en los 243 libros, 10.890 palabras); `83ec559`, las listas a mano con su motivo por decisión de Antonio (2 autores, 2 obras en diálogo, 21 capítulos, después del tope y sin sustituir; si una ya no está en la muestra, PARA, y paró dos veces: `pg42440-002` era texto de una imagen y `pg39613-039` pasó a idéntico); la crítica, en «El filtro "fiction"…» (`5b8a8f0`). Fixture y jueces en rojo antes del verde; contraprueba 3 de 3 y 5 de 5. Comprobado releyendo la muestra que se publica, entera: las etiquetas de todos los capítulos de 300-599 y 600+ (1.349 en la muestra de entonces) y el arranque de los sospechosos, el arranque del primer capítulo de cada uno de los 237 libros, los 8 capítulos que entraron al cambiar la extracción (todos narración), los finales de 300-599 y 600+ con marcas de contraportada (81 marcados, quedan solo fechas de redacción y algún título de sección) y cada corte de más de 250 palabras (justo antes queda el final de la narración). Con el código de `c825201`, en esa muestra: 0 líneas de texto de imagen, 0 catálogos detrás de «FIN»; `pg39444-035` acaba en «Los que le rodeaban creían que el terror le hacía desvariar.»
+**Commit:** ~~27157be~~ 27157be, 08bf5f9, 2d65c97, ef04f80, 754510b, aef73fc, 83ec559, 0657408, c825201
 **Ley que sale de aquí:** un fixture sintético solo juzga lo que su autor imaginó: antes de calibrar, se leen a mano documentos reales de cada tramo.
 Y al cerrar otra vez: un arreglo se comprueba sobre la muestra que sale, no sobre los casos que lo dispararon.
-**Traza:** `motor/herramientas/calibrar/epub.ts` (`esDivisionNumerada`, `esParatexto`, `capitulosDeEpub`); `motor/herramientas/calibrar/epub.spec.ts`; `motor/herramientas/calibrar/fixtures/prueba.epub`.
+Y al cerrar por tercera vez: la relectura cubre TODA la muestra que se publica, y de cada documento el principio y el final; una relectura por partes deja pasar lo que vive en la parte sin leer, y el informe no dice más de lo que se leyó.
+**Traza:** `motor/herramientas/calibrar/epub.ts` (`esDivisionNumerada`, `esParatexto`, `capitulosDeEpub`, `recortarFinal`); `motor/herramientas/calibrar/epub.spec.ts`; `motor/herramientas/calibrar/fixtures/prueba.epub`.
 **Nota:** el arreglo ya había comenzado al abrir esta entrada.
 **Nota [2026-09-30] — reabierta:** con la descarga completa (240 EPUB), la revisión a mano de los 127 capítulos de 100-299 encontró unos 30 que no eran narración: portadas cuyo índice repite el título («El criticón»: «Logotipo del editor / BIBLIOTECA RENACIMIENTO…»), la «TASA» del Quijote, «TABLA», «D E D I C A T O R I A», «Codificación», un año tomado por capítulo («1872»), escenas de teatro y capítulos duplicados entre dos libros. En un clon limpio de `27157be`:
 ```
