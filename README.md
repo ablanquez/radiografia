@@ -107,16 +107,25 @@ ruta](#hoja-de-ruta).
 En [`paquetes/`](paquetes/):
 
 - **RadiografIA 0.1.0** ([`radiografia.json`](paquetes/radiografia.json)):
-  declara las seis familias y trae las dos primeras:
+  declara las seis familias y trae tres:
+  - **léxico**: once reglas. Las cuatro de más peso están medidas en
+    español (Juzek, 2026): los verbos de énfasis (destacar, subrayar…),
+    «importancia», «innovador» e «imborrable», «multidisciplinario» e
+    «impecable». Las demás son traslados del inglés o anécdotas, con menos
+    peso: fórmulas de chatbot, «Adicionalmente» al principio de la frase,
+    palabras traducidas de las más señaladas en inglés, verbos corporativos
+    o «no solo… sino»;
   - **canal** (informativa: se señala y no suma): negrita y encabezados de
     Markdown, viñetas con rótulo en negrita, separadores y tablas, el espacio
     estrecho U+202F y los caracteres de ancho cero. Las de emojis y flechas
     esperan fuente;
   - **puntuación y formato**: la densidad de rayas y la raya con espacios.
 
-  Léxico, sintaxis, estadística y discurso están declaradas y vacías. Un
-  juez comprueba que ninguna regla va sin fuente, que el peso no pasa del
-  que permite su nivel de evidencia y que la familia canal no suma.
+  Sintaxis, estadística y discurso están declaradas y vacías. Un juez
+  comprueba que ninguna regla va sin fuente, que el peso no pasa del que
+  permite su nivel de evidencia, que la familia canal no suma y que ninguna
+  expresión regular usa `\b` ni `\w`, que en JavaScript no reconocen las
+  letras con tilde ni la eñe.
 - **«español correcto»**: pendiente.
 
 ## Cómo está pensado
