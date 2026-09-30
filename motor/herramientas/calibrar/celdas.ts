@@ -74,3 +74,36 @@ export function calcularCeldas(medidas: readonly Medida[], claves: readonly stri
   }
   return { n, celdas, omitidas };
 }
+
+/** De cada regla, en un tramo: en cuántos documentos de calibración da alguna señal y cuántas señales suman. */
+export interface DisparosDelTramo {
+  documentos: number;
+  reglas: Record<string, { documentos: number; senales: number }>;
+}
+
+/**
+ * [PROPIO, parada de narrativa] Los disparos de las reglas en los documentos
+ * de CALIBRACIÓN de cada tramo (los de validación quedan para el FPR del
+ * 5.6), de la regla que dispara en más documentos a la que menos (a igualdad,
+ * más señales; luego, por id).
+ */
+export function disparosPorTramo(
+  documentos: readonly { tramo: TramoDeCalibracion; reparto: Reparto; disparos: Readonly<Record<string, number>> }[],
+): Record<TramoDeCalibracion, DisparosDelTramo> {
+  const salida = {} as Record<TramoDeCalibracion, DisparosDelTramo>;
+  for (const tramo of TRAMOS) {
+    const delTramo = documentos.filter((d) => d.tramo === tramo && d.reparto === 'calibracion');
+    const reglas: DisparosDelTramo['reglas'] = {};
+    for (const d of delTramo) {
+      for (const [regla, senales] of Object.entries(d.disparos)) {
+        if (senales <= 0) continue;
+        const r = (reglas[regla] ??= { documentos: 0, senales: 0 });
+        r.documentos++;
+        r.senales += senales;
+      }
+    }
+    const orden = Object.entries(reglas).sort(([ia, a], [ib, b]) => b.documentos - a.documentos || b.senales - a.senales || (ia < ib ? -1 : 1));
+    salida[tramo] = { documentos: delTramo.length, reglas: Object.fromEntries(orden) };
+  }
+  return salida;
+}

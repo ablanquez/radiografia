@@ -13,7 +13,7 @@ import { analizarTexto } from '../../src/texto.ts';
 import { METRICAS } from '../../src/metricas/index.ts';
 import { CLAVES_DE_CALIBRACION, NOMBRES_DE_METRICAS } from '../../src/metricas/nombres.ts';
 import type { Paquete } from '../../src/paquete.ts';
-import { medirDocumento } from './medir.ts';
+import { medirConDisparos, medirDocumento } from './medir.ts';
 
 const RADIOGRAFIA = JSON.parse(readFileSync(new URL('../../../paquetes/radiografia.json', import.meta.url), 'utf8')) as Paquete;
 
@@ -39,5 +39,20 @@ describe('medirDocumento', () => {
     const esperado = analizar(conSenal, [RADIOGRAFIA], { genero: 'opinion' }).paquetes[0]!.puntuacion.total;
     assert.ok(typeof esperado === 'number' && esperado > 0, String(esperado));
     assert.equal(valores['_total-radiografia'], esperado);
+  });
+
+  test('los disparos: las señales de cada regla que puntúa, las de analizar() con el género del corpus', () => {
+    const conSenal = `${TEXTO} En resumen, cabe destacar que es crucial. Cabe destacar, además, que es clave.`;
+    const { valores, disparos } = medirConDisparos(conSenal, 'opinion', RADIOGRAFIA);
+    assert.deepEqual(valores, medirDocumento(conSenal, 'opinion', RADIOGRAFIA));
+    const r = analizar(conSenal, [RADIOGRAFIA], { genero: 'opinion' });
+    const esperado: Record<string, number> = {};
+    for (const s of [...r.senales, ...r.senalesTexto]) esperado[s.reglaId] = (esperado[s.reglaId] ?? 0) + 1;
+    assert.ok((disparos['lex-verbos-de-enfasis'] ?? 0) >= 2, JSON.stringify(disparos));
+    assert.deepEqual(disparos, esperado);
+  });
+
+  test('sin señales, sin disparos', () => {
+    assert.deepEqual(medirConDisparos(TEXTO, 'noticia', RADIOGRAFIA).disparos, {});
   });
 });

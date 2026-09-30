@@ -4,7 +4,8 @@
  * (medir.ts), lo reparte entre calibración y validación por la semilla
  * (comun.ts) y escribe, sin texto:
  *
- *   data/calibracion/<genero>.json             las celdas (n ≥ 100) y las omitidas
+ *   data/calibracion/<genero>.json             las celdas (n ≥ 100), las omitidas y
+ *                                              los disparos de las reglas por tramo
  *   data/calibracion/<genero>.manifiesto.json  el manifiesto con tramo y reparto
  *
  *   node herramientas/calibrar/calibrar.ts <genero>        (desde motor/)
@@ -21,9 +22,9 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import type { Paquete } from '../../src/paquete.ts';
 import { CLAVES_DE_CALIBRACION } from '../../src/metricas/nombres.ts';
-import { calcularCeldas, MINIMO_POR_CELDA, type Medida } from './celdas.ts';
+import { calcularCeldas, disparosPorTramo, MINIMO_POR_CELDA, type Medida } from './celdas.ts';
 import { SEMILLA, TRAMOS, huella, medirLongitud, reparto } from './comun.ts';
-import { medirDocumento } from './medir.ts';
+import { medirConDisparos } from './medir.ts';
 import { nombreDeFichero, prepararManifiesto, type Manifiesto } from './manifiesto.ts';
 
 const genero = process.argv[2];
@@ -46,6 +47,7 @@ if (corpus.genero !== genero) throw new Error(`el manifiesto es de «${corpus.ge
 const fecha = new Date().toISOString().slice(0, 10);
 const textos = new Map<string, string>();
 const medidas: Medida[] = [];
+const disparos: Parameters<typeof disparosPorTramo>[0][number][] = [];
 const cambios: string[] = [];
 const documentos = corpus.documentos.flatMap((d) => {
   const texto = readFileSync(`${CORPUS}textos/${nombreDeFichero(d.id)}`, 'utf8');
@@ -55,7 +57,9 @@ const documentos = corpus.documentos.flatMap((d) => {
   if (tramo === null) return [];
   textos.set(d.id, texto);
   const r = reparto(SEMILLA, d.id);
-  medidas.push({ id: d.id, tramo, reparto: r, valores: medirDocumento(texto, genero, RADIOGRAFIA) });
+  const medido = medirConDisparos(texto, genero, RADIOGRAFIA);
+  medidas.push({ id: d.id, tramo, reparto: r, valores: medido.valores });
+  disparos.push({ tramo, reparto: r, disparos: medido.disparos });
   return [{ ...d, palabrasProsa, tramo, reparto: r }];
 });
 
@@ -76,10 +80,12 @@ const calibracion = {
   n: { calibracion: n, validacion: cuenta('validacion') },
   celdas,
   omitidas,
+  disparos: disparosPorTramo(disparos),
   notas: [
     'Percentiles de los documentos de CALIBRACIÓN (sha256("semilla|id") < 0,8); los de validación quedan para el FPR del 5.6.',
     `Margen sobre el mínimo de ${MINIMO_POR_CELDA} documentos de calibración por tramo: ${TRAMOS.map((t) => `${t} ${n[t] - MINIMO_POR_CELDA >= 0 ? '+' : ''}${n[t] - MINIMO_POR_CELDA}`).join(' · ')}.`,
     `_total-radiografia: puntuacion.total de analizar() con paquetes/radiografia.json y el género «${genero}»; sin reglas estadísticas todavía: se recalcula en el 5.6.`,
+    'disparos: por tramo, en los documentos de calibración, en cuántos da alguna señal cada regla de RadiografIA que puntúa y cuántas señales suman (las informativas no cuentan); primer dato para pesos y `generos` en el 5.6.',
     ...(corpus.notas ?? []),
     ...corpus.filtros.map((f) => `filtro del corpus: ${f}`),
   ],

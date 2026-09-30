@@ -9,7 +9,7 @@
  */
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import { MINIMO_POR_CELDA, calcularCeldas, type Medida } from './celdas.ts';
+import { MINIMO_POR_CELDA, calcularCeldas, disparosPorTramo, type Medida } from './celdas.ts';
 
 const META = { corpus: 'corpus sintético', fecha: '2026-09-30' };
 
@@ -69,5 +69,28 @@ describe('calcularCeldas', () => {
       { clave: 'm', tramo: '100-299', n: 50, motivo: 'n < 100' },
       { clave: 'm', tramo: '300-599', n: 0, motivo: 'n < 100' },
     ]);
+  });
+});
+
+describe('disparosPorTramo', () => {
+  // A mano: en 600+, tres de calibración (a: 2 y 1 señales en dos de ellos; b: 5 en uno) y uno de validación que no cuenta.
+  const docs = [
+    { tramo: '600+', reparto: 'calibracion', disparos: { a: 2 } },
+    { tramo: '600+', reparto: 'calibracion', disparos: { a: 1, b: 5 } },
+    { tramo: '600+', reparto: 'calibracion', disparos: {} },
+    { tramo: '600+', reparto: 'validacion', disparos: { a: 9, c: 1 } },
+    { tramo: '100-299', reparto: 'calibracion', disparos: { c: 1 } },
+  ] as const;
+
+  test('por tramo, solo calibración: documentos con alguna señal de cada regla y señales en total', () => {
+    assert.deepEqual(disparosPorTramo(docs), {
+      '100-299': { documentos: 1, reglas: { c: { documentos: 1, senales: 1 } } },
+      '300-599': { documentos: 0, reglas: {} },
+      '600+': { documentos: 3, reglas: { a: { documentos: 2, senales: 3 }, b: { documentos: 1, senales: 5 } } },
+    });
+  });
+
+  test('las reglas, de la que dispara en más documentos a la que menos', () => {
+    assert.deepEqual(Object.keys(disparosPorTramo(docs)['600+'].reglas), ['a', 'b']);
   });
 });

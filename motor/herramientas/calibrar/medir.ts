@@ -10,6 +10,10 @@
  *    como se activarían para un texto de ese género); para la mezcla
  *    «general», con «general». Hoy el paquete no tiene reglas estadísticas:
  *    el total se recalcula en el 5.6.
+ * [PROPIO, parada de narrativa] Los disparos: cuántas señales da cada regla
+ *    que puntúa (las de patrón, las estructurales y las del texto entero; no
+ *    las informativas, que son contexto), del mismo analizar(). Son el primer
+ *    dato para pesos y `generos` en el 5.6.
  */
 import { analizar } from '../../src/analizar.ts';
 import { analizarTexto } from '../../src/texto.ts';
@@ -17,10 +21,17 @@ import { METRICAS } from '../../src/metricas/index.ts';
 import { CLAVE_TOTAL_RADIOGRAFIA, NOMBRES_DE_METRICAS } from '../../src/metricas/nombres.ts';
 import type { Paquete } from '../../src/paquete.ts';
 
-export function medirDocumento(texto: string, genero: string, radiografia: Paquete): Record<string, number | null> {
+export function medirConDisparos(texto: string, genero: string, radiografia: Paquete): { valores: Record<string, number | null>; disparos: Record<string, number> } {
   const segmentado = analizarTexto(texto);
   const valores: Record<string, number | null> = {};
   for (const nombre of NOMBRES_DE_METRICAS) valores[nombre] = METRICAS[nombre](segmentado);
-  valores[CLAVE_TOTAL_RADIOGRAFIA] = analizar(texto, [radiografia], { genero }).paquetes[0]!.puntuacion.total;
-  return valores;
+  const r = analizar(texto, [radiografia], { genero });
+  valores[CLAVE_TOTAL_RADIOGRAFIA] = r.paquetes[0]!.puntuacion.total;
+  const disparos: Record<string, number> = {};
+  for (const s of [...r.senales, ...r.senalesTexto]) disparos[s.reglaId] = (disparos[s.reglaId] ?? 0) + 1;
+  return { valores, disparos };
+}
+
+export function medirDocumento(texto: string, genero: string, radiografia: Paquete): Record<string, number | null> {
+  return medirConDisparos(texto, genero, radiografia).valores;
 }
