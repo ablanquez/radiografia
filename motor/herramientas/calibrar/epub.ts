@@ -34,6 +34,8 @@ export interface Capitulo {
   etiqueta: string;
   texto: string;
   problemas: string[];
+  /** Lo quitado al final (recortarFinal): la línea desde la que se cortó y sus palabras. */
+  recorte: { desde: string; palabras: number } | null;
 }
 
 export interface CapitulosDeEpub {
@@ -132,6 +134,25 @@ export function sinImagenes(html: string): string {
       }
       return entre + (texto !== '' && siguiente === texto ? '' : detras);
     });
+}
+
+/**
+ * [PROPIO, bitácora del 2026-09-30] El final de un capítulo que no es del
+ * libro: desde una marca de fin sola en su línea («FIN», «F I N», «FIN DEL
+ * TOMO SEXTO», «FIN DE LA PRIMERA PARTE») o desde una línea corta (8
+ * palabras o menos) que abre el catálogo del editor (FINAL: «OBRAS DE A.
+ * PALACIO VALDES», «Obras del mismo autor»), todo fuera. Detrás van fechas de
+ * redacción, catálogos y opiniones de la crítica (pg39444: 4.218 palabras),
+ * erratas del transcriptor y avisos de propiedad: visto en los 47 capítulos
+ * de la muestra con una marca de fin, ninguno con narración detrás.
+ */
+const MARCA_DE_FIN = /^(?:F\s?I\s?N|FIN\s+DEL?\s.+)\.?$/u;
+export function recortarFinal(texto: string): { texto: string; recorte: Capitulo['recorte'] } {
+  const lineas = texto.split('\n');
+  const i = lineas.findIndex((l) => MARCA_DE_FIN.test(l) || (FINAL.test(l) && l.split(/\s+/).length <= 8));
+  if (i < 0) return { texto, recorte: null };
+  const palabras = lineas.slice(i).join(' ').split(/\s+/).filter((p) => p !== '').length;
+  return { texto: lineas.slice(0, i).join('\n'), recorte: { desde: lineas[i]!, palabras } };
 }
 
 const atributo = (etiqueta: string, nombre: string): string | undefined => new RegExp(`\\b${nombre}="([^"]*)"`).exec(etiqueta)?.[1];
@@ -254,7 +275,7 @@ export function capitulosDeEpub(zip: ReadonlyMap<string, Buffer>): CapitulosDeEp
       .replace(/<a\b[^>]*\bclass="[^"]*\bfnanchor\b[^"]*"[^>]*>[\s\S]*?<\/a>/gi, '')
       .replace(/<span\b[^>]*\bclass="[^"]*\bpagenum\b[^"]*"[^>]*>[\s\S]*?<\/span>/gi, '');
     const { texto, problemas } = lineasDeHtml(fragmento);
-    salida.capitulos.push({ orden: e.orden, etiqueta: e.etiqueta, texto, problemas });
+    salida.capitulos.push({ orden: e.orden, etiqueta: e.etiqueta, ...recortarFinal(texto), problemas });
   });
   salida.fuera.sort((a, b) => a.orden - b.orden);
   return salida;

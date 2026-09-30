@@ -10,7 +10,7 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { capitulosDeEpub, esDivisionNumerada, esParatexto, sinImagenes } from './epub.ts';
+import { capitulosDeEpub, esDivisionNumerada, esParatexto, recortarFinal, sinImagenes } from './epub.ts';
 import { leerZip } from './zip.ts';
 
 const PRUEBA = leerZip(readFileSync(new URL('./fixtures/prueba.epub', import.meta.url)));
@@ -24,12 +24,14 @@ describe('capitulosDeEpub', () => {
         etiqueta: 'CAPÍTULO PRIMERO',
         texto: 'Era una noche de julio y llovía.\n—¿Quién va? —preguntó la vieja.\nNadie contestó.\nNi una voz.\nY amaneció al fin sobre el pueblo.',
         problemas: [],
+        recorte: null,
       },
       {
         orden: 7,
         etiqueta: 'CAPÍTULO II',
         texto: 'El segundo capítulo empieza aquí.\nSEÑOR mío, dijo el ama.\nAunque llovía, salió.\nLLEGÓ el otoño.',
         problemas: [],
+        recorte: { desde: 'FIN', palabras: 14 },
       },
     ]);
   });
@@ -74,6 +76,34 @@ describe('capitulosDeEpub', () => {
     const sinIndice = new Map(PRUEBA);
     sinIndice.delete('OEBPS/toc.ncx');
     assert.throws(() => capitulosDeEpub(sinIndice), /toc\.ncx/);
+  });
+});
+
+describe('recortarFinal', () => {
+  test('desde una marca de fin sola en su línea, todo fuera', () => {
+    for (const marca of ['FIN', 'FIN.', 'F I N', 'FIN DEL TOMO SEXTO', 'FIN DE «BAILÉN»', 'FIN DE LA PRIMERA PARTE']) {
+      assert.deepEqual(
+        recortarFinal(`Y se fueron.\n${marca}\nMadrid, 1878.`),
+        { texto: 'Y se fueron.', recorte: { desde: marca, palabras: marca.split(' ').length + 2 } },
+        marca,
+      );
+    }
+  });
+  test('desde una línea corta que abre el catálogo del editor', () => {
+    assert.deepEqual(recortarFinal('Los que le rodeaban creían que desvariaba.\nOBRAS DE A. PALACIO VALDES\nRiverita, un tomo.'), {
+      texto: 'Los que le rodeaban creían que desvariaba.',
+      recorte: { desde: 'OBRAS DE A. PALACIO VALDES', palabras: 8 },
+    });
+  });
+  test('la narración que dice «fin» u «obras de», no', () => {
+    for (const texto of [
+      'Y llegó el fin.\nFin de fiesta, dijo.',
+      'Obras de misericordia hacía la señora cada domingo, sin faltar uno, en el hospicio.',
+      'Fin',
+      'El FIN DEL MUNDO llegó.',
+    ]) {
+      assert.deepEqual(recortarFinal(texto), { texto, recorte: null }, texto);
+    }
   });
 });
 
