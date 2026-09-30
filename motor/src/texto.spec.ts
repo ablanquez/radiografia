@@ -134,6 +134,32 @@ describe('analizarTexto: casos límite (esperados escritos antes de ejecutar)', 
     );
   });
 
+  test('«+» seguido de espacio es viñeta (CommonMark § 5.2)', () => {
+    const t = analizarTexto(['+ una viñeta con más', 'Y esto es prosa.'].join('\n'));
+    assert.deepEqual(
+      t.parrafos.map((p) => [p.texto, p.prosa, p.motivo]),
+      [
+        ['+ una viñeta con más', false, 'viñeta'],
+        ['Y esto es prosa.', true, null],
+      ],
+    );
+  });
+
+  test('«~~~» abre y cierra código como «```», y cada valla solo la cierra una de su tipo (CommonMark § 4.5)', () => {
+    const t = analizarTexto(['~~~', 'dentro de tildes', '```', 'sigue dentro', '~~~', 'Ya fuera: prosa.'].join('\n'));
+    assert.deepEqual(
+      t.parrafos.map((p) => [p.texto, p.prosa, p.motivo]),
+      [
+        ['~~~', false, 'código'],
+        ['dentro de tildes', false, 'código'],
+        ['```', false, 'código'],
+        ['sigue dentro', false, 'código'],
+        ['~~~', false, 'código'],
+        ['Ya fuera: prosa.', true, null],
+      ],
+    );
+  });
+
   test('lo que parece marca pero no lo es sigue siendo prosa («1.000 personas», «*Nota*», «#etiqueta»)', () => {
     const t = analizarTexto(['1.000 personas vinieron.', '*Nota*: esto es prosa.', '#etiqueta pegada, sin espacio.'].join('\n'));
     assert.deepEqual(

@@ -19,19 +19,25 @@
  *    párrafo.
  * [PROPIO] No-prosa (no cuenta para el umbral de longitud ni la miran los
  *    detectores). Una línea es no-prosa si, por este orden:
- *      · es una valla de código (empieza por ```) o está entre dos → «código»;
+ *      · es una valla de código (empieza por ``` o por ~~~) o está entre una
+ *        valla y la siguiente DEL MISMO TIPO → «código»;
  *      · es un encabezado Markdown: 1 a 6 «#» y un espacio (o nada más) → «encabezado»;
- *      · empieza por viñeta: «-», «*», «•», o un número de 1 a 9 cifras con «.»
- *        o «)», SEGUIDOS de un espacio o tabulador → «viñeta»;
+ *      · empieza por viñeta: «-», «+», «*», «•», o un número de 1 a 9 cifras con
+ *        «.» o «)», SEGUIDOS de un espacio o tabulador → «viñeta»;
  *      · contiene dos o más «|» → «tabla».
- *    Las marcas son las del encargo 4.1; exigir el espacio detrás es de
- *    CommonMark 0.31.2 ([DOC] https://spec.commonmark.org/0.31.2/: § 5.2 «at
- *    least one space or tab is needed between the list marker and any
- *    following content»; § 4.2, los «#» «must be followed by spaces or tabs, or
- *    by the end of line»; § 4.5, la valla es de al menos tres acentos graves).
+ *    Las marcas son las del encargo 4.1 y, tras su parada intermedia, «+» y
+ *    «~~~». De CommonMark 0.31.2 ([DOC] https://spec.commonmark.org/0.31.2/):
+ *      § 5.2 «A bullet list marker is a -, +, or * character»; un marcador
+ *        ordenado son 1–9 cifras seguidas de «.» o «)»; y «at least one space
+ *        or tab is needed between the list marker and any following content»;
+ *      § 4.2, los «#» «must be followed by spaces or tabs, or by the end of line»;
+ *      § 4.5, «A code fence is a sequence of at least three consecutive
+ *        backtick characters (`) or tildes (~)», y la valla de cierre tiene que
+ *        ser del mismo carácter que la de apertura.
+ *    «•» no es de CommonMark: es del encargo (viñeta pegada de un procesador de
+ *    textos). [PROPIO] No se exige que la valla de cierre sea al menos tan
+ *    larga como la de apertura (CommonMark sí): basta con el mismo carácter.
  *    Así «1.000 personas», «*Nota*:» o «#etiqueta» siguen siendo prosa.
- *    Ampliable en el punto 6 (p. ej. «+» o «~~~», que CommonMark también
- *    admite y el encargo no nombra).
  * [PROPIO] Frases y palabras se sacan de TODOS los párrafos (también de los de
  *    no-prosa); quien los use decide si mira `prosa`.
  */
@@ -78,10 +84,19 @@ function recortar(trabajo: string, inicio: number, fin: number): [number, number
   return [inicio, fin];
 }
 
-function motivoDeLinea(linea: string, enCodigo: boolean): Motivo | null {
-  if (linea.startsWith('```') || enCodigo) return 'código';
+type Valla = '```' | '~~~';
+
+/** La valla de código con la que empieza la línea, si empieza por una. */
+function vallaDe(linea: string): Valla | null {
+  if (linea.startsWith('```')) return '```';
+  if (linea.startsWith('~~~')) return '~~~';
+  return null;
+}
+
+function motivoDeLinea(linea: string, abierta: Valla | null): Motivo | null {
+  if (abierta !== null || vallaDe(linea) !== null) return 'código';
   if (/^#{1,6}(?:[ \t]|$)/.test(linea)) return 'encabezado';
-  if (/^(?:[-*•]|\d{1,9}[.)])[ \t]/.test(linea)) return 'viñeta';
+  if (/^(?:[-+*•]|\d{1,9}[.)])[ \t]/.test(linea)) return 'viñeta';
   if ((linea.match(/\|/g)?.length ?? 0) >= 2) return 'tabla';
   return null;
 }
@@ -109,7 +124,7 @@ function frasesDe(original: string, trabajo: string, inicio: number, fin: number
 export function analizarTexto(original: string): Texto {
   const trabajo = original.replaceAll('\r', ' ');
   const parrafos: Parrafo[] = [];
-  let enCodigo = false;
+  let abierta: Valla | null = null;
   let desde = 0;
   while (desde <= trabajo.length) {
     const salto = trabajo.indexOf('\n', desde);
@@ -117,8 +132,10 @@ export function analizarTexto(original: string): Texto {
     const [inicio, fin] = recortar(trabajo, desde, hasta);
     if (inicio < fin) {
       const linea = trabajo.slice(inicio, fin);
-      const motivo = motivoDeLinea(linea, enCodigo);
-      if (linea.startsWith('```')) enCodigo = !enCodigo;
+      const motivo = motivoDeLinea(linea, abierta);
+      const valla = vallaDe(linea);
+      if (abierta === null && valla !== null) abierta = valla;
+      else if (abierta !== null && valla === abierta) abierta = null;
       parrafos.push({
         texto: original.slice(inicio, fin),
         inicio,
