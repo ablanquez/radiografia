@@ -23,6 +23,11 @@
  *      y cada ficha su carpeta: ni una más ni una menos
  *   6. cada carpeta bajo data/ lleva al lado su LICENSE-*.md
  *
+ * Y desde el encargo 5.5, la CALIBRACIÓN (§ 2.3), contra data/calibracion/:
+ *   9. cada <genero>.json tiene su fila en la tabla de § 2.3 y cada fila su fichero
+ *  10. cada uno lleva al lado su <genero>.manifiesto.json, y la licencia de su
+ *      fila es la que dice el campo «licencia» del propio fichero
+ *
  * Y el CÓDIGO de terceros incorporado (§ 1.5; encargo 3.3, silabea), contra
  * motor/src/terceros/:
  *   7. cada fichero ajeno tiene su fila en § 1.5 y cada fila su fichero (los
@@ -181,6 +186,45 @@ describe('los datos de terceros de data/ tienen ficha y licencia al lado', () =>
     for (const carpeta of carpetas()) {
       const licencias = readdirSync(new URL(`${carpeta}/`, DATOS)).filter((f) => /^LICENSE-.+\.md$/.test(f));
       assert.ok(licencias.length > 0, `data/${carpeta}/ no tiene ningún LICENSE-*.md`);
+    }
+  });
+});
+
+describe('cada calibración de data/calibracion/ tiene su fila en § 2.3', () => {
+  const CALIBRACION = new URL('calibracion/', DATOS);
+
+  /** Los géneros calibrados: los `<genero>.json` de data/calibracion/ que no son manifiestos. */
+  function generos(): string[] {
+    if (!existsSync(CALIBRACION)) return [];
+    return readdirSync(CALIBRACION)
+      .filter((f) => /^[a-z0-9]+(-[a-z0-9]+)*\.json$/.test(f) && !f.endsWith('.manifiesto.json'))
+      .sort();
+  }
+
+  /** Las filas de la tabla de § 2.3: fichero y licencia (sin negrita). */
+  function filas(): { fichero: string; licencia: string }[] {
+    const { texto } = leer();
+    const inicio = texto.indexOf('### 2.3 · ');
+    assert.ok(inicio >= 0, 'falta la sección § 2.3');
+    const resto = texto.slice(inicio + 4);
+    const fin = resto.search(/^#{2,3} /m);
+    const seccion = fin >= 0 ? resto.slice(0, fin) : resto;
+    return [...seccion.matchAll(/^\| `([^`]+\.json)` \|[^|]+\|[^|]+\| ([^|]+?) \|/gm)].map((m) => ({
+      fichero: m[1]!,
+      licencia: m[2]!.replaceAll('**', '').trim(),
+    }));
+  }
+
+  test('9 · cada data/calibracion/<genero>.json tiene su fila en § 2.3, y cada fila su fichero', () => {
+    assert.deepEqual(filas().map((f) => f.fichero).sort(), generos());
+  });
+
+  test('10 · cada <genero>.json lleva al lado su manifiesto, y su fila dice la licencia que dice el fichero', () => {
+    for (const fila of filas()) {
+      const genero = fila.fichero.replace(/\.json$/, '');
+      assert.ok(existsSync(new URL(`${genero}.manifiesto.json`, CALIBRACION)), `falta data/calibracion/${genero}.manifiesto.json`);
+      const { licencia } = JSON.parse(readFileSync(new URL(fila.fichero, CALIBRACION), 'utf8')) as { licencia: string };
+      assert.equal(fila.licencia, licencia.replace(/ \(.*$/, ''), `licencia de ${fila.fichero} en § 2.3 frente a la del fichero`);
     }
   });
 });

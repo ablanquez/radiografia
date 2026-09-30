@@ -4,7 +4,7 @@ La licencia Apache 2.0 cubre **el código y los paquetes de reglas** de Radiogra
 lo ajeno**, que conserva sus propias condiciones. Aquí está, una por una, con lo que sabemos y lo
 que no.
 
-> ℹ️ **Estado a 29/09/2026.** Lo ajeno es software y datos. Software (§ 1): **seis**
+> ℹ️ **Estado a 30/09/2026.** Lo ajeno es software y datos. Software (§ 1): **seis**
 > dependencias declaradas en [`motor/package.json`](motor/package.json) —una de ejecución y
 > cinco de desarrollo—, el árbol que arrastran y **un fichero de código ajeno incorporado** al
 > repositorio (§ 1.5). Datos (§ 2): las carpetas de [`data/`](data/), **aparte del código
@@ -187,3 +187,22 @@ sin ficha ni una ficha sin carpeta: lo vigila `motor/src/notices.spec.ts`.
   a la oleada de texto generado.
 - **Viajará al navegador** cuando la usen las reglas: su atribución CC BY-SA tendrá que viajar
   con ella. Cómo, **NO CONSTA** hasta que exista el build (punto 6).
+
+### 2.3 · `data/calibracion/` — percentiles de textos humanos, por género
+
+Aquí hay **cifras derivadas**, no textos: por género, los percentiles de cada métrica en
+textos humanos (`<genero>.json`) y el manifiesto de su corpus (`<genero>.manifiesto.json`),
+con qué se descargó, de dónde, con qué licencia y con qué filtros, y cada documento por su id
+y su huella sha256. **Ni una frase de los textos**: la herramienta lo comprueba antes de
+escribir (`motor/herramientas/calibrar/manifiesto.ts`). Los textos se descargan en
+`motor/corpus/`, que no se versiona. La atribución que pide cada corpus está en
+[`data/calibracion/LICENSE-CORPUS.md`](data/calibracion/LICENSE-CORPUS.md).
+
+| Fichero | Corpus | Titular | Licencia | Estado de la licencia |
+|---|---|---|---|---|
+
+- Una fila por fichero de calibración y un fichero por fila, con la licencia que dice el propio
+  fichero: lo vigila `motor/src/notices.spec.ts`.
+- **Viajará al navegador**: los percentiles entran en la cabecera del paquete
+  (`cabecera.calibracion`), cada celda con el nombre de su corpus. Cómo se enseña la atribución
+  en la interfaz, **NO CONSTA** hasta el punto 6.
