@@ -132,6 +132,21 @@ const INVALIDOS: readonly CasoInvalido[] = [
     regla: { indice: 0, id: 'd6-referencia-interna' },
     campo: 'parametros.ambito',
   },
+  // ── Encargo 4.1, tras la parada: dos comprobaciones más en el paso 2 ──
+  {
+    // una regex que no compila con sus flags: el mensaje es el del motor de expresiones regulares.
+    fichero: 'invalido-regex-no-compila.json',
+    regla: { indice: 0, id: 'd6-referencia-interna' },
+    campo: 'parametros.regex',
+    mensajeIncluye: 'Invalid regular expression',
+  },
+  {
+    // en ámbito «palabra», una forma con espacio no puede coincidir nunca con una palabra.
+    fichero: 'invalido-forma-con-espacio.json',
+    regla: { indice: 1, id: 'meses-en-mayuscula' },
+    campo: 'parametros.formas[0]',
+    mensajeIncluye: '"de Enero"',
+  },
 ];
 
 describe('validarPaquete', () => {
@@ -139,9 +154,9 @@ describe('validarPaquete', () => {
    * Ningún fixture sin juez: si entra uno nuevo en la carpeta y nadie lo añade
    * aquí, esto se pone rojo en vez de dejarlo sin mirar.
    */
-  test('la carpeta de fixtures tiene exactamente los dieciocho que se juzgan', () => {
+  test('la carpeta de fixtures tiene exactamente los veinte que se juzgan', () => {
     assert.equal(VALIDOS.length, 4, 'cuatro válidos');
-    assert.equal(INVALIDOS.length, 14, 'catorce inválidos');
+    assert.equal(INVALIDOS.length, 16, 'dieciséis inválidos');
     const esperados = [...VALIDOS, ...INVALIDOS.map((c) => c.fichero)].sort();
     // Solo los FICHEROS de la raíz: los paquetes. Las subcarpetas (fixtures/referencia/)
     // guardan datos de referencia de otros jueces (encargo 3.3).

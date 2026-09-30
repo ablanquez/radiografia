@@ -11,7 +11,11 @@
  *      únicos, familia declarada, y que una regla de una familia informativa
  *      sea informativa (encargo 3.2: el motor no puntúa reglas de familias
  *      informativas, y una regla que dijera lo contrario sería una mentira
- *      de la ficha).
+ *      de la ficha). Y desde el 4.1: que la `regex` de patrón y estructural
+ *      compile con sus `flags` (new RegExp; si no, el mensaje del propio
+ *      motor de expresiones regulares), y que en ámbito «palabra» ninguna
+ *      forma lleve espacios (una expresión de varias palabras va por regex en
+ *      ámbito «frase»: una palabra nunca contiene un espacio).
  *
  * [DOC] https://ajv.js.org/json-schema.html#draft-2020-12 — «To use
  *    draft-2020-12 schemas you need to import a different Ajv class»: Ajv2020.
@@ -84,7 +88,13 @@ export interface ResultadoDeValidacion {
 /** Lo que el paso 2 lee, cuando el esquema ya garantizó la forma. */
 export interface PaqueteConForma {
   cabecera: { familias: { id: string; informativa: boolean }[] };
-  reglas: { id: string; familia: string; informativa: boolean }[];
+  reglas: {
+    id: string;
+    familia: string;
+    informativa: boolean;
+    detector: string;
+    parametros: { regex?: string; flags?: string; formas?: string[]; ambito?: string };
+  }[];
 }
 
 /**
@@ -275,6 +285,28 @@ function comprobarCoherencia(paquete: PaqueteConForma): ErrorDeValidacion[] {
           `vale false, pero la familia "${regla.familia}" es informativa y el motor no puntúa sus reglas: tiene que ser true`,
         ),
       );
+    }
+
+    const { regex, flags, formas, ambito } = regla.parametros;
+    if (regex !== undefined) {
+      try {
+        new RegExp(regex, flags ?? '');
+      } catch (fallo) {
+        errores.push(crear({ indice, id: regla.id }, 'parametros.regex', `no compila: ${(fallo as Error).message}`));
+      }
+    }
+    if (ambito === 'palabra') {
+      formas?.forEach((forma, i) => {
+        if (/\s/.test(forma)) {
+          errores.push(
+            crear(
+              { indice, id: regla.id },
+              `parametros.formas[${i}]`,
+              `"${forma}" lleva un espacio y en ámbito "palabra" se compara palabra a palabra: una expresión de varias palabras va por regex en ámbito "frase"`,
+            ),
+          );
+        }
+      });
     }
   });
   return errores;
