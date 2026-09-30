@@ -13,7 +13,8 @@ export interface FicheroDeFuente {
   nombre: string;
   url: string;
   bytes: number;
-  sha256: string;
+  /** La huella de lo descargado; sin ella, el fichero no se bajó entero (se leyó por rangos) y su nombre lo dice. */
+  sha256?: string;
   /** El SHA-1 de blob de Git, cuando la fuente es un repositorio y se comprobó contra él. */
   blobGit?: string;
 }
