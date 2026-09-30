@@ -1447,6 +1447,61 @@
           "Hace unos años, la inteligencia artificial parecía ciencia ficción."
         ]
       }
+    },
+    {
+      "id": "sint-gerundio-adjunto-final",
+      "familia": "sintaxis",
+      "detector": "estructural",
+      "parametros": {
+        "posicion": "fin-frase",
+        "regex": ", (?!(cuando|cu[aá]ndo|bando|mando|comando|blando|nefando|infando|fernando|orlando|armando|rolando)(?!\\p{L}))(\\p{L}+(ando|iendo|yendo))( \\p{L}+){0,8}[.!?…]?",
+        "flags": "iu"
+      },
+      "peso": 2,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Una frase que termina en una coletilla de gerundio detrás de una coma: «…, logrando un récord», «…, destacando su importancia». Medido en inglés: los modelos ajustados para seguir instrucciones usan cláusulas de participio presente entre 2 y 5 veces más que los humanos (GPT-4o, 5,3 veces; Reinhart et al. 2025), y Wikipedia describe el «análisis superficial» que se añade así al final de la frase. En español no hay medición. La norma solo la respalda en parte: la Nueva gramática (§ 27.4g) considera incorrecto el gerundio de posterioridad cuando introduce una mera sucesión temporal («Estudió en Santiago, yendo después a Bogotá»), pero lo tiene por más aceptable cuando la posterioridad es casi simultánea o cuando cabe una relación de causa, concesión o consecuencia, que es justo la coletilla más típica («…, provocando cien despidos»). No demuestra quién escribió el texto.",
+      "sugerencia": "Si la coletilla cuenta una consecuencia, dila con un verbo conjugado o en una frase propia: «Cerró la fábrica y despidió a cien personas».",
+      "excepciones": [
+        "Gerundio de simultaneidad, legítimo: «Salió de casa, corriendo» dice cómo salió, no qué pasó después.",
+        "Diálogos y acotaciones: «—Ya voy —dijo sonriendo» no dispara porque no hay coma delante del gerundio; con coma, sí.",
+        "La regla no distingue la posterioridad de la simultaneidad, ni la mera sucesión que la norma censura de la consecuencia que admite: cuenta la construcción, como Reinhart.",
+        "Palabras en -ando o -iendo que no son gerundios: se excluyen «cuando», «bando», «mando», «comando», «blando», «nefando», «infando» y los nombres «Fernando», «Orlando», «Armando» y «Rolando»; las que no están en la lista («Nando», «remiendo») pueden disparar.",
+        "Solo ve coletillas cortas, de hasta nueve palabras, sin cifras ni comas dentro: «…, alcanzando los 300 empleados» no dispara."
+      ],
+      "fuente": [
+        {
+          "titulo": "Reinhart, Markey, Laudenbach, Pantusen, Yurko, Weinberg y Brown (2025), «Do LLMs write like humans? Variation in grammatical and rhetorical styles», PNAS 122(8), versión de arXiv: «the instruction-tuned LLMs used present participial clauses at 2 to 5 times the rate of human text»",
+          "url": "https://arxiv.org/html/2410.16107v2"
+        },
+        {
+          "titulo": "Reinhart et al. (2025), PNAS 122(8), versión publicada",
+          "url": "https://www.pnas.org/doi/10.1073/pnas.2422455122"
+        },
+        {
+          "titulo": "Wikipedia en inglés, «Signs of AI writing», apartado «Superficial analyses»: «attaching a present participle (\"-ing\") phrase at the end of sentences» (ensayo editorial, sin frecuencias)",
+          "url": "https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing"
+        },
+        {
+          "titulo": "RAE y ASALE, Nueva gramática de la lengua española, § 27.4g, gerundio de posterioridad (leída en web.archive.org, captura del 26/05/2024: rae.es no deja leerla a un programa)",
+          "url": "https://www.rae.es/gram%C3%A1tica/sintaxis/interpretaciones-sem%C3%A1nticas-del-gerundio-i-usos-temporales"
+        }
+      ],
+      "origenLista": "exclusiones de falsos gerundios [PROPIO]: palabras en -ando que no son gerundios (cuando, bando, mando, comando, blando, nefando, infando) y nombres propios (Fernando, Orlando, Armando, Rolando). Absorbe D8 de discurso.md (análisis superficial con gerundio final; CANDIDATAS.md, decisión 5)",
+      "nivelEvidencia": "medido en inglés",
+      "ejemplos": {
+        "positivos": [
+          "Cerró la fábrica, provocando cien despidos.",
+          "Se fue, dejando la puerta abierta.",
+          "El proyecto transformó la ciudad, destacando su importancia histórica y cultural."
+        ],
+        "negativos": [
+          "Salió corriendo hacia la puerta.",
+          "Lo dijo sonriendo, y se fue.",
+          "Llegó tarde, cuando ya no quedaba nadie.",
+          "Se lo dio a Fernando."
+        ]
+      }
     }
   ]
 }
