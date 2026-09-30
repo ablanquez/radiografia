@@ -974,6 +974,479 @@
           "La alineación del equipo cambió en el descanso."
         ]
       }
+    },
+    {
+      "id": "disc-cierre-de-plantilla",
+      "familia": "discurso",
+      "detector": "estructural",
+      "parametros": {
+        "posicion": "ultimo-parrafo",
+        "regex": "^(En conclusi[oó]n|En resumen|En definitiva|En s[ií]ntesis|Para concluir|Para terminar|En suma)(?!\\p{L})",
+        "flags": "iu"
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "El último párrafo empieza con una fórmula de cierre: «En conclusión», «En resumen», «En definitiva», «En síntesis», «Para concluir», «Para terminar» o «En suma». Medido en inglés: en los ensayos argumentativos de Herbold et al. (2023), el texto de ChatGPT lleva «In conclusion» en 166 de 180 (92 %; el artículo dice «todos», y la cifra sale de sus propios datos de replicación). Peso 1, y no 2: en esos mismos datos, 53 de 90 estudiantes (59 %) abren también su último párrafo con una fórmula de cierre, porque es la plantilla que se enseña. En español solo hay la observación de un blog, sin cifras. No demuestra quién escribió el texto.",
+      "sugerencia": "Cierra con una idea nueva o con una consecuencia concreta, sin anunciar que es el final.",
+      "excepciones": [
+        "Redacción escolar y de quien aprende español: «En conclusión» es la plantilla que se enseña (Herbold: «corresponds to the general structure that is sought after for argumentative essays»; discurso.md § 9).",
+        "Solo mira el último párrafo de prosa: la misma fórmula a mitad del texto no cuenta aquí."
+      ],
+      "fuente": [
+        {
+          "titulo": "Herbold, Hautli-Janisz, Heuer, Kikteva y Trautsch (2023), «A large-scale comparison of human-written versus ChatGPT-generated essays», Scientific Reports 13:18617",
+          "url": "https://www.nature.com/articles/s41598-023-45644-9"
+        },
+        {
+          "titulo": "Herbold et al. (2023), paquete de replicación v1.1 (Zenodo): calc_linguistic_features.ipynb (las 14 regex de marcadores epistémicos), markers/modals.csv, markers/connectives_discourse_markers_PDTB.txt y los 90 ensayos de cada grupo",
+          "url": "https://doi.org/10.5281/zenodo.8343644"
+        },
+        {
+          "titulo": "Pham (2026), «Metadiscourse in ChatGPT-generated and human-written research articles in linguistics», Indonesian Journal of Applied Linguistics 15(3): 561-572 (Tablas 1, 4 y 5)",
+          "url": "https://vm113.upi.edu/index.php/ijal/article/download/101/55"
+        },
+        {
+          "titulo": "Bilateria, «Cómo detectar textos escritos por ChatGPT»: al acabar una explicación, «termina diciendo: «En resumen,» y, a veces, «En conclusión,»»",
+          "url": "https://educacion.bilateria.org/como-detectar-textos-escritos-por-chatgpt"
+        }
+      ],
+      "origenLista": "«En conclusión», «En resumen», «En definitiva», «En síntesis» y «Para concluir», de discurso.md § 11 (fila D1); traducción propia de «In conclusion» (Herbold et al. 2023) y de los cierres de Pham 2026 («To conclude, In summary, Ultimately, In short»), de donde salen también «Para terminar» y «En suma»; «En resumen» y «En conclusión» los recoge además el blog de bilateria (discurso.md § 8)",
+      "nivelEvidencia": "medido en inglés",
+      "ejemplos": {
+        "positivos": [
+          "El plan tiene tres partes y un presupuesto cerrado.\nEn conclusión, el plan es viable.",
+          "Hubo dos horas de debate en el pleno.\nEn definitiva, se aprobó la propuesta por mayoría.",
+          "Los datos del primer trimestre son claros.\nEn resumen: la medida funcionó."
+        ],
+        "negativos": [
+          "En conclusión, esto va al principio.\nY el último párrafo no resume nada.",
+          "El plan tiene tres partes.\nLa conclusión es que el plan funciona.",
+          "El informe tiene dos anexos.\nEn conclusiones como esta hay que ir con cuidado."
+        ]
+      }
+    },
+    {
+      "id": "disc-marcador-repetido",
+      "familia": "discurso",
+      "detector": "estructural",
+      "parametros": {
+        "posicion": "inicio-frase",
+        "regex": "(Además|Sin embargo|Asimismo|Por lo tanto|Por tanto|No obstante|Por ello|Por consiguiente)(?!\\p{L})",
+        "flags": "iu",
+        "minimoPorCoincidencia": 3
+      },
+      "peso": 2,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "El mismo conector abre tres frases o más: «Además…», «Además…», «Además…». No se puntúa cuántos conectores hay, sino que se repita el mismo: la cantidad no es señal, porque cambia de signo según el género (en ensayos, GPT-4 usa menos marcadores del discurso que los estudiantes, d = 0,98, Herbold et al. 2023; en artículos de investigación, más, Pham 2026). En español, la UCM describe los marcadores del texto generado como «scarce and repetitive», de forma cualitativa. Cada forma cuenta por separado: «Por lo tanto» y «Por tanto» son formas distintas y no suman juntas. No demuestra quién escribió el texto.",
+      "sugerencia": "Cambia alguno de los conectores repetidos o quítalo: muchas veces la frase se entiende sin él.",
+      "excepciones": [
+        "Escritura escolar y de quien aprende español: usa más conectores, sobre todo al principio de la frase, y repite los mismos (discurso.md § 9).",
+        "Solo cuenta el conector que abre la frase: «y además» o un «además» a mitad de frase no suman."
+      ],
+      "fuente": [
+        {
+          "titulo": "Herbold, Hautli-Janisz, Heuer, Kikteva y Trautsch (2023), «A large-scale comparison of human-written versus ChatGPT-generated essays», Scientific Reports 13:18617",
+          "url": "https://www.nature.com/articles/s41598-023-45644-9"
+        },
+        {
+          "titulo": "Herbold et al. (2023), paquete de replicación v1.1 (Zenodo): calc_linguistic_features.ipynb (las 14 regex de marcadores epistémicos), markers/modals.csv, markers/connectives_discourse_markers_PDTB.txt y los 90 ensayos de cada grupo",
+          "url": "https://doi.org/10.5281/zenodo.8343644"
+        },
+        {
+          "titulo": "Pham (2026), «Metadiscourse in ChatGPT-generated and human-written research articles in linguistics», Indonesian Journal of Applied Linguistics 15(3): 561-572 (Tablas 1, 4 y 5)",
+          "url": "https://vm113.upi.edu/index.php/ijal/article/download/101/55"
+        },
+        {
+          "titulo": "UCM, IberLEF 2023 (AuTexTification): encuesta cualitativa a lingüistas sobre textos en español; marcadores «scarce and repetitive» y más expresiones idiomáticas en los humanos",
+          "url": "https://ceur-ws.org/Vol-3496/autextification-paper17.pdf"
+        }
+      ],
+      "origenLista": "inventario propio ordenado por la taxonomía de Portolés y Martín Zorraquino (el DPDE solo está en línea y no se copia; discurso.md § 8); las formas, traducción propia de la lista PDTB de conectores que usa Herbold et al. 2023: moreover, furthermore, besides → Además; however → Sin embargo; likewise, similarly → Asimismo; thus, hence → Por lo tanto, Por tanto, Por ello; nevertheless, nonetheless → No obstante; consequently, accordingly → Por consiguiente",
+      "nivelEvidencia": "medido en inglés",
+      "ejemplos": {
+        "positivos": [
+          "Además, el plan sigue en marcha. Además, nadie lo discute. Además, el presupuesto ya está cerrado.",
+          "Sin embargo, llovió toda la mañana. Sin embargo, la carrera salió a su hora. Sin embargo, nadie se quejó del barro."
+        ],
+        "negativos": [
+          "Además, el plan sigue en marcha. Sin embargo, faltan datos. Asimismo, el equipo pidió más tiempo. Por tanto, se aplaza la votación. No obstante, el calendario se mantiene. Por ello, nadie protestó.",
+          "Por lo tanto, se aplaza la votación. Por tanto, nadie vota hoy. Por lo tanto, habrá otra reunión.",
+          "Además, el plan sigue en marcha. Nadie, además, lo discute. Además, el presupuesto está cerrado."
+        ]
+      }
+    },
+    {
+      "id": "disc-sin-marcadores-epistemicos",
+      "familia": "discurso",
+      "generos": [
+        "opinion",
+        "academico"
+      ],
+      "detector": "patrón",
+      "parametros": {
+        "regex": "(?<!\\p{L})(creo|pienso|me parece|en mi opini[oó]n|a mi juicio|quiz[aá]s?|tal vez|probablemente|supongo|opino|considero que|dir[ií]a que|a lo mejor)(?!\\p{L})",
+        "flags": "iu",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": true,
+          "tildes": false
+        },
+        "ausencia": true
+      },
+      "peso": 2,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Un texto de opinión o académico de 300 palabras de prosa o más sin ningún marcador epistémico: ni «creo», ni «me parece», ni «en mi opinión», ni «quizá», ni «probablemente». Medido en inglés, en ensayos argumentativos: GPT-4 no usó ninguno (0,00 por frase frente a 0,06 de los estudiantes; d = 1,53; Herbold et al. 2023). Solo se evalúa en los géneros opinión y académico, y en textos de 300 palabras de prosa o más. No se exige que coincida con la otra ausencia medida (epistémicos y automenciones): cada una puntúa por su cuenta, y los pesos y la calibración dirán cómo pesan juntas. No demuestra quién escribió el texto.",
+      "sugerencia": "Si el texto defiende una postura, di de quién es y con cuánta seguridad: «creo», «me parece», «quizá».",
+      "excepciones": [
+        "En los datos de replicación de Herbold, con sus propias regex, 30 de 90 ensayos de estudiantes (de segunda lengua) no tienen ningún marcador epistémico: la ausencia sola también dispara en un tercio de esos humanos. Por eso el peso se queda en 2 y la calibración decide.",
+        "Textos impersonales por norma: informes técnicos, dictámenes o revistas que piden no opinar en primera persona.",
+        "«creo» también es el verbo crear («creo un archivo») y «pienso», un nombre: si aparecen así, la regla no dispara aunque falten epistémicos."
+      ],
+      "fuente": [
+        {
+          "titulo": "Herbold, Hautli-Janisz, Heuer, Kikteva y Trautsch (2023), «A large-scale comparison of human-written versus ChatGPT-generated essays», Scientific Reports 13:18617",
+          "url": "https://www.nature.com/articles/s41598-023-45644-9"
+        },
+        {
+          "titulo": "Herbold et al. (2023), paquete de replicación v1.1 (Zenodo): calc_linguistic_features.ipynb (las 14 regex de marcadores epistémicos), markers/modals.csv, markers/connectives_discourse_markers_PDTB.txt y los 90 ensayos de cada grupo",
+          "url": "https://doi.org/10.5281/zenodo.8343644"
+        }
+      ],
+      "origenLista": "traducción propia, forma a forma. De los marcadores epistémicos de Herbold et al. 2023 (las 14 regex de su código de replicación): creo, pienso, opino y considero que (I think, I believe), supongo (I guess, I assume), me parece (it seems), en mi opinión y a mi juicio (in my opinion), diría que (I would say). De su lista de modales, que es otra variable del estudio: probablemente (probably) y tal vez (perhaps). Quizá(s) y a lo mejor, de discurso.md § 11 (fila D3)",
+      "nivelEvidencia": "medido en inglés",
+      "ejemplos": {
+        "positivos": [
+          "La semana laboral de cuatro días se ha convertido en uno de los debates más relevantes del mundo del trabajo. Lo que hace apenas una década parecía una utopía hoy ocupa titulares, programas electorales y reuniones de dirección. Los expertos coinciden en que este modelo podría transformar la relación entre las empresas y sus plantillas.\nDiversos estudios demuestran que reducir la jornada sin recortar el salario mejora la productividad. Los empleados descansan más, se concentran mejor y faltan menos por enfermedad. Además, las empresas que han probado el modelo aseguran que les resulta más fácil atraer y retener talento en un mercado laboral cada vez más competitivo.\nEl impacto no se limita al ámbito económico. La reducción de la jornada desempeña un papel fundamental en la conciliación entre la vida personal y la profesional. Las familias ganan tiempo para el cuidado de los hijos y de los mayores, y las personas disponen de más horas para formarse, hacer deporte o participar en la vida de su comunidad. Además, menos desplazamientos a la oficina significan menos emisiones y un tráfico más fluido en las grandes ciudades.\nSin embargo, la transición plantea desafíos importantes. No todos los sectores pueden reorganizar sus turnos con la misma facilidad: la sanidad, la hostelería o el comercio necesitan cubrir su horario de apertura todos los días. Las pequeñas empresas, por su parte, temen que la medida eleve sus costes. Además, la experiencia acumulada procede sobre todo de programas piloto voluntarios, cuyas conclusiones no siempre pueden trasladarse a toda la economía.\nA pesar de estos desafíos, la experiencia de Islandia marca un hito en la historia de las relaciones laborales y sienta las bases de un cambio que muchos gobiernos observan con atención. La clave estará en adaptar el modelo a la realidad de cada sector y en medir sus efectos con rigor.\nEn conclusión, la semana de cuatro días representa una oportunidad única para repensar el valor del tiempo. Con planificación, diálogo social y evaluación continua, este modelo puede contribuir a construir un mercado laboral más humano, más productivo y más sostenible.",
+          "Cuando cerraron el mercado de abastos de mi barrio, en marzo, nadie organizó una despedida. Los puestos se fueron vaciando uno a uno durante el invierno, y el último día solo quedaba la frutería de Rosa, con media docena de cajas y un cartel escrito a mano.\nYo compraba allí desde que me mudé a la calle Olmos, hace once años, y allí aprendí a distinguir una buena merluza. Mis vecinos también. El mercado no era barato ni moderno, pero era nuestro: el sitio donde uno se enteraba de quién había tenido un nieto, de qué obra iban a empezar en la plaza o de que la farmacia cambiaba de horario.\nEl ayuntamiento explica el cierre con cifras. El edificio necesitaba una reforma de dos millones de euros, la mitad de los puestos llevaba años sin inquilino y los que resistían facturaban cada vez menos. Todo eso es verdad, y ninguno de nosotros lo discute. Lo que nos duele es que nadie preguntara al barrio qué quería hacer con ese espacio antes de anunciar que se venderá a una cadena de supermercados.\nEsta semana nos reunimos una treintena de vecinos en el local de la asociación. Llevamos una propuesta sencilla: que el ayuntamiento ceda la planta baja durante dos años a los comerciantes que quieran volver, con un alquiler bajo, y que al final de ese plazo se estudien las ventas. Si el experimento fracasa, el barrio lo aceptará. Si funciona, habremos salvado algo más que unos puestos de fruta. La asociación ya ha pedido cita con la concejala de Comercio para presentarla.\nMi hija, que tiene nueve años, me preguntó el otro día adónde iba a ir ahora Rosa. No supe qué contestarle. Esa pregunta, más que cualquier informe, resume lo que está en juego: un mercado no es solo un negocio, es un lugar de encuentro que tarda décadas en formarse y muy poco en desaparecer."
+        ],
+        "negativos": [
+          "Prohibir el móvil en las aulas parece una decisión sencilla, pero creo que el debate es más complicado de lo que sugieren los titulares. Quizá el problema no sea el aparato, sino el uso que se hace de él y la falta de normas claras en cada centro.\nEs cierto que el móvil distrae. Un aviso de mensaje basta para romper la concentración de un adolescente durante varios minutos, y los profesores lo saben mejor que nadie. Probablemente por eso tantas comunidades autónomas han optado por restringirlo en primaria y en secundaria. Me parece una reacción comprensible, sobre todo después de años de quejas de familias y docentes.\nSin embargo, tal vez convenga distinguir entre prohibir y educar. Un teléfono sirve para buscar un dato, grabar un experimento de ciencias o consultar un diccionario, y los alumnos van a usarlo durante toda su vida adulta. Si la escuela lo expulsa por completo, pierde la ocasión de enseñar a manejarlo con criterio. Supongo que muchos docentes preferirían tener margen para decidir en qué actividades tiene sentido y en cuáles no.\nTambién está la cuestión de la desigualdad. No todas las familias pueden comprar un portátil o una tableta, y para algunos estudiantes el móvil es el único dispositivo conectado que tienen en casa. Una prohibición total puede agrandar esa brecha si los centros no ofrecen alternativas, y eso, pienso, se discute poco.\nConsidero que la solución pasa por reglas claras y compartidas: el móvil guardado durante las explicaciones, disponible cuando el profesor lo pida y fuera del aula en el recreo, que es cuando más se nota la falta de conversación entre los chicos. Diría que lo importante es que la norma se entienda y se aplique igual en todas las clases.\nA lo mejor dentro de unos años se vea esta discusión como se ve hoy la de las calculadoras. Por ahora, opino que conviene ensayar, evaluar los resultados y corregir sin prisas.",
+          "La semana laboral de cuatro días se ha convertido en uno de los debates más relevantes del mundo del trabajo, y creo que ha llegado para quedarse. Lo que hace apenas una década me parecía una utopía hoy ocupa titulares, programas electorales y reuniones de dirección. Los expertos coinciden en que este modelo podría transformar la relación entre las empresas y sus plantillas.\nRecuerdo que mi padre trabajaba seis días a la semana en un taller de Albacete y que solo lo veíamos de verdad los domingos por la tarde. Cuando yo empecé a trabajar, la semana de cinco días ya era lo normal, y aun así llegaba a casa sin tiempo para nada.\nDiversos estudios demuestran que reducir la jornada sin recortar el salario mejora la productividad. Los empleados descansan más, se concentran mejor y faltan menos por enfermedad. Además, las empresas que han probado el modelo aseguran que les resulta más fácil atraer y retener talento en un mercado laboral cada vez más competitivo.\nEl impacto no se limita al ámbito económico. La reducción de la jornada desempeña un papel fundamental en la conciliación entre la vida personal y la profesional. Las familias ganan tiempo para el cuidado de los hijos y de los mayores, y las personas disponen de más horas para formarse, hacer deporte o participar en la vida de su comunidad. En mi caso, ese día libre iría casi entero a la huerta que tenemos en el pueblo. Además, menos desplazamientos a la oficina significan menos emisiones y un tráfico más fluido en las grandes ciudades.\nSin embargo, la transición plantea desafíos importantes. No todos los sectores pueden reorganizar sus turnos con la misma facilidad: la sanidad, la hostelería o el comercio necesitan cubrir su horario de apertura todos los días. Las pequeñas empresas, por su parte, temen que la medida eleve sus costes. Además, la experiencia acumulada procede sobre todo de programas piloto voluntarios, cuyas conclusiones quizá no puedan trasladarse a toda la economía.\nA pesar de estos desafíos, la experiencia de Islandia marca un hito en la historia de las relaciones laborales y sienta las bases de un cambio que muchos gobiernos observan con atención. La clave, a mi juicio, estará en adaptar el modelo a la realidad de cada sector y en medir sus efectos con rigor.\nEn conclusión, la semana de cuatro días representa una oportunidad única para repensar el valor de nuestro tiempo. Con planificación, diálogo social y evaluación continua, este modelo puede contribuir a construir un mercado laboral más humano, más productivo y más sostenible."
+        ]
+      }
+    },
+    {
+      "id": "disc-sin-automenciones",
+      "familia": "discurso",
+      "generos": [
+        "opinion",
+        "academico"
+      ],
+      "detector": "patrón",
+      "parametros": {
+        "regex": "(?<!\\p{L})(yo|m[ií]|mis|conmigo|nosotros|nosotras|nuestr[oa]s?)(?!\\p{L})",
+        "flags": "iu",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": true,
+          "tildes": false
+        },
+        "ausencia": true
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Un texto de opinión o académico de 300 palabras de prosa o más sin ninguna automención: ni «yo», «mí», «mi», «mis» o «conmigo», ni «nosotros», «nosotras» o «nuestro». Medido en inglés, en artículos de investigación: ninguna en ChatGPT frente a 2,14 por 10.000 palabras en los humanos («complete absence of self-mentions», Pham 2026). Peso 1, y no 2: el español es lengua de sujeto tácito —«las propiedades de la flexión verbal permiten que puedan formarse en español oraciones sin sujeto expreso» (Nueva gramática de la lengua española, § 33.4a)—, así que «pienso que llegué tarde» habla en primera persona sin ningún pronombre, y la medida de Pham no se traslada sin un etiquetador que vea la persona del verbo. Solo se evalúa en opinión y académico. No se exige que coincida con la otra ausencia medida (epistémicos y automenciones): cada una puntúa por su cuenta, y los pesos y la calibración dirán cómo pesan juntas. No demuestra quién escribió el texto.",
+      "sugerencia": "Si hablas de tu experiencia o de tu trabajo, dilo: «en mi barrio», «nuestro estudio».",
+      "excepciones": [
+        "La primera persona que va solo en el verbo no cuenta: «Pienso que llegué tarde y lo sentí» dispara la ausencia, porque la regla ve pronombres y posesivos, no la persona verbal.",
+        "Un «nuestra» inclusivo la desactiva aunque el texto no hable de quien lo escribe: «Nuestra sociedad debe afrontar el cambio climático» ya cuenta como automención.",
+        "«me» y «nos» no cuentan: también son reflexivos y recíprocos («se me olvidó», «nos vemos»).",
+        "Textos académicos impersonales por norma de la revista, y cualquier texto escrito en tercera persona por convención.",
+        "Pham avisa de que su resultado «should be interpreted with caution»: la ausencia depende de lo que se le pida al modelo."
+      ],
+      "fuente": [
+        {
+          "titulo": "Pham (2026), «Metadiscourse in ChatGPT-generated and human-written research articles in linguistics», Indonesian Journal of Applied Linguistics 15(3): 561-572 (Tablas 1, 4 y 5)",
+          "url": "https://vm113.upi.edu/index.php/ijal/article/download/101/55"
+        },
+        {
+          "titulo": "RAE y ASALE, Nueva gramática de la lengua española, § 33.4a, «Sujetos expresos y sujetos tácitos (I). Sus rasgos gramaticales»",
+          "url": "https://www.rae.es/gram%C3%A1tica/sintaxis/sujetos-expresos-y-sujetos-t%C3%A1citos-i-sus-rasgos-gramaticales"
+        }
+      ],
+      "origenLista": "pronombres y posesivos de primera persona: automenciones según Hyland 2005, vía Pham 2026 («I, we, my, our»), traducción propia; sin «me» ni «nos», que también son reflexivos",
+      "nivelEvidencia": "medido en inglés",
+      "ejemplos": {
+        "positivos": [
+          "La semana laboral de cuatro días se ha convertido en uno de los debates más relevantes del mundo del trabajo. Lo que hace apenas una década parecía una utopía hoy ocupa titulares, programas electorales y reuniones de dirección. Los expertos coinciden en que este modelo podría transformar la relación entre las empresas y sus plantillas.\nDiversos estudios demuestran que reducir la jornada sin recortar el salario mejora la productividad. Los empleados descansan más, se concentran mejor y faltan menos por enfermedad. Además, las empresas que han probado el modelo aseguran que les resulta más fácil atraer y retener talento en un mercado laboral cada vez más competitivo.\nEl impacto no se limita al ámbito económico. La reducción de la jornada desempeña un papel fundamental en la conciliación entre la vida personal y la profesional. Las familias ganan tiempo para el cuidado de los hijos y de los mayores, y las personas disponen de más horas para formarse, hacer deporte o participar en la vida de su comunidad. Además, menos desplazamientos a la oficina significan menos emisiones y un tráfico más fluido en las grandes ciudades.\nSin embargo, la transición plantea desafíos importantes. No todos los sectores pueden reorganizar sus turnos con la misma facilidad: la sanidad, la hostelería o el comercio necesitan cubrir su horario de apertura todos los días. Las pequeñas empresas, por su parte, temen que la medida eleve sus costes. Además, la experiencia acumulada procede sobre todo de programas piloto voluntarios, cuyas conclusiones no siempre pueden trasladarse a toda la economía.\nA pesar de estos desafíos, la experiencia de Islandia marca un hito en la historia de las relaciones laborales y sienta las bases de un cambio que muchos gobiernos observan con atención. La clave estará en adaptar el modelo a la realidad de cada sector y en medir sus efectos con rigor.\nEn conclusión, la semana de cuatro días representa una oportunidad única para repensar el valor del tiempo. Con planificación, diálogo social y evaluación continua, este modelo puede contribuir a construir un mercado laboral más humano, más productivo y más sostenible.",
+          "Prohibir el móvil en las aulas parece una decisión sencilla, pero creo que el debate es más complicado de lo que sugieren los titulares. Quizá el problema no sea el aparato, sino el uso que se hace de él y la falta de normas claras en cada centro.\nEs cierto que el móvil distrae. Un aviso de mensaje basta para romper la concentración de un adolescente durante varios minutos, y los profesores lo saben mejor que nadie. Probablemente por eso tantas comunidades autónomas han optado por restringirlo en primaria y en secundaria. Me parece una reacción comprensible, sobre todo después de años de quejas de familias y docentes.\nSin embargo, tal vez convenga distinguir entre prohibir y educar. Un teléfono sirve para buscar un dato, grabar un experimento de ciencias o consultar un diccionario, y los alumnos van a usarlo durante toda su vida adulta. Si la escuela lo expulsa por completo, pierde la ocasión de enseñar a manejarlo con criterio. Supongo que muchos docentes preferirían tener margen para decidir en qué actividades tiene sentido y en cuáles no.\nTambién está la cuestión de la desigualdad. No todas las familias pueden comprar un portátil o una tableta, y para algunos estudiantes el móvil es el único dispositivo conectado que tienen en casa. Una prohibición total puede agrandar esa brecha si los centros no ofrecen alternativas, y eso, pienso, se discute poco.\nConsidero que la solución pasa por reglas claras y compartidas: el móvil guardado durante las explicaciones, disponible cuando el profesor lo pida y fuera del aula en el recreo, que es cuando más se nota la falta de conversación entre los chicos. Diría que lo importante es que la norma se entienda y se aplique igual en todas las clases.\nA lo mejor dentro de unos años se vea esta discusión como se ve hoy la de las calculadoras. Por ahora, opino que conviene ensayar, evaluar los resultados y corregir sin prisas."
+        ],
+        "negativos": [
+          "Cuando cerraron el mercado de abastos de mi barrio, en marzo, nadie organizó una despedida. Los puestos se fueron vaciando uno a uno durante el invierno, y el último día solo quedaba la frutería de Rosa, con media docena de cajas y un cartel escrito a mano.\nYo compraba allí desde que me mudé a la calle Olmos, hace once años, y allí aprendí a distinguir una buena merluza. Mis vecinos también. El mercado no era barato ni moderno, pero era nuestro: el sitio donde uno se enteraba de quién había tenido un nieto, de qué obra iban a empezar en la plaza o de que la farmacia cambiaba de horario.\nEl ayuntamiento explica el cierre con cifras. El edificio necesitaba una reforma de dos millones de euros, la mitad de los puestos llevaba años sin inquilino y los que resistían facturaban cada vez menos. Todo eso es verdad, y ninguno de nosotros lo discute. Lo que nos duele es que nadie preguntara al barrio qué quería hacer con ese espacio antes de anunciar que se venderá a una cadena de supermercados.\nEsta semana nos reunimos una treintena de vecinos en el local de la asociación. Llevamos una propuesta sencilla: que el ayuntamiento ceda la planta baja durante dos años a los comerciantes que quieran volver, con un alquiler bajo, y que al final de ese plazo se estudien las ventas. Si el experimento fracasa, el barrio lo aceptará. Si funciona, habremos salvado algo más que unos puestos de fruta. La asociación ya ha pedido cita con la concejala de Comercio para presentarla.\nMi hija, que tiene nueve años, me preguntó el otro día adónde iba a ir ahora Rosa. No supe qué contestarle. Esa pregunta, más que cualquier informe, resume lo que está en juego: un mercado no es solo un negocio, es un lugar de encuentro que tarda décadas en formarse y muy poco en desaparecer.",
+          "La semana laboral de cuatro días se ha convertido en uno de los debates más relevantes del mundo del trabajo, y creo que ha llegado para quedarse. Lo que hace apenas una década me parecía una utopía hoy ocupa titulares, programas electorales y reuniones de dirección. Los expertos coinciden en que este modelo podría transformar la relación entre las empresas y sus plantillas.\nRecuerdo que mi padre trabajaba seis días a la semana en un taller de Albacete y que solo lo veíamos de verdad los domingos por la tarde. Cuando yo empecé a trabajar, la semana de cinco días ya era lo normal, y aun así llegaba a casa sin tiempo para nada.\nDiversos estudios demuestran que reducir la jornada sin recortar el salario mejora la productividad. Los empleados descansan más, se concentran mejor y faltan menos por enfermedad. Además, las empresas que han probado el modelo aseguran que les resulta más fácil atraer y retener talento en un mercado laboral cada vez más competitivo.\nEl impacto no se limita al ámbito económico. La reducción de la jornada desempeña un papel fundamental en la conciliación entre la vida personal y la profesional. Las familias ganan tiempo para el cuidado de los hijos y de los mayores, y las personas disponen de más horas para formarse, hacer deporte o participar en la vida de su comunidad. En mi caso, ese día libre iría casi entero a la huerta que tenemos en el pueblo. Además, menos desplazamientos a la oficina significan menos emisiones y un tráfico más fluido en las grandes ciudades.\nSin embargo, la transición plantea desafíos importantes. No todos los sectores pueden reorganizar sus turnos con la misma facilidad: la sanidad, la hostelería o el comercio necesitan cubrir su horario de apertura todos los días. Las pequeñas empresas, por su parte, temen que la medida eleve sus costes. Además, la experiencia acumulada procede sobre todo de programas piloto voluntarios, cuyas conclusiones quizá no puedan trasladarse a toda la economía.\nA pesar de estos desafíos, la experiencia de Islandia marca un hito en la historia de las relaciones laborales y sienta las bases de un cambio que muchos gobiernos observan con atención. La clave, a mi juicio, estará en adaptar el modelo a la realidad de cada sector y en medir sus efectos con rigor.\nEn conclusión, la semana de cuatro días representa una oportunidad única para repensar el valor de nuestro tiempo. Con planificación, diálogo social y evaluación continua, este modelo puede contribuir a construir un mercado laboral más humano, más productivo y más sostenible."
+        ]
+      }
+    },
+    {
+      "id": "disc-encuadre-ordinal",
+      "familia": "discurso",
+      "detector": "estructural",
+      "parametros": {
+        "posicion": "inicio-frase",
+        "regex": "(En primer lugar|En segundo lugar|En tercer lugar|Por [uú]ltimo|Finalmente|A continuaci[oó]n)(?!\\p{L})",
+        "flags": "iu",
+        "minimo": 2
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Dos o más marcadores de orden al principio de frase —«En primer lugar», «En segundo lugar», «En tercer lugar», «A continuación», «Finalmente», «Por último»—: el texto se anuncia en pasos numerados. Medido en inglés: los marcadores de encuadre casi se duplican en artículos de ChatGPT (26,67 frente a 14,0 por 10.000 palabras; Pham 2026). Peso 1, y no 2: es la estructura que se enseña en la escuela y la que más usa quien aprende español, y en el estudio de Pham todo el metadiscurso de ese tipo (transiciones, encuadre, remisiones) se duplica a la vez, lo que apunta más a la longitud del texto que a un abuso del encuadre (discurso.md § 2). No demuestra quién escribió el texto.",
+      "sugerencia": "Si la enumeración es real, conviértela en una lista; si no, deja que las ideas se encadenen sin numerarlas.",
+      "excepciones": [
+        "Redacción escolar y de quien aprende español: «En primer lugar… Por último» es la plantilla que se enseña, y los conectores cronológicos se usan hasta cuatro veces más en segunda lengua (discurso.md § 9).",
+        "Instrucciones, recetas y procedimientos, donde el orden es el contenido.",
+        "Cuenta apariciones, no marcadores distintos: dos «Finalmente» también llegan al mínimo."
+      ],
+      "fuente": [
+        {
+          "titulo": "Pham (2026), «Metadiscourse in ChatGPT-generated and human-written research articles in linguistics», Indonesian Journal of Applied Linguistics 15(3): 561-572 (Tablas 1, 4 y 5)",
+          "url": "https://vm113.upi.edu/index.php/ijal/article/download/101/55"
+        },
+        {
+          "titulo": "Herbold et al. (2023), paquete de replicación v1.1 (Zenodo): calc_linguistic_features.ipynb (las 14 regex de marcadores epistémicos), markers/modals.csv, markers/connectives_discourse_markers_PDTB.txt y los 90 ensayos de cada grupo",
+          "url": "https://doi.org/10.5281/zenodo.8343644"
+        }
+      ],
+      "origenLista": "traducción propia de los marcadores de encuadre de Pham 2026 (Hyland 2005): En primer lugar y En segundo lugar (First, Second), A continuación (Next); En tercer lugar [PROPIO], que sigue la serie; Finalmente, de «finally» en la lista PDTB de Herbold et al. 2023; Por último, de discurso.md §§ 9 y 11 (fila D5)",
+      "nivelEvidencia": "medido en inglés",
+      "ejemplos": {
+        "positivos": [
+          "En primer lugar, hay que medir el terreno. Por último, se presenta el proyecto.",
+          "En primer lugar, se revisan los datos. En segundo lugar, se comparan con los del año pasado. A continuación, se redacta el informe."
+        ],
+        "negativos": [
+          "Finalmente, llegó el tren.",
+          "Para empezar, hay que medir el terreno. Por último, se presenta el proyecto.",
+          "Llegó en primer lugar y, por último, saludó al público."
+        ]
+      }
+    },
+    {
+      "id": "disc-referencia-interna-concreta",
+      "familia": "discurso",
+      "detector": "patrón",
+      "parametros": {
+        "regex": "(?<!\\p{L})((v[eé]ase|consulte) |en )(la |el )?(tabla|figura|apartado|secci[oó]n|anexo|nota|cap[ií]tulo) \\d+(?!\\p{L})|(?<!\\p{L})como (dije|señal[eé]|mencion[eé]) (arriba|antes|m[aá]s arriba|en el apartado)(?!\\p{L})",
+        "flags": "iu",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": true,
+          "tildes": false
+        }
+      },
+      "peso": -2,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Una referencia a otra parte del propio texto, concreta: «véase la tabla 2», «en la figura 3», «como dije antes». Resta, porque es un rasgo humano. Medido en inglés: en artículos de investigación, las remisiones como «see Table 5, see Figure 1» «are rarely found» en el texto de ChatGPT (Pham 2026). Peso −2, el máximo de un atenuante: está medido, aunque en inglés y en un solo género. Solo cuenta lo concreto, una tabla, figura, apartado, sección, anexo, nota o capítulo con su número, o una remisión en primera persona (que además es automención, y ChatGPT no las usa). Las remisiones genéricas («como se indicó arriba») no cuentan: son las que ChatGPT usa el doble (17,26 frente a 8,3 por 10.000 palabras). No demuestra quién escribió el texto.",
+      "sugerencia": "Es un rasgo que resta. Si remites a otra parte del texto, hazlo con su número: «véase la tabla 2».",
+      "excepciones": [
+        "Una cita externa no es una referencia interna: «Véase Pérez (2003)» no cuenta.",
+        "«Consulte» sin una tabla, figura o apartado numerado tampoco cuenta: «Consulte a un profesional» es un aviso, y muy de asistente.",
+        "Pham mide artículos de investigación: en otros géneros las tablas y figuras numeradas son raras y la regla casi no dispara.",
+        "Una reseña de un libro o de una serie («en el capítulo 3») también lleva número: es un atenuante falso posible."
+      ],
+      "fuente": [
+        {
+          "titulo": "Pham (2026), «Metadiscourse in ChatGPT-generated and human-written research articles in linguistics», Indonesian Journal of Applied Linguistics 15(3): 561-572 (Tablas 1, 4 y 5)",
+          "url": "https://vm113.upi.edu/index.php/ijal/article/download/101/55"
+        }
+      ],
+      "origenLista": "traducción propia de los endofóricos de Pham 2026 (Hyland 2005): véase, consulte y en la/el + tabla o figura con su número («see Table 5, see Figure 1»); apartado y sección con número (su «in the next section»); anexo, nota y capítulo con número [PROPIO], por extensión; «como dije, señalé o mencioné + arriba, antes, más arriba o en el apartado» [PROPIO], remisión en primera persona. Listas leídas y aprobadas por Antonio en la parada 2 del 5.3",
+      "nivelEvidencia": "medido en inglés",
+      "ejemplos": {
+        "positivos": [
+          "Los resultados completos están en la tabla 2.",
+          "Véase la figura 3 para el detalle del montaje.",
+          "Como dije antes, el método es fiable."
+        ],
+        "negativos": [
+          "Véase Pérez (2003) para una revisión.",
+          "Consulte a un profesional antes de decidir.",
+          "Como se indicó arriba, el método es fiable."
+        ]
+      }
+    },
+    {
+      "id": "disc-puffery-de-significancia",
+      "familia": "discurso",
+      "detector": "patrón",
+      "parametros": {
+        "regex": "(?<!\\p{L})(papel (crucial|fundamental|clave|decisivo)|marca un hito|hito hist[oó]rico|es un testimonio de|legado (duradero|perdurable)|pone de manifiesto la importancia|refleja una tendencia m[aá]s amplia|sienta las bases|contribuye al panorama)(?!\\p{L})",
+        "flags": "iu",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": true,
+          "tildes": false
+        }
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Frases que inflan la importancia del asunto: «un papel crucial», «marca un hito», «es un testimonio de», «sienta las bases», «un legado duradero». Anecdótico: Wikipedia las cuenta entre los signos del texto generado («undue emphasis on significance, legacy, and broader trends»), con ejemplos y sin frecuencias. En español no hay medición. No demuestra quién escribió el texto.",
+      "sugerencia": "Cuenta el hecho y deja que el lector juzgue su importancia: qué pasó, cuándo y a quién afectó.",
+      "excepciones": [
+        "Prensa institucional, notas de prensa y publicidad, donde estas fórmulas son de oficio.",
+        "«pone de manifiesto la importancia» lo cuenta también lex-importancia, que busca la palabra «importancia»."
+      ],
+      "fuente": [
+        {
+          "titulo": "Wikipedia en inglés, «Signs of AI writing» (ensayo editorial con ejemplos, sin frecuencias; leído entero el 30/09/2026)",
+          "url": "https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing"
+        }
+      ],
+      "origenLista": "traducción propia de las «words to watch» de Wikipedia, «Signs of AI writing», apartado «Undue emphasis on significance, legacy, and broader trends»: a crucial/pivotal/vital/key role, marking a pivotal moment, key turning point, is a testament, enduring/lasting, underscores its importance, reflects broader, setting the stage for, contributing to the… landscape (discurso.md § 5 y fila D7 del § 11)",
+      "nivelEvidencia": "anecdótico",
+      "ejemplos": {
+        "positivos": [
+          "La ciudad desempeñó un papel crucial en la historia del comercio.",
+          "La apertura del puerto marca un hito en la región y es un testimonio de su espíritu emprendedor."
+        ],
+        "negativos": [
+          "El actor tuvo un papel secundario en la película.",
+          "El puerto abrió en 1998 y hoy mueve dos millones de toneladas al año.",
+          "El legado del escultor está en el museo municipal."
+        ]
+      }
+    },
+    {
+      "id": "disc-atribucion-vaga",
+      "familia": "discurso",
+      "detector": "patrón",
+      "parametros": {
+        "regex": "(?<!\\p{L})((los )?expertos (coinciden|se[nñ]alan|afirman|advierten)|(diversos|numerosos|varios|muchos) (estudios|an[aá]lisis|investigaciones) (muestran|demuestran|se[nñ]alan|indican)|(seg[uú]n )?(los )?informes del sector|(algunos|muchos) cr[ií]ticos)(?!\\p{L})",
+        "flags": "iu",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": true,
+          "tildes": false
+        }
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Opiniones atribuidas a una autoridad sin nombre: «los expertos coinciden», «diversos estudios demuestran», «según los informes del sector», «algunos críticos». Anecdótico: Wikipedia lo cuenta entre los signos del texto generado, y un recuento informal de su página de discusión lo encontró en 3 textos generados frente a 1 humano. La sobregeneralización sí está medida en resúmenes científicos (odds ratio 4,85; Peters y Chin-Yee 2025), pero es otro rasgo: se cita como contexto, no como prueba de esta regla. No demuestra quién escribió el texto.",
+      "sugerencia": "Di quién: el nombre del experto, del estudio o del informe, y su fecha.",
+      "excepciones": [
+        "Periodismo y divulgación, que resumen así el estado de una cuestión.",
+        "La regla no mira si hay un nombre propio o una cifra cerca, como pedía discurso.md: «los expertos coinciden, según el informe del INE de 2024,» también dispara."
+      ],
+      "fuente": [
+        {
+          "titulo": "Wikipedia en inglés, «Signs of AI writing» (ensayo editorial con ejemplos, sin frecuencias; leído entero el 30/09/2026)",
+          "url": "https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing"
+        },
+        {
+          "titulo": "Peters y Chin-Yee (2025), Royal Society Open Science 12:241776: sobregeneralización en resúmenes científicos, odds ratio 4,85 (contexto, no prueba de esta regla)",
+          "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12042776/"
+        }
+      ],
+      "origenLista": "traducción propia de las «words to watch» de Wikipedia, «Signs of AI writing», apartado «Vague attributions and overgeneralization of opinions»: Industry reports, Experts argue, Some critics argue, several sources/publications (discurso.md § 5 y fila D9 del § 11)",
+      "nivelEvidencia": "anecdótico",
+      "ejemplos": {
+        "positivos": [
+          "Los expertos coinciden en que el modelo es sostenible.",
+          "Diversos estudios demuestran que la medida reduce el paro.",
+          "Algunos críticos consideran que la novela es demasiado larga."
+        ],
+        "negativos": [
+          "Se ha observado que los pacientes mejoran con el tratamiento.",
+          "El estudio de García (2021) muestra que la medida reduce el paro.",
+          "Los expertos del laboratorio publicaron sus datos en abierto."
+        ]
+      }
+    },
+    {
+      "id": "disc-retos-y-futuro",
+      "familia": "discurso",
+      "detector": "patrón",
+      "parametros": {
+        "regex": "(?<!\\p{L})(a pesar de (los|estos|sus|estas) (desaf[ií]os|retos|dificultades)|(sigue|contin[uú]a) (prosperando|evolucionando)|de cara al futuro|perspectivas de futuro|en los pr[oó]ximos a[nñ]os)(?!\\p{L})",
+        "flags": "iu",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": true,
+          "tildes": false
+        }
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "La fórmula de «retos y futuro»: «a pesar de estos desafíos», «continúa prosperando», «de cara al futuro», «perspectivas de futuro», «en los próximos años». Anecdótico: Wikipedia la cuenta entre los signos del texto generado («Despite its… faces several challenges», «Despite these challenges», «continues to thrive») y avisa de que el signo es la fórmula rígida, no el hecho de mencionar retos. En español no hay medición. No demuestra quién escribió el texto.",
+      "sugerencia": "Si hay retos, nómbralos con datos; si no los hay, cierra sin la vuelta optimista.",
+      "excepciones": [
+        "Informes de gestión, memorias anuales y prensa económica, donde «en los próximos años» y «de cara al futuro» son corrientes.",
+        "No busca «sigue siendo» ni «sigue creciendo»: Wikipedia no los recoge y son frases corrientes («El paro sigue siendo alto»)."
+      ],
+      "fuente": [
+        {
+          "titulo": "Wikipedia en inglés, «Signs of AI writing» (ensayo editorial con ejemplos, sin frecuencias; leído entero el 30/09/2026)",
+          "url": "https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing"
+        }
+      ],
+      "origenLista": "traducción propia de las «words to watch» de Wikipedia, «Signs of AI writing», apartado «Outline-like conclusions about challenges and future prospects»: Despite its… faces several challenges, Despite these challenges, Future Outlook, Future Prospects; y de sus ejemplos, continues to thrive, continues to evolve, for the coming decades (discurso.md § 3 y fila D11 del § 11)",
+      "nivelEvidencia": "anecdótico",
+      "ejemplos": {
+        "positivos": [
+          "A pesar de estos desafíos, la cooperativa continúa prosperando.",
+          "De cara al futuro, el sector confía en la exportación."
+        ],
+        "negativos": [
+          "El paro sigue siendo alto en la comarca.",
+          "La empresa sigue creciendo a buen ritmo.",
+          "El reto de este año es terminar la obra."
+        ]
+      }
+    },
+    {
+      "id": "disc-anecdota-en-primera-persona",
+      "familia": "discurso",
+      "detector": "patrón",
+      "parametros": {
+        "regex": "(?<!\\p{L})(me acuerdo de|(?<!(le|te|les|os) )recuerdo que|cuando yo|a m[ií] me|en mi caso|el otro d[ií]a|mi (madre|padre|abuela|abuelo|hermano|hermana|amigo|amiga))(?!\\p{L})",
+        "flags": "iu",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": true,
+          "tildes": false
+        }
+      },
+      "peso": -1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Una anécdota en primera persona: «recuerdo que», «me acuerdo de», «cuando yo», «en mi caso», «el otro día», «mi abuela». Resta, porque es un rasgo humano. Anecdótico: la edición con un modelo de lenguaje quita las anécdotas y la argumentación basada en la experiencia propia («LLM edits will often remove human colloquialisms, anecdotes, or examples», Abdulhai et al. 2026, preprint), y en español la UCM observa, de forma cualitativa, más expresiones idiomáticas en los textos humanos. Peso −1: la evidencia es cualitativa. No busca modismos: la lista sería inabarcable. No demuestra quién escribió el texto.",
+      "sugerencia": "Es un rasgo que resta: una experiencia concreta ancla lo que se dice.",
+      "excepciones": [
+        "«Le recuerdo que…» es una fórmula de aviso, no un recuerdo: no cuenta detrás de «le», «te», «les» u «os».",
+        "«Hace unos años» no cuenta: abre también textos impersonales («Hace unos años, la inteligencia artificial parecía ciencia ficción»).",
+        "Un texto generado al que se le pide una anécdota la inventa: la regla no puede saber si es verdad."
+      ],
+      "fuente": [
+        {
+          "titulo": "Abdulhai et al. (2026), «How LLMs distort our written language», arXiv 2603.18161 (preprint sin revisión)",
+          "url": "https://arxiv.org/pdf/2603.18161v1"
+        },
+        {
+          "titulo": "UCM, IberLEF 2023 (AuTexTification): encuesta cualitativa a lingüistas sobre textos en español; marcadores «scarce and repetitive» y más expresiones idiomáticas en los humanos",
+          "url": "https://ceur-ws.org/Vol-3496/autextification-paper17.pdf"
+        }
+      ],
+      "origenLista": "inventario propio a partir de discurso.md § 6 (Abdulhai 2026: la edición con un modelo de lenguaje quita anécdotas y argumentación en primera persona); sin modismos. Lista leída y aprobada por Antonio en la parada 2 del 5.3",
+      "nivelEvidencia": "anecdótico",
+      "ejemplos": {
+        "positivos": [
+          "Recuerdo que aquel invierno nevó tanto que no abrieron la escuela.",
+          "En mi caso, el tratamiento funcionó a la segunda semana.",
+          "Mi abuela guardaba las cartas en una caja de galletas."
+        ],
+        "negativos": [
+          "Le recuerdo que el plazo termina el lunes.",
+          "Hace unos años, la inteligencia artificial parecía ciencia ficción."
+        ]
+      }
     }
   ]
 }
