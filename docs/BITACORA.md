@@ -14,7 +14,61 @@
 
 ---
 
-## [2026-09-30] ✅ CERRADA — Los capítulos de EPUB dejaban entrar anuncios, glosarios y preliminares con los jueces en verde
+## [2026-09-30] 🔴 ABIERTA — El filtro «fiction» de Gutenberg deja pasar la crítica literaria («Spanish fiction -- History and criticism»)
+
+**Categoría:** herramienta de calibración (extracción de corpus)
+**Síntoma:** los tres tomos de «Orígenes de la novela» de Menéndez Pelayo (pg70058, pg71733, pg76459) están en la muestra de narrativa-clasica: el tomo I es el estudio crítico («Reseña de la novela en la antigüedad clásica, griega y latina…»); el II y el III, la antología de textos que lo acompaña (diálogos lucianescos, coloquios, comedias en diálogo). En el catálogo hay 947 líneas con «History and criticism». Visto al releer las etiquetas de 600+, antes de hacer commit de los datos de narrativa.
+**⭐ Qué dio verde mientras el fallo estaba vivo:** los jueces de `gutenberg.ts` en HEAD (`0b33a73`), y con el mismo código el filtro sobre el catálogo en caché:
+```
+$ node --test herramientas/calibrar/gutenberg.spec.ts
+✔ leerCsv (RFC 4180) (1.6776ms)
+✔ persona: nombre, año de muerte y papel (1.2909ms)
+✔ librosDelCatalogo y filtrarLibro (0.7356ms)
+✔ lenguasPropias y el filtro por autor (0.2542ms)
+✔ enlacesDeHarvest (0.378ms)
+ℹ tests 17
+ℹ pass 17
+ℹ fail 0
+filtrarLibro(pg70058 «Orígenes de la novela,  Tomo I», Subjects «Spanish fiction -- History and criticism») → {"dentro":true}
+filtrarLibro(pg71733 «Orígenes de la novela, Tomo II», Subjects «Spanish fiction -- History and criticism») → {"dentro":true}
+filtrarLibro(pg76459 «Orígenes de la novela, Tomo II», Subjects «Spanish fiction -- History and criticism») → {"dentro":true}
+```
+**Cómo se cazó:** ojo humano (relectura de la muestra de 300-599 y 600+ a la parada de narrativa)
+**Causa raíz:** ⏳ PENDIENTE
+**Arreglo aplicado:** ⏳ PENDIENTE
+**Commit:** ⏳ PENDIENTE
+**Ley que sale de aquí:** SIN LEY TODAVÍA
+**Traza:** `motor/herramientas/calibrar/gutenberg.ts` (`filtrarLibro`); `motor/herramientas/calibrar/gutenberg.spec.ts`. Misma relectura que la reapertura de «Los capítulos de EPUB dejaban entrar…».
+
+---
+
+## [2026-09-30] 🔴 ABIERTA — El texto alternativo de las imágenes del EPUB «noimages» entra en los capítulos con los jueces en verde
+
+**Categoría:** herramienta de calibración (extracción de corpus)
+**Síntoma:** en los EPUB «epub.noimages» de Gutenberg cada imagen es un `<span id="img_…">` con su texto alternativo, y ese texto queda dentro del capítulo: «Pie» y «Cabecera» como líneas sueltas en los capítulos de pg14995 («Los hombres de pro»); el nombre de la capitular pegado a la primera palabra en pg75382 («letra-a-iloPENAS» por «APENAS»). Hay 2.801 spans así en 157 de los 243 libros de la muestra. Visto al releer la muestra de 300-599 y 600+, antes de hacer commit de los datos de narrativa.
+**⭐ Qué dio verde mientras el fallo estaba vivo:** los jueces de `epub.ts` en HEAD (`0b33a73`), y con el mismo código los capítulos extraídos de la caché:
+```
+$ node --test herramientas/calibrar/epub.spec.ts
+✔ capitulosDeEpub (6.2473ms)
+✔ esDivisionNumerada (0.4778ms)
+✔ esParatexto (0.406ms)
+ℹ tests 8
+ℹ pass 8
+ℹ fail 0
+pg14995-013 dentro: línea 65: «Pie» · línea 66: «Cabecera»
+pg75382-013 dentro: línea 1: «letra-a-iloPENAS un asomo de razón ilumi»
+```
+Y la revisión a mano declarada en el manifiesto («los 127 capítulos de 100-299 de la primera descarga completa, uno a uno») no lo señaló.
+**Cómo se cazó:** ojo humano (relectura de la muestra a la parada de narrativa)
+**Causa raíz:** ⏳ PENDIENTE
+**Arreglo aplicado:** ⏳ PENDIENTE
+**Commit:** ⏳ PENDIENTE
+**Ley que sale de aquí:** SIN LEY TODAVÍA
+**Traza:** `motor/herramientas/calibrar/epub.ts` (`capitulosDeEpub`); `motor/herramientas/calibrar/html.ts` (`limpiarHtml`, `lineasDeHtml`).
+
+---
+
+## [2026-09-30] 🔁 REABIERTA — Los capítulos de EPUB dejaban entrar anuncios, glosarios y preliminares con los jueces en verde
 
 **Categoría:** herramienta de calibración (extracción de corpus)
 **Síntoma:** en el piloto de narrativa-clasica (40 EPUB de Gutenberg), entre los documentos del tramo 100-299 estaban el catálogo de anuncios del editor de pg29831 («OBRAS DEL MISMO AUTOR», «PSICOLOGÍA ALEMANA… 3,50 pesetas») y la «ACLARACIÓN» de pg32364; en 600+, un glosario inglés «ABBREVIATIONS» de 14.831 palabras (pg29731). Ningún dato publicado: se vio antes de calibrar.
@@ -32,9 +86,11 @@ pg29831 capítulos dentro: OBRAS DEL MISMO AUTOR · PSICOLOGÍA ALEMANA CONTEMPO
 ```
 **Cómo se cazó:** ojo humano (revisión a mano de los capítulos de 100-299 del piloto)
 **Causa raíz:** ~~el EPUB de prueba (`fixtures/prueba.epub`) solo tenía la estructura que se había visto en pg12457: ni abreviaturas con punto en el índice, ni anuncios del editor al final, ni paratextos en inglés. `NUMERADA` aceptaba cualquier letra romana suelta con punto («D.»), y ninguna regla miraba lo que va detrás del último capítulo. Los jueces pasaban porque no había caso que los contradijera.~~
-Los jueces se escribieron contra un EPUB sintético hecho a imagen de un solo libro (pg12457), y las reglas de `epub.ts` (qué es paratexto, qué es división numerada, dónde empieza el libro) son listas de etiquetas: cada libro real con una etiqueta no prevista las burlaba sin que ningún juez lo supiera. **Por qué no aguantó el primer cierre:** se comprobó solo en los tres libros del síntoma, no releyendo la muestra resultante; con 240 libros salieron etiquetas nuevas del mismo tipo (portadas con el título, «TASA», «TABLA», letras espaciadas, años, escenas, plurales).
+~~Los jueces se escribieron contra un EPUB sintético hecho a imagen de un solo libro (pg12457), y las reglas de `epub.ts` (qué es paratexto, qué es división numerada, dónde empieza el libro) son listas de etiquetas: cada libro real con una etiqueta no prevista las burlaba sin que ningún juez lo supiera. **Por qué no aguantó el primer cierre:** se comprobó solo en los tres libros del síntoma, no releyendo la muestra resultante; con 240 libros salieron etiquetas nuevas del mismo tipo (portadas con el título, «TASA», «TABLA», letras espaciadas, años, escenas, plurales).~~
+⏳ PENDIENTE
 **Arreglo aplicado:** ~~`epub.ts`: los romanos de una sola letra solo valen si son I, V o X, y se aceptan los numerales entre guiones (`NUMERADA`); nueva regla `FINAL`, que deja fuera todo desde la primera entrada «obras del mismo autor», «catálogo»…; `PARATEXTO` añade aclaración, prefacio, notes, vocabulary, abbreviations y exercises. Fixture y jueces ampliados (anuncios finales, «D. ARMANDO…», «M. Bergeret…», «-I-»), en rojo antes del verde, con contraprueba de 5 de 5. Comprobado después en los tres libros del síntoma: `esDivisionNumerada('D. ARMANDO PALACIO VALDÉS') → false`; pg29831, «OBRAS DEL MISMO AUTOR», «PSICOLOGÍA ALEMANA…» y «CALDERÓN DE LA BARCA» → final; pg32364, «ACLARACIÓN» → paratexto; pg29731, «ABBREVIATIONS» → paratexto.~~
-Lo de `27157be` y, además: `08bf5f9`, portada (la etiqueta empieza por el `dc:title` del OPF), tasa, privilegio, aprobación, tabla, codificación y ediciones como paratexto, letras espaciadas juntas antes de mirar, teatro («ESCENA», «SCENA», «ACTO»), los arábigos de cuatro cifras no son capítulo; `2d65c97`, plurales explícitos (advertencias, dedicatorias, aclaraciones) y proemio, obras citadas, significado de; `ef04f80`, en el descargador, un capítulo idéntico a uno ya tomado no entra dos veces. Comprobado, esta vez releyendo la muestra: los 104 capítulos de 100-299 y los 31 sin numerar de 300-599, uno a uno, y los casos de la reapertura con el código de `ef04f80`: `esDivisionNumerada('1872') → false | esParatexto('TASA') → true | esParatexto('D E D I C A T O R I A') → true | esParatexto('ADVERTENCIAS') → true`; pg62691 «El criticón» → portada; pg2000 «TASA» → paratexto; pg49756 «ESCENA…» → teatro. Quedan dentro, declarados en el manifiesto, 13 capítulos de 100-299 y 3-4 de 300-599 que no son narración y ninguna regla general separa.
+~~Lo de `27157be` y, además: `08bf5f9`, portada (la etiqueta empieza por el `dc:title` del OPF), tasa, privilegio, aprobación, tabla, codificación y ediciones como paratexto, letras espaciadas juntas antes de mirar, teatro («ESCENA», «SCENA», «ACTO»), los arábigos de cuatro cifras no son capítulo; `2d65c97`, plurales explícitos (advertencias, dedicatorias, aclaraciones) y proemio, obras citadas, significado de; `ef04f80`, en el descargador, un capítulo idéntico a uno ya tomado no entra dos veces. Comprobado, esta vez releyendo la muestra: los 104 capítulos de 100-299 y los 31 sin numerar de 300-599, uno a uno, y los casos de la reapertura con el código de `ef04f80`: `esDivisionNumerada('1872') → false | esParatexto('TASA') → true | esParatexto('D E D I C A T O R I A') → true | esParatexto('ADVERTENCIAS') → true`; pg62691 «El criticón» → portada; pg2000 «TASA» → paratexto; pg49756 «ESCENA…» → teatro. Quedan dentro, declarados en el manifiesto, 13 capítulos de 100-299 y 3-4 de 300-599 que no son narración y ninguna regla general separa.~~
+⏳ PENDIENTE
 **Commit:** ~~27157be~~ 27157be, 08bf5f9, 2d65c97, ef04f80
 **Ley que sale de aquí:** un fixture sintético solo juzga lo que su autor imaginó: antes de calibrar, se leen a mano documentos reales de cada tramo.
 Y al cerrar otra vez: un arreglo se comprueba sobre la muestra que sale, no sobre los casos que lo dispararon.
@@ -55,6 +111,23 @@ pg2000 dentro: TASA
 pg49756 dentro: ESCENA PRIMERA · ESCENA II · ESCENA III
 ```
 El arreglo nuevo empezó antes de esta nota (código cambiado, sin commit).
+**Nota [2026-09-30] — reabierta otra vez:** a la parada de narrativa, releyendo las etiquetas de los capítulos de 300-599 y 600+ (los de las celdas publicadas) y el arranque de los sospechosos, siguen dentro capítulos que no son narración: teatro de Cervantes (pg15115, el entremés «EL RETABLO DE LAS MARAVILLAS» y «JORNADA SEGUNDA» de La Numancia), prólogos con título propio (pg55448 «BREVE NOTICIA», pg38814 «ANTES DE EMPEZAR»; en pg55916 el prólogo de Unamuno va numerado «I», «II»), obras en diálogo sin narrador (La Celestina, pg1619; La Lozana andaluza, pg50291), secciones de ensayo dentro de libros de ficción (la cosmogonía de Lugones en pg65689; el tratado de cocotología en pg49149). El cierre anterior solo releyó 100-299 y los capítulos SIN numerar de 300-599: 600+ y los numerados no se leyeron. En HEAD (`0b33a73`):
+```
+$ node --test herramientas/calibrar/epub.spec.ts
+✔ capitulosDeEpub (6.2473ms)
+✔ esDivisionNumerada (0.4778ms)
+✔ esParatexto (0.406ms)
+ℹ tests 8
+ℹ pass 8
+ℹ fail 0
+pg15115 dentro: EL RETABLO DE LAS MARAVILLAS · JORNADA SEGUNDA
+pg55448 dentro: BREVE NOTICIA
+pg38814 dentro: ANTES DE EMPEZAR
+pg1619 dentro: "EL AUCTOR
+pg49149 dentro: ETIMOLOGÍA
+pg65689 dentro: EL ORIGEN DEL UNIVERSO
+```
+Y el informe de la parada decía «13 en 100-299 y 3 o 4 en 300-599», sin haber leído 600+. Nada publicado: los datos de narrativa no tienen commit.
 
 ---
 
