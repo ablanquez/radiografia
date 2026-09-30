@@ -151,10 +151,24 @@ export function lenguasPropias(libros: readonly Libro[]): Map<string, string> {
   return salida;
 }
 
+/**
+ * [PROPIO, bitácora del 2026-09-30] «fiction» en Subjects es ficción salvo en
+ * un encabezamiento de crítica: «Spanish fiction -- History and criticism» es
+ * un libro SOBRE la novela (los tres tomos de «Orígenes de la novela»). Un
+ * libro es ficción si algún encabezamiento suyo con «fiction» no lleva esa
+ * subdivisión. Es la única subdivisión de crítica que aparece en los
+ * encabezamientos con «fiction» de los libros en español del catálogo.
+ */
+const esFiccion = (materias: string) =>
+  materias
+    .split(';')
+    .some((m) => /fiction/i.test(m) && !/--\s*history and criticism/i.test(m));
+
 export function filtrarLibro(libro: Libro, ultimoAnio: number, lenguas?: ReadonlyMap<string, string>): { dentro: true } | { fuera: string } {
   if (libro.tipo !== 'Text') return { fuera: `no es Text (${libro.tipo})` };
   if (libro.lenguas.length !== 1 || libro.lenguas[0] !== 'es') return { fuera: `no solo en español (${libro.lenguas.join('; ')})` };
   if (!/fiction/i.test(libro.materias)) return { fuera: 'sin «fiction» en Subjects' };
+  if (!esFiccion(libro.materias)) return { fuera: 'crítica: «fiction» solo con «History and criticism»' };
   if (libro.personas.some((p) => p.papel === 'Translator')) return { fuera: 'con traductor' };
   if (TRADUCCION.test(libro.materias)) return { fuera: 'traducción probable por Subjects' };
   const extranjero = libro.personas.find((p) => p.papel === null && (lenguas?.get(p.nombre) ?? 'es') !== 'es');

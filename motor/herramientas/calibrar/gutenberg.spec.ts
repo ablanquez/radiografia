@@ -56,6 +56,8 @@ describe('librosDelCatalogo y filtrarLibro', () => {
       fila(8, 'es', 'Goyri, María, 1873-1955? [Compiler]', 'Spanish fiction'),
       fila(9, 'es', 'Isaacs, Jorge, 1837-1895', 'Colombian fiction; Spanish American fiction; Latin American fiction'),
       fila(10, 'es', 'Pérez Galdós, Benito, 1843-1920', 'Spanish fiction', 'Sound'),
+      fila(11, 'es', 'Menéndez y Pelayo, Marcelino, 1856-1912', 'Spanish fiction -- History and criticism'),
+      fila(12, 'es', 'Pérez Galdós, Benito, 1843-1920', 'Spanish fiction -- History and criticism; Spain -- History -- Fiction'),
     ].join('\n'),
   );
   const motivo = (id: number) => filtrarLibro(libros.find((l) => l.id === id)!, 1945);
@@ -63,6 +65,7 @@ describe('librosDelCatalogo y filtrarLibro', () => {
   test('dentro: español, texto, ficción, sin traductor, todos muertos hasta 1945 (también literatura hispanoamericana)', () => {
     assert.deepEqual(motivo(1), { dentro: true });
     assert.deepEqual(motivo(9), { dentro: true });
+    assert.deepEqual(motivo(12), { dentro: true });
   });
   test('fuera, cada uno con su motivo', () => {
     assert.deepEqual(motivo(2), { fuera: 'sin «fiction» en Subjects' });
@@ -73,6 +76,7 @@ describe('librosDelCatalogo y filtrarLibro', () => {
     assert.deepEqual(motivo(7), { fuera: 'alguien sin año de muerte en el catálogo' });
     assert.deepEqual(motivo(8), { fuera: 'murió después de 1945' });
     assert.deepEqual(motivo(10), { fuera: 'no es Text (Sound)' });
+    assert.deepEqual(motivo(11), { fuera: 'crítica: «fiction» solo con «History and criticism»' });
   });
 });
 
