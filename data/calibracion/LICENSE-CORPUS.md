@@ -42,3 +42,50 @@ muestra; sin licencia al menos declarada no hay cifra.**
   aplican.
 - **Qué se cambió:** nada del texto se redistribuye. Se derivan cifras (percentiles de
   métricas de estilo por tramo de longitud).
+
+## `administrativo.json` y `administrativo.manifiesto.json` — BOE, 2000-2021
+
+**Basado en datos de la Agencia Estatal Boletín Oficial del Estado** (<https://www.boe.es>).
+
+- **Obra:** disposiciones generales (sección I), resoluciones (secciones II.A, II.B y III) y
+  anuncios (secciones V.A y V.B) del Boletín Oficial del Estado, publicados entre 2000 y 2021.
+  Los sumarios salen de la API de datos abiertos
+  (<https://www.boe.es/datosabiertos/documentos/APIsumarioBOE.pdf>) y el texto de cada
+  documento, de su versión HTML (`https://www.boe.es/diario_boe/txt.php?id=…`).
+- **Qué se usó:** de cada documento, el texto del cuerpo, medido y descartado. Aquí solo quedan
+  percentiles y, por documento, su id, su huella sha256, su subgénero, su sección, su fecha de
+  publicación y sus páginas. Ningún dato personal.
+- **Art. 13 del texto refundido de la Ley de Propiedad Intelectual** (Real Decreto Legislativo
+  1/1996, versión consolidada en <https://www.boe.es/buscar/act.php?id=BOE-A-1996-8930>, leída
+  en origen en cada ejecución), tal cual:
+
+  > No son objeto de propiedad intelectual las disposiciones legales o reglamentarias y sus
+  > correspondientes proyectos, las resoluciones de los órganos jurisdiccionales y los actos,
+  > acuerdos, deliberaciones y dictámenes de los organismos públicos, así como las traducciones
+  > oficiales de todos los textos anteriores.
+
+- **Licencia tipo del BOE** (aviso legal, <https://www.boe.es/informacion/aviso_legal/index.php>,
+  leído en origen en cada ejecución): «Las condiciones de reutilización de la información
+  disponible en la sede electrónica de la Agencia Estatal Boletín Oficial del Estado son las
+  siguientes, conforme a la licencia tipo aprobada por Resolución de la Agencia de fecha 27 de
+  junio de 2024.» La condición tercera: «Las presentes condiciones permiten la reutilización de
+  los documentos sometidos a ellas para fines comerciales y no comerciales […]». La cuarta, las
+  que obligan aquí:
+  - «Debe citarse la fuente de los documentos objeto de la reutilización, incluyendo en todo
+    caso un enlace a la sede electrónica de la Agencia Estatal Boletín Oficial del Estado
+    https://www.boe.es»; para obras derivadas, «la cita se realizará de la siguiente manera:
+    "Basado en datos de la Agencia Estatal Boletín Oficial del Estado"». Va arriba, y en la
+    ficha de NOTICES § 2.3.
+  - «Está prohibido desnaturalizar el sentido de la información.» Las cifras son métricas de
+    estilo, no del contenido.
+  - «No se podrá reutilizar la información de un modo que sugiera que tiene carácter oficial.»
+    y «No se podrá indicar, insinuar o sugerir que la Agencia Estatal Boletín Oficial del Estado
+    participa, patrocina o apoya la reutilización desarrollada.» RadiografIA no lo sugiere.
+  - «Deben conservarse, no alterarse ni suprimirse los metadatos sobre la fecha de
+    actualización […]»: el manifiesto conserva la fecha de publicación de cada documento.
+- **Fuera:** la sección IV (Administración de Justicia), la V.C (anuncios particulares: no los
+  cubre el art. 13), el Tribunal Constitucional, los tratados y acuerdos internacionales y los
+  títulos con «traducción».
+- **Qué se cambió:** nada del texto se redistribuye. Se derivan cifras (percentiles de métricas
+  de estilo por tramo de longitud), de una mezcla por turnos que **no** es la proporción natural
+  del BOE; se declara en el propio fichero.

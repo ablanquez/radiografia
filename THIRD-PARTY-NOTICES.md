@@ -201,6 +201,7 @@ escribir (`motor/herramientas/calibrar/manifiesto.ts`). Los textos se descargan 
 | Fichero | Corpus | Titular | Licencia | Estado de la licencia |
 |---|---|---|---|---|
 | `noticia.json` | UD Spanish-AnCora r2.18 (commit `197cca3`), sin el subcorpus Cast3LB: 1.025 documentos de la agencia EFE y de El Periódico (año 2000) | Taulé, Martí y Recasens (AnCora, CLiC-UB); conversión a UD de Martínez Alonso y Zeman | **CC BY 4.0** | Verificada en el repositorio: `LICENSE.txt` y los metadatos del README dicen CC BY 4.0; la prosa del mismo README dice «The GNU license is inherited from the original dataset». Las dos citas, en `LICENSE-CORPUS.md` |
+| `administrativo.json` | BOE de 2000 a 2021: 463 disposiciones generales, resoluciones y anuncios (API de sumarios de datos abiertos y texto de `txt.php`), por turnos y con ningún subgénero por encima del 60 % de su tramo | Agencia Estatal Boletín Oficial del Estado | **Art. 13 LPI y licencia tipo del BOE de 27/06/2024** | Verificada en origen: el aviso legal y el art. 13 del TRLPI consolidado, leídos en cada ejecución. Cita obligatoria: «Basado en datos de la Agencia Estatal Boletín Oficial del Estado» |
 
 - Una fila por fichero de calibración y un fichero por fila, con la licencia que dice el propio
   fichero: lo vigila `motor/src/notices.spec.ts`.
