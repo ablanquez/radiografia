@@ -74,13 +74,16 @@ export function comprobarSinTexto(objeto: unknown, textos: readonly string[], la
     else if (v !== null && typeof v === 'object') Object.values(v).forEach(recorrer);
   };
   recorrer(objeto);
+  // Solo una cadena de `largo` caracteres o más puede contener un trozo de `largo`.
+  const largas = cadenas.filter((c) => c.length >= largo);
   const encontrados: string[] = [];
+  if (largas.length === 0) return encontrados;
   for (const texto of textos) {
     for (const parrafo of texto.split('\n')) {
       const limpio = parrafo.trim();
       if (limpio.length < largo) continue;
       const trozo = limpio.slice(0, largo);
-      if (cadenas.some((c) => c.includes(trozo))) encontrados.push(trozo);
+      if (largas.some((c) => c.includes(trozo))) encontrados.push(trozo);
     }
   }
   return encontrados;
