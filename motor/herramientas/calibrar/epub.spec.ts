@@ -29,14 +29,16 @@ describe('capitulosDeEpub', () => {
     ]);
   });
 
-  test('fuera, con su motivo: lo que va antes del primer capítulo numerado, el prólogo, las notas, los anuncios finales y la licencia de Gutenberg', () => {
+  test('fuera, con su motivo: la portada, el prólogo, el teatro, la tabla, las notas, los anuncios finales y la licencia de Gutenberg', () => {
     assert.deepEqual(capitulosDeEpub(PRUEBA).fuera, [
-      { orden: 1, etiqueta: 'EL LIBRO DE PRUEBA', motivo: 'preliminar: antes de la primera división numerada' },
+      { orden: 1, etiqueta: 'EL LIBRO DE PRUEBA', motivo: 'portada: el título del libro' },
       { orden: 2, etiqueta: 'PRÓLOGO', motivo: 'paratexto' },
-      { orden: 5, etiqueta: 'FOOTNOTES:', motivo: 'paratexto' },
-      { orden: 6, etiqueta: 'OBRAS DEL MISMO AUTOR', motivo: 'final: anuncios del editor u obras del autor' },
-      { orden: 7, etiqueta: 'EL OTRO LIBRO', motivo: 'final: anuncios del editor u obras del autor' },
-      { orden: 8, etiqueta: 'THE FULL PROJECT GUTENBERG™ LICENSE', motivo: 'licencia de Project Gutenberg' },
+      { orden: 5, etiqueta: 'ESCENA PRIMERA', motivo: 'teatro' },
+      { orden: 6, etiqueta: 'T A B L A', motivo: 'paratexto' },
+      { orden: 7, etiqueta: 'FOOTNOTES:', motivo: 'paratexto' },
+      { orden: 8, etiqueta: 'OBRAS DEL MISMO AUTOR', motivo: 'final: anuncios del editor u obras del autor' },
+      { orden: 9, etiqueta: 'EL OTRO LIBRO', motivo: 'final: anuncios del editor u obras del autor' },
+      { orden: 10, etiqueta: 'THE FULL PROJECT GUTENBERG™ LICENSE', motivo: 'licencia de Project Gutenberg' },
     ]);
   });
 
@@ -54,12 +56,12 @@ describe('capitulosDeEpub', () => {
 
 describe('esDivisionNumerada', () => {
   test('capítulos, trancos, partes y números: sí', () => {
-    for (const e of ['CAPÍTULO PRIMERO', 'Capitulo 3', 'TRANCO II', 'PARTE SEGUNDA', 'XII', 'I. La llegada', '3.', '14', 'V', 'X.', 'IX', '-I-', '—XII—']) {
+    for (const e of ['CAPÍTULO PRIMERO', 'Capitulo 3', 'TRANCO II', 'PARTE SEGUNDA', 'XII', 'I. La llegada', '3.', '14', '120', 'V', 'X.', 'IX', '-I-', '—XII—']) {
       assert.equal(esDivisionNumerada(e), true, e);
     }
   });
   test('títulos, aunque empiecen por letras de numeral romano: no', () => {
-    for (const e of ['MI VIDA', 'LA NOCHE', 'EL DIABLO COJUELO', 'Carta de recomendación', 'Soneto', 'i. nota', 'D. ARMANDO PALACIO VALDÉS', 'M. Bergeret en París']) {
+    for (const e of ['MI VIDA', 'LA NOCHE', 'EL DIABLO COJUELO', 'Carta de recomendación', 'Soneto', 'i. nota', 'D. ARMANDO PALACIO VALDÉS', 'M. Bergeret en París', '1872']) {
       assert.equal(esDivisionNumerada(e), false, e);
     }
   });
@@ -67,7 +69,7 @@ describe('esDivisionNumerada', () => {
 
 describe('esParatexto', () => {
   test('prólogos, dedicatorias, notas, índices y glosarios: sí', () => {
-    for (const e of ['PRÓLOGO', 'Prólogo del autor', 'DEDICATORIA DE ESTA EDICIÓN', 'NOTAS', 'FOOTNOTES:', 'ÍNDICE', 'Indice', 'Vocabulario', 'INTRODUCCIÓN', 'Advertencia', 'Al lector', 'ACLARACIÓN', 'Prefacio', 'ABBREVIATIONS', 'VOCABULARY', 'NOTES', 'EXERCISES']) {
+    for (const e of ['PRÓLOGO', 'Prólogo del autor', 'DEDICATORIA DE ESTA EDICIÓN', 'NOTAS', 'FOOTNOTES:', 'ÍNDICE', 'Indice', 'Vocabulario', 'INTRODUCCIÓN', 'Advertencia', 'Al lector', 'ACLARACIÓN', 'Prefacio', 'ABBREVIATIONS', 'VOCABULARY', 'NOTES', 'EXERCISES', 'TASA', 'TABLA', 'D E D I C A T O R I A', 'Codificación', 'Nota del transcriptor', 'EDICIONES ESPAÑOLAS PUBLICADAS', 'PRIVILEGIO', 'APROBACIÓN']) {
       assert.equal(esParatexto(e), true, e);
     }
   });

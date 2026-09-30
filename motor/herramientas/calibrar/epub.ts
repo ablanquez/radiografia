@@ -41,7 +41,22 @@ export interface CapitulosDeEpub {
 }
 
 const PARATEXTO =
-  /^\s*(pr[oó]logo|prefacio|pr[eé]face|preface|dedicatoria|introducci[oó]n|introduction|advertencia|aclaraci[oó]n|al lector|nota|notas|notes|footnotes|[ií]ndice|index|contents|contenido|sumario|glosario|vocabulario|vocabulary|abbreviations|exercises|ejercicios|erratas|fe de erratas|colof[oó]n|ap[eé]ndice|bibliograf[ií]a)\b/iu;
+  /^\s*(pr[oó]logo|prefacio|pr[eé]face|preface|dedicatoria|introducci[oó]n|introduction|advertencia|aclaraci[oó]n|al lector|nota|notas|notes|footnotes|[ií]ndice|index|contents|contenido|sumario|tabla|glosario|vocabulario|vocabulary|abbreviations|exercises|ejercicios|erratas|fe de erratas|tasa|privilegio|aprobaci[oó]n|colof[oó]n|ap[eé]ndice|bibliograf[ií]a|codificaci[oó]n|ediciones)\b/iu;
+
+/** Las letras espaciadas de un título («D E D I C A T O R I A»), juntas. */
+const juntarEspaciadas = (etiqueta: string) => (/^\s*(?:\S\s)+\S\s*$/u.test(etiqueta) ? etiqueta.replace(/\s+/g, '') : etiqueta);
+
+/** [PROPIO] Una escena o un acto: teatro, no narración (visto en pg49756, pg66488, pg76459). */
+const TEATRO = /^\s*(escena|scena|acto)\b/iu;
+
+/** Para comparar un título con otro: minúsculas, sin tildes ni signos. */
+const comparable = (s: string) =>
+  s
+    .normalize('NFD')
+    .replace(/\p{M}/gu, '')
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, ' ')
+    .trim();
 
 /**
  * [PROPIO] El principio de los anuncios del editor al final del libro (visto en
@@ -50,9 +65,16 @@ const PARATEXTO =
  */
 const FINAL = /^\s*(obras del mismo autor|otras obras|obras de\b|obras publicadas|cat[aá]logo|publicaciones de|de venta en)/iu;
 
-/** Una entrada del índice que no es narración: prólogos, dedicatorias, notas, índices, glosarios. */
+/**
+ * Una entrada del índice que no es narración: prólogos, dedicatorias, notas,
+ * índices y tablas, glosarios (también los de las ediciones escolares
+ * inglesas: notes, vocabulary, abbreviations, exercises), los preliminares
+ * legales de los clásicos (tasa, privilegio, aprobación), las notas del
+ * transcriptor («Codificación») y las del editor («Ediciones…»). Las letras
+ * espaciadas se juntan antes de mirar.
+ */
 export function esParatexto(etiqueta: string): boolean {
-  return PARATEXTO.test(etiqueta);
+  return PARATEXTO.test(juntarEspaciadas(etiqueta)) || /nota del transcriptor|transcriber/iu.test(etiqueta);
 }
 
 /**
@@ -60,11 +82,12 @@ export function esParatexto(etiqueta: string): boolean {
  * «Jornada…», «Canto…», o un número romano (en mayúsculas) o arábigo solo o
  * seguido de puntuación («XII», «I. La llegada», «3.»). Un romano de una sola
  * letra solo vale si es I, V o X: «D.» o «M.» son abreviaturas («D. Armando
- * Palacio Valdés», pg32364). [PROPIO] Si el índice tiene alguna, lo que va
- * antes de la primera es preliminar (portada, cartas, poemas de dedicatoria),
- * no narración.
+ * Palacio Valdés», pg32364). Un arábigo, de una a tres cifras: «1872» es un
+ * año (pg14995). [PROPIO] Si el índice tiene alguna, lo que va antes de la
+ * primera es preliminar (portada, cartas, poemas de dedicatoria), no
+ * narración.
  */
-const NUMERADA = /^[\s\-–—]*(?:(?:cap[ií]tulo|tranco|parte|libro|tratado|jornada|canto)\b|(?:[IVXLCDM]{2,}|[IVX])\s*(?:[.:\-–—]|$)|\d+\s*(?:[.:\-–—)]|$))/iu;
+const NUMERADA = /^[\s\-–—]*(?:(?:cap[ií]tulo|tranco|parte|libro|tratado|jornada|canto)\b|(?:[IVXLCDM]{2,}|[IVX])\s*(?:[.:\-–—]|$)|\d{1,3}\s*(?:[.:\-–—)]|$))/iu;
 const ROMANO_EN_MINUSCULA = /^\s*[ivxlcdm]+\s*(?:[.:\-–—]|$)/u;
 export function esDivisionNumerada(etiqueta: string): boolean {
   return NUMERADA.test(etiqueta) && !ROMANO_EN_MINUSCULA.test(etiqueta);
@@ -86,6 +109,9 @@ export function capitulosDeEpub(zip: ReadonlyMap<string, Buffer>): CapitulosDeEp
   const rutaOpf = /<rootfile\b[^>]*\bfull-path="([^"]+)"/.exec(container)?.[1];
   if (rutaOpf === undefined) throw new Error('epub: container.xml sin rootfile');
   const opf = leer(zip, rutaOpf);
+  // [PROPIO] La portada: una entrada cuya etiqueta empieza por el título del libro (dc:title, hasta «:», «;» o «(»).
+  const titulo = comparable(textoPlano(/<dc:title\b[^>]*>([\s\S]*?)<\/dc:title>/.exec(opf)?.[1] ?? '').split(/[:;(]/)[0] ?? '');
+  const esPortada = (etiqueta: string) => titulo.length >= 4 && comparable(etiqueta).startsWith(titulo);
 
   const manifiesto = new Map<string, string>();
   for (const [item] of opf.matchAll(/<item\b[^>]*>/g)) {
@@ -146,6 +172,14 @@ export function capitulosDeEpub(zip: ReadonlyMap<string, Buffer>): CapitulosDeEp
     }
     if (esParatexto(e.etiqueta)) {
       salida.fuera.push({ orden: e.orden, etiqueta: e.etiqueta, motivo: 'paratexto' });
+      return;
+    }
+    if (esPortada(e.etiqueta)) {
+      salida.fuera.push({ orden: e.orden, etiqueta: e.etiqueta, motivo: 'portada: el título del libro' });
+      return;
+    }
+    if (TEATRO.test(e.etiqueta)) {
+      salida.fuera.push({ orden: e.orden, etiqueta: e.etiqueta, motivo: 'teatro' });
       return;
     }
     if (e.posicion < primeraNumerada) {
