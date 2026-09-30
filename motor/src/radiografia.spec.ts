@@ -20,7 +20,9 @@
  *      medido en español 3, medido en inglés 2, anecdótico 1, norma 0; una
  *      regla informativa, o de familia informativa, 0. Desde el 5.3, un peso
  *      negativo (un atenuante: rasgo humano que resta, discurso.md § 11) solo
- *      puede ser −1 o −2; y como queda por debajo del máximo, su ficha también
+ *      puede ser −1 o −2; y desde el 5.4 el máximo se aplica a |peso|: un
+ *      atenuante no resta más de lo que su evidencia permitiría sumar (−2
+ *      solo si está medido; −1 si es anecdótico), y si resta menos, su ficha
  *      dice «peso».
  *   8. regex-ascii (encargo 5.2) — ninguna regex lleva \b ni \w (ni sus
  *      contrarios \B y \W), sin escapar: en JavaScript son ASCII y «á», «é» o
@@ -115,8 +117,11 @@ function comprobar(paquete: Paquete): Problema[] {
     const informativa = r.informativa || familia.get(r.familia)?.informativa === true;
     const maximo = informativa ? 0 : MAXIMO[r.nivelEvidencia];
     if (maximo === undefined) continue;
-    if (r.peso > maximo) mal('peso', `regla "${r.id}": peso ${r.peso} y el máximo de ${informativa ? 'una informativa' : `«${r.nivelEvidencia}»`} es ${maximo}`);
-    else if (r.peso < maximo && ![r.explicacion, ...r.excepciones].some((t) => /\bpeso\b/i.test(t))) {
+    // El máximo vale para sumar y para restar: se compara |peso|.
+    const magnitud = Math.abs(r.peso);
+    const de = informativa ? 'una informativa' : `«${r.nivelEvidencia}»`;
+    if (magnitud > maximo) mal('peso', `regla "${r.id}": peso ${r.peso} y el máximo de ${de} es ${maximo}${r.peso < 0 ? ', también para restar' : ''}`);
+    else if (magnitud < maximo && ![r.explicacion, ...r.excepciones].some((t) => /\bpeso\b/i.test(t))) {
       mal('peso', `regla "${r.id}": peso ${r.peso}, por debajo del máximo (${maximo}), y ni la explicación ni las excepciones dicen «peso»`);
     }
   }
@@ -190,6 +195,8 @@ describe('el juez de RadiografIA caza cada condición rota', () => {
     // Encargo 5.3: los atenuantes (peso negativo) restan 1 o 2, y la familia discurso lleva «disc-».
     ['un atenuante de −3 (solo −1 o −2)', ['peso'], (p) => (regla(p, 'pf-raya-densidad').peso = -3)],
     ['un atenuante de −2, con «peso» en la ficha (sin problema)', [], (p) => (regla(p, 'pf-raya-densidad').peso = -2)],
+    // Encargo 5.4: el máximo por evidencia vale también para restar (|peso|).
+    ['un atenuante anecdótico a −2 (máximo 1, también para restar)', ['peso'], (p) => (regla(p, 'disc-anecdota-en-primera-persona').peso = -2)],
     [
       'una regla de discurso con el prefijo «disc-» (sin problema)',
       [],
