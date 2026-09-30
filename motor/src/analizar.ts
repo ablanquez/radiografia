@@ -4,7 +4,9 @@
  *
  *   1. Valida cada paquete con validarPaquete (validar.ts). Si uno falla,
  *      lanza PaqueteInvalido con su nombre (cabecera.nombre, o su posición si
- *      no se puede leer) y sus mensajes, y no analiza nada.
+ *      no se puede leer) y sus mensajes, y no analiza nada. Y dos paquetes
+ *      con el mismo cabecera.nombre son un error (encargo 4.3): el nombre es
+ *      el origen de cada señal, y las de los dos no se distinguirían.
  *   2. Una regla estadística lanza «detector estadístico: pendiente del 4.3»,
  *      antes de mirar el texto: el paquete no se puede analizar entero.
  *   3. Segmenta el texto UNA vez (texto.ts) y mide su longitud (umbral.ts).
@@ -82,6 +84,16 @@ export function analizar(textoOriginal: string, paquetes: readonly Paquete[]): R
   paquetes.forEach((paquete, indice) => {
     const { valido, errores } = validarPaquete(paquete);
     if (!valido) throw new PaqueteInvalido(nombreDe(paquete, indice), errores);
+  });
+  const primeraVez = new Map<string, number>();
+  paquetes.forEach((paquete, indice) => {
+    const anterior = primeraVez.get(paquete.cabecera.nombre);
+    if (anterior !== undefined) {
+      throw new Error(
+        `dos paquetes se llaman «${paquete.cabecera.nombre}» (paquetes[${anterior}] y paquetes[${indice}]): las señales de los dos llevarían el mismo origen`,
+      );
+    }
+    primeraVez.set(paquete.cabecera.nombre, indice);
   });
   for (const paquete of paquetes) {
     const estadistica = paquete.reglas.find((r) => r.detector === 'estadístico');

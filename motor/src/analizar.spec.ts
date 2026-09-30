@@ -85,6 +85,22 @@ describe('analizar: lo que no se analiza', () => {
     );
   });
 
+  // Encargo 4.3, cabo del 4.2: con dos paquetes del mismo nombre, las señales de los dos
+  // llevarían el mismo origen y no se distinguirían.
+  test('dos paquetes con el mismo cabecera.nombre: error con el nombre y las dos posiciones', () => {
+    assert.throws(
+      () => analizar(TEXTO_200, [cargar('paquete-prueba-interno.json'), cargar('paquete-prueba-interno.json')]),
+      /«Paquete de prueba interno del motor».*paquetes\[0\].*paquetes\[1\]/s,
+    );
+    // Y aunque sean paquetes distintos: el secundario con el nombre del interno, en tercera posición.
+    const secundario = cargar('paquete-prueba-secundario.json');
+    secundario.cabecera.nombre = INTERNO;
+    assert.throws(
+      () => analizar(TEXTO_200, [cargar('paquete-prueba-interno.json'), cargar('valido.json'), secundario]),
+      /«Paquete de prueba interno del motor».*paquetes\[0\].*paquetes\[2\]/s,
+    );
+  });
+
   test('un paquete sin nombre legible se nombra por su posición', () => {
     assert.throws(() => analizar(TEXTO_200, [cargar('paquete-prueba-interno.json'), {} as Paquete]), /«paquetes\[1\]»/);
   });

@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "license": "Apache-2.0",
-  "description": "El motor de RadiografIA. Hoy valida un paquete de reglas contra su esquema y genera el validador standalone que llevará el navegador.",
+  "description": "El motor de RadiografIA: aplica paquetes de reglas en JSON a un texto en español y devuelve, por paquete, las señales y su puntuación. Sin interfaz. Genera también el validador standalone que llevará el navegador.",
   "scripts": {
     "test": "node --test \"src/**/*.spec.ts\"",
     "tipos": "tsc --noEmit",
