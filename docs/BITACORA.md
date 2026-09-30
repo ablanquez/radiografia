@@ -14,7 +14,7 @@
 
 ---
 
-## [2026-09-30] 🔁 REABIERTA — Los capítulos de EPUB dejaban entrar anuncios, glosarios y preliminares con los jueces en verde
+## [2026-09-30] ✅ CERRADA — Los capítulos de EPUB dejaban entrar anuncios, glosarios y preliminares con los jueces en verde
 
 **Categoría:** herramienta de calibración (extracción de corpus)
 **Síntoma:** en el piloto de narrativa-clasica (40 EPUB de Gutenberg), entre los documentos del tramo 100-299 estaban el catálogo de anuncios del editor de pg29831 («OBRAS DEL MISMO AUTOR», «PSICOLOGÍA ALEMANA… 3,50 pesetas») y la «ACLARACIÓN» de pg32364; en 600+, un glosario inglés «ABBREVIATIONS» de 14.831 palabras (pg29731). Ningún dato publicado: se vio antes de calibrar.
@@ -32,11 +32,12 @@ pg29831 capítulos dentro: OBRAS DEL MISMO AUTOR · PSICOLOGÍA ALEMANA CONTEMPO
 ```
 **Cómo se cazó:** ojo humano (revisión a mano de los capítulos de 100-299 del piloto)
 **Causa raíz:** ~~el EPUB de prueba (`fixtures/prueba.epub`) solo tenía la estructura que se había visto en pg12457: ni abreviaturas con punto en el índice, ni anuncios del editor al final, ni paratextos en inglés. `NUMERADA` aceptaba cualquier letra romana suelta con punto («D.»), y ninguna regla miraba lo que va detrás del último capítulo. Los jueces pasaban porque no había caso que los contradijera.~~
-⏳ PENDIENTE
+Los jueces se escribieron contra un EPUB sintético hecho a imagen de un solo libro (pg12457), y las reglas de `epub.ts` (qué es paratexto, qué es división numerada, dónde empieza el libro) son listas de etiquetas: cada libro real con una etiqueta no prevista las burlaba sin que ningún juez lo supiera. **Por qué no aguantó el primer cierre:** se comprobó solo en los tres libros del síntoma, no releyendo la muestra resultante; con 240 libros salieron etiquetas nuevas del mismo tipo (portadas con el título, «TASA», «TABLA», letras espaciadas, años, escenas, plurales).
 **Arreglo aplicado:** ~~`epub.ts`: los romanos de una sola letra solo valen si son I, V o X, y se aceptan los numerales entre guiones (`NUMERADA`); nueva regla `FINAL`, que deja fuera todo desde la primera entrada «obras del mismo autor», «catálogo»…; `PARATEXTO` añade aclaración, prefacio, notes, vocabulary, abbreviations y exercises. Fixture y jueces ampliados (anuncios finales, «D. ARMANDO…», «M. Bergeret…», «-I-»), en rojo antes del verde, con contraprueba de 5 de 5. Comprobado después en los tres libros del síntoma: `esDivisionNumerada('D. ARMANDO PALACIO VALDÉS') → false`; pg29831, «OBRAS DEL MISMO AUTOR», «PSICOLOGÍA ALEMANA…» y «CALDERÓN DE LA BARCA» → final; pg32364, «ACLARACIÓN» → paratexto; pg29731, «ABBREVIATIONS» → paratexto.~~
-⏳ PENDIENTE
-**Commit:** ~~27157be~~ ⏳ PENDIENTE
+Lo de `27157be` y, además: `08bf5f9`, portada (la etiqueta empieza por el `dc:title` del OPF), tasa, privilegio, aprobación, tabla, codificación y ediciones como paratexto, letras espaciadas juntas antes de mirar, teatro («ESCENA», «SCENA», «ACTO»), los arábigos de cuatro cifras no son capítulo; `2d65c97`, plurales explícitos (advertencias, dedicatorias, aclaraciones) y proemio, obras citadas, significado de; `ef04f80`, en el descargador, un capítulo idéntico a uno ya tomado no entra dos veces. Comprobado, esta vez releyendo la muestra: los 104 capítulos de 100-299 y los 31 sin numerar de 300-599, uno a uno, y los casos de la reapertura con el código de `ef04f80`: `esDivisionNumerada('1872') → false | esParatexto('TASA') → true | esParatexto('D E D I C A T O R I A') → true | esParatexto('ADVERTENCIAS') → true`; pg62691 «El criticón» → portada; pg2000 «TASA» → paratexto; pg49756 «ESCENA…» → teatro. Quedan dentro, declarados en el manifiesto, 13 capítulos de 100-299 y 3-4 de 300-599 que no son narración y ninguna regla general separa.
+**Commit:** ~~27157be~~ 27157be, 08bf5f9, 2d65c97, ef04f80
 **Ley que sale de aquí:** un fixture sintético solo juzga lo que su autor imaginó: antes de calibrar, se leen a mano documentos reales de cada tramo.
+Y al cerrar otra vez: un arreglo se comprueba sobre la muestra que sale, no sobre los casos que lo dispararon.
 **Traza:** `motor/herramientas/calibrar/epub.ts` (`esDivisionNumerada`, `esParatexto`, `capitulosDeEpub`); `motor/herramientas/calibrar/epub.spec.ts`; `motor/herramientas/calibrar/fixtures/prueba.epub`.
 **Nota:** el arreglo ya había comenzado al abrir esta entrada.
 **Nota [2026-09-30] — reabierta:** con la descarga completa (240 EPUB), la revisión a mano de los 127 capítulos de 100-299 encontró unos 30 que no eran narración: portadas cuyo índice repite el título («El criticón»: «Logotipo del editor / BIBLIOTECA RENACIMIENTO…»), la «TASA» del Quijote, «TABLA», «D E D I C A T O R I A», «Codificación», un año tomado por capítulo («1872»), escenas de teatro y capítulos duplicados entre dos libros. En un clon limpio de `27157be`:
