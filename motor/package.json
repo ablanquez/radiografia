@@ -6,7 +6,7 @@
   "license": "Apache-2.0",
   "description": "El motor de RadiografIA: aplica paquetes de reglas en JSON a un texto en español y devuelve, por paquete, las señales y su puntuación. Sin interfaz. Genera también el validador standalone que llevará el navegador.",
   "scripts": {
-    "test": "node --test \"src/**/*.spec.ts\"",
+    "test": "node --test \"src/**/*.spec.ts\" \"herramientas/**/*.spec.ts\"",
     "tipos": "tsc --noEmit",
     "generar": "node src/generar-validador.ts"
   },

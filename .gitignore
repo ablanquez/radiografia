@@ -7,6 +7,11 @@ dist/
 # si un día `dist/` se acota a la raíz para Astro.
 motor/dist/
 
+# Los corpus que bajan los descargadores de la calibración (encargo 5.5):
+# textos de terceros que no se versionan. Al repo van solo las cifras y los
+# manifiestos, sin texto (data/calibracion/).
+motor/corpus/
+
 # generated types
 .astro/
 
