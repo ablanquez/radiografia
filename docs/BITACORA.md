@@ -128,6 +128,20 @@ pg49149 dentro: ETIMOLOGÍA
 pg65689 dentro: EL ORIGEN DEL UNIVERSO
 ```
 Y el informe de la parada decía «13 en 100-299 y 3 o 4 en 300-599», sin haber leído 600+. Nada publicado: los datos de narrativa no tienen commit.
+**Nota [2026-09-30] — sigue abierta, más de lo mismo dentro del capítulo:** con los arreglos de `754510b` y las listas de `83ec559`, el final de los capítulos trae lo que la regla `FINAL` solo miraba en el índice: detrás de «FIN» o de un párrafo «OBRAS DE…» van el catálogo del editor, opiniones de la crítica, tablas de erratas del transcriptor y fechas. La relectura miró arranques, no finales. En `83ec559`:
+```
+$ node --test herramientas/calibrar/epub.spec.ts
+✔ capitulosDeEpub (7.752ms)
+✔ esDivisionNumerada (0.4737ms)
+✔ esParatexto (0.4172ms)
+ℹ tests 9
+ℹ pass 9
+ℹ fail 0
+pg39444-035 dentro: línea 70 «OBRAS DE A. PALACIO VALDES» y detrás 4218 palabras («Y»…)
+pg25074-025 dentro: línea 39 «FIN» y detrás 865 palabras («CALPE»…)
+pg45834-018 dentro: línea 186 «FIN DEL TOMO SEXTO» y detrás 185 palabras («| Los errores corregidos por el transcri»…)
+```
+Nada publicado todavía.
 
 ---
 
