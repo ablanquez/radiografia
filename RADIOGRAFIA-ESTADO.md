@@ -7,14 +7,13 @@ El ejecutor reporta descubrimientos; no toca este fichero.
 
 ## ESTADO ACTUAL — 30 de septiembre de 2026
 
-**⭐ PUNTOS 1-4 CERRADOS (29-30/09). PUNTO 5 EN MARCHA (30/09):** existe el
-paquete real `paquetes/radiografia.json` 0.1.0 con las seis familias
-declaradas y dos rellenas: **canal** (6 reglas informativas: Markdown
-residual, U+202F, invisibles) y **puntuación y formato** (P11 densidad de
-rayas, P12 raya espaciada), cada regla con fuente URL, nivel de evidencia
-y ejemplos que son jueces. **354 jueces: 349 en verde, 5 `todo`**, `tsc`
-limpio. Faltan léxico, discurso, sintaxis, «español correcto», estadística
-y calibración. No hay pantalla.
+**⭐ PUNTOS 1-4 CERRADOS (29-30/09). PUNTO 5 EN MARCHA (30/09):** el
+paquete real `paquetes/radiografia.json` 0.1.0 tiene tres familias
+rellenas: **canal** (6 informativas), **puntuación y formato** (P11, P12) y
+**léxico** (11 reglas; las cuatro de peso 3 con listas de Juzek 2026
+aprobadas por Antonio). **408 jueces: 403 en verde, 5 `todo`**, `tsc`
+limpio. Faltan discurso, sintaxis, «español correcto», estadística y
+calibración. No hay pantalla.
 
 ## 1 · Identidad
 
@@ -57,7 +56,7 @@ antes del verde, push = despliegue, bitácora por la skill
 ## 4 · El plan
 
 `PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1, 2 y 3 (29/09), 4 (30/09).
-Abierto: el 5 (5.1 hecho: canal y puntuación).
+Abierto: el 5 (5.1 canal y puntuación, 5.2 léxico hechos).
 
 ## 5 · Decisiones
 
@@ -188,39 +187,55 @@ Abierto: el 5 (5.1 hecho: canal y puntuación).
   conjuntos de signos; P15 pasa a incluir dos puntos y barras (métrica
   renombrada en su tanda); abreviaturas ante el segmentador solo si la
   calibración lo justifica.
+- 30/09 — **Decisiones del 5.2 (léxico)**: en JavaScript `\b` y `\w` son
+  ASCII [DOC MDN] → ninguna regex del paquete los usa (límites con
+  `(?<!\p{L})`/`(?!\p{L})`, letras con `\p{L}`, bandera u), con juez. Cada
+  forma de lista contrastada con su Zipf en wordfreq; Zipf ≥ 4,5 [PROPIO]
+  se declara como riesgo de FP en la ficha. L3 partida en dos reglas (lema
+  medido, peso 3; fórmula anecdótica, peso 1). L8 y L12 a peso 1 con
+  justificación (traslado sin medir; EQ-Bench mide otra construcción).
+  Fuente corregida: Juzek 2026 (34 lenguas), no «Juzek et al. 2024»;
+  ROBOT-TALK no mide esos lemas. **Versión del paquete: 0.1.0 hasta cerrar
+  el punto 5; 1.0.0 en la release del punto 11.** Severidad «baja» en todas
+  hasta que la calibración dé criterio.
 
 ## 6 · Cabos abiertos
 
+- Del 5.2 (30/09), para la calibración: solapes que suman dos veces
+  («es importante destacar» en énfasis y en fórmula; «Cabe destacar» en
+  énfasis y en conector). Límites declarados: «destacarlo» con enclítico
+  no se señala; «no se trata solo de X, sino» tampoco; L15 no coge
+  «optimice». L15 sigue cogiendo «potencia» (nombre), declarado.
 - Del 5.1 (30/09): **P24 (emojis y flechas) sin fuente en la
   investigación** → fuera hasta que aparezca una; cautelas técnicas si
   entra: `\p{Emoji_Presentation}` excluye © ® ™ pero también ⚠️ y ✔️
   (texto + U+FE0F); un emoji inicial dispararía viñeta y prosa a la vez.
-  P5 señala U+202F también entre cifras → en 5.2 pasar a
-  `(?<!\d)\u202F(?!\d)`. JS trata U+202F y U+FEFF como `\s`: si caen en el
+  JS trata U+202F y U+FEFF como `\s`: si caen en el
   borde de frase o párrafo el motor los recorta (BOM inicial no cuenta).
   P11+P12 puntuan dos veces una raya espaciada y P11 desde la primera raya
   → calibración 5.6. P3 no cubre listas numeradas con negrita. Sin cita
   de Microsoft para la autocorrección de «--» (no estaba en la
   investigación; no se afirmó). `ejemplos-estadisticos.spec.ts` aún no
-  incluye el paquete real (5.6). VS Code marcará `sobreNoProsa` como
-  desconocida hasta el push.
-- Para el punto 5 (del 4.3): «…» (U+2026) no parte la frase y «...» sí
-  (ICU; afecta a métricas de frase e IFSZ); comillas curvas “ ” fuera de
-  los conjuntos de signos (decidir si entran en P15/P16); P15 sigue el
-  nombre y deja fuera dos puntos y barras; silabea cuenta una cifra como
-  una sílaba (IFSZ); Zenker & Kyle 2021 cerrado, el «≥ 50» viene de la doc
-  de TAALED.
-- Para el punto 5: `tildes:true` junta «pasó/paso» y «está/esta»; las
-  listas de formas deben tenerlo en cuenta (usar `tildes:false` donde la
-  tilde distinga).
+  incluye el paquete real (5.6). P5 ajustado en 5.2 (no cuenta entre
+  cifras).
+- Para la tanda 5.6 (del 4.3): «…» (U+2026) no parte la frase y «...» sí
+  (ICU; afecta a métricas de frase e IFSZ); comillas curvas “ ” **entran**
+  en los conjuntos de signos (decidido 30/09, pendiente de implementar);
+  P15 pasa a `puntuacion-secundaria-por-1000` con dos puntos y barras
+  (decidido 30/09, pendiente); silabea cuenta una cifra como una sílaba
+  (IFSZ); Zenker & Kyle 2021 cerrado, el «≥ 50» viene de la doc de TAALED.
+- Para las tandas de reglas: `tildes:true` junta «pasó/paso» y
+  «está/esta»; en 5.2 se usó `tildes:false`; mantenerlo salvo
+  justificación.
 - Para el punto 5: abreviaturas («Sr.») parten la frase y los compuestos
   con guión cuentan dos palabras; decidir con datos si hace falta una
   lista de abreviaturas antes del segmentador.
 - Para el punto 6 (de los encargos 3.1/3.2): `validar.ts` compila Ajv al
   importarse → separar formateador y comprobaciones posteriores en un
-  módulo sin Ajv; el navegador usa `validador.standalone.js` (65 KB, sobre
-  todo los esquemas con `$comment`: valorar quitarlos en build); el aviso
-  MIT de `ucs2length` viaja con él. Ya anotado en la casilla del punto 6.
+  módulo sin Ajv; el navegador usa `validador.standalone.js` (159 KB tras
+  cerrar `parametros` y `calibracion`; sobre todo los esquemas con
+  `$comment`: valorar quitarlos en build); el aviso MIT de `ucs2length`
+  viaja con él. Ya anotado en la casilla del punto 6.
 - El guardián del NOTICES de **Desplázame** lee ficheros dentro del
   `describe` y tiene el mismo agujero de la bitácora nº1 (resumen `fail 0`
   con juez roto). Llevar a su cierre.
@@ -237,9 +252,6 @@ Abierto: el 5 (5.1 hecho: canal y puntuación).
 - Fuentes no leídas enteras que las fichas tendrán que abrir en el punto
   5: PDF de Pham 2026 (cifras por categoría), PUCP-Metrix, Berber
   Sardinha 2024, `license.txt` de SUBTLEX-ESP.
-- Corpus humano para calibrar (punto 5): decidido el 30/09 en
-  `docs/investigacion/corpus.md` (CSIC, BOE, Gutenberg, MuchoCine,
-  AnCora, Wikipedia ES). ROBOT-TALK solo si la UCM lo cede.
 
 ## Nevera
 

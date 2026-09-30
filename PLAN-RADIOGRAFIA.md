@@ -1,6 +1,6 @@
 # PLAN — 005 RadiografIA
 
-Estado a 29/09/2026: **FIRMADO por Antonio el 29/09/2026**, publicado en
+Estado a 30/09/2026: **FIRMADO por Antonio el 29/09/2026**, publicado en
 `73ef265`. **PUNTOS 1, 2 y 3 CERRADOS el 29/09; PUNTO 4 CERRADO el 30/09.**
 Se tacha lo hecho y lo nuevo se añade en su punto, y solo por decisión de
 Antonio.
@@ -35,7 +35,9 @@ La v1 entrega, y solo entrega, esto:
    explicación, sugerencia, excepciones, ejemplos positivos y negativos,
    **fuente, origen de la lista** («inventario propio» cuando lo sea) y
    **nivel de evidencia** («medido en español», «medido en inglés»,
-   «anecdótico»), visibles en el catálogo y en la interfaz. Los ejemplos
+   «anecdótico», «norma» para «español correcto»; «sin fuente» solo en
+   paquetes de terceros, prohibido en RadiografIA por juez), visibles en
+   el catálogo y en la interfaz. Los ejemplos
    son a la vez documentación y test automático.
 4. **Analizador**: pegas texto → subrayados por familia, medidor de
    estilo IA, explicación y sugerencia por señal.
@@ -259,7 +261,8 @@ Sin interfaz. Solo funciones y jueces.
 - [x] Carga y valida un paquete → punto 3; `parametros` cerrados por
       detector con `if/then` (4.1, 29-30/09): patrón (formas y/o regex,
       ámbito palabra/frase, normalizar), estructural (posición + regex),
-      estadístico (métrica, género, tramo, dirección); Vale como
+      estadístico (métrica, dirección, percentil; corregido en 4.3: género y
+      tramo son entradas del análisis); Vale como
       precedente [DOC]; regex que compilan y formas sin espacio en ámbito
       palabra comprobadas en el paso 2
 - [x] Texto segmentado (`texto.ts`, 4.1): párrafos = líneas no vacías,
@@ -307,15 +310,14 @@ Sin interfaz. Solo funciones y jueces.
       a cero y aparte; atenuantes restan; sin tope, escala ni veredicto (se
       deciden en 5 y 6); bajo 100 palabras no se analiza; entre 100 y 299,
       marca «poco fiable»
-- [ ] Longitud mínima 100/300 sobre **palabras de prosa** (sin viñetas,
+- [x] Longitud mínima 100/300 sobre **palabras de prosa** (sin viñetas,
       tablas ni código): «texto insuficiente» bajo 100, aviso entre 100 y
       299, con juez en ambos lados de cada borde → **HECHO** en 4.1
       (`umbral.ts`, jueces 99/100, 299/300, 400 con 350 en viñetas)
 - [x] Combinación de varios paquetes con origen en cada señal
       (`analizar.ts`, 4.2): desglose por paquete, familias nunca mezcladas,
-      ids de regla repetidos entre paquetes permitidos y distinguibles.
-      Pendiente al abrir 4.3: rechazar dos paquetes con el mismo
-      `cabecera.nombre`
+      ids de regla repetidos entre paquetes permitidos y distinguibles;
+      dos paquetes con el mismo `cabecera.nombre` se rechazan (4.3)
 - [x] Jueces alimentados por los ejemplos de las fichas
       (`ejemplos.spec.ts`): cada positivo dispara, cada negativo no; cubre
       patrón y estructural sobre el paquete interno (10 reglas) y el
@@ -327,7 +329,20 @@ Sin interfaz. Solo funciones y jueces.
 Una tanda por familia, cada regla con su ficha completa y sus ejemplos.
 Fuente citada en cada ficha (sale del punto 2 y de `CANDIDATAS.md`).
 
-- [ ] Léxico
+- [x] Léxico (5.2, 30/09): 11 reglas. Peso 3 (medidas en español, Juzek
+      2026 arXiv 2605.25358, listas aprobadas por Antonio): verbos de
+      énfasis (destac/subray/enfatiz/realz), importancia, innovador,
+      imborrable/multidisciplinario/impecable. Peso 2 (inglés): traslados
+      del inglés, verbos corporativos. Peso 1 (anecdótico o traslado sin
+      medir): frases de chatbot, «es importante + verbo», conector de
+      apertura (solo Adicionalmente / Cabe destacar / Cabe señalar; «la
+      densidad de conectores no es señal»), trigramas de Turrado, «no
+      solo… sino». Fuera: L6/L7 (POS), L11 (D1), L13, L14, L16, L17, L18.
+      Cada forma con su Zipf (wordfreq); ninguna regex con `\b` ni `\w`
+      (ASCII en JS; límites con `(?<!\p{L})` y bandera u), con juez. Texto
+      de asistente: 11/11 disparan (176,85); prensa humana AnCora: 3 (2,25).
+      Solapes énfasis + «es importante destacar» / «Cabe destacar» →
+      calibración
 - [ ] Sintaxis
 - [x] Puntuación y formato (5.1, 30/09): en RadiografIA v1 solo P11
       (densidad de rayas U+2014, peso 1 justificado, medido en inglés) y
@@ -375,8 +390,9 @@ Astro, sin diseño todavía: funciona, no luce.
       Chrome. Al importar el motor: **separar formateador y comprobaciones
       posteriores en un módulo sin Ajv** (`validar.ts` compila Ajv al
       cargarse y arrastraría 1 MB al navegador); el navegador usa
-      `validador.standalone.js` (65 KB, sobre todo los esquemas con sus
-      `$comment`: valorar quitarlos en build). El aviso MIT de `ucs2length`
+      `validador.standalone.js` (159 KB tras cerrar `parametros` y
+      `calibracion`; sobre todo los esquemas con sus `$comment`: valorar
+      quitarlos en build). El aviso MIT de `ucs2length`
       (Ajv) viaja con ese fichero
 - [ ] Área de texto + botón «Pon tu texto a contraluz»
 - [ ] Subrayados por familia sobre el texto
