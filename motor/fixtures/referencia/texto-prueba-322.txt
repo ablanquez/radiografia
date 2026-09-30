@@ -1,0 +1,9 @@
+El proyecto empezó en marzo con un enfoque innovador y un presupuesto corto. Además, el equipo tenía poca experiencia en ríos de montaña.
+Además, las primeras mediciones fueron **muy** irregulares. No solo faltaban sensores. Sino que el caudal cambiaba cada hora.
+Véase la tabla 2 para el detalle de cada punto de medida. Pero la tabla no lo explica todo
+Durante las primeras semanas el trabajo consistió sobre todo en recorrer la cuenca a pie. Los técnicos marcaron doce puntos de medida en los tramos altos y otros ocho cerca del embalse. En cada punto dejaron una estaca pintada de rojo y una ficha con las coordenadas, la fecha y el nombre de quien la había colocado.
+El invierno había sido seco y el río bajaba con poca agua. Eso facilitó los primeros recorridos, porque se podía cruzar por varios vados sin mojarse las botas. También permitió ver con claridad el lecho, las piedras grandes y los restos de las crecidas del año anterior.
+En abril llegaron las lluvias y todo cambió. El agua subió casi un metro en dos días y arrastró tres de las estacas del tramo alto. Hubo que volver a colocarlas más arriba, lejos de la orilla, y repetir las mediciones de aquellos puntos con un aparato prestado por la universidad.
+Los datos de mayo fueron los más completos. Cada mañana dos personas leían los sensores, anotaban la temperatura del agua y fotografiaban la escala del puente. Por la tarde otra persona pasaba las notas a una hoja de cálculo y comprobaba que no faltara ninguna lectura.
+A finales de junio el grupo presentó un informe breve a los ayuntamientos de la zona. Los vecinos preguntaron sobre todo por el riesgo de inundación en otoño y por el estado de los pozos. Nadie tenía respuestas seguras, pero los datos permitían al menos comparar un año con otro.
+En conclusión, el paso decisivo fue una decisión crucial del equipo.

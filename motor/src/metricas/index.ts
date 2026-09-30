@@ -1,0 +1,36 @@
+/**
+ * El registro de métricas del motor (encargo 4.3): nombre → función. Los
+ * nombres son los de nombres.ts (los que acepta el validador); el tipo obliga
+ * a que estén todos, y metricas/index.spec.ts a que no haya ninguno más.
+ * Cada métrica lleva su fórmula, su fuente y su base de cálculo en la cabecera
+ * de su fichero.
+ */
+import type { Metrica } from './base.ts';
+import type { NombreDeMetrica } from './nombres.ts';
+import { frasesPor100Palabras } from './frases-por-100-palabras.ts';
+import { cvLongitudFrase } from './cv-longitud-frase.ts';
+import { ratioComasPuntos } from './ratio-comas-puntos.ts';
+import { puntuacionPor1000 } from './puntuacion-por-1000.ts';
+import { parentesisComillasPuntoycomaPor1000 } from './parentesis-comillas-puntoycoma-por-1000.ts';
+import { ttr } from './ttr.ts';
+import { mattr50 } from './mattr-50.ts';
+import { mtld } from './mtld.ts';
+import { hdd42 } from './hdd-42.ts';
+import { seqRep4 } from './seq-rep-4.ts';
+import { ifsz } from './ifsz.ts';
+
+export type { Metrica } from './base.ts';
+
+export const METRICAS: Readonly<Record<NombreDeMetrica, Metrica>> = {
+  'frases-por-100-palabras': frasesPor100Palabras,
+  'cv-longitud-frase': cvLongitudFrase,
+  'ratio-comas-puntos': ratioComasPuntos,
+  'puntuacion-por-1000': puntuacionPor1000,
+  'parentesis-comillas-puntoycoma-por-1000': parentesisComillasPuntoycomaPor1000,
+  ttr,
+  'mattr-50': mattr50,
+  mtld,
+  'hdd-42': hdd42,
+  'seq-rep-4': seqRep4,
+  ifsz,
+};
