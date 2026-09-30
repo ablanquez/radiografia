@@ -309,6 +309,124 @@
           "\uFEFFEl informe llega el lunes."
         ]
       }
+    },
+    {
+      "id": "pf-raya-densidad",
+      "familia": "puntuacion-formato",
+      "detector": "patrón",
+      "parametros": {
+        "regex": "\\u2014",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": false,
+          "tildes": false
+        }
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Cada raya (—) es una señal, y la regla puntúa cuántas hay por cada 1.000 palabras. Medido en inglés (Freeburg, 2026): GPT-4.1 escribe 10,6 rayas por 1.000 palabras y Claude Opus 4.6, 9,1, frente a 3,2 de media en ensayos humanos, que van de 0,3 a 17,1; pero GPT-5.4 baja a 1,4, y según The Economist (2026) la raya ya no delata a la IA: hoy solo Claude la usa más que los humanos. Peso 1, y no 2, el máximo de lo medido en inglés: la evidencia es fuerte pero cambia con cada versión de modelo, y en español la raya es norma en los incisos y en los diálogos, así que quien escribe bien la usa.",
+      "sugerencia": "Si las rayas no encierran un inciso ni abren un diálogo, prueba con comas, paréntesis o dos puntos. Si encierran un inciso, déjalas: es la norma.",
+      "excepciones": [
+        "Diálogos: la raya que abre cada intervención y la de los incisos del narrador son norma en español (RAE). La regla todavía no separa los párrafos de diálogo; la calibración dirá si hace falta.",
+        "Incisos: la RAE los encierra entre rayas, que aíslan más que las comas y menos que los paréntesis (DPD).",
+        "Solo se cuenta la raya (U+2014), no la semirraya (–) ni el guion doble (--): un estudio de 44 años de actas de CHI mostró que contar solo ese carácter mide cómo se codificó el texto, no cómo se escribió; contando juntas todas las formas de raya, la serie era estable."
+      ],
+      "fuente": [
+        {
+          "titulo": "Freeburg (2026), «The Last Fingerprint: How Markdown Training Shapes LLM Prose», arXiv 2603.27006 (preprint, en inglés)",
+          "url": "https://arxiv.org/html/2603.27006v1"
+        },
+        {
+          "titulo": "The Economist, «How to spot AI writing» (30/07/2026), de pago y no leído; leído en OnTimeBrief (15/08/2026)",
+          "url": "https://ontimebrief.com/en/2026/08/15/economist-study-ai-writing-no-longer-betrayed-by-em-dashes/"
+        },
+        {
+          "titulo": "RAE, Ortografía básica, «La raya»: los incisos se encierran entre rayas",
+          "url": "https://www.rae.es/ortograf%C3%ADa-b%C3%A1sica/uso-de-los-signos-ortogr%C3%A1ficos/signos-de-puntuaci%C3%B3n/la-raya"
+        },
+        {
+          "titulo": "RAE, Diccionario panhispánico de dudas, «raya»",
+          "url": "https://www.rae.es/dpd/raya"
+        },
+        {
+          "titulo": "RAE, «La raya (I): usos como signo simple» (diálogos: sin espacio entre la raya y el enunciado)",
+          "url": "https://www.rae.es/buen-uso-espa%C3%B1ol/la-raya-i-usos-como-signo-simple"
+        },
+        {
+          "titulo": "Estudio de 44 años de actas de CHI, arXiv 2609.23090: contar solo U+2014 mide cómo se escaneó el texto, no cómo se escribió",
+          "url": "https://arxiv.org/pdf/2609.23090"
+        }
+      ],
+      "origenLista": null,
+      "nivelEvidencia": "medido en inglés",
+      "ejemplos": {
+        "positivos": [
+          "Los datos llegaron tarde — como cada trimestre — y el informe se retrasó.",
+          "La directora —que firmó el informe— pidió calma."
+        ],
+        "negativos": [
+          "Los datos llegaron tarde, como cada trimestre, y el informe se retrasó.",
+          "El periodo 2020–2024 se escribe con semirraya, no con raya."
+        ]
+      }
+    },
+    {
+      "id": "pf-raya-espaciada",
+      "familia": "puntuacion-formato",
+      "detector": "patrón",
+      "parametros": {
+        "regex": "\\s[\\u2014\\u2013]\\s",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": false,
+          "tildes": false
+        }
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Una raya (—) o una semirraya (–) con un espacio a cada lado, como pausa: «palabra — palabra». En español, la raya de un inciso va pegada al texto que encierra (—así—), y la del diálogo, pegada a lo que dice el personaje (RAE). Wikipedia recoge que las rayas de los textos generados suelen ir rodeadas de espacios, en contra de las normas tipográficas habituales. Anecdótico: es una inferencia sobre la norma y una observación en inglés, sin medición; el espaciado depende del libro de estilo.",
+      "sugerencia": "Si es un inciso, pega las rayas al texto que encierran (—así—); si es una pausa, prueba con una coma, dos puntos o un punto.",
+      "excepciones": [
+        "Libros de estilo que piden la raya con espacios, como el de Associated Press (AP), y textos traducidos del inglés que lo conservan: en notas de prensa humanas del Congreso de EE. UU., el 29,5 % de las rayas lleva espacios.",
+        "Intervalos escritos con semirraya y espacios («1990 – 2000»).",
+        "La raya que abre un elemento de lista sí lleva espacio detrás (RAE); no cuenta, porque abre el párrafo y no tiene espacio delante."
+      ],
+      "fuente": [
+        {
+          "titulo": "RAE, Ortografía básica, «La raya»: los incisos se encierran entre rayas",
+          "url": "https://www.rae.es/ortograf%C3%ADa-b%C3%A1sica/uso-de-los-signos-ortogr%C3%A1ficos/signos-de-puntuaci%C3%B3n/la-raya"
+        },
+        {
+          "titulo": "RAE, Diccionario panhispánico de dudas, «raya»",
+          "url": "https://www.rae.es/dpd/raya"
+        },
+        {
+          "titulo": "RAE, «La raya (I): usos como signo simple» (diálogos: sin espacio entre la raya y el enunciado)",
+          "url": "https://www.rae.es/buen-uso-espa%C3%B1ol/la-raya-i-usos-como-signo-simple"
+        },
+        {
+          "titulo": "Wikipedia en inglés, «Signs of AI writing»: «AI-generated em dashes are usually surrounded by spaces» (fragmento indexado)",
+          "url": "https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing"
+        },
+        {
+          "titulo": "Notas de prensa del Congreso de EE. UU., arXiv 2608.05889: 29,5 % de las rayas con espacios (AP los pide, Chicago no)",
+          "url": "https://arxiv.org/pdf/2608.05889"
+        }
+      ],
+      "origenLista": null,
+      "nivelEvidencia": "anecdótico",
+      "ejemplos": {
+        "positivos": [
+          "El plan era sencillo — y funcionó.",
+          "Llegamos tarde – como siempre – a la cita."
+        ],
+        "negativos": [
+          "El plan —sencillo, como siempre— funcionó.",
+          "—¿Vienes? —preguntó ella."
+        ]
+      }
     }
   ]
 }
