@@ -43,7 +43,7 @@
       "familia": "discurso",
       "detector": "estadístico",
       "parametros": {
-        "metrica": "frases-por-100-palabras",
+        "metrica": "frases-por-mil-palabras",
         "direccion": "mayor",
         "percentil": "p95"
       },

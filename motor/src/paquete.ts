@@ -11,12 +11,30 @@
 import type { ParametrosPatron } from './detector-patron.ts';
 import type { ParametrosEstructural } from './detector-estructural.ts';
 
+/** Desde el 4.3, sin género ni tramo: son entradas del análisis, no de la ficha. */
 export interface ParametrosEstadistico {
   metrica: string;
-  genero: string;
-  tramo: '100-299' | '300-599' | '600+';
   direccion: 'mayor' | 'menor' | 'ambas';
+  percentil: 'p95' | 'p99';
 }
+
+export type TramoDeCalibracion = '100-299' | '300-599' | '600+';
+
+/** Una celda de cabecera.calibracion: métrica × género × tramo. */
+export interface Celda {
+  p1: number;
+  p5: number;
+  p50: number;
+  p95: number;
+  p99: number;
+  n: number;
+  corpus: string;
+  fecha: string;
+  metodo: 'hyndman-fan-7';
+}
+
+/** métrica → género → tramo → celda. */
+export type Calibracion = Record<string, Record<string, Partial<Record<TramoDeCalibracion, Celda>>>>;
 
 export interface Familia {
   id: string;
@@ -32,6 +50,7 @@ export interface Cabecera {
   autor: string;
   licencia: string;
   familias: Familia[];
+  calibracion?: Calibracion;
 }
 
 interface ReglaComun {

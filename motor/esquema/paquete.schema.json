@@ -60,6 +60,30 @@
               }
             }
           }
+        },
+        "calibracion": {
+          "type": "object",
+          "additionalProperties": false,
+          "patternProperties": {
+            "^[a-z0-9]+(-[a-z0-9]+)*$": {
+              "type": "object",
+              "additionalProperties": false,
+              "patternProperties": {
+                "^[a-z0-9]+(-[a-z0-9]+)*$": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "100-299": { "$ref": "#/$defs/celda" },
+                    "300-599": { "$ref": "#/$defs/celda" },
+                    "600+": { "$ref": "#/$defs/celda" }
+                  },
+                  "$comment": "Un género: sus tramos de longitud (los del umbral, 4.1)."
+                }
+              },
+              "$comment": "Una métrica: sus géneros, cada uno con un nombre kebab-case («general», «noticia»…)."
+            }
+          },
+          "$comment": "Opcional (encargo 4.3): los percentiles humanos contra los que las reglas estadísticas comparan su métrica, por métrica × género × tramo (plan, punto 5: calibración firmada el 29/09). Las claves de métrica son las de parametros.metrica de las reglas. Si el paquete tiene reglas estadísticas, validar.ts exige que la métrica de cada una esté aquí con el género «general» [PROPIO: el género por defecto del análisis] en algún tramo, y que en cada celda p1 ≤ p5 ≤ p50 ≤ p95 ≤ p99."
         }
       }
     },
@@ -67,6 +91,32 @@
       "type": "array",
       "minItems": 1,
       "items": { "$ref": "regla.schema.json" }
+    }
+  },
+  "$defs": {
+    "celda": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["p1", "p5", "p50", "p95", "p99", "n", "corpus", "fecha", "metodo"],
+      "properties": {
+        "p1": { "type": "number" },
+        "p5": { "type": "number" },
+        "p50": { "type": "number" },
+        "p95": { "type": "number" },
+        "p99": { "type": "number" },
+        "n": { "type": "integer", "minimum": 1, "$comment": "Cuántos textos humanos dieron estos percentiles." },
+        "corpus": { "type": "string", "minLength": 1, "$comment": "De dónde salen esos textos." },
+        "fecha": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "$comment": "AAAA-MM-DD. [PROPIO] Patrón y no «format: date», por lo mismo que la url de la ficha: sin ajv-formats. No comprueba que la fecha exista en el calendario."
+        },
+        "metodo": {
+          "const": "hyndman-fan-7",
+          "$comment": "[DOC] Hyndman & Fan (1996), «Sample quantiles in statistical packages», American Statistician 50, 361–365, doi 10.2307/2684934: nueve definiciones de cuantil que dan resultados distintos. Se fija el tipo 7, «p_k = (k - 1)/(n - 1)», el de R por defecto («type = 7», https://rdocumentation.org/packages/stats/topics/quantile), para que la calibración del punto 5 y el motor (percentil.ts) calculen igual."
+        }
+      },
+      "$comment": "Una celda de calibración: métrica × género × tramo."
     }
   }
 }

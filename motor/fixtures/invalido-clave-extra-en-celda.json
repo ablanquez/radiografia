@@ -31,7 +31,8 @@
             "n": 40,
             "corpus": "cifras inventadas para el fixture: sin corpus",
             "fecha": "2026-09-30",
-            "metodo": "hyndman-fan-7"
+            "metodo": "hyndman-fan-7",
+            "media": 5.1
           }
         }
       }

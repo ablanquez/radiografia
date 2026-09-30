@@ -21,7 +21,12 @@
  *      no se usan: sin regex, la regla no señalaría nunca nada, en silencio);
  *      y que en las cuatro posiciones estructurales ancladas (inicio-frase,
  *      fin-frase, inicio-parrafo, fin-parrafo) la regex no empiece por «^» ni
- *      termine en un «$» sin escapar: esa ancla la pone el motor.
+ *      termine en un «$» sin escapar: esa ancla la pone el motor. Y desde el
+ *      4.3, la calibración: que la métrica de cada regla estadística esté en
+ *      el registro del motor (metricas/nombres.ts), que cabecera.calibracion
+ *      la traiga con el género «general» en algún tramo, y que en cada celda
+ *      p1 ≤ p5 ≤ p50 ≤ p95 ≤ p99 (JSON Schema no compara un número con otro
+ *      del mismo dato).
  *      [PROPIO] «Sin escapar» = con un número par de barras inversas delante;
  *      el encargo dice «sin barra inversa delante», y `\\$` (barra escapada y
  *      ancla) lleva una barra delante y sigue siendo ancla.
@@ -76,6 +81,7 @@
  */
 import { Ajv2020 } from 'ajv/dist/2020.js';
 import type { ErrorObject, Options } from 'ajv/dist/2020.js';
+import { NOMBRES_DE_METRICAS, esMetrica } from './metricas/nombres.ts';
 import esquemaPaquete from '../esquema/paquete.schema.json' with { type: 'json' };
 import esquemaRegla from '../esquema/regla.schema.json' with { type: 'json' };
 
@@ -96,15 +102,24 @@ export interface ResultadoDeValidacion {
 
 /** Lo que el paso 2 lee, cuando el esquema ya garantizó la forma. */
 export interface PaqueteConForma {
-  cabecera: { familias: { id: string; informativa: boolean }[] };
+  cabecera: {
+    familias: { id: string; informativa: boolean }[];
+    calibracion?: Record<string, Record<string, Record<string, Record<Percentil, number>>>>;
+  };
   reglas: {
     id: string;
     familia: string;
     informativa: boolean;
     detector: string;
-    parametros: { regex?: string; flags?: string; formas?: string[]; ambito?: string; posicion?: string };
+    parametros: { regex?: string; flags?: string; formas?: string[]; ambito?: string; posicion?: string; metrica?: string };
   }[];
 }
+
+type Percentil = 'p1' | 'p5' | 'p50' | 'p95' | 'p99';
+const PERCENTILES: readonly Percentil[] = ['p1', 'p5', 'p50', 'p95', 'p99'];
+
+/** El género con el que se analiza si quien analiza no elige otro (encargo 4.3) [PROPIO]. */
+export const GENERO_POR_DEFECTO = 'general';
 
 /**
  * Una función de validación de esquema con la forma de las de Ajv: la que se
@@ -154,6 +169,8 @@ export function validarPaquete(paquete: unknown, validador: ValidadorDeEsquema =
 
 function desdeAjv(e: ErrorObject, paquete: unknown, deRamas: readonly ErrorObject[]): ErrorDeValidacion {
   const ruta = punteroARuta(e.instancePath);
+  // Dentro de cabecera.calibracion, a qué nivel está el objeto del error: 0 métricas, 1 géneros, 2 tramos.
+  const nivelDeCalibracion = ruta[0] === 'cabecera' && ruta[1] === 'calibracion' ? ruta.length - 2 : null;
   // En `required` y `additionalProperties` el puntero señala al objeto que
   // contiene el campo; el nombre del campo viene en params.
   if (e.keyword === 'required') ruta.push(String(e.params['missingProperty']));
@@ -164,7 +181,7 @@ function desdeAjv(e: ErrorObject, paquete: unknown, deRamas: readonly ErrorObjec
   const alternativas = deRamas
     .filter((r) => r.instancePath === e.instancePath && r.keyword === 'required')
     .map((r) => String(r.params['missingProperty']));
-  const mensaje = mensajeEnCastellano(e, valor, alternativas) + (porQue === undefined ? '' : ` ${porQue}`);
+  const mensaje = mensajeEnCastellano(e, valor, alternativas, nivelDeCalibracion) + (porQue === undefined ? '' : ` ${porQue}`);
 
   if (ruta[0] === 'reglas' && typeof ruta[1] === 'number') {
     const indice = ruta[1];
@@ -217,13 +234,21 @@ const TIPOS: Readonly<Record<string, string>> = {
   null: 'null',
 };
 
-function mensajeEnCastellano(e: ErrorObject, valor: unknown, alternativas: readonly string[]): string {
+function mensajeEnCastellano(e: ErrorObject, valor: unknown, alternativas: readonly string[], nivelDeCalibracion: number | null): string {
   const p = e.params;
   switch (e.keyword) {
     case 'required':
       return 'falta este campo obligatorio';
     case 'additionalProperties':
+      // En la calibración, las claves de métrica y de género son nombres (patternProperties) y las de tramo, tres fijas.
+      if (nivelDeCalibracion === 0) return 'una métrica de la calibración se nombra en kebab-case: minúsculas, cifras y guiones';
+      if (nivelDeCalibracion === 1) return 'un género de la calibración se nombra en kebab-case: minúsculas, cifras y guiones';
+      if (nivelDeCalibracion === 2) return 'no es un tramo: los tramos son "100-299", "300-599" y "600+"';
       return 'este campo no existe en el esquema (¿una errata?)';
+    case 'const':
+      return `vale ${JSON.stringify(valor)} y tiene que ser ${JSON.stringify(p['allowedValue'])}`;
+    case 'minimum':
+      return `vale ${JSON.stringify(valor)} y tiene que ser como mínimo ${p['limit']}`;
     case 'enum': {
       const permitidos = (p['allowedValues'] as unknown[]).map((v) => JSON.stringify(v)).join(', ');
       return `vale ${JSON.stringify(valor)} y tiene que ser uno de: ${permitidos}`;
@@ -267,6 +292,27 @@ function comprobarCoherencia(paquete: PaqueteConForma): ErrorDeValidacion[] {
     }
   });
 
+  // La calibración: en cada celda, los percentiles en orden.
+  const calibracion = paquete.cabecera.calibracion;
+  for (const [metrica, generos] of Object.entries(calibracion ?? {})) {
+    for (const [genero, tramos] of Object.entries(generos)) {
+      for (const [tramo, celda] of Object.entries(tramos)) {
+        const desorden = PERCENTILES.slice(1)
+          .map((p, i) => [PERCENTILES[i]!, p] as const)
+          .filter(([a, b]) => celda[a] > celda[b]);
+        if (desorden.length > 0) {
+          errores.push(
+            crear(
+              null,
+              `cabecera.calibracion.${metrica}.${genero}.${tramo}`,
+              `los percentiles tienen que ir en orden, p1 ≤ p5 ≤ p50 ≤ p95 ≤ p99, y ${desorden.map(([a, b]) => `${a} (${celda[a]}) > ${b} (${celda[b]})`).join('; ')}`,
+            ),
+          );
+        }
+      }
+    }
+  }
+
   const primeraVez = new Map<string, number>();
   paquete.reglas.forEach((regla, indice) => {
     const anterior = primeraVez.get(regla.id);
@@ -294,6 +340,11 @@ function comprobarCoherencia(paquete: PaqueteConForma): ErrorDeValidacion[] {
           `vale false, pero la familia "${regla.familia}" es informativa y el motor no puntúa sus reglas: tiene que ser true`,
         ),
       );
+    }
+
+    if (regla.detector === 'estadístico' && regla.parametros.metrica !== undefined) {
+      const problema = problemaDeMetrica(regla.parametros.metrica, calibracion);
+      if (problema !== null) errores.push(crear({ indice, id: regla.id }, 'parametros.metrica', problema));
     }
 
     const { regex, flags, formas, ambito, posicion } = regla.parametros;
@@ -340,6 +391,31 @@ function comprobarCoherencia(paquete: PaqueteConForma): ErrorDeValidacion[] {
     }
   });
   return errores;
+}
+
+/**
+ * Lo que falla en la métrica de una regla estadística, o null: que el
+ * registro la tenga y, si la tiene, que la cabecera la calibre para el género
+ * por defecto en algún tramo. Si la métrica no existe, no se mira la
+ * calibración: un defecto, un error. `Object.hasOwn`, porque «constructor» es
+ * un nombre kebab-case válido y lo tiene cualquier objeto por herencia.
+ */
+function problemaDeMetrica(metrica: string, calibracion: PaqueteConForma['cabecera']['calibracion']): string | null {
+  if (!esMetrica(metrica)) {
+    return `"${metrica}" no es una métrica del motor (las registradas: ${NOMBRES_DE_METRICAS.map((n) => `"${n}"`).join(', ')})`;
+  }
+  if (calibracion === undefined) {
+    return `el paquete no trae cabecera.calibracion, y una regla estadística compara "${metrica}" con los percentiles de ahí`;
+  }
+  if (!Object.hasOwn(calibracion, metrica)) {
+    return `"${metrica}" no está en cabecera.calibracion: una regla estadística necesita los percentiles de su métrica`;
+  }
+  const porGenero = calibracion[metrica]!;
+  const general = Object.hasOwn(porGenero, GENERO_POR_DEFECTO) ? porGenero[GENERO_POR_DEFECTO]! : {};
+  if (Object.keys(general).length === 0) {
+    return `cabecera.calibracion.${metrica} no tiene el género "${GENERO_POR_DEFECTO}" con algún tramo: es el género por defecto del análisis y tiene que estar`;
+  }
+  return null;
 }
 
 /** Las posiciones del detector estructural en las que el motor pone el ancla (regla.schema.json, «posicion»). */

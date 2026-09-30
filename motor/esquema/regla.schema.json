@@ -181,15 +181,18 @@
       }
     },
     "parametrosEstadistico": {
-      "$comment": "Detector estadístico: una métrica del texto entero contra los percentiles humanos de un género y un tramo de longitud (plan, punto 4). «metrica» será un nombre registrado en el motor; en el 4.1 basta con que no esté vacío. [PROPIO] Los tramos, de estadistica.md § 6 (100–199 y 200–299 van juntos: por debajo de 300 el análisis ya es «poco fiable»).",
+      "$comment": "Detector estadístico: una métrica del texto entero contra los percentiles humanos de la cabecera (cabecera.calibracion, por métrica × género × tramo; plan, punto 4). El género y el tramo NO van en la ficha (corrección del 4.1, encargo 4.3): el género lo elige quien analiza y el tramo sale de la longitud del texto. «percentil» dice qué banda es la normal: con «p95», dispara «mayor» si el valor es > p95, «menor» si es < p5, y «ambas» si queda fuera de [p5, p95]; con «p99», lo mismo con p99, p1 y [p1, p99]. Una regla estadística señala el texto entero, una vez: puntúa por presencia.",
       "type": "object",
       "additionalProperties": false,
-      "required": ["metrica", "genero", "tramo", "direccion"],
+      "required": ["metrica", "direccion", "percentil"],
       "properties": {
-        "metrica": { "type": "string", "minLength": 1 },
-        "genero": { "type": "string", "minLength": 1 },
-        "tramo": { "enum": ["100-299", "300-599", "600+"] },
-        "direccion": { "enum": ["mayor", "menor", "ambas"] }
+        "metrica": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "$comment": "El nombre de una métrica del registro del motor (motor/src/metricas/). Que exista, y que la cabecera la calibre para el género «general», lo comprueba validar.ts."
+        },
+        "direccion": { "enum": ["mayor", "menor", "ambas"] },
+        "percentil": { "enum": ["p95", "p99"] }
       }
     }
   }

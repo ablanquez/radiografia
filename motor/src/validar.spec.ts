@@ -172,6 +172,40 @@ const INVALIDOS: readonly CasoInvalido[] = [
     campo: 'parametros.regex',
     mensajeIncluye: '"inicio-frase"',
   },
+  // ── Encargo 4.3: la regla estadística y la calibración de la cabecera ──
+  {
+    // una métrica que el registro del motor no tiene.
+    fichero: 'invalido-metrica-desconocida.json',
+    regla: { indice: 0, id: 'd6-referencia-interna' },
+    campo: 'parametros.metrica',
+    mensajeIncluye: '"frases-por-mil-palabras"',
+  },
+  {
+    // la cabecera calibra otra métrica, no la de la regla.
+    fichero: 'invalido-sin-calibracion-para-la-metrica.json',
+    regla: { indice: 0, id: 'd6-referencia-interna' },
+    campo: 'parametros.metrica',
+    mensajeIncluye: 'cabecera.calibracion',
+  },
+  {
+    // la métrica está calibrada, pero no para el género por defecto.
+    fichero: 'invalido-sin-genero-general.json',
+    regla: { indice: 0, id: 'd6-referencia-interna' },
+    campo: 'parametros.metrica',
+    mensajeIncluye: '"general"',
+  },
+  {
+    // p50 por encima de p95.
+    fichero: 'invalido-percentiles-desordenados.json',
+    regla: null,
+    campo: 'cabecera.calibracion.frases-por-100-palabras.general.300-599',
+    mensajeIncluye: 'p50 (7)',
+  },
+  {
+    fichero: 'invalido-clave-extra-en-celda.json',
+    regla: null,
+    campo: 'cabecera.calibracion.frases-por-100-palabras.general.300-599.media',
+  },
 ];
 
 describe('validarPaquete', () => {
@@ -179,9 +213,9 @@ describe('validarPaquete', () => {
    * Ningún fixture sin juez: si entra uno nuevo en la carpeta y nadie lo añade
    * aquí, esto se pone rojo en vez de dejarlo sin mirar.
    */
-  test('la carpeta de fixtures tiene exactamente los veinticuatro que se juzgan', () => {
+  test('la carpeta de fixtures tiene exactamente los veintinueve que se juzgan', () => {
     assert.equal(VALIDOS.length, 6, 'seis válidos');
-    assert.equal(INVALIDOS.length, 18, 'dieciocho inválidos');
+    assert.equal(INVALIDOS.length, 23, 'veintitrés inválidos');
     const esperados = [...VALIDOS, ...INVALIDOS.map((c) => c.fichero)].sort();
     // Solo los FICHEROS de la raíz: los paquetes. Las subcarpetas (fixtures/referencia/)
     // guardan datos de referencia de otros jueces (encargo 3.3).
@@ -241,6 +275,48 @@ describe('validarPaquete', () => {
       conAncla.errores.map((e) => [e.regla, e.campo]),
       [[{ indice: 2, id: 'exclamacion-doble' }, 'parametros.regex']],
     );
+  });
+
+  /**
+   * La calibración (encargo 4.3): lo que el esquema rechaza en ella, con el
+   * campo exacto y un mensaje en castellano que diga qué se esperaba. Cada
+   * caso cambia UNA cosa del válido estadístico.
+   */
+  test('calibración: sin ella, y cada defecto de forma, nombrando el campo', () => {
+    type Paquete = { cabecera: { calibracion?: Record<string, Record<string, Record<string, Record<string, unknown>>>> } };
+    const con = (cambiar: (p: Paquete) => void) => {
+      const p = cargar('valido-detector-estadistico.json') as Paquete;
+      cambiar(p);
+      return validarPaquete(p).errores.map((e) => [e.regla?.id ?? null, e.campo, e.mensaje]);
+    };
+    const CELDA = 'cabecera.calibracion.frases-por-100-palabras.general.300-599';
+    const celda = (p: Paquete) => p.cabecera.calibracion!['frases-por-100-palabras']!['general']!['300-599']!;
+    const casos: [string, (p: Paquete) => void, string | null, string, string][] = [
+      ['sin calibración', (p) => delete p.cabecera.calibracion, 'd6-referencia-interna', 'parametros.metrica', 'cabecera.calibracion'],
+      ['método de otro tipo', (p) => (celda(p)['metodo'] = 'tipo-7'), null, `${CELDA}.metodo`, '"hyndman-fan-7"'],
+      ['n = 0', (p) => (celda(p)['n'] = 0), null, `${CELDA}.n`, 'como mínimo 1'],
+      ['fecha en otro formato', (p) => (celda(p)['fecha'] = '30/09/2026'), null, `${CELDA}.fecha`, '"30/09/2026"'],
+      [
+        'una métrica que no es kebab-case',
+        (p) => (p.cabecera.calibracion = { Frases_por_100: p.cabecera.calibracion!['frases-por-100-palabras']! }),
+        null,
+        'cabecera.calibracion.Frases_por_100',
+        'minúsculas',
+      ],
+      [
+        'un tramo que no existe',
+        (p) => (p.cabecera.calibracion!['frases-por-100-palabras']!['general'] = { '300-600': celda(p) }),
+        null,
+        'cabecera.calibracion.frases-por-100-palabras.general.300-600',
+        '"600+"',
+      ],
+    ];
+    for (const [nombre, cambiar, regla, campo, incluye] of casos) {
+      const errores = con(cambiar);
+      assert.equal(errores.length, 1, `${nombre}: un defecto, un error; salieron ${JSON.stringify(errores)}`);
+      assert.deepEqual(errores[0]!.slice(0, 2), [regla, campo], nombre);
+      assert.ok(String(errores[0]![2]).includes(incluye), `${nombre}: el mensaje tenía que nombrar ${incluye}: ${errores[0]![2]}`);
+    }
   });
 
   for (const caso of INVALIDOS) {

@@ -21,7 +21,7 @@
     ],
     "calibracion": {
       "frases-por-100-palabras": {
-        "general": {
+        "noticia": {
           "300-599": {
             "p1": 3.1,
             "p5": 3.6,

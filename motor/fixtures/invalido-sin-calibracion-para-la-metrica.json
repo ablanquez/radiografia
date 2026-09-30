@@ -20,7 +20,7 @@
       }
     ],
     "calibracion": {
-      "frases-por-100-palabras": {
+      "ttr": {
         "general": {
           "300-599": {
             "p1": 3.1,
