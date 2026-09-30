@@ -15,10 +15,13 @@
  *     se pudo abrir; Ríos Hernández (2009) y Law (2011) dan «frases por cada
  *     100 palabras», y la transcripción de sintaxis.md § 8, «palabras por
  *     frase». No son la misma magnitud, y no se implementa de memoria.
+ *   · el solapamiento de lemas entre frases adyacentes (D15; encargo 5.5):
+ *     exige un lematizador, y el motor no lo tiene.
  *
  * Encargo 5.5: parentesis-comillas-puntoycoma-por-1000 pasa a llamarse
  * puntuacion-secundaria-por-1000 (P15 con dos puntos, barras, raya y comillas
- * curvas).
+ * curvas), y entran nominalizaciones-por-1000 (S5) y
+ * pronombres-anaforicos-por-1000 (D16, contexto). Trece.
  */
 export const NOMBRES_DE_METRICAS = [
   'frases-por-100-palabras',
@@ -32,10 +35,33 @@ export const NOMBRES_DE_METRICAS = [
   'hdd-42',
   'seq-rep-4',
   'ifsz',
+  'nominalizaciones-por-1000',
+  'pronombres-anaforicos-por-1000',
 ] as const;
 
 export type NombreDeMetrica = (typeof NOMBRES_DE_METRICAS)[number];
 
 export function esMetrica(nombre: string): nombre is NombreDeMetrica {
   return (NOMBRES_DE_METRICAS as readonly string[]).includes(nombre);
+}
+
+/**
+ * [PROPIO, encargo 5.5] El total del paquete RadiografIA en textos humanos:
+ * una clave de `cabecera.calibracion` que NO es una métrica. El motor no la
+ * calcula sobre el texto ni una regla puede pedirla (esMetrica la rechaza):
+ * la calcula la herramienta de calibración (motor/herramientas/calibrar/)
+ * con analizar(texto, [radiografia.json], { genero }) sobre cada documento
+ * humano, tomando la `puntuacion.total` de RadiografIA, con el género del
+ * corpus. Servirá para la escala del medidor («percentil respecto a humanos
+ * de este género»; 5.6 y punto 6).
+ * ⚠️ Hoy el paquete no tiene reglas estadísticas: el total se RECALCULA en
+ *    el 5.6, cuando las tenga.
+ */
+export const CLAVE_TOTAL_RADIOGRAFIA = '_total-radiografia';
+
+/** Las claves que puede llevar la calibración: las métricas y el total. */
+export const CLAVES_DE_CALIBRACION = [...NOMBRES_DE_METRICAS, CLAVE_TOTAL_RADIOGRAFIA] as const;
+
+export function esClaveDeCalibracion(nombre: string): boolean {
+  return (CLAVES_DE_CALIBRACION as readonly string[]).includes(nombre);
 }

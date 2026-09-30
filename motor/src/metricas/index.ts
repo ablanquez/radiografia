@@ -1,5 +1,5 @@
 /**
- * El registro de métricas del motor (encargo 4.3): nombre → función. Los
+ * El registro de métricas del motor (encargo 4.3; trece desde el 5.5): nombre → función. Los
  * nombres son los de nombres.ts (los que acepta el validador); el tipo obliga
  * a que estén todos, y metricas/index.spec.ts a que no haya ninguno más.
  * Cada métrica lleva su fórmula, su fuente y su base de cálculo en la cabecera
@@ -18,6 +18,8 @@ import { mtld } from './mtld.ts';
 import { hdd42 } from './hdd-42.ts';
 import { seqRep4 } from './seq-rep-4.ts';
 import { ifsz } from './ifsz.ts';
+import { nominalizacionesPor1000 } from './nominalizaciones-por-1000.ts';
+import { pronombresAnaforicosPor1000 } from './pronombres-anaforicos-por-1000.ts';
 
 export type { Metrica } from './base.ts';
 
@@ -33,4 +35,6 @@ export const METRICAS: Readonly<Record<NombreDeMetrica, Metrica>> = {
   'hdd-42': hdd42,
   'seq-rep-4': seqRep4,
   ifsz,
+  'nominalizaciones-por-1000': nominalizacionesPor1000,
+  'pronombres-anaforicos-por-1000': pronombresAnaforicosPor1000,
 };
