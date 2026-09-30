@@ -47,6 +47,10 @@
  *     (`seMira` de texto.ts). `indiceParrafo` es su posición en
  *     `texto.parrafos` (contando los de no-prosa, para poder volver a él);
  *     `indiceFrase`, la posición de la frase DENTRO de su párrafo.
+ *   · Recuento (encargo 5.3): minimoPorCoincidencia y minimo, en ese orden,
+ *     sobre las coincidencias ya encontradas (recuento.ts). Con `ausencia`,
+ *     lo que devuelve son las coincidencias que CUENTAN, no señales que
+ *     emitir: las convierte detector-ausencia.ts.
  *
  * En ámbito «frase» se usa solo la regex, y la regla la trae siempre: lo
  * comprueba el paso 2 de validar.ts (encargo 4.2) y el tipo lo dice
@@ -54,15 +58,18 @@
  * detector lanzaba un error si faltaba.
  */
 import { seMira, type Texto } from './texto.ts';
+import { aplicarRecuento, type ParametrosDeRecuento } from './recuento.ts';
 
 interface Normalizar {
   minusculas: boolean;
   tildes: boolean;
 }
 
-export type ParametrosPatron =
+export type ParametrosPatron = (
   | { ambito: 'palabra'; formas?: string[]; regex?: string; flags?: string; normalizar: Normalizar; sobreNoProsa?: boolean }
-  | { ambito: 'frase'; regex: string; formas?: string[]; flags?: string; normalizar: Normalizar; sobreNoProsa?: boolean };
+  | { ambito: 'frase'; regex: string; formas?: string[]; flags?: string; normalizar: Normalizar; sobreNoProsa?: boolean }
+) &
+  ParametrosDeRecuento;
 
 export interface ReglaDePatron {
   id: string;
@@ -113,7 +120,7 @@ export function detectarPatron(regla: ReglaDePatron, texto: Texto): Senal[] {
         }
       });
     });
-    return senales;
+    return aplicarRecuento(senales, p);
   }
 
   const regex = new RegExp(p.regex, banderas(p, 'g'));
@@ -127,5 +134,5 @@ export function detectarPatron(regla: ReglaDePatron, texto: Texto): Senal[] {
       }
     });
   });
-  return senales;
+  return aplicarRecuento(senales, p);
 }

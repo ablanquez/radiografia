@@ -34,8 +34,11 @@
  *     posiciones de párrafo entero, la frase donde EMPIEZA la coincidencia.
  *     [PROPIO] Si empieza en el blanco entre dos frases, cuenta la anterior:
  *     ese blanco es del segmento de la anterior en Intl.Segmenter.
- *   · `minimo`: si el total de coincidencias en todo el texto es menor, la
- *     regla no señala nada.
+ *   · Recuento (encargo 5.3; `minimo` desde el 4.2): minimoPorCoincidencia y
+ *     minimo, en ese orden, sobre las coincidencias ya encontradas
+ *     (recuento.ts); si quedan menos que `minimo`, la regla no señala nada.
+ *     Con `ausencia`, lo que devuelve son las coincidencias que CUENTAN: las
+ *     convierte detector-ausencia.ts.
  *   · Solo párrafos de prosa (texto.ts), salvo con `sobreNoProsa` (encargo
  *     5.1): entonces también viñetas, encabezados y tablas, nunca código
  *     (`seMira` de texto.ts). [PROPIO] Con él, cada posición se aplica a los
@@ -45,14 +48,14 @@
  */
 import { seMira, type Parrafo, type Texto } from './texto.ts';
 import type { Senal } from './detector-patron.ts';
+import { aplicarRecuento, type ParametrosDeRecuento } from './recuento.ts';
 
 export type Posicion = 'inicio-frase' | 'fin-frase' | 'inicio-parrafo' | 'fin-parrafo' | 'ultimo-parrafo' | 'cualquiera';
 
-export interface ParametrosEstructural {
+export interface ParametrosEstructural extends ParametrosDeRecuento {
   posicion: Posicion;
   regex: string;
   flags?: string;
-  minimo?: number;
   sobreNoProsa?: boolean;
 }
 
@@ -135,6 +138,5 @@ export function detectarEstructural(regla: ReglaEstructural, texto: Texto): Sena
       break;
   }
 
-  if (p.minimo !== undefined && senales.length < p.minimo) return [];
-  return senales;
+  return aplicarRecuento(senales, p);
 }

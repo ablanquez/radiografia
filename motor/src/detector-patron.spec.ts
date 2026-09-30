@@ -136,3 +136,44 @@ describe('detectarPatron: tildes:true quita solo el acento agudo', () => {
     assert.deepEqual(fragmentos(['año'], 'Fue un buen an\u0303o.'), ['an\u0303o']);
   });
 });
+
+/**
+ * Encargo 5.3: minimo también en patrón, y minimoPorCoincidencia (las
+ * coincidencias se agrupan por su forma: en minúsculas y sin blancos ni
+ * puntuación en los bordes). Los desplazamientos, a mano en cada juez.
+ */
+describe('detectarPatron: minimo y minimoPorCoincidencia (encargo 5.3)', () => {
+  const NORMAL = { minusculas: true, tildes: false };
+  const vistas = (texto: string, p: ParametrosPatron) => detectarPatron(regla(p), analizarTexto(texto)).map((s) => [s.fragmento, s.inicio, s.fin]);
+
+  test('minimo 2: con una coincidencia, ninguna señal; con dos, las dos', () => {
+    const crucial: ParametrosPatron = { formas: ['crucial'], ambito: 'palabra', normalizar: NORMAL, minimo: 2 };
+    assert.deepEqual(vistas('Es crucial.', crucial), []);
+    // «Es crucial.» [0, 11): «crucial» en [3, 10) · «Muy crucial.» [12, 24): «crucial» en [16, 23).
+    assert.deepEqual(vistas('Es crucial. Muy crucial.', crucial), [
+      ['crucial', 3, 10],
+      ['crucial', 16, 23],
+    ]);
+  });
+
+  test('minimoPorCoincidencia 3: «Además,», «además» y «Además» son la misma forma; «También» dos veces no llega', () => {
+    // «Además, sí.» [0, 11): «Además,» en [0, 7) · «Y además no.» [12, 24): «además» en [14, 20) ·
+    // «¡Además!» [25, 33): «Además» en [26, 32) · «También.» [34, 42): «También» en [34, 41) ·
+    // «También.» [43, 51): [43, 50).
+    const texto = 'Además, sí. Y además no. ¡Además! También. También.';
+    const conectores = (minimoPorCoincidencia: number): ParametrosPatron => ({
+      regex: '(?<!\\p{L})(además|también),?',
+      flags: 'iu',
+      ambito: 'frase',
+      normalizar: NORMAL,
+      minimoPorCoincidencia,
+    });
+    assert.deepEqual(vistas(texto, conectores(3)), [
+      ['Además,', 0, 7],
+      ['además', 14, 20],
+      ['Además', 26, 32],
+    ]);
+    assert.deepEqual(vistas(texto, conectores(2)).length, 5);
+    assert.deepEqual(vistas(texto, conectores(4)), []);
+  });
+});

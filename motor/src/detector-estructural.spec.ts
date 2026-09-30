@@ -163,3 +163,30 @@ describe('detectarEstructural: minimo, prosa e índices', () => {
     assert.deepEqual(senales(texto, apertura), []);
   });
 });
+
+describe('detectarEstructural: minimoPorCoincidencia (encargo 5.3)', () => {
+  // «Además, uno.» [0, 12): «Además» en [0, 6) · «Además, dos.» [13, 25): [13, 19) ·
+  // «ADEMÁS, tres.» [26, 39): [26, 32) · «Sin embargo, cuatro.» [40, 60): «Sin embargo» en [40, 51).
+  const texto = 'Además, uno. Además, dos. ADEMÁS, tres. Sin embargo, cuatro.';
+  const apertura = (extra: Partial<ParametrosEstructural>): ParametrosEstructural => ({
+    posicion: 'inicio-frase',
+    regex: '(Además|Sin embargo)(?!\\p{L})',
+    flags: 'iu',
+    ...extra,
+  });
+  const LAS_TRES = [
+    ['Además', 0, 6, 0, 0],
+    ['Además', 13, 19, 0, 1],
+    ['ADEMÁS', 26, 32, 0, 2],
+  ];
+
+  test('sin él, las cuatro; con 3, solo la forma que se repite tres veces (mayúsculas aparte)', () => {
+    assert.equal(senales(texto, apertura({})).length, 4);
+    assert.deepEqual(senales(texto, apertura({ minimoPorCoincidencia: 3 })), LAS_TRES);
+  });
+
+  test('con minimo también: minimo cuenta las que quedan tras el filtro por forma', () => {
+    assert.deepEqual(senales(texto, apertura({ minimoPorCoincidencia: 3, minimo: 3 })), LAS_TRES);
+    assert.deepEqual(senales(texto, apertura({ minimoPorCoincidencia: 3, minimo: 4 })), []);
+  });
+});
