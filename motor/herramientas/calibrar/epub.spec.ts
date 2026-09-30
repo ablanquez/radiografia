@@ -69,12 +69,12 @@ describe('esDivisionNumerada', () => {
 
 describe('esParatexto', () => {
   test('prólogos, dedicatorias, notas, índices y glosarios: sí', () => {
-    for (const e of ['PRÓLOGO', 'Prólogo del autor', 'DEDICATORIA DE ESTA EDICIÓN', 'NOTAS', 'FOOTNOTES:', 'ÍNDICE', 'Indice', 'Vocabulario', 'INTRODUCCIÓN', 'Advertencia', 'Al lector', 'ACLARACIÓN', 'Prefacio', 'ABBREVIATIONS', 'VOCABULARY', 'NOTES', 'EXERCISES', 'TASA', 'TABLA', 'D E D I C A T O R I A', 'Codificación', 'Nota del transcriptor', 'EDICIONES ESPAÑOLAS PUBLICADAS', 'PRIVILEGIO', 'APROBACIÓN']) {
+    for (const e of ['PRÓLOGO', 'Prólogo del autor', 'DEDICATORIA DE ESTA EDICIÓN', 'NOTAS', 'FOOTNOTES:', 'ÍNDICE', 'Indice', 'Vocabulario', 'INTRODUCCIÓN', 'Advertencia', 'Al lector', 'ACLARACIÓN', 'Prefacio', 'ABBREVIATIONS', 'VOCABULARY', 'NOTES', 'EXERCISES', 'TASA', 'TABLA', 'D E D I C A T O R I A', 'Codificación', 'Nota del transcriptor', 'EDICIONES ESPAÑOLAS PUBLICADAS', 'PRIVILEGIO', 'APROBACIÓN', 'ADVERTENCIAS', 'PROEMIO', 'OBRAS CITADAS', 'Significado de algunas palabras']) {
       assert.equal(esParatexto(e), true, e);
     }
   });
   test('capítulos y títulos: no', () => {
-    for (const e of ['CAPÍTULO PRIMERO', 'TRANCO II', 'I', 'La noche de San Juan', 'EL DIABLO COJUELO', 'Notable suceso']) {
+    for (const e of ['CAPÍTULO PRIMERO', 'TRANCO II', 'I', 'La noche de San Juan', 'EL DIABLO COJUELO', 'Notable suceso', 'Tasadores', 'Tablas de la ley']) {
       assert.equal(esParatexto(e), false, e);
     }
   });

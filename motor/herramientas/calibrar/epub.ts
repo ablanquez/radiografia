@@ -41,7 +41,7 @@ export interface CapitulosDeEpub {
 }
 
 const PARATEXTO =
-  /^\s*(pr[oó]logo|prefacio|pr[eé]face|preface|dedicatoria|introducci[oó]n|introduction|advertencia|aclaraci[oó]n|al lector|nota|notas|notes|footnotes|[ií]ndice|index|contents|contenido|sumario|tabla|glosario|vocabulario|vocabulary|abbreviations|exercises|ejercicios|erratas|fe de erratas|tasa|privilegio|aprobaci[oó]n|colof[oó]n|ap[eé]ndice|bibliograf[ií]a|codificaci[oó]n|ediciones)\b/iu;
+  /^\s*(pr[oó]logo|prefacio|pr[eé]face|preface|dedicatoria|introducci[oó]n|introduction|advertencias|advertencia|dedicatorias|aclaraciones|aclaraci[oó]n|proemio|obras citadas|significado de|al lector|nota|notas|notes|footnotes|[ií]ndice|index|contents|contenido|sumario|tabla|glosario|vocabulario|vocabulary|abbreviations|exercises|ejercicios|erratas|fe de erratas|tasa|privilegio|aprobaci[oó]n|colof[oó]n|ap[eé]ndice|bibliograf[ií]a|codificaci[oó]n|ediciones)\b/iu;
 
 /** Las letras espaciadas de un título («D E D I C A T O R I A»), juntas. */
 const juntarEspaciadas = (etiqueta: string) => (/^\s*(?:\S\s)+\S\s*$/u.test(etiqueta) ? etiqueta.replace(/\s+/g, '') : etiqueta);
