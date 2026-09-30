@@ -4,7 +4,7 @@
     "nombre": "Paquete de prueba secundario del motor",
     "version": "0.1.0",
     "idioma": "es",
-    "descripcion": "Segundo paquete de PRUEBA del motor (encargo 4.2), para juzgar la combinación de paquetes: su familia se llama como una del paquete interno y una de sus reglas tiene el mismo id que una de aquel. NO tiene valor lingüístico.",
+    "descripcion": "Segundo paquete de PRUEBA del motor (encargos 4.2 y 4.3), para juzgar la combinación de paquetes —su familia se llama como una del paquete interno y una de sus reglas tiene el mismo id que una de aquel— y el género de entrada: su regla estadística está calibrada para «general» y para «noticia». La calibración es DE PRUEBA: cifras inventadas, sin corpus. NO tiene valor lingüístico.",
     "autor": "Antonio Blánquez Cabeza",
     "licencia": "Apache-2.0",
     "familias": [
@@ -13,7 +13,19 @@
         "nombre": "Prueba del motor (secundario)",
         "informativa": false
       }
-    ]
+    ],
+    "calibracion": {
+      "puntuacion-por-1000": {
+        "general": {
+          "100-299": { "p1": 60, "p5": 80, "p50": 130, "p95": 200, "p99": 240, "n": 30, "corpus": "cifras inventadas de prueba: sin corpus", "fecha": "2026-09-30", "metodo": "hyndman-fan-7" },
+          "300-599": { "p1": 70, "p5": 85, "p50": 130, "p95": 190, "p99": 230, "n": 30, "corpus": "cifras inventadas de prueba: sin corpus", "fecha": "2026-09-30", "metodo": "hyndman-fan-7" },
+          "600+": { "p1": 75, "p5": 90, "p50": 130, "p95": 180, "p99": 220, "n": 30, "corpus": "cifras inventadas de prueba: sin corpus", "fecha": "2026-09-30", "metodo": "hyndman-fan-7" }
+        },
+        "noticia": {
+          "300-599": { "p1": 50, "p5": 60, "p50": 90, "p95": 120, "p99": 140, "n": 30, "corpus": "cifras inventadas de prueba: sin corpus", "fecha": "2026-09-30", "metodo": "hyndman-fan-7" }
+        }
+      }
+    }
   },
   "reglas": [
     {
@@ -62,6 +74,33 @@
       "ejemplos": {
         "positivos": ["Pero nadie lo sabía."],
         "negativos": ["Nadie lo sabía, pero siguió."]
+      }
+    },
+    {
+      "id": "secundario-puntuacion-alta",
+      "familia": "prueba",
+      "detector": "estadístico",
+      "parametros": {
+        "metrica": "puntuacion-por-1000",
+        "direccion": "mayor",
+        "percentil": "p95"
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Regla de prueba del motor (detector estadístico): más signos de puntuación por cada 1.000 palabras que el p95 de la calibración de prueba, con referencias distintas para «general» y para «noticia».",
+      "sugerencia": "Ninguna: es una regla de prueba.",
+      "excepciones": [],
+      "fuente": [],
+      "origenLista": null,
+      "nivelEvidencia": "sin fuente",
+      "ejemplos": {
+        "positivos": [
+          "—¿Vienes? —preguntó Marta, impaciente. —Sí, sí; espera un momento (solo uno). —¿Otra vez tarde? ¡Siempre igual! —No, esta vez no: el autobús, lo juro, se retrasó. —Ya... «El autobús», claro. —¡De verdad! Pregunta a Luis, a Carmen, a quien quieras. —Vale, vale; te creo. ¿Nos vamos? —Vamos. Pero antes, ¿has cogido las llaves, la cartera, el móvil? —Todo, todo. Bueno... casi todo. —¿Casi? —Me falta el paraguas. —¡Pues cógelo! Va a llover, ¿no lo ves? —Lo veo, lo veo. Ya voy. —¿Y la bufanda, la tuya, la azul? —Aquí está, mírala; y los guantes, también. —¡Por fin! Venga, que perdemos el tren (el de las diez)."
+        ],
+        "negativos": [
+          "El huerto del colegio empezó como un pequeño proyecto de los alumnos de quinto curso y hoy ocupa casi todo el patio de atrás. Cada clase cuida una parcela y decide qué plantar según la estación del año. En otoño siembran habas y ajos y en primavera tomates y calabacines. Los mayores enseñan a los pequeños a regar sin gastar agua y a reconocer las plantas que no sirven. Al final del curso reparten lo que han cosechado entre las familias y guardan las semillas para el año siguiente en unos botes de cristal con el nombre de cada grupo."
+        ]
       }
     }
   ]

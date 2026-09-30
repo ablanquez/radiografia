@@ -13,6 +13,7 @@ import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { analizarTexto } from './texto.ts';
 import type { Senal } from './detector-patron.ts';
+import type { SenalTexto } from './detector-estadistico.ts';
 import { puntuar, type PaqueteParaPuntuar } from './puntuar.ts';
 
 /** Un texto de `n` palabras de prosa en una sola frase. */
@@ -34,8 +35,20 @@ const PAQUETE: PaqueteParaPuntuar = {
     { id: 'atenuante', familia: 'a', detector: 'patrón', parametros: {}, peso: -1, informativa: false },
     { id: 'cierre', familia: 'a', detector: 'estructural', parametros: { posicion: 'ultimo-parrafo' }, peso: 3, informativa: false },
     { id: 'informativa', familia: 'canal', detector: 'patrón', parametros: {}, peso: 5, informativa: true },
+    // Encargo 4.3: una regla estadística (su señal es del texto entero).
+    { id: 'estadistica', familia: 'a', detector: 'estadístico', parametros: {}, peso: 2, informativa: false },
   ],
 };
+
+/** Una señal de texto (detector estadístico) de la regla `reglaId`: puntuar solo la cuenta. */
+const senalDeTexto = (reglaId: string): SenalTexto => ({
+  reglaId,
+  ambito: 'texto',
+  metrica: 'ttr',
+  valor: 0.9,
+  referencia: { p1: 0.4, p5: 0.5, p50: 0.6, p95: 0.7, p99: 0.8, n: 30, corpus: 'de prueba', fecha: '2026-09-30', metodo: 'hyndman-fan-7' },
+  lado: 'arriba',
+});
 
 const regla = (p: ReturnType<typeof puntuar>, id: string) => p.familias.flatMap((f) => f.reglas).find((r) => r.id === id);
 
@@ -89,6 +102,22 @@ describe('puntuar: ultimo-parrafo puntúa por presencia, no por densidad', () =>
     assert.equal(regla(puntuar(senales('peso-2', 3), PAQUETE, prosa(300)), 'peso-2')?.contribucion, 20);
     assert.equal(regla(puntuar(senales('peso-2', 3), PAQUETE, prosa(3000)), 'peso-2')?.contribucion, 2);
   });
+});
+
+describe('puntuar: una regla estadística puntúa por presencia (encargo 4.3)', () => {
+  for (const palabras of [300, 3000]) {
+    test(`${palabras} palabras: peso 2 con su señal de texto → 2 (sin densidad); sin ella → 0`, () => {
+      assert.deepEqual(regla(puntuar([senalDeTexto('estadistica')], PAQUETE, prosa(palabras)), 'estadistica'), {
+        id: 'estadistica',
+        informativa: false,
+        n: 1,
+        modo: 'presencia',
+        densidad: null,
+        contribucion: 2,
+      });
+      assert.equal(regla(puntuar([], PAQUETE, prosa(palabras)), 'estadistica')?.contribucion, 0);
+    });
+  }
 });
 
 describe('puntuar: signo, tramos y guardas', () => {

@@ -10,6 +10,7 @@
  * Qué es prosa y qué es palabra lo decide texto.ts (Intl.Segmenter).
  */
 import type { Texto } from './texto.ts';
+import type { TramoDeCalibracion } from './paquete.ts';
 
 export type Tramo = 'insuficiente' | 'poco-fiable' | 'completo';
 
@@ -22,4 +23,17 @@ export function evaluarLongitud(texto: Texto): { palabrasProsa: number; tramo: T
     .reduce((n, p) => n + p.frases.reduce((m, f) => m + f.palabras.length, 0), 0);
   const tramo: Tramo = palabrasProsa < MINIMO ? 'insuficiente' : palabrasProsa < COMPLETO ? 'poco-fiable' : 'completo';
   return { palabrasProsa, tramo };
+}
+
+/**
+ * El tramo de cabecera.calibracion que toca a un texto (encargo 4.3): 100-299,
+ * 300-599 o 600+ palabras de prosa [PROPIO, tramos del 4.1; 100–199 y 200–299
+ * van juntos porque por debajo de 300 el análisis ya es «poco fiable»]. Por
+ * debajo de 100, ninguno: el texto no se analiza.
+ */
+export function tramoDeCalibracion(palabrasProsa: number): TramoDeCalibracion | null {
+  if (palabrasProsa < MINIMO) return null;
+  if (palabrasProsa < COMPLETO) return '100-299';
+  if (palabrasProsa < 600) return '300-599';
+  return '600+';
 }

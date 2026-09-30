@@ -31,7 +31,9 @@
  *    se quiere):
  *   · Modo de cada regla: PRESENCIA si es estructural con posición
  *     «ultimo-parrafo» —una señal única por texto (hay cierre de plantilla o
- *     no) no se normaliza—; DENSIDAD en todo lo demás.
+ *     no) no se normaliza— o si es ESTADÍSTICA (4.3: su señal es del texto
+ *     entero, una por texto, y la métrica ya está normalizada); DENSIDAD en
+ *     todo lo demás.
  *   · Por regla, n = número de señales.
  *       densidad:  densidad = n × 1.000 / palabrasProsa;  contribución = peso × densidad.
  *       presencia: contribución = peso × (n > 0 ? 1 : 0).
@@ -50,6 +52,7 @@
  * (calibración) y 6 (interfaz), no aquí.
  */
 import type { Senal } from './detector-patron.ts';
+import type { SenalTexto } from './detector-estadistico.ts';
 import type { ParametrosEstructural } from './detector-estructural.ts';
 import type { Familia, Regla } from './paquete.ts';
 import type { Texto } from './texto.ts';
@@ -100,7 +103,7 @@ export interface Puntuacion {
   aviso: string | null;
   familias: PuntosDeFamilia[];
   /** Las señales de las reglas informativas: se enseñan, no suman. */
-  informativas: Senal[];
+  informativas: (Senal | SenalTexto)[];
 }
 
 const UNIDAD = 'puntos por 1.000 palabras de prosa';
@@ -109,10 +112,11 @@ const UNIDAD = 'puntos por 1.000 palabras de prosa';
 const sinMenosCero = (x: number): number => (x === 0 ? 0 : x);
 
 function modoDe(regla: ReglaParaPuntuar): Modo {
+  if (regla.detector === 'estadístico') return 'presencia';
   return regla.detector === 'estructural' && regla.parametros.posicion === 'ultimo-parrafo' ? 'presencia' : 'densidad';
 }
 
-export function puntuar(senales: readonly Senal[], paquete: PaqueteParaPuntuar, texto: Texto): Puntuacion {
+export function puntuar(senales: readonly (Senal | SenalTexto)[], paquete: PaqueteParaPuntuar, texto: Texto): Puntuacion {
   const { palabrasProsa, tramo } = evaluarLongitud(texto);
 
   const cuenta = new Map<string, number>(paquete.reglas.map((r) => [r.id, 0]));

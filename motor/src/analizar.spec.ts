@@ -1,11 +1,13 @@
 /**
- * Los jueces de la entrada del motor (encargo 4.2): analizar(texto, paquetes)
- * valida cada paquete, segmenta una vez, aplica a cada regla su detector,
- * puntúa por paquete y califica cada señal con su paquete. Paquete → familia
- * → regla, sin mezclar nunca familias de dos paquetes.
+ * Los jueces de la entrada del motor (encargos 4.2 y 4.3): analizar(texto,
+ * paquetes, { genero }) valida cada paquete, segmenta una vez, aplica a cada
+ * regla su detector (también el estadístico, con el género de entrada), puntúa
+ * por paquete y califica cada señal con su paquete. Paquete → familia →
+ * regla, sin mezclar nunca familias de dos paquetes.
  *
  * Las cifras, a mano: TEXTO_200 tiene 200 palabras de prosa, así que una señal
- * vale 1.000 / 200 = 5 por unidad de peso.
+ * de patrón vale 1.000 / 200 = 5 por unidad de peso; una estadística puntúa por
+ * presencia (su peso).
  *
  * ⚠️ Los fixtures se leen DENTRO de cada test (docs/BITACORA.md, 2026-09-29).
  * [DOC] https://nodejs.org/api/test.html — node:test.
@@ -40,19 +42,34 @@ describe('analizar: dos paquetes combinados', () => {
     );
   });
 
-  test('dos desgloses separados, aunque las familias se llamen igual: interno 1 × 5 = 5; secundario 2 × 5 = 10', () => {
+  test('dos desgloses separados, aunque las familias se llamen igual: interno 1 × 5 + 2 = 7; secundario 2 × 5 = 10', () => {
+    // Desde el 4.3 los dos paquetes traen reglas estadísticas (calibración de prueba, tramo 100-299):
+    //   interno · frases-por-100-palabras = 21 frases / 200 × 100 = 10,5 > p95 (8) → dispara;
+    //             presencia × peso 2 = 2.
+    //   interno · ttr (informativa) = 19 tipos / 200 = 0,095 → contexto, contribución 0
+    //             (tipos: es un enfoque innovador · el equipo revisó los datos de la semana con calma ·
+    //              todo quedó listo para lunes).
+    //   secundario · puntuacion-por-1000 = 21 puntos / 200 × 1.000 = 105 ≤ p95 (200) → dentro, nada.
     const r = analizar(TEXTO_200, [cargar('paquete-prueba-interno.json'), cargar('paquete-prueba-secundario.json')]);
     const desglose = (i: number) =>
       r.paquetes[i]!.puntuacion.familias.map((f) => [f.id, f.total, f.reglas.filter((x) => x.n > 0).map((x) => [x.id, x.n, x.contribucion])]);
     assert.deepEqual(
       r.paquetes.map((p) => [p.paquete, p.puntuacion.total]),
       [
-        [INTERNO, 5],
+        [INTERNO, 7],
         [SECUNDARIO, 10],
       ],
     );
     assert.deepEqual(desglose(0), [
-      ['prueba', 5, [['prueba-formas-palabra', 1, 5]]],
+      [
+        'prueba',
+        7,
+        [
+          ['prueba-formas-palabra', 1, 5],
+          ['prueba-estadistica-frases-cortas', 1, 2],
+          ['prueba-contexto-ttr', 1, 0],
+        ],
+      ],
       ['canal', 0, []],
     ]);
     assert.deepEqual(desglose(1), [['prueba', 10, [['prueba-formas-palabra', 1, 10]]]]);
@@ -64,7 +81,7 @@ describe('analizar: dos paquetes combinados', () => {
       r.paquetes.map((p) => [p.paquete, p.puntuacion.total]),
       [
         [SECUNDARIO, 10],
-        [INTERNO, 5],
+        [INTERNO, 7],
       ],
     );
   });
@@ -105,8 +122,15 @@ describe('analizar: lo que no se analiza', () => {
     assert.throws(() => analizar(TEXTO_200, [cargar('paquete-prueba-interno.json'), {} as Paquete]), /«paquetes\[1\]»/);
   });
 
-  test('una regla estadística: error claro, «detector estadístico: pendiente del 4.3»', () => {
-    assert.throws(() => analizar(TEXTO_200, [cargar('valido-detector-estadistico.json')]), /detector estadístico: pendiente del 4\.3/);
+  test('una regla estadística sin celda para el tramo del texto → «sin calibración», con su motivo, y no puntúa', () => {
+    // valido-detector-estadistico.json calibra frases-por-100-palabras solo en 300-599; TEXTO_200 está en 100-299.
+    const r = analizar(TEXTO_200, [cargar('valido-detector-estadistico.json')]);
+    assert.deepEqual(
+      r.sinCalibracion.map((s) => [s.paquete, s.reglaId, s.metrica]),
+      [['Fixture mínimo válido', 'd6-referencia-interna', 'frases-por-100-palabras']],
+    );
+    assert.match(r.sinCalibracion[0]!.motivo, /«general», tramo «100-299»/);
+    assert.deepEqual([r.senalesTexto, r.contexto, r.paquetes[0]!.puntuacion.total], [[], [], 0]);
   });
 
   test('insuficiente (99 palabras): cada paquete con total null y motivo, y ninguna señal', () => {
@@ -117,5 +141,69 @@ describe('analizar: lo que no se analiza', () => {
       [null, null],
     );
     assert.ok(r.paquetes.every((p) => p.puntuacion.motivo?.includes('99')));
+    // Y ninguna estadística: ni señales de texto, ni contexto, ni avisos de calibración.
+    assert.deepEqual([r.tramoDeCalibracion, r.senalesTexto, r.contexto, r.sinCalibracion], [null, [], [], []]);
+  });
+});
+
+// Encargo 4.3: el género es una ENTRADA del análisis (por defecto «general»).
+// TEXTO_300 = 10 × [RELLENO, RELLENO, CON_COMA]: 30 frases de 10 palabras = 300 palabras (tramo 300-599).
+//   · frases-por-100-palabras = 30 / 300 × 100 = 10.
+//   · ttr = 10 tipos (el equipo revisó los datos de la semana con calma) / 300 = 1/30 = 0,0333…
+//   · puntuacion-por-1000 = (1 + 1 + 2) × 10 = 40 signos / 300 × 1.000 = 400/3 = 133,33…
+// Ninguna regla de patrón ni estructural dispara.
+const CON_COMA = 'El equipo revisó los datos de la semana, con calma.';
+const TEXTO_300 = Array.from({ length: 10 }, () => [RELLENO, RELLENO, CON_COMA].join(' ')).join(' ');
+
+describe('analizar: el género de entrada (encargo 4.3)', () => {
+  test('sin género → «general»: dispara la del interno (10 > p95 7,5), la de contexto va aparte (1/30 < p1 0,38) y la del secundario queda dentro (133,3 ≤ p95 190)', () => {
+    const interno = cargar('paquete-prueba-interno.json');
+    const r = analizar(TEXTO_300, [interno, cargar('paquete-prueba-secundario.json')]);
+    assert.deepEqual([r.genero, r.palabrasProsa, r.tramoDeCalibracion], ['general', 300, '300-599']);
+    assert.deepEqual(
+      r.senalesTexto.map((s) => [s.paquete, s.reglaId, s.valor, s.lado]),
+      [[INTERNO, 'prueba-estadistica-frases-cortas', 10, 'arriba']],
+    );
+    assert.deepEqual(r.senalesTexto[0]!.referencia, interno.cabecera.calibracion!['frases-por-100-palabras']!['general']!['300-599']);
+    assert.deepEqual(
+      r.contexto.map((s) => [s.paquete, s.reglaId, s.valor, s.lado]),
+      [[INTERNO, 'prueba-contexto-ttr', 1 / 30, 'abajo']],
+    );
+    assert.deepEqual(r.sinCalibracion, []);
+    // Presencia: interno 2 (peso de la estadística); secundario 0.
+    assert.deepEqual(
+      r.paquetes.map((p) => [p.paquete, p.puntuacion.total]),
+      [
+        [INTERNO, 2],
+        [SECUNDARIO, 0],
+      ],
+    );
+  });
+
+  test('género «noticia»: el interno no lo calibra (sin calibración) y la del secundario dispara con su referencia (133,3 > p95 120)', () => {
+    const secundario = cargar('paquete-prueba-secundario.json');
+    const r = analizar(TEXTO_300, [cargar('paquete-prueba-interno.json'), secundario], { genero: 'noticia' });
+    assert.equal(r.genero, 'noticia');
+    assert.deepEqual(
+      r.senalesTexto.map((s) => [s.paquete, s.reglaId, s.valor, s.lado]),
+      [[SECUNDARIO, 'secundario-puntuacion-alta', 400 / 3, 'arriba']],
+    );
+    assert.deepEqual(r.senalesTexto[0]!.referencia, secundario.cabecera.calibracion!['puntuacion-por-1000']!['noticia']!['300-599']);
+    assert.deepEqual(r.contexto, []);
+    assert.deepEqual(
+      r.sinCalibracion.map((s) => [s.paquete, s.reglaId]),
+      [
+        [INTERNO, 'prueba-estadistica-frases-cortas'],
+        [INTERNO, 'prueba-contexto-ttr'],
+      ],
+    );
+    assert.ok(r.sinCalibracion.every((s) => s.motivo.includes('«noticia»')));
+    assert.deepEqual(
+      r.paquetes.map((p) => [p.paquete, p.puntuacion.total]),
+      [
+        [INTERNO, 0],
+        [SECUNDARIO, 1],
+      ],
+    );
   });
 });

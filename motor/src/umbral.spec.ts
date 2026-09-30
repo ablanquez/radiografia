@@ -8,7 +8,7 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { analizarTexto } from './texto.ts';
-import { evaluarLongitud } from './umbral.ts';
+import { evaluarLongitud, tramoDeCalibracion } from './umbral.ts';
 
 /** Una frase de `n` palabras de prosa. */
 const prosa = (n: number): string => `${Array.from({ length: n }, () => 'palabra').join(' ')}.`;
@@ -35,4 +35,20 @@ describe('evaluarLongitud: solo cuenta la prosa', () => {
     assert.equal(todas, 400, 'el texto tiene 400 palabras en total');
     assert.deepEqual(evaluarLongitud(segmentado), { palabrasProsa: 50, tramo: 'insuficiente' });
   });
+});
+
+// Encargo 4.3: el tramo de la calibración (cabecera.calibracion), por palabras de prosa.
+describe('tramoDeCalibracion: los bordes, a los dos lados', () => {
+  for (const [n, tramo] of [
+    [99, null],
+    [100, '100-299'],
+    [299, '100-299'],
+    [300, '300-599'],
+    [599, '300-599'],
+    [600, '600+'],
+  ] as const) {
+    test(`${n} palabras de prosa → ${tramo}`, () => {
+      assert.equal(tramoDeCalibracion(n), tramo);
+    });
+  }
 });

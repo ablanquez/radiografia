@@ -4,7 +4,7 @@
     "nombre": "Paquete de prueba interno del motor",
     "version": "0.1.0",
     "idioma": "es",
-    "descripcion": "Paquete de PRUEBA del motor (encargos 4.1 y 4.2): reglas de patrón y estructurales para juzgar los detectores y la puntuación con sus ejemplos, una informativa y un atenuante. NO es el paquete RadiografIA v1 ni tiene valor lingüístico.",
+    "descripcion": "Paquete de PRUEBA del motor (encargos 4.1, 4.2 y 4.3): reglas de patrón, estructurales y estadísticas para juzgar los detectores y la puntuación con sus ejemplos, una informativa y un atenuante. La calibración es DE PRUEBA: cifras inventadas, sin corpus. NO es el paquete RadiografIA v1 ni tiene valor lingüístico.",
     "autor": "Antonio Blánquez Cabeza",
     "licencia": "Apache-2.0",
     "familias": [
@@ -18,7 +18,23 @@
         "nombre": "Canal (prueba)",
         "informativa": true
       }
-    ]
+    ],
+    "calibracion": {
+      "frases-por-100-palabras": {
+        "general": {
+          "100-299": { "p1": 2.5, "p5": 3, "p50": 5, "p95": 8, "p99": 10, "n": 30, "corpus": "cifras inventadas de prueba: sin corpus", "fecha": "2026-09-30", "metodo": "hyndman-fan-7" },
+          "300-599": { "p1": 2.8, "p5": 3.3, "p50": 5, "p95": 7.5, "p99": 9, "n": 30, "corpus": "cifras inventadas de prueba: sin corpus", "fecha": "2026-09-30", "metodo": "hyndman-fan-7" },
+          "600+": { "p1": 3, "p5": 3.5, "p50": 5, "p95": 7, "p99": 8.5, "n": 30, "corpus": "cifras inventadas de prueba: sin corpus", "fecha": "2026-09-30", "metodo": "hyndman-fan-7" }
+        }
+      },
+      "ttr": {
+        "general": {
+          "100-299": { "p1": 0.45, "p5": 0.52, "p50": 0.65, "p95": 0.76, "p99": 0.82, "n": 30, "corpus": "cifras inventadas de prueba: sin corpus", "fecha": "2026-09-30", "metodo": "hyndman-fan-7" },
+          "300-599": { "p1": 0.38, "p5": 0.44, "p50": 0.55, "p95": 0.66, "p99": 0.72, "n": 30, "corpus": "cifras inventadas de prueba: sin corpus", "fecha": "2026-09-30", "metodo": "hyndman-fan-7" },
+          "600+": { "p1": 0.3, "p5": 0.35, "p50": 0.45, "p95": 0.56, "p99": 0.62, "n": 30, "corpus": "cifras inventadas de prueba: sin corpus", "fecha": "2026-09-30", "metodo": "hyndman-fan-7" }
+        }
+      }
+    }
   },
   "reglas": [
     {
@@ -227,6 +243,60 @@
       "ejemplos": {
         "positivos": ["Véase la tabla 2 para el detalle.", "Como se ve en la figura 3, el caudal bajó."],
         "negativos": ["La tabla quedó en la cocina.", "Como se ve, el caudal bajó."]
+      }
+    },
+    {
+      "id": "prueba-estadistica-frases-cortas",
+      "familia": "prueba",
+      "detector": "estadístico",
+      "parametros": {
+        "metrica": "frases-por-100-palabras",
+        "direccion": "mayor",
+        "percentil": "p95"
+      },
+      "peso": 2,
+      "severidad": "media",
+      "informativa": false,
+      "explicacion": "Regla de prueba del motor (detector estadístico): más frases por cada 100 palabras que el p95 de la calibración de prueba. Una señal por texto; puntúa por presencia.",
+      "sugerencia": "Ninguna: es una regla de prueba.",
+      "excepciones": [],
+      "fuente": [],
+      "origenLista": null,
+      "nivelEvidencia": "sin fuente",
+      "ejemplos": {
+        "positivos": [
+          "Salimos temprano. El cielo estaba gris. Cruzamos el puente viejo. El río bajaba crecido. Nadie hablaba. Paramos en una fuente. Bebimos agua fría. Seguimos por el camino. Empezó a llover. Nos refugiamos bajo un árbol. Pasó una hora. La lluvia no paraba. Comimos pan y queso. Un pastor pasó con sus ovejas. Nos saludó con la mano. Luego desapareció en la niebla. Volvimos a caminar. El barro cubría las botas. Llegamos al refugio de noche. Encendimos el fuego. Cenamos en silencio. Dormimos pronto. Al amanecer salió el sol. Recogimos todo deprisa. Bajamos hacia el valle. En el pueblo había mercado. Compramos fruta y pan. Después tomamos el autobús de vuelta."
+        ],
+        "negativos": [
+          "Durante toda la mañana estuvimos caminando por un sendero estrecho que subía entre pinos y rocas, y aunque el cielo amenazaba lluvia desde el principio, decidimos seguir adelante porque queríamos llegar al refugio antes de que se hiciera de noche. Cuando por fin alcanzamos la parte alta del valle, el viento soplaba con tanta fuerza que apenas podíamos oírnos, así que nos sentamos detrás de un muro de piedra para comer algo y descansar un rato. Por la tarde el tiempo mejoró de repente y pudimos ver con claridad las montañas del otro lado, cubiertas todavía de nieve a pesar de que ya estábamos a finales de la primavera. Llegamos al refugio justo cuando empezaba a oscurecer, cansados pero contentos de haber terminado la etapa más larga de todo el viaje."
+        ]
+      }
+    },
+    {
+      "id": "prueba-contexto-ttr",
+      "familia": "prueba",
+      "detector": "estadístico",
+      "parametros": {
+        "metrica": "ttr",
+        "direccion": "ambas",
+        "percentil": "p99"
+      },
+      "peso": 0,
+      "severidad": "baja",
+      "informativa": true,
+      "explicacion": "Regla de prueba del motor (estadística informativa): el TTR del texto frente a la calibración de prueba. Se enseña siempre como contexto, con su valor y su referencia, y no puntúa. Dispara si queda fuera de [p1, p99].",
+      "sugerencia": "Ninguna: es una regla de prueba.",
+      "excepciones": [],
+      "fuente": [],
+      "origenLista": null,
+      "nivelEvidencia": "sin fuente",
+      "ejemplos": {
+        "positivos": [
+          "El gato mira la puerta. La puerta mira al gato. El gato mira la ventana. La ventana mira al gato. El gato mira la mesa. La mesa mira al gato. El gato mira la silla. La silla mira al gato. El gato mira la casa. La casa mira al gato. El gato mira el perro. El perro mira al gato. El gato mira la puerta otra vez. La puerta mira al gato otra vez. El gato mira la ventana otra vez. La ventana mira al gato otra vez. Y así pasa el día en la casa del gato. Y el gato duerme."
+        ],
+        "negativos": [
+          "La biblioteca del barrio abrió sus puertas en mil novecientos ochenta, gracias al empeño de un grupo de vecinos que reunieron libros casa por casa. Al principio ocupaba un local pequeño junto al mercado, con dos estanterías y una mesa larga donde los niños hacían los deberes por la tarde. Con los años llegaron más fondos, una sala de lectura y un pequeño archivo de fotografías antiguas. Hoy la visitan estudiantes, jubilados y familias enteras, y cada otoño organiza un concurso de relatos que ya se ha convertido en una tradición del barrio. Su directora actual lleva allí más de veinte años."
+        ]
       }
     }
   ]

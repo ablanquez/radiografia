@@ -6,10 +6,12 @@
  * añadir su paquete a la lista.
  *
  * Desde el 4.2 aplica a cada regla su detector con `detectar` de analizar.ts,
- * el mismo reparto que usa el motor: patrón y estructural. El estadístico es
- * del 4.3: una regla estadística hace fallar su juez (no se salta en
- * silencio). Cada ejemplo se juzga solo, con su detector, sin el umbral de
- * longitud: los ejemplos son cortos a propósito.
+ * el mismo reparto que usa el motor: patrón y estructural. Cada ejemplo se
+ * juzga solo, con su detector, sin el umbral de longitud: los ejemplos son
+ * cortos a propósito.
+ * Las reglas ESTADÍSTICAS no pasan por aquí (encargo 4.3): sus ejemplos
+ * necesitan el análisis entero —longitud de al menos 100 palabras de prosa,
+ * tramo, calibración y género— y tienen su propio juez.
  *
  * ⚠️ Los paquetes se leen al cargar el fichero, fuera de los tests, porque de
  *    ellos salen los tests. Si uno no se puede leer, falla el fichero entero y
@@ -34,7 +36,7 @@ for (const fichero of PAQUETES) {
       assert.deepEqual(validarPaquete(paquete).errores, []);
     });
 
-    for (const regla of paquete.reglas) {
+    for (const regla of paquete.reglas.filter((r) => r.detector !== 'estadístico')) {
       const senales = (ejemplo: string) => detectar(regla, analizarTexto(ejemplo));
       for (const ejemplo of regla.ejemplos.positivos) {
         test(`${regla.id} · positivo «${ejemplo}» → al menos una señal`, () => {
