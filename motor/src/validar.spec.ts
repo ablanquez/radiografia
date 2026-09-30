@@ -34,7 +34,9 @@ function cargar(fichero: string): unknown {
  * Y un válido por detector (encargo 4.1, parametros cerrados): el de patrón es
  * valido.json; valido-detector-estructural.json y valido-detector-estadistico.json.
  * Y los paquetes de prueba del motor (interno, 4.1; secundario, 4.2), cuyos
- * ejemplos juzga ejemplos.spec.ts.
+ * ejemplos juzga ejemplos.spec.ts. Y `valido-sobre-no-prosa.json` (encargo
+ * 5.1): sobreNoProsa en true en una regla de patrón y en una estructural, y en
+ * false en otra de patrón.
  */
 const VALIDOS = [
   'valido.json',
@@ -43,6 +45,7 @@ const VALIDOS = [
   'valido-detector-estadistico.json',
   'paquete-prueba-interno.json',
   'paquete-prueba-secundario.json',
+  'valido-sobre-no-prosa.json',
 ] as const;
 
 /**
@@ -206,6 +209,14 @@ const INVALIDOS: readonly CasoInvalido[] = [
     regla: null,
     campo: 'cabecera.calibracion.frases-por-100-palabras.general.300-599.media',
   },
+  // ── Encargo 5.1: sobreNoProsa ──
+  {
+    // «sí» en vez de true (un solo diff de valido-sobre-no-prosa.json).
+    fichero: 'invalido-sobre-no-prosa-no-booleano.json',
+    regla: { indice: 0, id: 'd6-referencia-interna' },
+    campo: 'parametros.sobreNoProsa',
+    mensajeIncluye: 'true o false',
+  },
 ];
 
 describe('validarPaquete', () => {
@@ -213,9 +224,9 @@ describe('validarPaquete', () => {
    * Ningún fixture sin juez: si entra uno nuevo en la carpeta y nadie lo añade
    * aquí, esto se pone rojo en vez de dejarlo sin mirar.
    */
-  test('la carpeta de fixtures tiene exactamente los veintinueve que se juzgan', () => {
-    assert.equal(VALIDOS.length, 6, 'seis válidos');
-    assert.equal(INVALIDOS.length, 23, 'veintitrés inválidos');
+  test('la carpeta de fixtures tiene exactamente los treinta y uno que se juzgan', () => {
+    assert.equal(VALIDOS.length, 7, 'siete válidos');
+    assert.equal(INVALIDOS.length, 24, 'veinticuatro inválidos');
     const esperados = [...VALIDOS, ...INVALIDOS.map((c) => c.fichero)].sort();
     // Solo los FICHEROS de la raíz: los paquetes. Las subcarpetas (fixtures/referencia/)
     // guardan datos de referencia de otros jueces (encargo 3.3).

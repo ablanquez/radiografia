@@ -36,9 +36,14 @@
  *     ese blanco es del segmento de la anterior en Intl.Segmenter.
  *   · `minimo`: si el total de coincidencias en todo el texto es menor, la
  *     regla no señala nada.
- *   · Solo párrafos de prosa (texto.ts).
+ *   · Solo párrafos de prosa (texto.ts), salvo con `sobreNoProsa` (encargo
+ *     5.1): entonces también viñetas, encabezados y tablas, nunca código
+ *     (`seMira` de texto.ts). [PROPIO] Con él, cada posición se aplica a los
+ *     párrafos que se miran: el «último párrafo» es el último de ellos (una
+ *     viñeta final sí; un bloque de código final no), y el mínimo cuenta
+ *     también las coincidencias de la no-prosa.
  */
-import type { Parrafo, Texto } from './texto.ts';
+import { seMira, type Parrafo, type Texto } from './texto.ts';
 import type { Senal } from './detector-patron.ts';
 
 export type Posicion = 'inicio-frase' | 'fin-frase' | 'inicio-parrafo' | 'fin-parrafo' | 'ultimo-parrafo' | 'cualquiera';
@@ -48,6 +53,7 @@ export interface ParametrosEstructural {
   regex: string;
   flags?: string;
   minimo?: number;
+  sobreNoProsa?: boolean;
 }
 
 export interface ReglaEstructural {
@@ -93,35 +99,37 @@ export function detectarEstructural(regla: ReglaEstructural, texto: Texto): Sena
     }
   };
 
-  const prosa = texto.parrafos.map((parrafo, indiceParrafo) => ({ parrafo, indiceParrafo })).filter(({ parrafo }) => parrafo.prosa);
+  const mirados = texto.parrafos
+    .map((parrafo, indiceParrafo) => ({ parrafo, indiceParrafo }))
+    .filter(({ parrafo }) => seMira(parrafo, p.sobreNoProsa ?? false));
 
   switch (p.posicion) {
     case 'inicio-frase':
     case 'fin-frase':
-      for (const { parrafo, indiceParrafo } of prosa) {
+      for (const { parrafo, indiceParrafo } of mirados) {
         parrafo.frases.forEach((frase, i) => buscar(frase, indiceParrafo, () => i));
       }
       break;
     case 'inicio-parrafo':
-      for (const { parrafo, indiceParrafo } of prosa) {
+      for (const { parrafo, indiceParrafo } of mirados) {
         const primera = parrafo.frases[0];
         if (primera !== undefined) buscar(primera, indiceParrafo, () => 0);
       }
       break;
     case 'fin-parrafo':
-      for (const { parrafo, indiceParrafo } of prosa) {
+      for (const { parrafo, indiceParrafo } of mirados) {
         const i = parrafo.frases.length - 1;
         const ultima = parrafo.frases[i];
         if (ultima !== undefined) buscar(ultima, indiceParrafo, () => i);
       }
       break;
     case 'ultimo-parrafo': {
-      const ultimo = prosa.at(-1);
+      const ultimo = mirados.at(-1);
       if (ultimo !== undefined) buscar(ultimo.parrafo, ultimo.indiceParrafo, (inicio) => fraseDonde(ultimo.parrafo, inicio));
       break;
     }
     case 'cualquiera':
-      for (const { parrafo, indiceParrafo } of prosa) {
+      for (const { parrafo, indiceParrafo } of mirados) {
         buscar(parrafo, indiceParrafo, (inicio) => fraseDonde(parrafo, inicio));
       }
       break;

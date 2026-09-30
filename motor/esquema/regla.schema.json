@@ -161,6 +161,10 @@
             "minusculas": { "type": "boolean" },
             "tildes": { "type": "boolean" }
           }
+        },
+        "sobreNoProsa": {
+          "type": "boolean",
+          "$comment": "[PROPIO] Encargo 5.1. Opcional; sin él, false. Con true, el detector mira también los párrafos de no-prosa que son viñetas, encabezados o tablas (texto.ts); los bloques de código (entre vallas ``` o ~~~) quedan SIEMPRE fuera: ahí los asteriscos y las almohadillas son código. Para las reglas que buscan formato pegado (familia «canal»). No cambia el conteo de palabras: el umbral y la puntuación cuentan solo las de prosa."
         }
       },
       "anyOf": [{ "required": ["formas"] }, { "required": ["regex"] }]
@@ -173,11 +177,15 @@
       "properties": {
         "posicion": {
           "enum": ["inicio-frase", "fin-frase", "inicio-parrafo", "fin-parrafo", "ultimo-parrafo", "cualquiera"],
-          "$comment": "[PROPIO] (encargo 4.2) Solo en párrafos de prosa, y siempre sobre la frase o el párrafo SIN blancos al final: Intl.Segmenter deja dentro de cada segmento el espacio que lo sigue, y el motor lo recorta. La señal lleva el [inicio, fin) del texto original. · inicio-frase: la regex anclada al principio de cada frase. · fin-frase: anclada al final de cada frase. · inicio-parrafo: anclada al principio de la primera frase de cada párrafo. · fin-parrafo: anclada al final de la última frase de cada párrafo. · ultimo-parrafo: sin ancla añadida, sobre el último párrafo de prosa entero. · cualquiera: sin ancla añadida, sobre cada párrafo de prosa entero (para patrones que cruzan frases, como «no solo… sino»). En las cuatro posiciones ancladas el ancla la pone el motor y el autor NO la escribe: validar.ts rechaza la regex que empieza por «^» o termina en un «$» sin escapar. En ultimo-parrafo y cualquiera el autor puede escribir ^ y $, y la bandera m si la quiere (un párrafo es una línea: sin m, ^ y $ anclan a su principio y a su final)."
+          "$comment": "[PROPIO] (encargo 4.2) Solo en párrafos de prosa, y siempre sobre la frase o el párrafo SIN blancos al final: Intl.Segmenter deja dentro de cada segmento el espacio que lo sigue, y el motor lo recorta. La señal lleva el [inicio, fin) del texto original. · inicio-frase: la regex anclada al principio de cada frase. · fin-frase: anclada al final de cada frase. · inicio-parrafo: anclada al principio de la primera frase de cada párrafo. · fin-parrafo: anclada al final de la última frase de cada párrafo. · ultimo-parrafo: sin ancla añadida, sobre el último párrafo de prosa entero. · cualquiera: sin ancla añadida, sobre cada párrafo de prosa entero (para patrones que cruzan frases, como «no solo… sino»). Con sobreNoProsa (encargo 5.1), «párrafo de prosa» es «párrafo que se mira»: también viñetas, encabezados y tablas, y ultimo-parrafo es el último de ellos. En las cuatro posiciones ancladas el ancla la pone el motor y el autor NO la escribe: validar.ts rechaza la regex que empieza por «^» o termina en un «$» sin escapar. En ultimo-parrafo y cualquiera el autor puede escribir ^ y $, y la bandera m si la quiere (un párrafo es una línea: sin m, ^ y $ anclan a su principio y a su final)."
         },
         "regex": { "type": "string", "minLength": 1 },
         "flags": { "$ref": "#/$defs/flags" },
-        "minimo": { "type": "integer", "minimum": 1 }
+        "minimo": { "type": "integer", "minimum": 1 },
+        "sobreNoProsa": {
+          "type": "boolean",
+          "$comment": "[PROPIO] Encargo 5.1. Opcional; sin él, false. Con true, el detector mira también los párrafos de no-prosa que son viñetas, encabezados o tablas (texto.ts); los bloques de código (entre vallas ``` o ~~~) quedan SIEMPRE fuera: ahí los asteriscos y las almohadillas son código. Para las reglas que buscan formato pegado (familia «canal»). No cambia el conteo de palabras: el umbral y la puntuación cuentan solo las de prosa."
+        }
       }
     },
     "parametrosEstadistico": {

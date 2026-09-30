@@ -103,6 +103,44 @@ describe('detectarEstructural: las posiciones de párrafo entero', () => {
   });
 });
 
+describe('detectarEstructural: sobreNoProsa (encargo 5.1)', () => {
+  const almohadilla = (sobreNoProsa?: boolean): ParametrosEstructural => ({
+    posicion: 'inicio-parrafo',
+    regex: '#{1,6} ',
+    ...(sobreNoProsa === undefined ? {} : { sobreNoProsa }),
+  });
+
+  test('un «# Título» solo se señala con sobreNoProsa: true', () => {
+    // «# Título del informe» [0, 20) es un encabezado (no-prosa): «# » en [0, 2).
+    const texto = '# Título del informe\nEl informe llega el lunes.';
+    assert.deepEqual(senales(texto, almohadilla()), []);
+    assert.deepEqual(senales(texto, almohadilla(false)), []);
+    assert.deepEqual(senales(texto, almohadilla(true)), [['# ', 0, 2, 0, 0]]);
+  });
+
+  test('con true, un «# » dentro de un bloque de código no se señala', () => {
+    assert.deepEqual(senales('```bash\n# instala las dependencias\n```\nEl informe llega el lunes.', almohadilla(true)), []);
+    assert.deepEqual(senales('~~~\n## otra valla\n~~~', almohadilla(true)), []);
+  });
+
+  test('ultimo-parrafo con true: el último de los párrafos que se miran (una viñeta sí, un bloque de código no)', () => {
+    // «En resumen, prosa.» [0, 18) · «- En resumen, viñeta.» [19, 40): «En resumen» en [21, 31) · código detrás.
+    const texto = 'En resumen, prosa.\n- En resumen, viñeta.\n```\nEn resumen, código.\n```';
+    assert.deepEqual(senales(texto, { posicion: 'ultimo-parrafo', regex: 'En resumen' }), [['En resumen', 0, 10, 0, 0]]);
+    assert.deepEqual(senales(texto, { posicion: 'ultimo-parrafo', regex: 'En resumen', sobreNoProsa: true }), [['En resumen', 21, 31, 1, 0]]);
+  });
+
+  test('con true, las filas de una tabla se miran y cuentan para el mínimo', () => {
+    // «| Mes | Ventas |» [0, 16) · «|---|---|» [17, 26) · «Texto.» [27, 33): una «|» al principio de cada fila.
+    const texto = '| Mes | Ventas |\n|---|---|\nTexto.';
+    assert.deepEqual(senales(texto, { posicion: 'inicio-parrafo', regex: '\\|', minimo: 2 }), []);
+    assert.deepEqual(senales(texto, { posicion: 'inicio-parrafo', regex: '\\|', minimo: 2, sobreNoProsa: true }), [
+      ['|', 0, 1, 0, 0],
+      ['|', 17, 18, 1, 0],
+    ]);
+  });
+});
+
 describe('detectarEstructural: minimo, prosa e índices', () => {
   const apertura = { posicion: 'inicio-frase', regex: 'Además', minimo: 2 } as const;
 

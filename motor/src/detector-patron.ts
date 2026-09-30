@@ -42,7 +42,9 @@
  *     del esquema). Una señal por coincidencia; las coincidencias vacías no
  *     cuentan.
  *   · La bandera «g» la pone el detector (el esquema solo admite i, m, s, u).
- *   · Solo párrafos de prosa (texto.ts). `indiceParrafo` es su posición en
+ *   · Solo párrafos de prosa (texto.ts), salvo con `sobreNoProsa` (encargo
+ *     5.1): entonces también viñetas, encabezados y tablas, nunca código
+ *     (`seMira` de texto.ts). `indiceParrafo` es su posición en
  *     `texto.parrafos` (contando los de no-prosa, para poder volver a él);
  *     `indiceFrase`, la posición de la frase DENTRO de su párrafo.
  *
@@ -51,7 +53,7 @@
  * (`ParametrosPatron` en ámbito «frase» exige `regex`). Hasta el 4.2 el
  * detector lanzaba un error si faltaba.
  */
-import type { Texto } from './texto.ts';
+import { seMira, type Texto } from './texto.ts';
 
 interface Normalizar {
   minusculas: boolean;
@@ -59,8 +61,8 @@ interface Normalizar {
 }
 
 export type ParametrosPatron =
-  | { ambito: 'palabra'; formas?: string[]; regex?: string; flags?: string; normalizar: Normalizar }
-  | { ambito: 'frase'; regex: string; formas?: string[]; flags?: string; normalizar: Normalizar };
+  | { ambito: 'palabra'; formas?: string[]; regex?: string; flags?: string; normalizar: Normalizar; sobreNoProsa?: boolean }
+  | { ambito: 'frase'; regex: string; formas?: string[]; flags?: string; normalizar: Normalizar; sobreNoProsa?: boolean };
 
 export interface ReglaDePatron {
   id: string;
@@ -93,6 +95,7 @@ function banderas(p: ParametrosPatron, extra: string): string {
 
 export function detectarPatron(regla: ReglaDePatron, texto: Texto): Senal[] {
   const p = regla.parametros;
+  const sobreNoProsa = p.sobreNoProsa ?? false;
   const senales: Senal[] = [];
 
   if (p.ambito === 'palabra') {
@@ -100,7 +103,7 @@ export function detectarPatron(regla: ReglaDePatron, texto: Texto): Senal[] {
     const formas = new Set((p.formas ?? []).map(normalizar));
     const regex = p.regex === undefined ? null : new RegExp(p.regex, banderas(p, ''));
     texto.parrafos.forEach((parrafo, indiceParrafo) => {
-      if (!parrafo.prosa) return;
+      if (!seMira(parrafo, sobreNoProsa)) return;
       parrafo.frases.forEach((frase, indiceFrase) => {
         for (const palabra of frase.palabras) {
           const n = normalizar(palabra.texto);
@@ -115,7 +118,7 @@ export function detectarPatron(regla: ReglaDePatron, texto: Texto): Senal[] {
 
   const regex = new RegExp(p.regex, banderas(p, 'g'));
   texto.parrafos.forEach((parrafo, indiceParrafo) => {
-    if (!parrafo.prosa) return;
+    if (!seMira(parrafo, sobreNoProsa)) return;
     parrafo.frases.forEach((frase, indiceFrase) => {
       for (const m of frase.texto.matchAll(regex)) {
         if (m[0].length === 0) continue;

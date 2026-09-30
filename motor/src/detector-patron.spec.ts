@@ -68,6 +68,50 @@ describe('detectarPatron', () => {
 
 });
 
+/**
+ * Encargo 5.1: sobreNoProsa. Con true, el detector mira también viñetas,
+ * encabezados y tablas; los bloques de código (``` y ~~~) nunca. Un solo
+ * texto con «**x**» en cada clase de párrafo; los desplazamientos, a mano:
+ *   0 «```» [0, 3) · 1 «**x** en código» [4, 19) · 2 «```» [20, 23) ·
+ *   3 «~~~» [24, 27) · 4 «**x** en otra valla» [28, 47) · 5 «~~~» [48, 51) ·
+ *   6 «- **x** en viñeta» [52, 69), «**x**» en [54, 59) ·
+ *   7 «## **x** en encabezado» [70, 92), «**x**» en [73, 78) ·
+ *   8 «| **x** | tabla |» [93, 110), «**x**» en [95, 100) ·
+ *   9 «Y **x** en prosa.» [111, 128), «**x**» en [113, 118).
+ */
+describe('detectarPatron: sobreNoProsa (encargo 5.1)', () => {
+  const texto = ['```', '**x** en código', '```', '~~~', '**x** en otra valla', '~~~', '- **x** en viñeta', '## **x** en encabezado', '| **x** | tabla |', 'Y **x** en prosa.'].join('\n');
+  const negrita = (sobreNoProsa?: boolean): ParametrosPatron => ({
+    regex: '\\*\\*[^*\\n]+\\*\\*',
+    ambito: 'frase',
+    normalizar: { minusculas: false, tildes: false },
+    ...(sobreNoProsa === undefined ? {} : { sobreNoProsa }),
+  });
+  const vistas = (p: ParametrosPatron) => detectarPatron(regla(p), analizarTexto(texto)).map((s) => [...cortes(texto, [s])[0]!, s.indiceParrafo, s.indiceFrase]);
+
+  test('sin sobreNoProsa, o con false: solo la prosa', () => {
+    const soloProsa = [['**x**', 113, 118, '**x**', 9, 0]];
+    assert.deepEqual(vistas(negrita()), soloProsa);
+    assert.deepEqual(vistas(negrita(false)), soloProsa);
+  });
+
+  test('con true: también la viñeta, el encabezado y la tabla, y ninguno de los dos bloques de código', () => {
+    assert.deepEqual(vistas(negrita(true)), [
+      ['**x**', 54, 59, '**x**', 6, 0],
+      ['**x**', 73, 78, '**x**', 7, 0],
+      ['**x**', 95, 100, '**x**', 8, 0],
+      ['**x**', 113, 118, '**x**', 9, 0],
+    ]);
+  });
+
+  test('con true y ámbito palabra: la palabra de la viñeta sí, la del código no', () => {
+    // «- crucial en viñeta» [0, 19): «crucial» en [2, 9) · «```» [20, 23) · «crucial en código» [24, 41) · «```» [42, 45).
+    const t = ['- crucial en viñeta', '```', 'crucial en código', '```'].join('\n');
+    const s = detectarPatron(regla({ formas: ['crucial'], ambito: 'palabra', normalizar: { minusculas: false, tildes: false }, sobreNoProsa: true }), analizarTexto(t));
+    assert.deepEqual(cortes(t, s), [['crucial', 2, 9, 'crucial']]);
+  });
+});
+
 // Encargo 4.2, cabo 1: «tildes» quita solo el acento agudo (U+0301); la «ñ» es letra y la diéresis
 // es otro signo. Era un `todo` del 4.1 (quitar \p{M} tras NFD quitaba también la virgulilla y la diéresis).
 describe('detectarPatron: tildes:true quita solo el acento agudo', () => {

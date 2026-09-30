@@ -40,6 +40,10 @@
  *    Así «1.000 personas», «*Nota*:» o «#etiqueta» siguen siendo prosa.
  * [PROPIO] Frases y palabras se sacan de TODOS los párrafos (también de los de
  *    no-prosa); quien los use decide si mira `prosa`.
+ * [PROPIO] Encargo 5.1: `seMira` dice qué párrafos recorre un detector de
+ *    patrón o estructural. La prosa siempre; con `sobreNoProsa`, también las
+ *    viñetas, los encabezados y las tablas; el código nunca (ahí «**» y «#» son
+ *    código). El conteo de palabras no pasa por aquí: sigue siendo de prosa.
  */
 
 export type Motivo = 'código' | 'encabezado' | 'viñeta' | 'tabla';
@@ -119,6 +123,12 @@ function frasesDe(original: string, trabajo: string, inicio: number, fin: number
     salida.push({ texto: original.slice(a, b), inicio: a, fin: b, palabras: palabrasDe(original, trabajo, a, b) });
   }
   return salida;
+}
+
+/** Si un detector recorre este párrafo: la prosa siempre; con sobreNoProsa, también viñetas, encabezados y tablas; el código nunca. */
+export function seMira(parrafo: Parrafo, sobreNoProsa: boolean): boolean {
+  if (parrafo.prosa) return true;
+  return sobreNoProsa && parrafo.motivo !== 'código';
 }
 
 export function analizarTexto(original: string): Texto {

@@ -155,6 +155,36 @@ describe('analizar: lo que no se analiza', () => {
 const CON_COMA = 'El equipo revisó los datos de la semana, con calma.';
 const TEXTO_300 = Array.from({ length: 10 }, () => [RELLENO, RELLENO, CON_COMA].join(' ')).join(' ');
 
+/**
+ * sobreNoProsa (encargo 5.1): las señales de un encabezado y de una viñeta
+ * salen con sus desplazamientos en el original, y el conteo de palabras NO
+ * cambia: son solo las de prosa. valido-sobre-no-prosa.json: d6 (patrón,
+ * «véase la tabla/figura N», peso −1, sobreNoProsa) y encabezado-markdown
+ * (estructural, «# » al principio del párrafo, informativa, sobreNoProsa).
+ */
+describe('analizar: sobreNoProsa (encargo 5.1)', () => {
+  test('el conteo es de prosa (105), y las señales del encabezado y de la viñeta llevan su [inicio, fin)', () => {
+    // «La muestra se redujo a la mitad.» = 7 palabras y 32 caracteres; 15 veces, unidas por un espacio: 105
+    // palabras y 15 × 32 + 14 = 494 caracteres.
+    //   «# Véase la tabla 2» [0, 18) (encabezado) · «\n» 18 · prosa [19, 513) · «\n» 513 ·
+    //   «- Véase la figura 3 para el detalle.» [514, 550) (viñeta): «Véase la figura 3» en [516, 533).
+    const prosa = Array<string>(15).fill('La muestra se redujo a la mitad.').join(' ');
+    const texto = ['# Véase la tabla 2', prosa, '- Véase la figura 3 para el detalle.'].join('\n');
+    const r = analizar(texto, [cargar('valido-sobre-no-prosa.json')]);
+    assert.deepEqual([r.palabrasProsa, r.tramo], [105, 'poco-fiable']);
+    assert.deepEqual(
+      r.senales.map((s) => [s.reglaId, s.fragmento, s.inicio, s.fin, s.indiceParrafo, texto.slice(s.inicio, s.fin)]),
+      [
+        ['d6-referencia-interna', 'Véase la tabla 2', 2, 18, 0, 'Véase la tabla 2'],
+        ['d6-referencia-interna', 'Véase la figura 3', 516, 533, 2, 'Véase la figura 3'],
+        ['encabezado-markdown', '# ', 0, 2, 0, '# '],
+      ],
+    );
+    // d6: 2 señales × 1.000 / 105 palabras de prosa × peso −1; encabezado-markdown es informativa (0).
+    assert.equal(r.paquetes[0]!.puntuacion.total, -((2 * 1000) / 105));
+  });
+});
+
 describe('analizar: el género de entrada (encargo 4.3)', () => {
   test('sin género → «general»: dispara la del interno (10 > p95 7,5), la de contexto va aparte (1/30 < p1 0,38) y la del secundario queda dentro (133,3 ≤ p95 190)', () => {
     const interno = cargar('paquete-prueba-interno.json');
