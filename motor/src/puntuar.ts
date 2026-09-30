@@ -31,9 +31,10 @@
  *    se quiere):
  *   · Modo de cada regla: PRESENCIA si es estructural con posición
  *     «ultimo-parrafo» —una señal única por texto (hay cierre de plantilla o
- *     no) no se normaliza— o si es ESTADÍSTICA (4.3: su señal es del texto
- *     entero, una por texto, y la métrica ya está normalizada); DENSIDAD en
- *     todo lo demás.
+ *     no) no se normaliza—, si es ESTADÍSTICA (4.3: su señal es del texto
+ *     entero, una por texto, y la métrica ya está normalizada) o si es de
+ *     AUSENCIA (5.3: su señal también es del texto entero, una por texto);
+ *     DENSIDAD en todo lo demás.
  *   · Por regla, n = número de señales.
  *       densidad:  densidad = n × 1.000 / palabrasProsa;  contribución = peso × densidad.
  *       presencia: contribución = peso × (n > 0 ? 1 : 0).
@@ -53,6 +54,7 @@
  */
 import type { Senal } from './detector-patron.ts';
 import type { SenalTexto } from './detector-estadistico.ts';
+import type { SenalAusencia } from './detector-ausencia.ts';
 import type { ParametrosEstructural } from './detector-estructural.ts';
 import type { Familia, Regla } from './paquete.ts';
 import type { Texto } from './texto.ts';
@@ -63,8 +65,9 @@ export type Modo = 'densidad' | 'presencia';
 /** Lo que puntuar lee de una regla. Una `Regla` de paquete.ts lo cumple. */
 export type ReglaParaPuntuar = Pick<Regla, 'id' | 'familia' | 'peso' | 'informativa'> &
   (
-    | { detector: 'estructural'; parametros: Pick<ParametrosEstructural, 'posicion'> }
-    | { detector: 'patrón' | 'estadístico'; parametros: object }
+    | { detector: 'estructural'; parametros: Pick<ParametrosEstructural, 'posicion' | 'ausencia'> }
+    | { detector: 'patrón'; parametros: { ausencia?: boolean } }
+    | { detector: 'estadístico'; parametros: object }
   );
 
 /** Lo que puntuar lee de un paquete. Un `Paquete` de paquete.ts lo cumple. */
@@ -103,7 +106,7 @@ export interface Puntuacion {
   aviso: string | null;
   familias: PuntosDeFamilia[];
   /** Las señales de las reglas informativas: se enseñan, no suman. */
-  informativas: (Senal | SenalTexto)[];
+  informativas: (Senal | SenalTexto | SenalAusencia)[];
 }
 
 const UNIDAD = 'puntos por 1.000 palabras de prosa';
@@ -113,10 +116,11 @@ const sinMenosCero = (x: number): number => (x === 0 ? 0 : x);
 
 function modoDe(regla: ReglaParaPuntuar): Modo {
   if (regla.detector === 'estadístico') return 'presencia';
+  if (regla.parametros.ausencia === true) return 'presencia';
   return regla.detector === 'estructural' && regla.parametros.posicion === 'ultimo-parrafo' ? 'presencia' : 'densidad';
 }
 
-export function puntuar(senales: readonly (Senal | SenalTexto)[], paquete: PaqueteParaPuntuar, texto: Texto): Puntuacion {
+export function puntuar(senales: readonly (Senal | SenalTexto | SenalAusencia)[], paquete: PaqueteParaPuntuar, texto: Texto): Puntuacion {
   const { palabrasProsa, tramo } = evaluarLongitud(texto);
 
   const cuenta = new Map<string, number>(paquete.reglas.map((r) => [r.id, 0]));

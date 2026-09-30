@@ -12,6 +12,11 @@
  * Las reglas ESTADÍSTICAS no pasan por aquí (encargo 4.3): sus ejemplos
  * necesitan el análisis entero —longitud de al menos 100 palabras de prosa,
  * tramo, calibración y género— y tienen su propio juez.
+ * Tampoco las que llevan `ausencia` o `generos` (encargo 5.3): una ausencia se
+ * juzga sobre el texto entero y solo en tramo completo, y `generos` depende
+ * del género del análisis; las juzga ejemplos-ausencia.spec.ts con
+ * analizar(). Aquí cada una deja un test SALTADO que lo dice en su nombre,
+ * para que el resumen de node --test la cuente como saltada y no desaparezca.
  * [PROPIO] En el nombre de cada test, los saltos de línea y los caracteres
  * invisibles del ejemplo se escriben a la vista (⏎, <U+202F>): si no, un
  * positivo con U+202F y su negativo sin él se llamarían igual.
@@ -51,6 +56,12 @@ for (const url of PAQUETES) {
     });
 
     for (const regla of paquete.reglas.filter((r) => r.detector !== 'estadístico')) {
+      const aparte = [regla.parametros.ausencia === true ? 'ausencia' : null, regla.generos !== undefined ? 'generos' : null].filter((x) => x !== null);
+      if (aparte.length > 0) {
+        const motivo = `lleva ${aparte.join(' y ')}: la juzga ejemplos-ausencia.spec.ts`;
+        test(`${regla.id} · aquí no: ${motivo}`, { skip: motivo }, () => {});
+        continue;
+      }
       const senales = (ejemplo: string) => detectar(regla, analizarTexto(ejemplo));
       for (const ejemplo of regla.ejemplos.positivos) {
         test(`${regla.id} · positivo «${aLaVista(ejemplo)}» → al menos una señal`, () => {

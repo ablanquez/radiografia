@@ -14,6 +14,7 @@ import assert from 'node:assert/strict';
 import { analizarTexto } from './texto.ts';
 import type { Senal } from './detector-patron.ts';
 import type { SenalTexto } from './detector-estadistico.ts';
+import type { SenalAusencia } from './detector-ausencia.ts';
 import { puntuar, type PaqueteParaPuntuar } from './puntuar.ts';
 
 /** Un texto de `n` palabras de prosa en una sola frase. */
@@ -144,5 +145,27 @@ describe('puntuar: signo, tramos y guardas', () => {
 
   test('una señal de una regla que no está en el paquete es un error, no se ignora', () => {
     assert.throws(() => puntuar(senales('no-existe', 1), PAQUETE, prosa(500)), /no-existe/);
+  });
+});
+
+/**
+ * Encargo 5.3: una regla de ausencia (patrón o estructural) da una señal del
+ * texto entero y puntúa por PRESENCIA, como las estadísticas: peso × 1.
+ */
+describe('puntuar: las reglas de ausencia puntúan por presencia (encargo 5.3)', () => {
+  const AUSENCIAS: PaqueteParaPuntuar = {
+    cabecera: { familias: [{ id: 'a', nombre: 'Familia A', informativa: false }] },
+    reglas: [
+      { id: 'sin-opinion', familia: 'a', detector: 'patrón', parametros: { ausencia: true }, peso: 2, informativa: false },
+      { id: 'sin-cifras', familia: 'a', detector: 'estructural', parametros: { posicion: 'cualquiera', ausencia: true }, peso: 1, informativa: false },
+    ],
+  };
+  const deAusencia = (reglaId: string): SenalAusencia => ({ reglaId, ambito: 'texto', coincidencias: 0, minimo: 1 });
+
+  test('en 500 palabras: patrón peso 2 → 2 y estructural peso 1 → 1, sin densidad; total 3', () => {
+    const p = puntuar([deAusencia('sin-opinion'), deAusencia('sin-cifras')], AUSENCIAS, prosa(500));
+    assert.deepEqual(regla(p, 'sin-opinion'), { id: 'sin-opinion', informativa: false, n: 1, modo: 'presencia', densidad: null, contribucion: 2 });
+    assert.deepEqual(regla(p, 'sin-cifras'), { id: 'sin-cifras', informativa: false, n: 1, modo: 'presencia', densidad: null, contribucion: 1 });
+    assert.equal(p.total, 3);
   });
 });

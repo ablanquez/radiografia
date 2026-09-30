@@ -15,10 +15,14 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { analizar, PaqueteInvalido } from './analizar.ts';
+import { analizar, PaqueteInvalido, type SenalTextoCalificada } from './analizar.ts';
+import { esAusencia } from './detector-ausencia.ts';
+import type { SenalTexto } from './detector-estadistico.ts';
 import type { Paquete } from './paquete.ts';
 
 const cargar = (fichero: string): Paquete => JSON.parse(readFileSync(new URL(`../fixtures/${fichero}`, import.meta.url), 'utf8')) as Paquete;
+/** Las señales de texto estadísticas: desde el encargo 5.3 también las hay de ausencia (esAusencia). */
+const estadisticas = (xs: readonly SenalTextoCalificada[]) => xs.filter((s): s is SenalTexto & { paquete: string } => !esAusencia(s));
 const INTERNO = 'Paquete de prueba interno del motor';
 const SECUNDARIO = 'Paquete de prueba secundario del motor';
 
@@ -191,12 +195,12 @@ describe('analizar: el género de entrada (encargo 4.3)', () => {
     const r = analizar(TEXTO_300, [interno, cargar('paquete-prueba-secundario.json')]);
     assert.deepEqual([r.genero, r.palabrasProsa, r.tramoDeCalibracion], ['general', 300, '300-599']);
     assert.deepEqual(
-      r.senalesTexto.map((s) => [s.paquete, s.reglaId, s.valor, s.lado]),
+      estadisticas(r.senalesTexto).map((s) => [s.paquete, s.reglaId, s.valor, s.lado]),
       [[INTERNO, 'prueba-estadistica-frases-cortas', 10, 'arriba']],
     );
-    assert.deepEqual(r.senalesTexto[0]!.referencia, interno.cabecera.calibracion!['frases-por-100-palabras']!['general']!['300-599']);
+    assert.deepEqual(estadisticas(r.senalesTexto)[0]!.referencia, interno.cabecera.calibracion!['frases-por-100-palabras']!['general']!['300-599']);
     assert.deepEqual(
-      r.contexto.map((s) => [s.paquete, s.reglaId, s.valor, s.lado]),
+      estadisticas(r.contexto).map((s) => [s.paquete, s.reglaId, s.valor, s.lado]),
       [[INTERNO, 'prueba-contexto-ttr', 1 / 30, 'abajo']],
     );
     assert.deepEqual(r.sinCalibracion, []);
@@ -215,10 +219,10 @@ describe('analizar: el género de entrada (encargo 4.3)', () => {
     const r = analizar(TEXTO_300, [cargar('paquete-prueba-interno.json'), secundario], { genero: 'noticia' });
     assert.equal(r.genero, 'noticia');
     assert.deepEqual(
-      r.senalesTexto.map((s) => [s.paquete, s.reglaId, s.valor, s.lado]),
+      estadisticas(r.senalesTexto).map((s) => [s.paquete, s.reglaId, s.valor, s.lado]),
       [[SECUNDARIO, 'secundario-puntuacion-alta', 400 / 3, 'arriba']],
     );
-    assert.deepEqual(r.senalesTexto[0]!.referencia, secundario.cabecera.calibracion!['puntuacion-por-1000']!['noticia']!['300-599']);
+    assert.deepEqual(estadisticas(r.senalesTexto)[0]!.referencia, secundario.cabecera.calibracion!['puntuacion-por-1000']!['noticia']!['300-599']);
     assert.deepEqual(r.contexto, []);
     assert.deepEqual(
       r.sinCalibracion.map((s) => [s.paquete, s.reglaId]),
@@ -235,5 +239,77 @@ describe('analizar: el género de entrada (encargo 4.3)', () => {
         [SECUNDARIO, 1],
       ],
     );
+  });
+});
+
+/**
+ * Encargo 5.3: ausencias, repetición por forma y generos, con
+ * valido-recuento-y-generos.json:
+ *   · d6-referencia-interna (patrón, peso −1, minimo 2);
+ *   · conector-repetido (estructural inicio-frase «Además|Sin embargo», minimoPorCoincidencia 3, peso 1);
+ *   · sin-opinion (patrón «creo|opino», ausencia, generos ["opinion"], peso 2);
+ *   · sin-cifras (estructural \p{N}+, ausencia, minimo 2, peso 1);
+ *   · solo-noticia (patrón «declaró», generos ["noticia"], peso 1).
+ * Las palabras, a mano: «Además, el plan sigue en marcha.» (6) · «Además, nadie lo discute.» (4) ·
+ * «Además, el presupuesto se cerró.» (5) · «Sin embargo, faltan datos.» (4) · «Véase la tabla 2 para el
+ * detalle.» (7, con el «2») + RELLENO (10) × n.
+ */
+describe('analizar: ausencias, repetición y generos (encargo 5.3)', () => {
+  const CABEZA = ['Además, el plan sigue en marcha.', 'Además, nadie lo discute.', 'Además, el presupuesto se cerró.', 'Sin embargo, faltan datos.', 'Véase la tabla 2 para el detalle.'];
+  /** 26 palabras de CABEZA + 28 × 10 = 306: completo. */
+  const TEXTO_306 = [...CABEZA, ...Array<string>(28).fill(RELLENO)].join(' ');
+  /** 26 + 10 × 10 = 126: poco fiable. */
+  const TEXTO_126 = [...CABEZA, ...Array<string>(10).fill(RELLENO)].join(' ');
+  const r = (texto: string, genero: string) => analizar(texto, [cargar('valido-recuento-y-generos.json')], { genero });
+  const deTexto = (x: ReturnType<typeof r>) => x.senalesTexto.map((s) => [s.reglaId, 'coincidencias' in s ? s.coincidencias : null, 'minimo' in s ? s.minimo : null]);
+  const noAplicadas = (x: ReturnType<typeof r>) => x.noAplicadas.map((n) => n.reglaId);
+
+  test('«opinion», 306 palabras: tres «Además» sí, «Sin embargo» no; d6 no llega a su minimo 2; las dos ausencias disparan', () => {
+    const x = r(TEXTO_306, 'opinion');
+    assert.deepEqual([x.palabrasProsa, x.tramo], [306, 'completo']);
+    // «Además, el plan sigue en marcha.» [0, 32) · «Además, nadie lo discute.» [33, 58) · «Además, el presupuesto se cerró.» [59, 91).
+    assert.deepEqual(
+      x.senales.map((s) => [s.reglaId, s.fragmento, s.inicio, s.fin]),
+      [
+        ['conector-repetido', 'Además', 0, 6],
+        ['conector-repetido', 'Además', 33, 39],
+        ['conector-repetido', 'Además', 59, 65],
+      ],
+    );
+    // sin-opinion: ningún «creo» ni «opino» (0 < 1). sin-cifras: una cifra, el «2» (1 < 2).
+    assert.deepEqual(deTexto(x), [
+      ['sin-opinion', 0, 1],
+      ['sin-cifras', 1, 2],
+    ]);
+    assert.deepEqual(noAplicadas(x), ['solo-noticia']);
+    assert.ok(x.noAplicadas[0]!.motivo.includes('«noticia»') && x.noAplicadas[0]!.motivo.includes('«opinion»'), x.noAplicadas[0]!.motivo);
+    // conector: 3 × 1.000 / 306 × 1; sin-opinion, presencia × 2; sin-cifras, presencia × 1.
+    assert.equal(x.paquetes[0]!.puntuacion.total, (3 * 1000) / 306 + 2 + 1);
+  });
+
+  test('«general»: las dos reglas con generos no se aplican (ni señales ni señales de texto); la ausencia sin generos, sí', () => {
+    const x = r(TEXTO_306, 'general');
+    assert.deepEqual(noAplicadas(x), ['sin-opinion', 'solo-noticia']);
+    assert.ok(x.noAplicadas.every((n) => n.motivo.includes('«general»')), JSON.stringify(x.noAplicadas));
+    assert.deepEqual(deTexto(x), [['sin-cifras', 1, 2]]);
+    assert.ok(!x.senales.some((s) => s.reglaId === 'sin-opinion' || s.reglaId === 'solo-noticia'));
+  });
+
+  test('«noticia»: la de presencia con generos ["noticia"] se aplica; la ausencia de «opinion», no', () => {
+    const x = r(`${TEXTO_306} El portavoz declaró que no habrá cambios.`, 'noticia');
+    assert.deepEqual(noAplicadas(x), ['sin-opinion']);
+    assert.deepEqual(
+      x.senales.filter((s) => s.reglaId === 'solo-noticia').map((s) => s.fragmento),
+      ['declaró'],
+    );
+  });
+
+  test('poco fiable (126 palabras): las ausencias no se juzgan y van a noAplicadas con su motivo; la repetición sí cuenta', () => {
+    const x = r(TEXTO_126, 'opinion');
+    assert.deepEqual([x.palabrasProsa, x.tramo], [126, 'poco-fiable']);
+    assert.deepEqual(noAplicadas(x), ['sin-opinion', 'sin-cifras', 'solo-noticia']);
+    assert.ok(x.noAplicadas.slice(0, 2).every((n) => n.motivo.includes('126')), JSON.stringify(x.noAplicadas));
+    assert.deepEqual(x.senalesTexto, []);
+    assert.equal(x.senales.length, 3);
   });
 });

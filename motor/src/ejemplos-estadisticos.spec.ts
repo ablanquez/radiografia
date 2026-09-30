@@ -22,6 +22,8 @@ import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { analizar } from './analizar.ts';
+import { esAusencia } from './detector-ausencia.ts';
+import type { SenalTexto } from './detector-estadistico.ts';
 import { analizarTexto } from './texto.ts';
 import { evaluarLongitud, MINIMO } from './umbral.ts';
 import type { Paquete } from './paquete.ts';
@@ -34,7 +36,10 @@ function disparo(paquete: Paquete, reglaId: string, ejemplo: string) {
   const r = analizar(ejemplo, [paquete]);
   const sin = r.sinCalibracion.find((s) => s.reglaId === reglaId);
   assert.equal(sin, undefined, `${reglaId}: sin calibración en su ejemplo (${sin?.motivo})`);
-  const senal = [...r.senalesTexto, ...r.contexto].find((s) => s.reglaId === reglaId);
+  // Solo las estadísticas: desde el encargo 5.3 también hay señales de texto de ausencia.
+  const senal = [...r.senalesTexto, ...r.contexto]
+    .filter((s): s is SenalTexto & { paquete: string } => !esAusencia(s))
+    .find((s) => s.reglaId === reglaId);
   return { dispara: senal !== undefined && senal.lado !== null, senal };
 }
 
