@@ -1,0 +1,622 @@
+{
+  "genero": "narrativa-clasica",
+  "fecha": "2026-09-30",
+  "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+  "licencia": "Dominio público en España (verificada por libro: todas las personas del registro del catálogo murieron en 1945 o antes (vida + 80 años desde el 1 de enero siguiente))",
+  "semilla": "radiografia-calibracion-2026",
+  "motor": {
+    "commit": "c82520198e6a05d3177427a5b0475445f2b131de",
+    "limpio": true
+  },
+  "metodo": "hyndman-fan-7",
+  "minimoPorCelda": 100,
+  "n": {
+    "calibracion": {
+      "100-299": 65,
+      "300-599": 124,
+      "600+": 895
+    },
+    "validacion": {
+      "100-299": 19,
+      "300-599": 30,
+      "600+": 244
+    }
+  },
+  "celdas": {
+    "frases-por-100-palabras": {
+      "300-599": {
+        "p1": 1.547979,
+        "p5": 2.348102,
+        "p50": 5.833738,
+        "p95": 11.439428,
+        "p99": 13.661687,
+        "n": 124,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": 2.009836,
+        "p5": 2.70234,
+        "p50": 5.263158,
+        "p95": 8.993816,
+        "p99": 11.4522,
+        "n": 895,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    },
+    "cv-longitud-frase": {
+      "300-599": {
+        "p1": 0.398648,
+        "p5": 0.480074,
+        "p50": 0.77405,
+        "p95": 1.148591,
+        "p99": 1.585337,
+        "n": 124,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": 0.512547,
+        "p5": 0.586153,
+        "p50": 0.803155,
+        "p95": 1.148303,
+        "p99": 1.380534,
+        "n": 895,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    },
+    "ratio-comas-puntos": {
+      "300-599": {
+        "p1": 0.721549,
+        "p5": 0.816253,
+        "p50": 2.074176,
+        "p95": 5.9625,
+        "p99": 12.976667,
+        "n": 124,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": 0.857687,
+        "p5": 1.082852,
+        "p50": 2.147059,
+        "p95": 4.704286,
+        "p99": 6.853984,
+        "n": 895,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    },
+    "puntuacion-por-1000": {
+      "300-599": {
+        "p1": 115.54723,
+        "p5": 129.871455,
+        "p50": 186.882595,
+        "p95": 319.446459,
+        "p99": 346.393701,
+        "n": 124,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": 112.597581,
+        "p5": 125.362601,
+        "p50": 178.441663,
+        "p95": 276.163664,
+        "p99": 319.528234,
+        "n": 895,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    },
+    "puntuacion-secundaria-por-1000": {
+      "300-599": {
+        "p1": 4.120724,
+        "p5": 6.466644,
+        "p50": 30.062893,
+        "p95": 91.829376,
+        "p99": 116.428329,
+        "n": 124,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": 5.515182,
+        "p5": 10.386545,
+        "p50": 30.755712,
+        "p95": 66.501909,
+        "p99": 83.462137,
+        "n": 895,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    },
+    "ttr": {
+      "300-599": {
+        "p1": 0.422233,
+        "p5": 0.464583,
+        "p50": 0.553049,
+        "p95": 0.617275,
+        "p99": 0.660123,
+        "n": 124,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": 0.219235,
+        "p5": 0.283588,
+        "p50": 0.39888,
+        "p95": 0.497457,
+        "p99": 0.534545,
+        "n": 895,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    },
+    "mattr-50": {
+      "300-599": {
+        "p1": 0.73067,
+        "p5": 0.755616,
+        "p50": 0.813675,
+        "p95": 0.848716,
+        "p99": 0.856451,
+        "n": 124,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": 0.757951,
+        "p5": 0.78245,
+        "p50": 0.820343,
+        "p95": 0.84167,
+        "p99": 0.850286,
+        "n": 895,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    },
+    "mtld": {
+      "300-599": {
+        "p1": 47.318368,
+        "p5": 61.185997,
+        "p50": 96.013626,
+        "p95": 137.460663,
+        "p99": 161.269477,
+        "n": 124,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": 59.395245,
+        "p5": 73.898899,
+        "p50": 106.00459,
+        "p95": 131.498774,
+        "p99": 140.865307,
+        "n": 895,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    },
+    "hdd-42": {
+      "300-599": {
+        "p1": 0.785117,
+        "p5": 0.802494,
+        "p50": 0.845012,
+        "p95": 0.871267,
+        "p99": 0.875784,
+        "n": 124,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": 0.816442,
+        "p5": 0.826112,
+        "p50": 0.850971,
+        "p95": 0.868722,
+        "p99": 0.876109,
+        "n": 895,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    },
+    "seq-rep-4": {
+      "300-599": {
+        "p1": 0,
+        "p5": 0,
+        "p50": 0,
+        "p95": 0.013273,
+        "p99": 0.023739,
+        "n": 124,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": 0,
+        "p5": 0,
+        "p50": 0.003165,
+        "p95": 0.011,
+        "p99": 0.016216,
+        "n": 895,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    },
+    "ifsz": {
+      "300-599": {
+        "p1": 18.98024,
+        "p5": 42.279474,
+        "p50": 67.474693,
+        "p95": 83.022209,
+        "p99": 89.633923,
+        "n": 124,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": 35.640017,
+        "p5": 45.849028,
+        "p50": 64.353807,
+        "p95": 78.014328,
+        "p99": 84.513472,
+        "n": 895,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    },
+    "nominalizaciones-por-1000": {
+      "300-599": {
+        "p1": 2.134387,
+        "p5": 4.558756,
+        "p50": 18.245342,
+        "p95": 34.748144,
+        "p99": 48.973175,
+        "n": 124,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": 5.438227,
+        "p5": 9.083186,
+        "p50": 19.980708,
+        "p95": 33.041578,
+        "p99": 37.486461,
+        "n": 895,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    },
+    "pronombres-anaforicos-por-1000": {
+      "300-599": {
+        "p1": 42.509937,
+        "p5": 52.21477,
+        "p50": 83.103131,
+        "p95": 120.897844,
+        "p99": 136.094675,
+        "n": 124,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": 60.94731,
+        "p5": 67.765091,
+        "p50": 85.371276,
+        "p95": 103.747786,
+        "p99": 112.636813,
+        "n": 895,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    },
+    "_total-radiografia": {
+      "300-599": {
+        "p1": -4.799876,
+        "p5": 0,
+        "p50": 10.15235,
+        "p95": 71.88444,
+        "p99": 88.001856,
+        "n": 124,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      },
+      "600+": {
+        "p1": -0.050042,
+        "p5": 0.805086,
+        "p50": 15.503876,
+        "p95": 47.601423,
+        "p99": 70.072291,
+        "n": 895,
+        "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+        "fecha": "2026-09-30",
+        "metodo": "hyndman-fan-7"
+      }
+    }
+  },
+  "omitidas": [
+    {
+      "clave": "frases-por-100-palabras",
+      "tramo": "100-299",
+      "n": 65,
+      "motivo": "n < 100"
+    },
+    {
+      "clave": "cv-longitud-frase",
+      "tramo": "100-299",
+      "n": 65,
+      "motivo": "n < 100"
+    },
+    {
+      "clave": "ratio-comas-puntos",
+      "tramo": "100-299",
+      "n": 65,
+      "motivo": "n < 100"
+    },
+    {
+      "clave": "puntuacion-por-1000",
+      "tramo": "100-299",
+      "n": 65,
+      "motivo": "n < 100"
+    },
+    {
+      "clave": "puntuacion-secundaria-por-1000",
+      "tramo": "100-299",
+      "n": 65,
+      "motivo": "n < 100"
+    },
+    {
+      "clave": "ttr",
+      "tramo": "100-299",
+      "n": 65,
+      "motivo": "n < 100"
+    },
+    {
+      "clave": "mattr-50",
+      "tramo": "100-299",
+      "n": 65,
+      "motivo": "n < 100"
+    },
+    {
+      "clave": "mtld",
+      "tramo": "100-299",
+      "n": 65,
+      "motivo": "n < 100"
+    },
+    {
+      "clave": "hdd-42",
+      "tramo": "100-299",
+      "n": 65,
+      "motivo": "n < 100"
+    },
+    {
+      "clave": "seq-rep-4",
+      "tramo": "100-299",
+      "n": 65,
+      "motivo": "n < 100"
+    },
+    {
+      "clave": "ifsz",
+      "tramo": "100-299",
+      "n": 65,
+      "motivo": "n < 100"
+    },
+    {
+      "clave": "nominalizaciones-por-1000",
+      "tramo": "100-299",
+      "n": 65,
+      "motivo": "n < 100"
+    },
+    {
+      "clave": "pronombres-anaforicos-por-1000",
+      "tramo": "100-299",
+      "n": 65,
+      "motivo": "n < 100"
+    },
+    {
+      "clave": "_total-radiografia",
+      "tramo": "100-299",
+      "n": 65,
+      "motivo": "n < 100"
+    }
+  ],
+  "disparos": {
+    "100-299": {
+      "documentos": 65,
+      "reglas": {
+        "pf-raya-densidad": {
+          "documentos": 32,
+          "senales": 187
+        },
+        "sint-gerundio-adjunto-final": {
+          "documentos": 9,
+          "senales": 12
+        },
+        "disc-anecdota-en-primera-persona": {
+          "documentos": 5,
+          "senales": 13
+        },
+        "lex-verbos-de-enfasis": {
+          "documentos": 2,
+          "senales": 3
+        },
+        "lex-importancia": {
+          "documentos": 2,
+          "senales": 2
+        },
+        "lex-no-solo-sino": {
+          "documentos": 1,
+          "senales": 1
+        },
+        "lex-traslados-del-ingles": {
+          "documentos": 1,
+          "senales": 1
+        },
+        "lex-verbos-corporativos": {
+          "documentos": 1,
+          "senales": 1
+        }
+      }
+    },
+    "300-599": {
+      "documentos": 124,
+      "reglas": {
+        "pf-raya-densidad": {
+          "documentos": 87,
+          "senales": 1130
+        },
+        "sint-gerundio-adjunto-final": {
+          "documentos": 26,
+          "senales": 28
+        },
+        "disc-anecdota-en-primera-persona": {
+          "documentos": 16,
+          "senales": 32
+        },
+        "pf-raya-espaciada": {
+          "documentos": 7,
+          "senales": 8
+        },
+        "lex-traslados-del-ingles": {
+          "documentos": 7,
+          "senales": 7
+        },
+        "lex-verbos-de-enfasis": {
+          "documentos": 4,
+          "senales": 4
+        },
+        "lex-no-solo-sino": {
+          "documentos": 3,
+          "senales": 3
+        },
+        "lex-verbos-corporativos": {
+          "documentos": 3,
+          "senales": 3
+        },
+        "canal-separador-o-tabla": {
+          "documentos": 2,
+          "senales": 61
+        }
+      }
+    },
+    "600+": {
+      "documentos": 895,
+      "reglas": {
+        "pf-raya-densidad": {
+          "documentos": 814,
+          "senales": 44526
+        },
+        "sint-gerundio-adjunto-final": {
+          "documentos": 586,
+          "senales": 2555
+        },
+        "disc-anecdota-en-primera-persona": {
+          "documentos": 376,
+          "senales": 1270
+        },
+        "lex-verbos-corporativos": {
+          "documentos": 325,
+          "senales": 587
+        },
+        "lex-importancia": {
+          "documentos": 182,
+          "senales": 237
+        },
+        "lex-verbos-de-enfasis": {
+          "documentos": 161,
+          "senales": 218
+        },
+        "lex-no-solo-sino": {
+          "documentos": 158,
+          "senales": 207
+        },
+        "lex-traslados-del-ingles": {
+          "documentos": 120,
+          "senales": 177
+        },
+        "disc-marcador-repetido": {
+          "documentos": 89,
+          "senales": 424
+        },
+        "pf-raya-espaciada": {
+          "documentos": 20,
+          "senales": 81
+        },
+        "disc-encuadre-ordinal": {
+          "documentos": 14,
+          "senales": 37
+        },
+        "canal-separador-o-tabla": {
+          "documentos": 13,
+          "senales": 38
+        },
+        "canal-negrita-markdown": {
+          "documentos": 4,
+          "senales": 6
+        },
+        "lex-innovador": {
+          "documentos": 4,
+          "senales": 6
+        },
+        "lex-imborrable-multidisciplinario-impecable": {
+          "documentos": 2,
+          "senales": 4
+        },
+        "disc-cierre-de-plantilla": {
+          "documentos": 1,
+          "senales": 1
+        },
+        "disc-referencia-interna-concreta": {
+          "documentos": 1,
+          "senales": 1
+        }
+      }
+    }
+  },
+  "notas": [
+    "Percentiles de los documentos de CALIBRACIÓN (sha256(\"semilla|id\") < 0,8); los de validación quedan para el FPR del 5.6.",
+    "Margen sobre el mínimo de 100 documentos de calibración por tramo: 100-299 -35 · 300-599 +24 · 600+ +795.",
+    "_total-radiografia: puntuacion.total de analizar() con paquetes/radiografia.json y el género «narrativa-clasica»; sin reglas estadísticas todavía: se recalcula en el 5.6.",
+    "disparos: por tramo, en los documentos de calibración, en cuántos da alguna señal cada regla de RadiografIA que puntúa y cuántas señales suman (las informativas no cuentan); primer dato para pesos y `generos` en el 5.6.",
+    "«narrativa-clasica»: capítulos de novelas y cuentos en español de autores muertos en 1945 o antes (dominio público en España): SESGO DE ÉPOCA (siglos XVI a XX, sobre todo XIX); no es narrativa contemporánea.",
+    "Las traducciones sin traductor declarado se filtran por heurísticas del catálogo (Subjects y lengua propia del autor) y por una lista a mano (Sudermann, Dourliac); puede colarse alguna: los autores de la muestra están en el manifiesto.",
+    "Documento = capítulo; como mucho 5 por libro en cada tramo (fijado antes de ver resultados; no se sube para llenar un tramo).",
+    "Fuera a mano, tras la revisión: 2 autores, 2 obras en diálogo y 21 capítulos que no son narración (teatro, prólogos con otro nombre, ensayos, dedicatorias, listas); dentro, declarado, lo dudoso: cuadros de costumbres y crónicas en libros que el catálogo da por ficción (pg61244 «Cosas que fueron»; pg71369, pg72768 de Pereda); pg62359: capítulos de «Viaje a China» de Enrique Gaspar, relato de viaje que el catálogo da por ficción («China -- Fiction»); pg15206: «En el jardín» y «En la Historia», de la fantasía «Theros» de Galdós, en forma de apóstrofe a los meses; La Quimera (pg49756): las «meditaciones» de la protagonista, en primera persona.",
+    "Pérdida aceptada, no contaminación: la regla de preliminares deja fuera narración real en libros que numeran tarde («Noli me tángere» y otros), y la de prólogos, el «Prólogo» narrativo de Tirano Banderas.",
+    "Límites del texto de las imágenes: una capitular cuyo texto alternativo no es la letra pierde esa letra («PENAS» por «APENAS», pg75382), y una letra repetida delante de una palabra en mayúsculas queda doble («CCAPÍTULO», pg62359); una capitular en su propio bloque deja la letra sola en una línea (31 líneas en 11 libros); en pg71469 y pg65719 quedan unas líneas de pie de imprenta antes del catálogo; al final de algunos capítulos quedan la fecha de redacción («Madrid, julio de 1873.») o el título de la sección siguiente (pg75382, pg72768): pocas palabras, leídos los finales de 300-599 y 600+ con marcas de contraportada.",
+    "filtro del corpus: catálogo: Type «Text», Language exactamente «es», «fiction» en Subjects, sin «[Translator]» (decisiones de la parada 1)",
+    "filtro del corpus: catálogo, heurísticas [PROPIO] aprobadas a la parada de narrativa: fuera la traducción probable por Subjects («Translations into Spanish» o literatura no hispánica) y los libros de un autor cuya lengua propia en el catálogo (la de su mayoría de libros sin traductor) no es el español",
+    "filtro del corpus: catálogo: «fiction» solo con «-- History and criticism» es crítica, no ficción (los tres tomos de «Orígenes de la novela»)",
+    "filtro del corpus: fuera a mano, con su motivo en las verificaciones: 2 autores, 2 libros y 21 capítulos (estos, después del tope por libro y sin sustituirlos)",
+    "filtro del corpus: catálogo: todas las personas del registro, con cualquier papel, con año de muerte y 1945 o antes; sin año, fuera",
+    "filtro del corpus: documento = capítulo (epub.ts): de una entrada de toc.ncx a la siguiente, sin cabecera ni pie de Gutenberg, sin títulos, llamadas a nota, números de página, ni el texto alternativo de las imágenes y sus pies, ni lo que va detrás de una marca de fin («FIN», «FIN DEL TOMO…») o del catálogo del editor; fuera paratextos (y las secciones anidadas en un prólogo), preliminares (antes de la primera división numerada), teatro por su etiqueta y licencia",
+    "filtro del corpus: libros en el orden de sha256(\"semilla|muestra|libro\"); de cada libro, como mucho 5 capítulos en cada tramo (los primeros por huella); hasta 100 documentos de calibración por tramo",
+    "filtro del corpus: fuera: capítulos con problemas de extracción y de menos de 100 palabras de prosa"
+  ]
+}

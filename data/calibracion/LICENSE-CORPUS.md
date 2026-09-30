@@ -89,3 +89,41 @@ muestra; sin licencia al menos declarada no hay cifra.**
 - **Qué se cambió:** nada del texto se redistribuye. Se derivan cifras (percentiles de métricas
   de estilo por tramo de longitud), de una mezcla por turnos que **no** es la proporción natural
   del BOE; se declara en el propio fichero.
+
+## `narrativa-clasica.json` y `narrativa-clasica.manifiesto.json` — Project Gutenberg, dominio público
+
+- **Obra:** capítulos de novelas y cuentos en español de Project Gutenberg
+  (<https://www.gutenberg.org>): el catálogo CSV (`pg_catalog.csv`, sha256
+  `52cc0ffbef2b79d8d07fdd16dada95d29952f47ce21a1557598c580ee6188bea`) y los EPUB que enlaza su
+  harvest de `epub.noimages` en español. El manifiesto guarda, de cada libro usado, su número,
+  título, autores, año de muerte y materias, que son datos de catálogo («The catalog data are
+  granted to the public domain», <https://www.gutenberg.org/policy/robot_access.html>).
+- **Qué se usó:** de cada capítulo, su texto, medido y descartado. Aquí solo quedan percentiles
+  y, por capítulo, su id (`pg<libro>-<entrada>`), su huella sha256 y su etiqueta en el índice.
+- **Dominio público en España**, comprobado libro a libro: todas las personas del registro del
+  catálogo, con cualquier papel, murieron en 1945 o antes. Leído en origen en cada ejecución:
+  - TRLPI (<https://www.boe.es/buscar/act.php?id=BOE-A-1996-8930>, sha256
+    `76e5384f3ed68e54b2319c98b50a057e6a8ffb122946e8c0b0af1179dd3492a7`), art. 26: «Los derechos
+    de explotación de la obra durarán toda la vida del autor y setenta años después de su muerte
+    o declaración de fallecimiento.»; art. 30: «Los plazos de protección establecidos en esta
+    Ley se computarán desde el día 1 de enero del año siguiente al de la muerte o declaración de
+    fallecimiento del autor […]»; disposición transitoria cuarta: «Los derechos de explotación
+    de las obras creadas por autores fallecidos antes del 7 de diciembre de 1987 tendrán la
+    duración prevista en la Ley de 10 de enero de 1879 sobre Propiedad Intelectual.»
+  - Ley de 10 de enero de 1879 (<https://www.boe.es/buscar/doc.php?id=BOE-A-1879-40001>,
+    sha256 `6440a4b04808c7a4af0efc0e42b319a7041d82a4132be7192d190c5dab84d2f4`), art. 6: «La
+    propiedad intelectual corresponde a los autores durante su vida, y se trasmite a sus
+    herederos testamentarios o legatarios por el término de ochenta años.»
+  - En 2026: 1945 + 80 = 2025, así que la obra de quien murió en 1945 o antes está en dominio
+    público desde el 1 de enero de 2026 como tarde.
+- **Project Gutenberg:** su licencia, en el pie de cada EPUB (las dos cláusulas, comprobadas en
+  los 243 EPUB leídos): «You may use this eBook for nearly any purpose such as creation of
+  derivative works, reports, performances and research.» y, § 1.C, «[…] we do not claim a right
+  to prevent you from copying, distributing, performing, displaying or creating derivative works
+  based on the work as long as all references to Project Gutenberg are removed.» Aquí no se
+  redistribuye texto; la cabecera y el pie de sus ediciones (su licencia y su marca) se retiran
+  antes de medir, y la marca solo se nombra para citar la fuente.
+- **Qué se cambió:** nada del texto se redistribuye. Se derivan cifras (percentiles de métricas
+  de estilo por tramo de longitud y los disparos de las reglas). Fuera, con su motivo en el
+  manifiesto: traducciones sin traductor declarado, crítica literaria, obras en diálogo y los
+  capítulos que no son narración. Sesgo de época declarado en el propio fichero.
