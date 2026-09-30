@@ -7,16 +7,16 @@ El ejecutor reporta descubrimientos; no toca este fichero.
 
 ## ESTADO ACTUAL — 30 de septiembre de 2026
 
-**⭐ PUNTOS 1, 2 Y 3 CERRADOS (29/09). PUNTO 4 A MEDIAS (30/09, encargo
-4.1):** el motor ya segmenta texto (`Intl.Segmenter`, desplazamientos
-exactos, prosa según CommonMark), aplica el umbral 100/300, valida
-`parametros` cerrados por detector y **detecta patrones** (formas y regex
-por palabra o frase) sobre un paquete interno de prueba; el juez de
-ejemplos de las fichas ya existe y lo reutilizará el punto 5. **136 jueces:
-130 en verde, 6 `todo`** (3 sílabas, 2 del segmentador ICU, 1 de ñ/ü),
-`tsc` limpio. Ocho commits locales de Claude Code sobre `e101b9f`.
-Faltan del punto 4: detector estructural, estadístico, puntuación y
-combinación de paquetes (4.2). No hay reglas reales ni pantalla.
+**⭐ PUNTOS 1, 2 Y 3 CERRADOS (29/09). PUNTO 4 CASI CERRADO (30/09, encargos
+4.1 y 4.2):** el motor analiza un texto de principio a fin con paquetes de
+prueba: segmenta (`Intl.Segmenter`, desplazamientos exactos, prosa según
+CommonMark), aplica el umbral 100/300, detecta **patrones** y
+**estructuras** (seis posiciones), **puntúa** por 1.000 palabras de prosa
+con desglose paquete → familia → regla (informativas aparte, atenuantes
+restan, presencia para el cierre de plantilla) y **combina paquetes** con
+origen en cada señal. **209 jueces: 204 en verde, 5 `todo`** (3 sílabas, 2
+ICU), `tsc` limpio. Falta del punto 4 solo el **detector estadístico**
+(4.3). No hay reglas reales ni pantalla.
 
 ## 1 · Identidad
 
@@ -59,7 +59,7 @@ antes del verde, push = despliegue, bitácora por la skill
 ## 4 · El plan
 
 `PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1, 2 y 3 (29/09). Abierto: el 4
-(4.1 hecho; 4.2 pendiente).
+(4.1 y 4.2 hechos; 4.3 pendiente).
 
 ## 5 · Decisiones
 
@@ -152,12 +152,27 @@ antes del verde, push = despliegue, bitácora por la skill
   regex limitadas a i m s u, la g la pone el motor; tramos estadísticos
   100-299 / 300-599 / 600+ [PROPIO]. Hallazgos ICU («Sr.», «coche-cama»)
   no se parchean: `todo` y decisión con datos en el punto 5.
+- 30/09 — **Decisiones del 4.2**: puntuación = peso × densidad por 1.000
+  palabras de prosa [DOC Biber, Conrad & Reppen 1998; pseudobibeR];
+  `ultimo-parrafo` por presencia [PROPIO]; sin tope, escala, signo ni
+  veredicto hasta los puntos 5-6; informativas a cero y aparte;
+  atenuantes restan; **bajo 100 palabras no se analiza nada** (ni
+  subrayados; si el punto 6 lo quiere, se reabre allí). Combinación:
+  desglose paquete → familia → regla, familias nunca mezcladas, ids
+  repetidos entre paquetes permitidos. Ñ/ü: solo se quita U+0301 (RAE:
+  ñ letra propia; diéresis signo distinto de la tilde). El motor pone
+  las anclas; el paso 2 rechaza `^` inicial o `$` final (paridad de
+  barras). Cita corregida: el capítulo de Helsinki sobre longitud de
+  texto es de **Liimatta 2024**, no de Laippala (error de la estrategia).
 
 ## 6 · Cabos abiertos
 
-- Para el 4.2 (abrir con ellos): `tildes:true` quita también ñ y ü (NFD
-  + \p{M}) → quitar solo el acento agudo U+0301; y «ámbito frase exige
-  regex» como tercera comprobación del paso 2, con fixture.
+- Para el 4.3 (abrir con ellos): rechazar dos paquetes con el mismo
+  `cabecera.nombre` en `analizar()`, con juez; `description` de
+  `motor/package.json` caducada.
+- Para el punto 5: `tildes:true` junta «pasó/paso» y «está/esta»; las
+  listas de formas deben tenerlo en cuenta (usar `tildes:false` donde la
+  tilde distinga).
 - Para el punto 5: abreviaturas («Sr.») parten la frase y los compuestos
   con guión cuentan dos palabras; decidir con datos si hace falta una
   lista de abreviaturas antes del segmentador.

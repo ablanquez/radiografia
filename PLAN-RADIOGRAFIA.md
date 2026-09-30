@@ -273,19 +273,36 @@ Sin interfaz. Solo funciones y jueces.
       de ejemplos (positivos ≥ 1 señal, negativos 0) que reutilizará el
       punto 5. Hallazgo: `tildes:true` quitaba también ñ y ü → se corrige
       al abrir el 4.2
-- [ ] Detector estructural (frase y párrafo)
+- [x] Detector estructural (`detector-estructural.ts`, 4.2, 30/09): seis
+      posiciones (inicio/fin de frase, inicio/fin de párrafo, último
+      párrafo, cualquiera) sobre frase o párrafo sin blancos finales, con
+      desplazamientos exactos; `minimo` de ocurrencias; el ancla la pone el
+      motor y el paso 2 rechaza la escrita por el autor. Ñ y ü protegidas
+      (solo se quita U+0301, Ortografía RAE 2010); «ámbito frase exige
+      regex» en el paso 2
 - [ ] Detector estadístico (texto entero contra **percentiles humanos por
       género × tramo de longitud**, nunca umbral absoluto)
-- [ ] Puntuación: normalizada por longitud, con acumulación por familia;
-      reglas informativas no suman; atenuantes restan
+- [x] Puntuación (`puntuar.ts`, 4.2): puntos por 1.000 palabras de prosa
+      [DOC Biber, Conrad & Reppen 1998 cap. 6; pseudobibeR] con desglose
+      paquete → familia → regla; `ultimo-parrafo` puntúa por PRESENCIA, no
+      por densidad [PROPIO: una señal binaria no se normaliza]; informativas
+      a cero y aparte; atenuantes restan; sin tope, escala ni veredicto (se
+      deciden en 5 y 6); bajo 100 palabras no se analiza; entre 100 y 299,
+      marca «poco fiable»
 - [ ] Longitud mínima 100/300 sobre **palabras de prosa** (sin viñetas,
       tablas ni código): «texto insuficiente» bajo 100, aviso entre 100 y
       299, con juez en ambos lados de cada borde → **HECHO** en 4.1
       (`umbral.ts`, jueces 99/100, 299/300, 400 con 350 en viñetas)
-- [ ] Combinación de varios paquetes con origen en cada señal
-- [ ] Jueces alimentados por los ejemplos de las fichas: cada ejemplo
-      positivo dispara, cada negativo no. Vistos en rojo antes del verde.
-      **PUNTO 4 CERRADO**
+- [x] Combinación de varios paquetes con origen en cada señal
+      (`analizar.ts`, 4.2): desglose por paquete, familias nunca mezcladas,
+      ids de regla repetidos entre paquetes permitidos y distinguibles.
+      Pendiente al abrir 4.3: rechazar dos paquetes con el mismo
+      `cabecera.nombre`
+- [x] Jueces alimentados por los ejemplos de las fichas
+      (`ejemplos.spec.ts`): cada positivo dispara, cada negativo no; cubre
+      patrón y estructural sobre el paquete interno (10 reglas) y el
+      secundario. Suite 4.2: **209 jueces, 204 en verde, 5 `todo`**.
+      **PUNTO 4 CERRADO** cuando 4.3 (detector estadístico) esté hecho
 
 ## 5 — Paquete RadiografIA v1
 
