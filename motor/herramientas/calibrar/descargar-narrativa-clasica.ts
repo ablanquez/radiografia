@@ -76,6 +76,18 @@ const LITERALES_TRLPI = [
   'Los derechos de explotación de las obras creadas por autores fallecidos antes del 7 de diciembre de 1987 tendrán la duración prevista en la Ley de 10 de enero de 1879 sobre Propiedad Intelectual.',
 ];
 const LITERAL_1879 = 'por el término de ochenta años';
+/**
+ * [DOC] La licencia de Project Gutenberg, en el pie de cada EPUB (leída en
+ * pg12457 el 30/09/2026 y comprobada aquí en cada EPUB leído): se puede usar
+ * para investigación y obras derivadas, y la marca se retira. Aquí no se
+ * redistribuye texto; la cabecera y el pie de Gutenberg (su licencia y su
+ * marca) se quitan antes de medir, y la marca solo se nombra para citar la
+ * fuente.
+ */
+const LITERALES_GUTENBERG = [
+  'You may use this eBook for nearly any purpose such as creation of derivative works, reports, performances and research.',
+  'we do not claim a right to prevent you from copying, distributing, performing, displaying or creating derivative works based on the work as long as all references to Project Gutenberg are removed.',
+];
 
 /** Revisados a mano, capítulo extraído frente al EPUB (30/09/2026). */
 const REVISADOS_A_MANO = [
@@ -230,6 +242,7 @@ const capitulosFueraAMano: string[] = [];
 const cuenta =(t: TramoDeCalibracion) => hechos.filter((h) => h.tramo === t && h.reparto === 'calibracion').length;
 let agotado: string | null = null;
 let epubsLeidos = 0;
+const sinLicenciaDeGutenberg: string[] = [];
 try {
   for (const libro of ordenDeMuestra(SEMILLA, conEpub, (l) => String(l.id))) {
     if (TRAMOS.every((t) => cuenta(t) >= MINIMO)) break;
@@ -239,7 +252,10 @@ try {
     epubsLeidos++;
     let capitulos;
     try {
-      capitulos = capitulosDeEpub(leerZip(epub));
+      const zip = leerZip(epub);
+      const pie = [...zip].filter(([n]) => /\.x?html?$/.test(n)).map(([, b]) => textoPlano(b.toString('utf8'))).join(' ');
+      for (const l of LITERALES_GUTENBERG) if (!pie.includes(l)) sinLicenciaDeGutenberg.push(`pg${libro.id}`);
+      capitulos = capitulosDeEpub(zip);
     } catch (e) {
       suma(descartados, `EPUB ilegible: ${(e as Error).message.replace(/ .*$/, '')}`);
       continue;
@@ -314,10 +330,10 @@ const manifiesto = prepararManifiesto(
     },
     licencia: {
       nombre: 'Dominio público en España',
-      literal: [...LITERALES_TRLPI.map((l) => `TRLPI: «${l}»`), `Ley de 10 de enero de 1879, art. 6: «…${LITERAL_1879}…»`],
+      literal: [...LITERALES_TRLPI.map((l) => `TRLPI: «${l}»`), `Ley de 10 de enero de 1879, art. 6: «…${LITERAL_1879}…»`, ...LITERALES_GUTENBERG.map((l) => `licencia de Project Gutenberg, en cada EPUB: «…${l}»`)],
       url: TRLPI,
       estado: `verificada por libro: todas las personas del registro del catálogo murieron en ${ULTIMO_ANIO_DE_MUERTE} o antes (vida + 80 años desde el 1 de enero siguiente)`,
-      atribucion: 'Project Gutenberg (https://www.gutenberg.org); el autor y el título de cada libro, en el manifiesto',
+      atribucion: 'Project Gutenberg (https://www.gutenberg.org), citado como fuente; el texto y la marca de sus ediciones se retiran según su licencia; el autor y el título de cada libro, en el manifiesto',
     },
     documentacion: [
       { que: 'política de acceso de robots de Project Gutenberg (harvest, catálogo)', url: 'https://www.gutenberg.org/policy/robot_access.html' },
@@ -355,6 +371,10 @@ const manifiesto = prepararManifiesto(
         que: 'dominio público, comprobado en el BOE en cada ejecución',
         resultado: `TRLPI consolidado (arts. 26 y 30, DT 4.ª) y Ley de 10 de enero de 1879 (art. 6, «por el término de ochenta años»), literales en la página descargada: entran autores fallecidos en ${ULTIMO_ANIO_DE_MUERTE} o antes`,
       },
+      {
+        que: 'licencia de Project Gutenberg en el pie de cada EPUB leído (las dos cláusulas de licencia.literal)',
+        resultado: sinLicenciaDeGutenberg.length === 0 ? `en los ${epubsLeidos}` : `falta en: ${[...new Set(sinLicenciaDeGutenberg)].join(', ')}`,
+      },
       { que: 'extracción de capítulos revisada a mano', resultado: REVISADOS_A_MANO.join('; ') },
       { que: 'autores fuera a mano, con su motivo', resultado: Object.entries(FUERA_POR_AUTOR).map(([a, m]) => `${a}: ${m}`).join('; ') },
       { que: 'libros fuera a mano, con su motivo', resultado: Object.entries(FUERA_POR_LIBRO).map(([l, m]) => `pg${l}: ${m}`).join('; ') },
@@ -390,7 +410,7 @@ const manifiesto = prepararManifiesto(
       `Documento = capítulo; como mucho ${TOPE_POR_LIBRO} por libro en cada tramo (fijado antes de ver resultados; no se sube para llenar un tramo).`,
       `Fuera a mano, tras la revisión: ${Object.keys(FUERA_POR_AUTOR).length} autores, ${Object.keys(FUERA_POR_LIBRO).length} obras en diálogo y ${Object.keys(FUERA_POR_CAPITULO).length} capítulos que no son narración (teatro, prólogos con otro nombre, ensayos, dedicatorias, listas); dentro, declarado, lo dudoso: ${DENTRO_DECLARADO.join('; ')}.`,
       'Pérdida aceptada, no contaminación: la regla de preliminares deja fuera narración real en libros que numeran tarde («Noli me tángere» y otros), y la de prólogos, el «Prólogo» narrativo de Tirano Banderas.',
-      'Límites del texto de las imágenes: una capitular cuyo texto alternativo no es la letra pierde esa letra («PENAS» por «APENAS», pg75382), y una letra repetida delante de una palabra en mayúsculas queda doble («CCAPÍTULO», pg62359); una capitular en su propio bloque deja la letra sola en una línea (31 líneas en 11 libros); en pg71469 quedan dos líneas de pie de imprenta antes del catálogo.',
+      'Límites del texto de las imágenes: una capitular cuyo texto alternativo no es la letra pierde esa letra («PENAS» por «APENAS», pg75382), y una letra repetida delante de una palabra en mayúsculas queda doble («CCAPÍTULO», pg62359); una capitular en su propio bloque deja la letra sola en una línea (31 líneas en 11 libros); en pg71469 y pg65719 quedan unas líneas de pie de imprenta antes del catálogo; al final de algunos capítulos quedan la fecha de redacción («Madrid, julio de 1873.») o el título de la sección siguiente (pg75382, pg72768): pocas palabras, leídos los finales de 300-599 y 600+ con marcas de contraportada.',
     ],
     libros: librosUsados
       .map((l) => ({ id: l.id, titulo: l.titulo, autores: l.autores, muerte: Math.max(...l.personas.map((p) => p.muerte!)), materias: l.materias }))
