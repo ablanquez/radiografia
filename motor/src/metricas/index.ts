@@ -11,7 +11,7 @@ import { frasesPor100Palabras } from './frases-por-100-palabras.ts';
 import { cvLongitudFrase } from './cv-longitud-frase.ts';
 import { ratioComasPuntos } from './ratio-comas-puntos.ts';
 import { puntuacionPor1000 } from './puntuacion-por-1000.ts';
-import { parentesisComillasPuntoycomaPor1000 } from './parentesis-comillas-puntoycoma-por-1000.ts';
+import { puntuacionSecundariaPor1000 } from './puntuacion-secundaria-por-1000.ts';
 import { ttr } from './ttr.ts';
 import { mattr50 } from './mattr-50.ts';
 import { mtld } from './mtld.ts';
@@ -26,7 +26,7 @@ export const METRICAS: Readonly<Record<NombreDeMetrica, Metrica>> = {
   'cv-longitud-frase': cvLongitudFrase,
   'ratio-comas-puntos': ratioComasPuntos,
   'puntuacion-por-1000': puntuacionPor1000,
-  'parentesis-comillas-puntoycoma-por-1000': parentesisComillasPuntoycomaPor1000,
+  'puntuacion-secundaria-por-1000': puntuacionSecundariaPor1000,
   ttr,
   'mattr-50': mattr50,
   mtld,

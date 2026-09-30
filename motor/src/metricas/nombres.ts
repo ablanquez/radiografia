@@ -15,13 +15,17 @@
  *     se pudo abrir; Ríos Hernández (2009) y Law (2011) dan «frases por cada
  *     100 palabras», y la transcripción de sintaxis.md § 8, «palabras por
  *     frase». No son la misma magnitud, y no se implementa de memoria.
+ *
+ * Encargo 5.5: parentesis-comillas-puntoycoma-por-1000 pasa a llamarse
+ * puntuacion-secundaria-por-1000 (P15 con dos puntos, barras, raya y comillas
+ * curvas).
  */
 export const NOMBRES_DE_METRICAS = [
   'frases-por-100-palabras',
   'cv-longitud-frase',
   'ratio-comas-puntos',
   'puntuacion-por-1000',
-  'parentesis-comillas-puntoycoma-por-1000',
+  'puntuacion-secundaria-por-1000',
   'ttr',
   'mattr-50',
   'mtld',

@@ -4,8 +4,10 @@
  *
  *   signos / palabras de prosa × 1.000
  *
- * Conjunto de signos [PROPIO, del encargo 4.3]: . , ; : ¿ ? ¡ ! ( ) « » " — …
- * Nada más: ni el guion, ni la barra, ni las comillas curvas “ ” ‘ ’.
+ * Conjunto de signos [PROPIO, del encargo 4.3]: . , ; : ¿ ? ¡ ! ( ) « » " — …,
+ * y desde el 5.5 las comillas curvas “ ” (decisión del 30/09,
+ * RADIOGRAFIA-ESTADO.md § 6). Nada más: ni el guion, ni la barra, ni las
+ * comillas simples ‘ ’.
  * «...» cuenta como un signo, igual que «…», y un signo entre dos cifras
  * («3,5», «1.000», «10:30») no cuenta (base.ts, contarSignos).
  * Medido en español y en inglés: puntuación total más baja en texto generado
@@ -15,7 +17,7 @@
  */
 import { contarSignos, palabrasDeProsa, textosDeProsa, type Metrica } from './base.ts';
 
-const SIGNOS = new Set(['.', ',', ';', ':', '¿', '?', '¡', '!', '(', ')', '«', '»', '"', '—', '…']);
+const SIGNOS = new Set(['.', ',', ';', ':', '¿', '?', '¡', '!', '(', ')', '«', '»', '"', '“', '”', '—', '…']);
 
 export const puntuacionPor1000: Metrica = (texto) => {
   const palabras = palabrasDeProsa(texto).length;

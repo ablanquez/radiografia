@@ -1,6 +1,7 @@
 /**
  * Jueces de puntuacion-por-1000 (P16; encargo 4.3): signos de
- * . , ; : ¿ ? ¡ ! ( ) « » " — … por 1.000 palabras de prosa. Cifras A MANO.
+ * . , ; : ¿ ? ¡ ! ( ) « » " “ ” — … por 1.000 palabras de prosa (las comillas
+ * curvas, desde el 5.5). Cifras A MANO.
  * [DOC] https://nodejs.org/api/test.html — node:test.
  */
 import { test, describe } from 'node:test';
@@ -25,9 +26,9 @@ describe('puntuacion-por-1000', () => {
     assert.equal(valor('—Vamos ya —dijo ella; y se fue pronto.'), 500);
   });
 
-  test('lo que no está en el conjunto no cuenta: «/» y las comillas curvas → 1 / 4 × 1.000 = 250', () => {
-    // Solo el punto final. Palabras: uno dos tres cuatro.
-    assert.equal(valor('Uno/dos “tres” cuatro.'), 250);
+  test('las comillas curvas cuentan (5.5) y la barra no: “ ” . = 3 / 4 × 1.000 = 750', () => {
+    // Palabras: uno dos tres cuatro.
+    assert.equal(valor('Uno/dos “tres” cuatro.'), 750);
   });
 
   test('un signo entre cifras no cuenta → 1 signo («.») / 3 palabras (mide, 3,5, metros)', () => {
