@@ -1,7 +1,7 @@
 /**
  * El juez del paquete real, paquetes/radiografia.json (encargo 5.1; punto 5
  * del plan): lo que el esquema del motor no exige, porque sirve también a
- * paquetes de terceros, y RadiografIA sí. Siete condiciones:
+ * paquetes de terceros, y RadiografIA sí. Nueve condiciones:
  *   1. valida — pasa validarPaquete sin ningún error.
  *   2. sin-fuente — ninguna regla con nivelEvidencia «sin fuente»: el esquema
  *      lo admite para paquetes de terceros; RadiografIA no (decisión del 3.1,
@@ -19,6 +19,20 @@
  *      [PROPIO, decisión del 30/09, sin doctrina; la calibración es el juez]
  *      medido en español 3, medido en inglés 2, anecdótico 1, norma 0; una
  *      regla informativa, o de familia informativa, 0.
+ *   8. regex-ascii (encargo 5.2) — ninguna regex lleva \b ni \w (ni sus
+ *      contrarios \B y \W), sin escapar: en JavaScript son ASCII y «á», «é» o
+ *      «ñ» cuentan como no-palabra. Los límites se escriben con (?<!\p{L}) y
+ *      (?!\p{L}), y las letras con \p{L}.
+ *      [DOC] https://developer.mozilla.org/docs/Web/JavaScript/Reference/Regular_expressions/Word_boundary_assertion
+ *      — «A word character includes … Letters (A–Z, a–z), numbers (0–9), and
+ *      underscore (_)»; con la bandera u y la i, solo además lo que el plegado
+ *      de mayúsculas convierte en esos caracteres. «Word characters are also
+ *      matched by the \w character class escape.» [PROPIO] \B y \W, por la
+ *      misma definición.
+ *   9. regex-u (encargo 5.2) — toda regex con \p{…} o \P{…} lleva la bandera
+ *      u: sin ella, \p no es una clase de Unicode sino una «p» escapada.
+ *   «Sin escapar» = con un número par de barras inversas delante (la misma
+ *   regla que validar.ts usa para el «$»).
  *
  * Cada condición tiene al menos un caso que la rompe sobre una copia del
  * paquete real, y el juez tiene que nombrar esa condición y ninguna otra
@@ -38,8 +52,8 @@ const leer = (): Paquete => JSON.parse(readFileSync(RUTA, 'utf8')) as Paquete;
 
 const FAMILIAS = ['lexico', 'sintaxis', 'puntuacion-formato', 'estadistica', 'discurso', 'canal'];
 
-/** El prefijo del id de cada familia con reglas (encargo 5.1). Las demás lo deciden en su tanda. */
-const PREFIJOS: Readonly<Record<string, string>> = { canal: 'canal-', 'puntuacion-formato': 'pf-' };
+/** El prefijo del id de cada familia con reglas (encargos 5.1 y 5.2). Las demás lo deciden en su tanda. */
+const PREFIJOS: Readonly<Record<string, string>> = { canal: 'canal-', 'puntuacion-formato': 'pf-', lexico: 'lex-' };
 
 /** El peso máximo de cada nivel de evidencia. «sin fuente» no tiene: ya lo prohíbe la condición 2. */
 const MAXIMO: Readonly<Partial<Record<Regla['nivelEvidencia'], number>>> = {
@@ -49,7 +63,7 @@ const MAXIMO: Readonly<Partial<Record<Regla['nivelEvidencia'], number>>> = {
   norma: 0,
 };
 
-type Condicion = 'valida' | 'sin-fuente' | 'fuente-https' | 'seis-familias' | 'canal-informativa' | 'ids' | 'peso';
+type Condicion = 'valida' | 'sin-fuente' | 'fuente-https' | 'seis-familias' | 'canal-informativa' | 'ids' | 'peso' | 'regex-ascii' | 'regex-u';
 
 interface Problema {
   condicion: Condicion;
@@ -70,10 +84,20 @@ function comprobar(paquete: Paquete): Problema[] {
   if (familia.get('canal')?.informativa !== true) mal('canal-informativa', 'la familia canal no es informativa');
 
   const vistos = new Set<string>();
+  // Una barra inversa SIN escapar (con un número par de barras delante) seguida de la letra.
+  const ASCII = /(?:^|[^\\])(?:\\\\)*\\[bBwW]/;
+  const UNICODE = /(?:^|[^\\])(?:\\\\)*\\[pP]\{/;
   for (const r of paquete.reglas) {
     if (r.nivelEvidencia === 'sin fuente') mal('sin-fuente', `regla "${r.id}": nivelEvidencia «sin fuente»`);
     if (!r.fuente.some((f) => f.url.startsWith('https://'))) mal('fuente-https', `regla "${r.id}": ninguna fuente con URL https`);
     if (r.familia === 'canal' && !r.informativa) mal('canal-informativa', `regla "${r.id}": es de canal y no es informativa`);
+    if (r.detector !== 'estadístico') {
+      const { regex, flags } = r.parametros;
+      if (regex !== undefined && ASCII.test(regex)) mal('regex-ascii', `regla "${r.id}": la regex lleva \\b, \\B, \\w o \\W, que en JavaScript son ASCII`);
+      if (regex !== undefined && UNICODE.test(regex) && !(flags ?? '').includes('u')) {
+        mal('regex-u', `regla "${r.id}": la regex lleva \\p{…} y sus banderas no tienen «u»`);
+      }
+    }
 
     if (vistos.has(r.id)) mal('ids', `regla "${r.id}": id repetido`);
     vistos.add(r.id);
@@ -93,7 +117,7 @@ function comprobar(paquete: Paquete): Problema[] {
 }
 
 describe('el paquete RadiografIA (paquetes/radiografia.json)', () => {
-  test('cumple las siete condiciones', () => {
+  test('cumple las nueve condiciones', () => {
     assert.deepEqual(comprobar(leer()), []);
   });
 });
@@ -104,6 +128,11 @@ describe('el juez de RadiografIA caza cada condición rota', () => {
     const r = p.reglas.find((x) => x.id === id);
     assert.ok(r, `el paquete ya no trae la regla ${id}: este caso no rompe nada`);
     return r;
+  };
+  /** Los parámetros de una regla con regex (patrón o estructural), para romperlos. */
+  const patron = (r: Regla): { regex?: string; flags?: string } => {
+    assert.ok(r.detector !== 'estadístico', `${r.id} no tiene regex: este caso no rompe nada`);
+    return r.parametros as { regex?: string; flags?: string };
   };
   /** Cambia a por b en un texto, y exige que a esté. */
   const cambiar = (texto: string, a: string, b: string): string => {
@@ -136,8 +165,8 @@ describe('el juez de RadiografIA caza cada condición rota', () => {
       ['ids'],
       (p) => {
         const r = regla(p, 'pf-raya-espaciada');
-        r.familia = 'lexico';
-        r.id = 'lexico-raya-espaciada';
+        r.familia = 'sintaxis';
+        r.id = 'sintaxis-raya-espaciada';
       },
     ],
     ['medido en inglés con peso 3 (máximo 2)', ['peso'], (p) => (regla(p, 'pf-raya-densidad').peso = 3)],
@@ -151,11 +180,25 @@ describe('el juez de RadiografIA caza cada condición rota', () => {
         r.explicacion = cambiar(r.explicacion, 'Peso 1, y no 2', 'Uno, y no dos');
       },
     ],
+    // Encargo 5.2: ni \b ni \w, y \p{…} solo con la bandera u.
+    ['una regex con \\b', ['regex-ascii'], (p) => (patron(regla(p, 'pf-raya-espaciada')).regex = '\\bno\\b')],
+    ['una regex con \\w', ['regex-ascii'], (p) => (patron(regla(p, 'pf-raya-espaciada')).regex = '\\w+\\s—')],
+    ['una regex con \\W dentro de una clase', ['regex-ascii'], (p) => (patron(regla(p, 'pf-raya-espaciada')).regex = '[\\W]—')],
+    ['una barra escapada seguida de «b» no es \\b (sin problema)', [], (p) => (patron(regla(p, 'pf-raya-espaciada')).regex = '\\\\b')],
+    [
+      'una regex con \\p{L} sin la bandera u',
+      ['regex-u'],
+      (p) => {
+        const q = patron(regla(p, 'pf-raya-espaciada'));
+        q.regex = '(?<!\\p{L})—';
+        delete q.flags;
+      },
+    ],
   ];
 
   test('hay al menos un caso por condición', () => {
     const cubiertas = new Set(casos.flatMap(([, condiciones]) => condiciones));
-    assert.deepEqual([...cubiertas].sort(), ['canal-informativa', 'fuente-https', 'ids', 'peso', 'seis-familias', 'sin-fuente', 'valida']);
+    assert.deepEqual([...cubiertas].sort(), ['canal-informativa', 'fuente-https', 'ids', 'peso', 'regex-ascii', 'regex-u', 'seis-familias', 'sin-fuente', 'valida']);
   });
 
   for (const [nombre, esperadas, romper] of casos) {
