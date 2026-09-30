@@ -200,7 +200,7 @@ const manifiesto = prepararManifiesto(
         `README.md, prosa: «${LITERAL_GNU}…» — contradicción interna del repositorio; valen LICENSE.txt y los metadatos, que coinciden con corpus.md`,
       ],
       url: `${RAW}/LICENSE.txt`,
-      estado: 'verificada en el repositorio (LICENSE.txt y metadatos del README)',
+      estado: 'verificada en el repositorio: LICENSE.txt y metadatos del README',
       atribucion: ATRIBUCION,
     },
     documentacion: [
