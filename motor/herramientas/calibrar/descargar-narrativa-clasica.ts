@@ -219,6 +219,7 @@ interface Hecho {
   palabrasProsa: number;
   tramo: TramoDeCalibracion;
   reparto: Reparto;
+  recorte: { desde: string; palabras: number } | null;
 }
 const hechos: Hecho[] = [];
 const tomadas = new Set<string>();
@@ -255,7 +256,7 @@ try {
         return [];
       }
       const id = `pg${libro.id}-${String(c.orden).padStart(3, '0')}`;
-      return [{ id, libro: libro.id, capitulo: c.etiqueta, texto: c.texto, palabrasProsa, tramo, reparto: reparto(SEMILLA, id) }];
+      return [{ id, libro: libro.id, capitulo: c.etiqueta, texto: c.texto, palabrasProsa, tramo, reparto: reparto(SEMILLA, id), recorte: c.recorte }];
     });
     let usadoAlguno = false;
     for (const t of TRAMOS) {
@@ -332,7 +333,7 @@ const manifiesto = prepararManifiesto(
       'catálogo: «fiction» solo con «-- History and criticism» es crítica, no ficción (los tres tomos de «Orígenes de la novela»)',
       `fuera a mano, con su motivo en las verificaciones: ${Object.keys(FUERA_POR_AUTOR).length} autores, ${Object.keys(FUERA_POR_LIBRO).length} libros y ${Object.keys(FUERA_POR_CAPITULO).length} capítulos (estos, después del tope por libro y sin sustituirlos)`,
       `catálogo: todas las personas del registro, con cualquier papel, con año de muerte y ${ULTIMO_ANIO_DE_MUERTE} o antes; sin año, fuera`,
-      'documento = capítulo (epub.ts): de una entrada de toc.ncx a la siguiente, sin cabecera ni pie de Gutenberg, sin títulos, llamadas a nota, números de página ni el texto alternativo de las imágenes y sus pies; fuera paratextos (y las secciones anidadas en un prólogo), preliminares (antes de la primera división numerada), teatro por su etiqueta y licencia',
+      'documento = capítulo (epub.ts): de una entrada de toc.ncx a la siguiente, sin cabecera ni pie de Gutenberg, sin títulos, llamadas a nota, números de página, ni el texto alternativo de las imágenes y sus pies, ni lo que va detrás de una marca de fin («FIN», «FIN DEL TOMO…») o del catálogo del editor; fuera paratextos (y las secciones anidadas en un prólogo), preliminares (antes de la primera división numerada), teatro por su etiqueta y licencia',
       `libros en el orden de sha256("semilla|muestra|libro"); de cada libro, como mucho ${TOPE_POR_LIBRO} capítulos en cada tramo (los primeros por huella); hasta ${MINIMO} documentos de calibración por tramo`,
       'fuera: capítulos con problemas de extracción y de menos de 100 palabras de prosa',
     ],
@@ -366,6 +367,10 @@ const manifiesto = prepararManifiesto(
       { que: 'libros elegibles con EPUB en el harvest; EPUB leídos (en orden de huella) hasta llenar los tramos', resultado: `${conEpub.length} elegibles; ${epubsLeidos} leídos; ${librosUsados.length} con algún capítulo en la muestra` },
       { que: 'entradas del índice fuera, por motivo', resultado: Object.entries(fueraDelIndice).map(([m, n]) => `${m}: ${n}`).join('; ') },
       {
+        que: 'capítulos de la muestra recortados al final (epub.ts: desde una marca de fin o el catálogo del editor)',
+        resultado: `${hechos.filter((h) => h.recorte !== null).length} capítulos; ${hechos.reduce((s, h) => s + (h.recorte?.palabras ?? 0), 0)} palabras fuera; desde: ${[...new Set(hechos.flatMap((h) => (h.recorte === null ? [] : [h.recorte.desde])))].join(' · ')}`,
+      },
+      {
         que: 'capítulos con problemas de extracción',
         resultado:
           Object.entries(descartados)
@@ -385,7 +390,7 @@ const manifiesto = prepararManifiesto(
       `Documento = capítulo; como mucho ${TOPE_POR_LIBRO} por libro en cada tramo (fijado antes de ver resultados; no se sube para llenar un tramo).`,
       `Fuera a mano, tras la revisión: ${Object.keys(FUERA_POR_AUTOR).length} autores, ${Object.keys(FUERA_POR_LIBRO).length} obras en diálogo y ${Object.keys(FUERA_POR_CAPITULO).length} capítulos que no son narración (teatro, prólogos con otro nombre, ensayos, dedicatorias, listas); dentro, declarado, lo dudoso: ${DENTRO_DECLARADO.join('; ')}.`,
       'Pérdida aceptada, no contaminación: la regla de preliminares deja fuera narración real en libros que numeran tarde («Noli me tángere» y otros), y la de prólogos, el «Prólogo» narrativo de Tirano Banderas.',
-      'Límites del texto de las imágenes: una capitular cuyo texto alternativo no es la letra pierde esa letra («PENAS» por «APENAS», pg75382), y una letra repetida delante de una palabra en mayúsculas queda doble («CCAPÍTULO», pg62359).',
+      'Límites del texto de las imágenes: una capitular cuyo texto alternativo no es la letra pierde esa letra («PENAS» por «APENAS», pg75382), y una letra repetida delante de una palabra en mayúsculas queda doble («CCAPÍTULO», pg62359); una capitular en su propio bloque deja la letra sola en una línea (31 líneas en 11 libros); en pg71469 quedan dos líneas de pie de imprenta antes del catálogo.',
     ],
     libros: librosUsados
       .map((l) => ({ id: l.id, titulo: l.titulo, autores: l.autores, muerte: Math.max(...l.personas.map((p) => p.muerte!)), materias: l.materias }))
