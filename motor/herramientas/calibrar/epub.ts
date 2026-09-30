@@ -21,9 +21,9 @@
  * Capítulo [PROPIO]: lo que va de una entrada del índice a la siguiente, en el
  *    orden de lectura (entradas anidadas incluidas), cortado en el pie de
  *    Gutenberg; del HTML de cada fichero solo cuenta su `<body>`. Sin sus
- *    títulos (h1-h6), sin llamadas a nota y sin números de página; el resto
- *    pasa por html.ts. Fuera, con su motivo: los paratextos (esParatexto) y la
- *    licencia de Gutenberg.
+ *    títulos (h1-h6), sin llamadas a nota, sin números de página y sin el
+ *    texto de las imágenes (sinImagenes); el resto pasa por html.ts. Fuera,
+ *    con su motivo: los paratextos (esParatexto) y la licencia de Gutenberg.
  */
 import { lineasDeHtml, limpiarHtml, textoPlano } from './html.ts';
 
@@ -91,6 +91,37 @@ const NUMERADA = /^[\s\-–—]*(?:(?:cap[ií]tulo|tranco|parte|libro|tratado|jo
 const ROMANO_EN_MINUSCULA = /^\s*[ivxlcdm]+\s*(?:[.:\-–—]|$)/u;
 export function esDivisionNumerada(etiqueta: string): boolean {
   return NUMERADA.test(etiqueta) && !ROMANO_EN_MINUSCULA.test(etiqueta);
+}
+
+/**
+ * [PROPIO, visto en 157 de los 243 libros de la muestra] En los EPUB
+ * «noimages» de Ebookmaker cada imagen es un `<span id="img_…">` con su texto
+ * alternativo: «Cabecera», «Pie», «decoración», el pie de la ilustración, la
+ * transcripción de una página reproducida… No es texto del libro: se quita,
+ * con los pies (`class="caption"`) y con el pie que repite el texto
+ * alternativo justo detrás de la imagen (pg15115). Salvo una capitular: si el
+ * texto alternativo es una letra («S» + «EÑOR», pg23957), es la primera de la
+ * palabra y se queda; si detrás ya va la palabra entera, con esa letra y una
+ * minúscula («A» + «Aunque», pg54228), no. «L» + «LEGÓ» da «LLEGÓ» (pg36573).
+ * Límites, a la vista: una capitular cuyo texto alternativo no es la letra
+ * pierde esa letra («letra-a-ilo» + «PENAS», pg75382), y una letra repetida
+ * delante de una palabra en mayúsculas se queda doble («C» + «CAPÍTULO»,
+ * pg62359).
+ */
+const IMAGEN = /<span\b[^>]*\bid="img_[^"]*"[^>]*>([\s\S]*?)<\/span>((?:\s|<\/?(?:a|br|span)\b[^>]*>)*)([^<]*)/gi;
+export function sinImagenes(html: string): string {
+  return html
+    .replace(/<(span|p|div)\b[^>]*\bclass="[^"]*\bcaption\b[^"]*"[^>]*>[\s\S]*?<\/\1>/gi, ' ')
+    .replace(IMAGEN, (_: string, alt: string, entre: string, detras: string) => {
+      const texto = textoPlano(alt);
+      const siguiente = textoPlano(detras);
+      if (/^[¡¿«"'(]?\p{L}$/u.test(texto)) {
+        const letra = texto.slice(-1).toLowerCase();
+        const repetida = siguiente[0]?.toLowerCase() === letra && /^\p{Ll}$/u.test(siguiente[1] ?? '');
+        return (repetida ? '' : texto) + entre + detras;
+      }
+      return entre + (texto !== '' && siguiente === texto ? '' : detras);
+    });
 }
 
 const atributo = (etiqueta: string, nombre: string): string | undefined => new RegExp(`\\b${nombre}="([^"]*)"`).exec(etiqueta)?.[1];
@@ -187,7 +218,7 @@ export function capitulosDeEpub(zip: ReadonlyMap<string, Buffer>): CapitulosDeEp
       return;
     }
     const hasta = Math.min(ordenadas[i + 1]?.posicion ?? fin, fin);
-    const fragmento = limpiarHtml(conjunto.slice(e.posicion, hasta))
+    const fragmento = sinImagenes(limpiarHtml(conjunto.slice(e.posicion, hasta)))
       .replace(/<(h[1-6])\b[^>]*>[\s\S]*?<\/\1>/gi, '\n')
       .replace(/<a\b[^>]*\bclass="[^"]*\bfnanchor\b[^"]*"[^>]*>[\s\S]*?<\/a>/gi, '')
       .replace(/<span\b[^>]*\bclass="[^"]*\bpagenum\b[^"]*"[^>]*>[\s\S]*?<\/span>/gi, '');
