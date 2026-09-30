@@ -55,7 +55,11 @@ paquetes de prueba:
   por palabra o por frase, y expresiones en una posición (principio o final
   de frase o de párrafo, último párrafo, o en cualquier punto de un párrafo).
   Miran solo la prosa, salvo las reglas que buscan formato pegado, que miran
-  también viñetas, encabezados y tablas; el código, nunca;
+  también viñetas, encabezados y tablas; el código, nunca. Una regla puede
+  pedir un mínimo de apariciones, señalar solo la forma que se repite cierto
+  número de veces o, al revés, señalar que algo falta en el texto entero (las
+  ausencias no se juzgan por debajo de 300 palabras de prosa); y puede
+  limitarse a ciertos géneros, que se eligen al analizar;
 - el **detector estadístico**: mide el texto entero con una métrica y la
   compara con los percentiles de textos humanos del mismo género y del mismo
   tramo de longitud, que trae el propio paquete; nunca con un umbral fijo. El
@@ -107,7 +111,7 @@ ruta](#hoja-de-ruta).
 En [`paquetes/`](paquetes/):
 
 - **RadiografIA 0.1.0** ([`radiografia.json`](paquetes/radiografia.json)):
-  declara las seis familias y trae tres:
+  declara las seis familias y trae cuatro:
   - **léxico**: once reglas. Las cuatro de más peso están medidas en
     español (Juzek, 2026): los verbos de énfasis (destacar, subrayar…),
     «importancia», «innovador» e «imborrable», «multidisciplinario» e
@@ -119,13 +123,24 @@ En [`paquetes/`](paquetes/):
     Markdown, viñetas con rótulo en negrita, separadores y tablas, el espacio
     estrecho U+202F y los caracteres de ancho cero. Las de emojis y flechas
     esperan fuente;
-  - **puntuación y formato**: la densidad de rayas y la raya con espacios.
+  - **puntuación y formato**: la densidad de rayas y la raya con espacios;
+  - **discurso**: diez reglas. Dos son ausencias medidas en inglés, y solo
+    se juzgan en textos de opinión o académicos de 300 palabras o más:
+    ningún marcador de opinión («creo», «quizá») y ninguna mención de quien
+    escribe («yo», «mi», «nuestro»). Otras seis suman: el cierre de
+    plantilla («En conclusión» en el último párrafo), el mismo conector al
+    principio de tres frases o más, el encuadre numerado («En primer
+    lugar… Por último»), la importancia inflada («un papel crucial»), la
+    atribución sin nombre («los expertos coinciden») y la fórmula de «retos
+    y futuro». Y dos restan, porque son rasgos humanos: una referencia
+    concreta a otra parte del texto («véase la tabla 2») y una anécdota en
+    primera persona («recuerdo que», «mi abuela»).
 
-  Sintaxis, estadística y discurso están declaradas y vacías. Un juez
-  comprueba que ninguna regla va sin fuente, que el peso no pasa del que
-  permite su nivel de evidencia, que la familia canal no suma y que ninguna
-  expresión regular usa `\b` ni `\w`, que en JavaScript no reconocen las
-  letras con tilde ni la eñe.
+  Sintaxis y estadística están declaradas y vacías. Un juez comprueba que
+  ninguna regla va sin fuente, que el peso no pasa del que permite su nivel
+  de evidencia, que un atenuante solo resta 1 o 2, que la familia canal no
+  suma y que ninguna expresión regular usa `\b` ni `\w`, que en JavaScript no
+  reconocen las letras con tilde ni la eñe.
 - **«español correcto»**: pendiente.
 
 ## Cómo está pensado
