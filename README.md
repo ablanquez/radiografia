@@ -37,8 +37,8 @@ el texto ni las reglas.
 
 **En construcción.** Hoy (30/09/2026) existe el plan firmado, la
 investigación de las familias en [`docs/investigacion/`](docs/investigacion/)
-y, en la carpeta [`motor/`](motor/), un motor que ya analiza un texto de
-principio a fin, por ahora con paquetes de prueba:
+y, en la carpeta [`motor/`](motor/), el **motor completo**, probado con
+paquetes de prueba:
 
 - el **esquema del paquete y de la ficha de regla** (JSON Schema 2020-12),
   con los parámetros de cada tipo de detector ya cerrados, y un
@@ -54,6 +54,10 @@ principio a fin, por ahora con paquetes de prueba:
 - los **detectores de patrón y estructural**: formas o expresiones regulares
   por palabra o por frase, y expresiones en una posición (principio o final
   de frase o de párrafo, último párrafo, o en cualquier punto de un párrafo);
+- el **detector estadístico**: mide el texto entero con una métrica y la
+  compara con los percentiles de textos humanos del mismo género y del mismo
+  tramo de longitud, que trae el propio paquete; nunca con un umbral fijo. El
+  género lo elige quien analiza (por defecto, «general»);
 - la **puntuación**: puntos por 1.000 palabras de prosa, con su desglose por
   familia y por regla; las reglas informativas se enseñan pero no suman y
   los atenuantes restan. Cómo se muestra el medidor (escala, tope) se decide
@@ -61,8 +65,21 @@ principio a fin, por ahora con paquetes de prueba:
 - la **combinación de paquetes**: se analizan varios a la vez, cada señal
   dice de qué paquete viene y cada paquete lleva su propio desglose.
 
+Las **métricas** del detector estadístico, cada una con su fórmula y su
+fuente en [`motor/src/metricas/`](motor/src/metricas/):
+
+- de frase: frases por cada 100 palabras, dispersión de la longitud de
+  frase (coeficiente de variación) y el índice de legibilidad de
+  Flesch-Szigriszt;
+- de vocabulario: variedad léxica (TTR, MATTR con ventana de 50, MTLD y
+  HD-D) y repetición de secuencias de cuatro palabras;
+- de puntuación: comas por punto, signos por cada 1.000 palabras y
+  paréntesis, comillas y punto y coma por cada 1.000 palabras.
+
 Todo está probado con dos paquetes de prueba internos: cada ejemplo positivo
-dispara su regla y ningún negativo.
+dispara su regla y ningún negativo. Los percentiles de esos paquetes son
+inventados: los de verdad se miden con textos humanos al escribir las reglas
+reales.
 
 Las piezas de apoyo que las reglas necesitarán están **medidas contra
 referencias ajenas**, no dadas por buenas:
@@ -78,10 +95,9 @@ referencias ajenas**, no dadas por buenas:
   necesitaban; su código se retiró. La medida entera, en
   [`docs/investigacion/pos-medida.md`](docs/investigacion/pos-medida.md).
 
-Falta el detector estadístico. No hay ninguna regla real y no hay
-pantalla: lo que promete la entrada de este README (subrayados, medidor,
-catálogo) es lo que se va a construir, en el orden de la
-[hoja de ruta](#hoja-de-ruta).
+No hay ninguna regla real y no hay pantalla: lo que promete la entrada de
+este README (subrayados, medidor, catálogo) es lo que se va a construir, en
+el orden de la [hoja de ruta](#hoja-de-ruta).
 
 ## Cómo está pensado
 
