@@ -11,7 +11,7 @@
  */
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import { clasificar, conservaElTexto, fechasDelPeriodo, itemsDelSumario, textoDelDocumento, textoPlano } from './boe.ts';
+import { clasificar, conservaElTexto, fechasDelPeriodo, itemsDelSumario, textoDelDocumento, textoPlano, topeDeMezcla } from './boe.ts';
 
 const item = (id: string, titulo = `Resolución de prueba ${id}.`) => ({
   identificador: id,
@@ -150,6 +150,22 @@ describe('textoDelDocumento', () => {
       pagina('<dl><dt>1. Objeto:</dt><dd><dl><dt>a) Tipo:</dt><dd>Suministro.</dd></dl></dd></dl><table><tr><td>A</td><td>1</td></tr></table><p class="caja gris info">Aviso.</p><p>Fin.</p>'),
     );
     assert.deepEqual(r.problemas, []);
+  });
+});
+
+describe('topeDeMezcla (ninguno pasa de 3/5 del total)', () => {
+  // A mano: con los otros dos sumando O, el que más tiene puede quedarse con ⌊3·O/2⌋ (n/(n+O) ≤ 3/5 ⇔ 2n ≤ 3O).
+  test('2 · 4 · 12 → el tercero baja a ⌊3·6/2⌋ = 9: 9/15 = 60 %', () => {
+    assert.deepEqual(topeDeMezcla({ a: 2, b: 4, c: 12 }, [3, 5]), { a: 2, b: 4, c: 9 });
+  });
+  test('14 · 7 · 23 → nadie pasa: 23/44 = 52 %', () => {
+    assert.deepEqual(topeDeMezcla({ a: 14, b: 7, c: 23 }, [3, 5]), { a: 14, b: 7, c: 23 });
+  });
+  test('22 · 10 · 1 → el primero baja a ⌊3·11/2⌋ = 16: 16/27 = 59,3 %', () => {
+    assert.deepEqual(topeDeMezcla({ a: 22, b: 10, c: 1 }, [3, 5]), { a: 16, b: 10, c: 1 });
+  });
+  test('uno solo con documentos: se queda en 0 (solo, sería el 100 %)', () => {
+    assert.deepEqual(topeDeMezcla({ a: 0, b: 0, c: 50 }, [3, 5]), { a: 0, b: 0, c: 0 });
   });
 });
 

@@ -118,6 +118,24 @@ export function clasificar(item: ItemDelSumario): { subgenero: Subgenero } | { f
   return { subgenero };
 }
 
+/**
+ * El tope de una mezcla (decisión de Antonio tras la parada del piloto, 5.5):
+ * ninguna parte pasa de `num/den` del total. Como mucho una parte puede pasar
+ * (con num/den ≥ 1/2), y baja a lo más que le deja el resto O:
+ * n/(n + O) ≤ num/den ⇔ n ≤ ⌊num·O/(den − num)⌋, en enteros (en coma
+ * flotante, 0,6/0,4 da 1,4999…).
+ */
+export function topeDeMezcla<K extends string>(cuentas: Readonly<Record<K, number>>, [num, den]: readonly [number, number]): Record<K, number> {
+  const salida = { ...cuentas } as Record<K, number>;
+  const total = (Object.values(cuentas) as number[]).reduce((a, b) => a + b, 0);
+  for (const k of Object.keys(cuentas) as K[]) {
+    const resto = total - cuentas[k];
+    const maximo = Math.floor((num * resto) / (den - num));
+    if (cuentas[k] > maximo) salida[k] = maximo;
+  }
+  return salida;
+}
+
 /** Las entidades con nombre que se decodifican (HTML 4 / Latin-1 y la tipografía de uso en español). */
 const NOMBRADAS: Readonly<Record<string, string>> = {
   amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', shy: '',
