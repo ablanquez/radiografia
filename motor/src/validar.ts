@@ -48,10 +48,16 @@
  * [PROPIO] Los errores de `if` se omiten: repiten el error de dentro del
  *    `then`, que es el que nombra el campo. Pero el error del `then`, solo, no
  *    dice por qué se exige algo que en otra regla sería válido: POR_QUE_THEN
- *    le añade la condición, buscándola por su `schemaPath` exacto (visto al
- *    ejecutar: `regla.schema.json/then/properties/fuente/minItems`). Si el
- *    esquema cambia de sitio esa condición, el juez que exige «nivelEvidencia»
- *    en el mensaje se pone rojo.
+ *    le añade la condición, buscándola por el FINAL de su `schemaPath`
+ *    (`/then/properties/fuente/minItems`). Por el final y no entera: el
+ *    principio depende de cómo compile Ajv las referencias —era
+ *    `regla.schema.json/then/…` y, desde que la ficha tiene `$defs` (4.1), es
+ *    `#/allOf/0/then/…`; visto al ejecutar—. Si el esquema cambia de sitio esa
+ *    condición, el juez que exige «nivelEvidencia» en el mensaje se pone rojo.
+ * [PROPIO] Un `anyOf` (encargo 4.1: patrón necesita «formas» o «regex») da un
+ *    error por cada rama más el suyo. Se omiten los de las ramas y el del
+ *    `anyOf` dice qué alternativas faltan, sacadas de esas mismas ramas: «tiene
+ *    que llevar al menos uno de estos campos: "formas", "regex"».
  * [PROPIO] El paso 2 solo corre si el paso 1 dio verde: sobre un paquete mal
  *    formado no se puede leer `id` ni `familia` con garantías.
  */
@@ -108,7 +114,11 @@ const validadorEnVivo: ValidadorDeEsquema = ajv.compile(esquemaPaquete);
  */
 export function validarEsquema(paquete: unknown, validador: ValidadorDeEsquema = validadorEnVivo): ResultadoDeValidacion {
   if (validador(paquete)) return { valido: true, errores: [] };
-  const errores = (validador.errors ?? []).filter((e) => e.keyword !== 'if').map((e) => desdeAjv(e, paquete));
+  const todos = validador.errors ?? [];
+  const deRama = (e: ErrorObject): boolean => /\/anyOf\/\d+\//.test(e.schemaPath);
+  const errores = todos
+    .filter((e) => e.keyword !== 'if' && !deRama(e))
+    .map((e) => desdeAjv(e, paquete, todos.filter(deRama)));
   return { valido: false, errores };
 }
 
@@ -123,7 +133,7 @@ export function validarPaquete(paquete: unknown, validador: ValidadorDeEsquema =
 
 // ── Paso 1: traducir un error de Ajv a regla + campo ───────────────────────
 
-function desdeAjv(e: ErrorObject, paquete: unknown): ErrorDeValidacion {
+function desdeAjv(e: ErrorObject, paquete: unknown, deRamas: readonly ErrorObject[]): ErrorDeValidacion {
   const ruta = punteroARuta(e.instancePath);
   // En `required` y `additionalProperties` el puntero señala al objeto que
   // contiene el campo; el nombre del campo viene en params.
@@ -131,8 +141,11 @@ function desdeAjv(e: ErrorObject, paquete: unknown): ErrorDeValidacion {
   if (e.keyword === 'additionalProperties') ruta.push(String(e.params['additionalProperty']));
 
   const valor = leer(paquete, ruta);
-  const porQue = POR_QUE_THEN[e.schemaPath];
-  const mensaje = mensajeEnCastellano(e, valor) + (porQue === undefined ? '' : ` ${porQue}`);
+  const porQue = Object.entries(POR_QUE_THEN).find(([final]) => e.schemaPath.endsWith(final))?.[1];
+  const alternativas = deRamas
+    .filter((r) => r.instancePath === e.instancePath && r.keyword === 'required')
+    .map((r) => String(r.params['missingProperty']));
+  const mensaje = mensajeEnCastellano(e, valor, alternativas) + (porQue === undefined ? '' : ` ${porQue}`);
 
   if (ruta[0] === 'reglas' && typeof ruta[1] === 'number') {
     const indice = ruta[1];
@@ -142,9 +155,9 @@ function desdeAjv(e: ErrorObject, paquete: unknown): ErrorDeValidacion {
   return crear(null, rutaATexto(ruta), mensaje);
 }
 
-/** La condición de cada `then` de los esquemas, por el `schemaPath` de su error. */
+/** La condición de cada `then` de los esquemas, por el FINAL del `schemaPath` de su error. */
 const POR_QUE_THEN: Readonly<Record<string, string>> = {
-  'regla.schema.json/then/properties/fuente/minItems': '(porque nivelEvidencia no es "sin fuente")',
+  '/then/properties/fuente/minItems': '(porque nivelEvidencia no es "sin fuente")',
 };
 
 /** `/reglas/1/ejemplos/negativos` → `['reglas', 1, 'ejemplos', 'negativos']` (RFC 6901: ~1 es «/», ~0 es «~»). */
@@ -185,7 +198,7 @@ const TIPOS: Readonly<Record<string, string>> = {
   null: 'null',
 };
 
-function mensajeEnCastellano(e: ErrorObject, valor: unknown): string {
+function mensajeEnCastellano(e: ErrorObject, valor: unknown, alternativas: readonly string[]): string {
   const p = e.params;
   switch (e.keyword) {
     case 'required':
@@ -204,6 +217,9 @@ function mensajeEnCastellano(e: ErrorObject, valor: unknown): string {
       return `tiene que tener al menos ${p['limit']} ${p['limit'] === 1 ? 'elemento' : 'elementos'}`;
     case 'minLength':
       return p['limit'] === 1 ? 'no puede estar vacío' : `tiene que tener al menos ${p['limit']} caracteres`;
+    case 'anyOf':
+      if (alternativas.length > 0) return `tiene que llevar al menos uno de estos campos: ${alternativas.map((a) => `"${a}"`).join(', ')}`;
+      return e.message ?? e.keyword;
     case 'pattern':
       return `vale ${JSON.stringify(valor)} y no cumple el formato ${p['pattern']}`;
     default:

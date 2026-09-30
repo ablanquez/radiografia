@@ -4,7 +4,7 @@
  * El navegador no llevará Ajv: llevará la función de validación que
  * `generar-validador.ts` genera en build. Estos jueces la generan en un
  * directorio temporal y comprueban que es EL MISMO validador que el de Ajv en
- * vivo, sobre los trece fixtures, y que no depende de nada en ejecución.
+ * vivo, sobre los dieciocho fixtures, y que no depende de nada en ejecución.
  *
  *   1. Equivalencia de esquema: mismo veredicto y, en los inválidos de
  *      esquema, mismos errores tras el mismo formateador. Los cuatro inválidos
@@ -83,12 +83,12 @@ async function standalone(): Promise<ValidadorDeEsquema> {
 function fixtures(): { nombre: string; dato: unknown }[] {
   // Solo los ficheros de la raíz, que son los paquetes (fixtures/referencia/ es de otros jueces).
   const nombres = readdirSync(FIXTURES, { withFileTypes: true }).filter((e) => e.isFile()).map((e) => e.name).sort();
-  assert.equal(nombres.length, 13, 'los trece fixtures: si cambia, que alguien mire este juez');
+  assert.equal(nombres.length, 18, 'los dieciocho fixtures: si cambia, que alguien mire este juez');
   return nombres.map((nombre) => ({ nombre, dato: JSON.parse(readFileSync(new URL(nombre, FIXTURES), 'utf8')) }));
 }
 
 describe('el validador standalone es el mismo que el de Ajv en vivo', () => {
-  test('1 · equivalencia de esquema sobre los trece fixtures', async () => {
+  test('1 · equivalencia de esquema sobre los dieciocho fixtures', async () => {
     const validador = await standalone();
     for (const { nombre, dato } of fixtures()) {
       const enVivo = validarEsquema(dato);

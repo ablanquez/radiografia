@@ -3,7 +3,7 @@
   "$id": "https://raw.githubusercontent.com/ablanquez/radiografia/main/motor/esquema/regla.schema.json",
   "title": "Ficha de regla",
   "description": "Una regla de un paquete: qué detecta, cuánto pesa, por qué, de dónde sale y con qué ejemplos se prueba.",
-  "$comment": "[DOC] JSON Schema 2020-12, la versión vigente (https://json-schema.org/specification). Precedente doctrinal, mirado y no copiado: las reglas de Vale (https://docs.vale.sh/topics/styles) — nuestro «detector» hace el papel de su «extends» y nuestra «fuente» el de su «link». [PROPIO] El $id es la URL raw del fichero en GitHub (encargo 3.2; en el 3.1 era la de la página github.com/…/blob/…, que sirve HTML): es un identificador, no una dirección que se descargue — el validador no tiene loadSchema y no hace ninguna llamada de red —, pero si alguien la abre, llega al JSON. [PROPIO] additionalProperties: false en toda la ficha salvo dentro de «parametros»: el JSON se edita a mano en Git y una errata en una clave no puede pasar en silencio. Claves en español sin tildes; valores de los enum con tildes (decisión B, 3.1).",
+  "$comment": "[DOC] JSON Schema 2020-12, la versión vigente (https://json-schema.org/specification). Precedente doctrinal, mirado y no copiado: las reglas de Vale (https://docs.vale.sh/topics/styles) — nuestro «detector» hace el papel de su «extends» y nuestra «fuente» el de su «link». [PROPIO] El $id es la URL raw del fichero en GitHub (encargo 3.2; en el 3.1 era la de la página github.com/…/blob/…, que sirve HTML): es un identificador, no una dirección que se descargue — el validador no tiene loadSchema y no hace ninguna llamada de red —, pero si alguien la abre, llega al JSON. [PROPIO] additionalProperties: false en toda la ficha, también dentro de «parametros» desde el encargo 4.1: el JSON se edita a mano en Git y una errata en una clave no puede pasar en silencio. Claves en español sin tildes; valores de los enum con tildes (decisión B, 3.1).",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -39,8 +39,7 @@
     },
     "parametros": {
       "type": "object",
-      "additionalProperties": true,
-      "$comment": "[PROPIO] Lo que el detector necesita para ejecutarse (lista, expresión, métrica…). Contenido LIBRE POR AHORA, y es el único sitio de la ficha con additionalProperties: true. En el punto 4 se cerrará su forma por detector con if/then y fixtures nuevos."
+      "$comment": "Lo que el detector necesita para ejecutarse. Su forma depende del detector y la cierra el allOf del final (si detector es X, parametros sigue $defs/parametrosX), cada una con additionalProperties: false (encargo 4.1; hasta entonces era libre). [DOC] Precedente: los tipos de comprobación de Vale (https://docs.vale.sh/topics/styles), donde cada «extends» —existence, substitution, occurrence, repetition, metric…— trae sus propias claves; aquí cada uno de los tres detectores trae las suyas."
     },
     "peso": {
       "type": "number",
@@ -114,11 +113,81 @@
       "$comment": "Son documentación y test a la vez (plan, punto 3 del alcance): al menos uno de cada."
     }
   },
-  "if": {
-    "required": ["nivelEvidencia"],
-    "properties": { "nivelEvidencia": { "not": { "const": "sin fuente" } } }
-  },
-  "then": {
-    "properties": { "fuente": { "type": "array", "minItems": 1 } }
+  "allOf": [
+    {
+      "$comment": "Con evidencia distinta de «sin fuente», al menos una fuente.",
+      "if": {
+        "required": ["nivelEvidencia"],
+        "properties": { "nivelEvidencia": { "not": { "const": "sin fuente" } } }
+      },
+      "then": {
+        "properties": { "fuente": { "type": "array", "minItems": 1 } }
+      }
+    },
+    {
+      "if": { "required": ["detector"], "properties": { "detector": { "const": "patrón" } } },
+      "then": { "properties": { "parametros": { "$ref": "#/$defs/parametrosPatron" } } }
+    },
+    {
+      "if": { "required": ["detector"], "properties": { "detector": { "const": "estructural" } } },
+      "then": { "properties": { "parametros": { "$ref": "#/$defs/parametrosEstructural" } } }
+    },
+    {
+      "if": { "required": ["detector"], "properties": { "detector": { "const": "estadístico" } } },
+      "then": { "properties": { "parametros": { "$ref": "#/$defs/parametrosEstadistico" } } }
+    }
+  ],
+  "$defs": {
+    "flags": {
+      "type": "string",
+      "pattern": "^(?!.*(.).*\\1)[imsu]*$",
+      "$comment": "[PROPIO] Banderas de la expresión regular: i, m, s, u, sin repetir. La g la pone el detector (busca todas las coincidencias), y la y (búsqueda anclada) le rompería el recorrido."
+    },
+    "parametrosPatron": {
+      "$comment": "Detector de patrón: formas y/o una expresión regular, sobre cada palabra o sobre la frase entera. Al menos una de «formas» o «regex».",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ambito", "normalizar"],
+      "properties": {
+        "formas": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "regex": { "type": "string", "minLength": 1 },
+        "flags": { "$ref": "#/$defs/flags" },
+        "ambito": { "enum": ["palabra", "frase"] },
+        "normalizar": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["minusculas", "tildes"],
+          "properties": {
+            "minusculas": { "type": "boolean" },
+            "tildes": { "type": "boolean" }
+          }
+        }
+      },
+      "anyOf": [{ "required": ["formas"] }, { "required": ["regex"] }]
+    },
+    "parametrosEstructural": {
+      "$comment": "Detector estructural: una expresión regular en una posición de la frase, del párrafo o del texto; «minimo», cuántas veces tiene que aparecer para señalar.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["posicion", "regex"],
+      "properties": {
+        "posicion": { "enum": ["inicio-frase", "fin-frase", "inicio-parrafo", "ultimo-parrafo", "cualquiera"] },
+        "regex": { "type": "string", "minLength": 1 },
+        "flags": { "$ref": "#/$defs/flags" },
+        "minimo": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "parametrosEstadistico": {
+      "$comment": "Detector estadístico: una métrica del texto entero contra los percentiles humanos de un género y un tramo de longitud (plan, punto 4). «metrica» será un nombre registrado en el motor; en el 4.1 basta con que no esté vacío. [PROPIO] Los tramos, de estadistica.md § 6 (100–199 y 200–299 van juntos: por debajo de 300 el análisis ya es «poco fiable»).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metrica", "genero", "tramo", "direccion"],
+      "properties": {
+        "metrica": { "type": "string", "minLength": 1 },
+        "genero": { "type": "string", "minLength": 1 },
+        "tramo": { "enum": ["100-299", "300-599", "600+"] },
+        "direccion": { "enum": ["mayor", "menor", "ambas"] }
+      }
+    }
   }
 }

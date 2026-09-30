@@ -25,7 +25,15 @@
       "id": "d6-referencia-interna",
       "familia": "lexico",
       "detector": "patrón",
-      "parametros": {},
+      "parametros": {
+        "regex": "\\b(?:v[eé]ase|se ve en|como muestra)\\s+(?:la\\s+)?(?:tabla|figura)\\s+\\d+",
+        "flags": "i",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": false,
+          "tildes": false
+        }
+      },
       "peso": -1,
       "severidad": "baja",
       "informativa": false,
@@ -55,7 +63,34 @@
       "id": "meses-en-mayuscula",
       "familia": "ortotipografia",
       "detector": "patrón",
-      "parametros": {},
+      "parametros": {
+        "formas": [
+          "Enero",
+          "Febrero",
+          "Marzo",
+          "Abril",
+          "Mayo",
+          "Junio",
+          "Julio",
+          "Agosto",
+          "Septiembre",
+          "Octubre",
+          "Noviembre",
+          "Diciembre",
+          "Lunes",
+          "Martes",
+          "Miércoles",
+          "Jueves",
+          "Viernes",
+          "Sábado",
+          "Domingo"
+        ],
+        "ambito": "palabra",
+        "normalizar": {
+          "minusculas": false,
+          "tildes": false
+        }
+      },
       "peso": 0,
       "severidad": "baja",
       "informativa": true,

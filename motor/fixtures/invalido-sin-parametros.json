@@ -54,7 +54,34 @@
       "id": "meses-en-mayuscula",
       "familia": "ortotipografia",
       "detector": "patrón",
-      "parametros": {},
+      "parametros": {
+        "formas": [
+          "Enero",
+          "Febrero",
+          "Marzo",
+          "Abril",
+          "Mayo",
+          "Junio",
+          "Julio",
+          "Agosto",
+          "Septiembre",
+          "Octubre",
+          "Noviembre",
+          "Diciembre",
+          "Lunes",
+          "Martes",
+          "Miércoles",
+          "Jueves",
+          "Viernes",
+          "Sábado",
+          "Domingo"
+        ],
+        "ambito": "palabra",
+        "normalizar": {
+          "minusculas": false,
+          "tildes": false
+        }
+      },
       "peso": 0,
       "severidad": "baja",
       "informativa": true,

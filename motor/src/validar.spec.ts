@@ -31,8 +31,10 @@ function cargar(fichero: string): unknown {
  * otra rama del if/then de la ficha: con nivelEvidencia «sin fuente», la lista
  * de fuentes puede ir vacía (el esquema es del motor y sirve a paquetes de
  * terceros; que RadiografIA no la use lo vigilará un juez del punto 5).
+ * Y un válido por detector (encargo 4.1, parametros cerrados): el de patrón es
+ * valido.json; valido-detector-estructural.json y valido-detector-estadistico.json.
  */
-const VALIDOS = ['valido.json', 'valido-sin-fuente.json'] as const;
+const VALIDOS = ['valido.json', 'valido-sin-fuente.json', 'valido-detector-estructural.json', 'valido-detector-estadistico.json'] as const;
 
 /**
  * Lo que cada inválido tiene que decir: qué regla (o `null` si el error es de
@@ -110,6 +112,26 @@ const INVALIDOS: readonly CasoInvalido[] = [
     campo: 'informativa',
     mensajeIncluye: '"ortotipografia"',
   },
+  // ── Encargo 4.1: parametros cerrados por detector ──
+  {
+    // patrón sin «formas» ni «regex»: tiene que llevar al menos uno.
+    fichero: 'invalido-parametros-patron.json',
+    regla: { indice: 0, id: 'd6-referencia-interna' },
+    campo: 'parametros',
+    mensajeIncluye: 'formas',
+  },
+  {
+    // estructural con una clave que no es de su forma.
+    fichero: 'invalido-parametros-estructural.json',
+    regla: { indice: 0, id: 'd6-referencia-interna' },
+    campo: 'parametros.formas',
+  },
+  {
+    // estadístico con una clave que no es de su forma.
+    fichero: 'invalido-parametros-estadistico.json',
+    regla: { indice: 0, id: 'd6-referencia-interna' },
+    campo: 'parametros.ambito',
+  },
 ];
 
 describe('validarPaquete', () => {
@@ -117,9 +139,9 @@ describe('validarPaquete', () => {
    * Ningún fixture sin juez: si entra uno nuevo en la carpeta y nadie lo añade
    * aquí, esto se pone rojo en vez de dejarlo sin mirar.
    */
-  test('la carpeta de fixtures tiene exactamente los trece que se juzgan', () => {
-    assert.equal(VALIDOS.length, 2, 'dos válidos');
-    assert.equal(INVALIDOS.length, 11, 'once inválidos');
+  test('la carpeta de fixtures tiene exactamente los dieciocho que se juzgan', () => {
+    assert.equal(VALIDOS.length, 4, 'cuatro válidos');
+    assert.equal(INVALIDOS.length, 14, 'catorce inválidos');
     const esperados = [...VALIDOS, ...INVALIDOS.map((c) => c.fichero)].sort();
     // Solo los FICHEROS de la raíz: los paquetes. Las subcarpetas (fixtures/referencia/)
     // guardan datos de referencia de otros jueces (encargo 3.3).
