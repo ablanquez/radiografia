@@ -48,7 +48,8 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import type { TramoDeCalibracion } from '../../src/paquete.ts';
-import { SUBGENEROS, clasificar, fechasDelPeriodo, itemsDelSumario, textoDelDocumento, textoPlano, topeDeMezcla, type ItemDelSumario, type Subgenero } from './boe.ts';
+import { SUBGENEROS, clasificar, fechasDelPeriodo, itemsDelSumario, textoDelDocumento, topeDeMezcla, type ItemDelSumario, type Subgenero } from './boe.ts';
+import { textoPlano } from './html.ts';
 import { SEMILLA, TRAMOS, huella, medirLongitud, ordenDeMuestra, reparto, type Reparto } from './comun.ts';
 import { nombreDeFichero, prepararManifiesto, type DocumentoDelManifiesto, type Manifiesto } from './manifiesto.ts';
 import { Cliente, PresupuestoAgotado, VetadoPorRobots } from './red.ts';

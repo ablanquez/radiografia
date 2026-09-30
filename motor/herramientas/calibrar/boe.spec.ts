@@ -11,7 +11,7 @@
  */
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import { clasificar, conservaElTexto, fechasDelPeriodo, itemsDelSumario, textoDelDocumento, textoPlano, topeDeMezcla } from './boe.ts';
+import { clasificar, fechasDelPeriodo, itemsDelSumario, textoDelDocumento, topeDeMezcla } from './boe.ts';
 
 const item = (id: string, titulo = `Resolución de prueba ${id}.`) => ({
   identificador: id,
@@ -166,20 +166,6 @@ describe('topeDeMezcla (ninguno pasa de 3/5 del total)', () => {
   });
   test('uno solo con documentos: se queda en 0 (solo, sería el 100 %)', () => {
     assert.deepEqual(topeDeMezcla({ a: 0, b: 0, c: 50 }, [3, 5]), { a: 0, b: 0, c: 0 });
-  });
-});
-
-describe('textoPlano', () => {
-  test('sin etiquetas, con las entidades decodificadas y el espacio colapsado (para buscar un literal en una página)', () => {
-    assert.equal(textoPlano('<p>Resoluci&oacute;n de\n  <b>27 de junio</b>&nbsp;de 2024</p>'), 'Resolución de 27 de junio de 2024');
-  });
-});
-
-describe('conservaElTexto', () => {
-  test('mismos caracteres salvo espacios y barras: sí; uno de menos: no', () => {
-    assert.equal(conservaElTexto('<p>Uno dos</p><p>tres</p>', 'Uno dos\ntres'), true);
-    assert.equal(conservaElTexto('<tr><td>A</td><td>1</td></tr>', '| A | 1 |'), true);
-    assert.equal(conservaElTexto('<p>Uno dos</p><p>tres</p>', 'Uno dos'), false);
   });
 });
 
