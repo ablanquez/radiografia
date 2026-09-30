@@ -326,9 +326,13 @@ y raya automáticas) y prosa académica (paréntesis y comillas por citas).
   publicidad humanas; el punto de miles sigue vivo en América y en textos
   jurídicos
   (https://algomasquetraducir.com/como-escribir-numeros-en-espanol-correctamente-y-sin-errores/).
-- Señal más específica: coma de miles inglesa («1,000» = mil) y punto
-  decimal («3.14») en prosa de España. En México y otros países el punto
-  decimal es normativo → **configuración regional**.
+- Señal más específica: coma de miles inglesa («1,000» = mil). ⚠️
+  **Corrección del 30/09 (encargo 5.4, Ortografía 2010 leída)**: el punto
+  decimal («3.14») NO es calco: la Ortografía, cap. VIII §2.2.1.2.1,
+  **recomienda** el punto como separador decimal («podrá escribirse
+  π = 3,1416… o π = 3.1416…»); lo que rechaza (§2.2.1.1) es usar punto o
+  coma para separar grupos de tres dígitos. La regla solo avisa de la
+  coma de millares.
 - Medido solo en inglés (Muñoz-Ortiz): más NUM y SYM en LLM base. **En
   español, ninguna medición del formato de cifras.**
 
@@ -411,7 +415,7 @@ y raya automáticas) y prosa académica (paréntesis y comillas por citas).
 | P17 | Omisión de ¿ ¡ | Español (ROBOT-TALK: sin diferencia) | Negativa | **No recomendada** | Sí | Alto: los LLM no muestran diferencia |
 | P18 | Title Case en títulos/encabezados | Norma RAE; sin LLM | Sin fuente LLM | Patrón (≥ 3 palabras capitalizadas en encabezado) | Sí, con excepciones | Medio: nombres propios, instituciones, asignaturas, títulos en inglés |
 | P19 | Mayúscula en meses/días fuera de inicio de frase | Norma RAE; sin LLM | Sin fuente LLM | Patrón | Sí | Medio: festividades, traducciones |
-| P20 | Coma de miles («1,000») o punto decimal («3.14») en prosa de España | Norma FundéuRAE; sin LLM | Sin fuente LLM | Patrón + configuración regional | Sí | Alto en México/Centroamérica; bajo en España |
+| P20 | Coma de miles («1,000») — el punto decimal («3.14») NO se avisa: la Ortografía lo recomienda (corrección 30/09) | Norma Ortografía 2010 cap. VIII §2.2.1.1; sin LLM | Sin fuente LLM | Patrón | Sí | Medio: «1,500» puede ser decimal de tres cifras |
 | P21 | «5%» sin espacio | Norma FundéuRAE; sin LLM | Sin fuente LLM | Patrón | Sí | Alto: mayoritario en prensa y publicidad |
 | P22 | Moneda antepuesta sin espacio («$100», «€50») | Norma FundéuRAE; sin LLM | Sin fuente LLM | Patrón | Sí | Medio-alto: en América «$» antepuesto es normal |
 | P23 | Guion (-) en intervalos numéricos en vez de semirraya | Inglés (Wikipedia, cualitativo) | Anecdótica | Patrón | Sí | Alto: casi todos los humanos usan guion |

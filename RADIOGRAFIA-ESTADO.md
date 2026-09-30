@@ -7,14 +7,15 @@ El ejecutor reporta descubrimientos; no toca este fichero.
 
 ## ESTADO ACTUAL — 30 de septiembre de 2026
 
-**⭐ PUNTOS 1-4 CERRADOS (29-30/09). PUNTO 5 EN MARCHA (30/09):** el
-paquete real `paquetes/radiografia.json` 0.1.0 tiene cuatro familias
-rellenas: **canal** (6 informativas), **puntuación y formato** (P11, P12),
-**léxico** (11) y **discurso** (10, con dos ausencias y dos atenuantes). El
-motor ganó en el 5.3 cuatro capacidades con precedente en Vale (mínimo,
-mínimo por coincidencia, ausencia, géneros). **493 jueces: 486 en verde,
-2 saltados con motivo, 5 `todo`**, `tsc` limpio. Faltan sintaxis,
-«español correcto», estadística y calibración. No hay pantalla.
+**⭐ PUNTOS 1-4 CERRADOS (29-30/09). PUNTO 5 EN MARCHA (30/09):** los dos
+paquetes reales existen. **RadiografIA 0.1.0** tiene cinco familias
+rellenas: canal (6 informativas), puntuación y formato (2), léxico (11),
+discurso (10, con dos ausencias y dos atenuantes) y sintaxis (1). **Español
+correcto 0.1.0** tiene sus siete avisos de norma con sección RAE leída. El
+motor combina los dos con origen en cada señal. **566 jueces: 559 en verde,
+2 saltados con motivo, 5 `todo`**, `tsc` limpio. Falta la familia
+estadística con su calibración por género (5.5), y con ella el punto 5. No
+hay pantalla.
 
 ## 1 · Identidad
 
@@ -57,7 +58,9 @@ antes del verde, push = despliegue, bitácora por la skill
 ## 4 · El plan
 
 `PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1, 2 y 3 (29/09), 4 (30/09).
-Abierto: el 5 (5.1 canal y puntuación, 5.2 léxico, 5.3 discurso hechos).
+Abierto: el 5 (5.1 canal y puntuación, 5.2 léxico, 5.3 discurso, 5.4
+sintaxis + «Español correcto» hechos; queda 5.5 estadística y
+calibración).
 
 ## 5 · Decisiones
 
@@ -211,18 +214,32 @@ Abierto: el 5 (5.1 canal y puntuación, 5.2 léxico, 5.3 discurso hechos).
   −1 sin modismos (lista inabarcable). Fuera: D10, D12, D13, D17
   (histórico según Wikipedia), D18 (= D3). D3 y D4 no se exigen
   combinadas en el motor: pesos y calibración.
+- 30/09 — **Decisiones del 5.4 (sintaxis + Español correcto)**: 5.4 y 5.5
+  fundidas porque sintaxis quedaba en una regla. En «Español correcto»
+  todas las reglas peso 1 y nivel «norma» [PROPIO]: mide avisos de norma
+  por 1.000 palabras, no estilo IA. **El punto decimal no se avisa**: la
+  Ortografía 2010 (cap. VIII §2.2.1.2.1) recomienda el punto; solo se avisa
+  la coma de millares (§2.2.1.1). Cada regla cita su sección de la RAE,
+  leída vía web.archive.org. S13 mantiene «lavó/frotó» como [PROPIO] aunque
+  la NGLE §14.7g no lo respalde. La tanda 5.6 pasa a llamarse 5.5.
 
 ## 6 · Cabos abiertos
 
-- **Para la calibración (5.6), el primero**: la escala pesa las ausencias
+- Del 5.4 (30/09): `puntuacion-formato.md` P20 decía que el punto decimal
+  era calco; la Ortografía lo recomienda → corregido el 30/09. P22
+  subraya solo el símbolo y la primera cifra («$1»): ampliar la regex a la
+  cantidad entera en el punto 6. Falsos positivos declarados: nombres en
+  -ando («Nando») en S4; «Conocí a Mayo»; «Ministerio de Asuntos
+  Exteriores y Cooperación». La comprobación del 5 % de FP en AnCora es
+  débil (100 frases sin material): se hace en la calibración con corpus.
+- **Para la calibración (5.5), el primero**: la escala pesa las ausencias
   mucho menos que las densidades (una ausencia = su peso una vez, 2
   puntos; «Además» ×3 en 346 palabras = 17,34), y `discurso.md` §12 pide
   «más peso a las ausencias que a las presencias». Decidir escala o
-  factor de presencia con datos. También: el juez de RadiografIA no
-  limita |peso| de un atenuante por su evidencia (abrir el 5.4 con esa
-  línea); una regla estadística con `generos` no tendría juez
-  (`ejemplos-estadisticos.spec.ts` analiza con «general»); D6 resta en
-  cualquier género aunque Pham es académico (declarado).
+  factor de presencia con datos. También: una regla estadística con
+  `generos` no tendría juez (`ejemplos-estadisticos.spec.ts` analiza con
+  «general»); D6 resta en cualquier género aunque Pham es académico
+  (declarado).
 - `discurso.md` corregido el 30/09 con las fuentes primarias: «In
   conclusion» en 166/180 (92 %), no 100 %; 53/90 estudiantes también
   cierran con fórmula; los epistémicos de Herbold son 14 regex de su código
@@ -240,12 +257,12 @@ Abierto: el 5 (5.1 canal y puntuación, 5.2 léxico, 5.3 discurso hechos).
   JS trata U+202F y U+FEFF como `\s`: si caen en el
   borde de frase o párrafo el motor los recorta (BOM inicial no cuenta).
   P11+P12 puntuan dos veces una raya espaciada y P11 desde la primera raya
-  → calibración 5.6. P3 no cubre listas numeradas con negrita. Sin cita
+  → calibración 5.5. P3 no cubre listas numeradas con negrita. Sin cita
   de Microsoft para la autocorrección de «--» (no estaba en la
   investigación; no se afirmó). `ejemplos-estadisticos.spec.ts` aún no
-  incluye el paquete real (5.6). P5 ajustado en 5.2 (no cuenta entre
+  incluye el paquete real (5.5). P5 ajustado en 5.2 (no cuenta entre
   cifras).
-- Para la tanda 5.6 (del 4.3): «…» (U+2026) no parte la frase y «...» sí
+- Para la tanda 5.5 (del 4.3): «…» (U+2026) no parte la frase y «...» sí
   (ICU; afecta a métricas de frase e IFSZ); comillas curvas “ ” **entran**
   en los conjuntos de signos (decidido 30/09, pendiente de implementar);
   P15 pasa a `puntuacion-secundaria-por-1000` con dos puntos y barras
