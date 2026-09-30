@@ -7,15 +7,14 @@ El ejecutor reporta descubrimientos; no toca este fichero.
 
 ## ESTADO ACTUAL — 30 de septiembre de 2026
 
-**⭐ PUNTOS 1, 2, 3 Y 4 CERRADOS (29-30/09).** El motor está completo y
-probado con paquetes de prueba: segmenta, aplica el umbral 100/300,
-detecta patrones, estructuras (seis posiciones) y estadísticas (11
-métricas contra percentiles por género × tramo que trae el paquete),
-puntúa por 1.000 palabras de prosa con desglose paquete → familia →
-regla, y combina paquetes con origen. **297 jueces: 292 en verde, 5
-`todo`**, `tsc` limpio. Standalone 156 KB (a revisar en el punto 6). No hay
-reglas reales ni pantalla. **Siguiente: punto 5, el paquete RadiografIA
-v1 y «español correcto», con calibración.**
+**⭐ PUNTOS 1-4 CERRADOS (29-30/09). PUNTO 5 EN MARCHA (30/09):** existe el
+paquete real `paquetes/radiografia.json` 0.1.0 con las seis familias
+declaradas y dos rellenas: **canal** (6 reglas informativas: Markdown
+residual, U+202F, invisibles) y **puntuación y formato** (P11 densidad de
+rayas, P12 raya espaciada), cada regla con fuente URL, nivel de evidencia
+y ejemplos que son jueces. **354 jueces: 349 en verde, 5 `todo`**, `tsc`
+limpio. Faltan léxico, discurso, sintaxis, «español correcto», estadística
+y calibración. No hay pantalla.
 
 ## 1 · Identidad
 
@@ -58,7 +57,7 @@ antes del verde, push = despliegue, bitácora por la skill
 ## 4 · El plan
 
 `PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1, 2 y 3 (29/09), 4 (30/09).
-Abierto: el 5.
+Abierto: el 5 (5.1 hecho: canal y puntuación).
 
 ## 5 · Decisiones
 
@@ -192,6 +191,19 @@ Abierto: el 5.
 
 ## 6 · Cabos abiertos
 
+- Del 5.1 (30/09): **P24 (emojis y flechas) sin fuente en la
+  investigación** → fuera hasta que aparezca una; cautelas técnicas si
+  entra: `\p{Emoji_Presentation}` excluye © ® ™ pero también ⚠️ y ✔️
+  (texto + U+FE0F); un emoji inicial dispararía viñeta y prosa a la vez.
+  P5 señala U+202F también entre cifras → en 5.2 pasar a
+  `(?<!\d)\u202F(?!\d)`. JS trata U+202F y U+FEFF como `\s`: si caen en el
+  borde de frase o párrafo el motor los recorta (BOM inicial no cuenta).
+  P11+P12 puntuan dos veces una raya espaciada y P11 desde la primera raya
+  → calibración 5.6. P3 no cubre listas numeradas con negrita. Sin cita
+  de Microsoft para la autocorrección de «--» (no estaba en la
+  investigación; no se afirmó). `ejemplos-estadisticos.spec.ts` aún no
+  incluye el paquete real (5.6). VS Code marcará `sobreNoProsa` como
+  desconocida hasta el push.
 - Para el punto 5 (del 4.3): «…» (U+2026) no parte la frase y «...» sí
   (ICU; afecta a métricas de frase e IFSZ); comillas curvas “ ” fuera de
   los conjuntos de signos (decidir si entran en P15/P16); P15 sigue el

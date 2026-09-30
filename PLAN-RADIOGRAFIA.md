@@ -329,10 +329,25 @@ Fuente citada en cada ficha (sale del punto 2 y de `CANDIDATAS.md`).
 
 - [ ] Léxico
 - [ ] Sintaxis
-- [ ] Puntuación y formato
+- [x] Puntuación y formato (5.1, 30/09): en RadiografIA v1 solo P11
+      (densidad de rayas U+2014, peso 1 justificado, medido en inglés) y
+      P12 (raya o semirraya espaciada, peso 1, anecdótico); P14-P16 son
+      estadísticas (5.6); P10 y P18-P22 a «español correcto»; P7 fuera
+      (exige métrica). P13 (exclusión de diálogos) NO en el motor: en las
+      excepciones de las fichas; la calibración dirá. Doble puntuación
+      P11+P12 en una raya espaciada: para la calibración
 - [ ] Estadística
 - [ ] Discurso
-- [ ] Canal (informativa)
+- [x] Canal (informativa) (5.1, 30/09): 6 reglas (negrita y encabezado
+      Markdown, viñeta con negrita inicial, separador o tabla, U+202F,
+      invisibles U+200B/2060/FEFF), todas peso 0 e informativas, con fuente
+      de `puntuacion-formato.md`. **P24 (emojis y flechas) FUERA hasta que
+      haya fuente**: la investigación no trae URL. Motor: campo
+      `sobreNoProsa` (mira viñetas, encabezados y tablas; el código nunca).
+      Nace `paquetes/radiografia.json` 0.1.0 con las seis familias
+      declaradas y `radiografia.spec.ts` (siete condiciones: valida, sin
+      «sin fuente», URL https, familias, canal informativa, ids con
+      prefijo, peso ≤ máximo por evidencia con justificación)
 - [ ] Paquete «español correcto» (7 reglas de norma RAE)
 - [ ] **Calibración** (FIRMADA 29/09; géneros firmados 30/09): percentiles
       1/5/50/95/99 (Hyndman & Fan tipo 7) de cada métrica en textos
