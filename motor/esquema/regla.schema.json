@@ -144,7 +144,7 @@
       "$comment": "[PROPIO] Banderas de la expresión regular: i, m, s, u, sin repetir. La g la pone el detector (busca todas las coincidencias), y la y (búsqueda anclada) le rompería el recorrido."
     },
     "parametrosPatron": {
-      "$comment": "Detector de patrón: formas y/o una expresión regular, sobre cada palabra o sobre la frase entera. Al menos una de «formas» o «regex». «normalizar» (minúsculas y tildes) se aplica SOLO en ámbito «palabra», palabra a palabra, y la señal lleva el [inicio, fin) de la palabra original. En ámbito «frase» la regex corre sobre la frase original sin normalizar: con minusculas: true el detector añade la bandera «i»; tildes no se aplica, y el autor de la regla escribe la regex con las variantes (p. ej. «conclusi[oó]n»). En ámbito «palabra», ninguna forma lleva espacios (lo comprueba validar.ts).",
+      "$comment": "Detector de patrón: formas y/o una expresión regular, sobre cada palabra o sobre la frase entera. Al menos una de «formas» o «regex». «normalizar» (minúsculas y tildes) se aplica SOLO en ámbito «palabra», palabra a palabra, a la palabra y a las formas por igual, y la señal lleva el [inicio, fin) de la palabra original. «tildes» quita solo el acento agudo (á → a): la ñ y la ü se conservan (encargo 4.2; la ñ es letra del abecedario, Ortografía RAE 2010). En ámbito «frase» la regex corre sobre la frase original sin normalizar: con minusculas: true el detector añade la bandera «i»; tildes no se aplica, y el autor de la regla escribe la regex con las variantes (p. ej. «conclusi[oó]n»). En ámbito «palabra», ninguna forma lleva espacios (lo comprueba validar.ts).",
       "type": "object",
       "additionalProperties": false,
       "required": ["ambito", "normalizar"],

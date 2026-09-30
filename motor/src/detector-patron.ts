@@ -9,19 +9,33 @@
  *   · Ámbito «palabra»: se normaliza cada palabra, y solo para compararla,
  *     con `normalizar`:
  *       minusculas → toLocaleLowerCase("es");
- *       tildes     → normalize("NFD") y fuera las marcas \p{M}.
+ *       tildes     → normalize("NFD"), fuera SOLO el acento agudo (U+0301,
+ *                    COMBINING ACUTE ACCENT) y normalize("NFC").
  *     [DOC] https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String/normalize
- *     — «NFD»: «Canonical Decomposition»; y cambia la LONGITUD de la cadena
+ *     — «NFD»: «Canonical Decomposition»; «NFC»: «Canonical Decomposition,
+ *     followed by Canonical Composition»; y cambia la LONGITUD de la cadena
  *     (su ejemplo: «ñ» pasa de 1 a 2 unidades). Por eso lo normalizado solo
  *     se compara: la señal lleva la posición y el texto de la palabra ORIGINAL.
- *     [DOC] \p{M} (marcas, General_Category M) con la bandera «u»:
- *     https://developer.mozilla.org/docs/Web/JavaScript/Reference/Regular_expressions/Unicode_character_class_escape
- *     Las formas se normalizan igual. Una palabra casa si está entre las formas
- *     o si la regex la acepta (probada sobre la palabra normalizada; con
- *     minúsculas se le añade la bandera «i»).
- *     ⚠️ Quitar \p{M} quita también la virgulilla de la «ñ» y la diéresis de
- *     la «ü»: con tildes: true, «año» y «ano» son la misma forma (juez `todo`
- *     en detector-patron.spec.ts). Es la regla del encargo, tal cual.
+ *     Tras NFD, «á» es «a» + U+0301, «ñ» es «n» + U+0303 (virgulilla) y «ü»
+ *     es «u» + U+0308 (diéresis): se quita la primera marca y se conservan las
+ *     otras dos. NFC vuelve a unir «n» + U+0303 en «ñ», así que da igual cómo
+ *     venga escrita la «ñ» (precompuesta o descompuesta).
+ *     Por qué solo el agudo (encargo 4.2, cabo 1 del 4.1):
+ *     [DOC] RAE, «Principales novedades de la última edición de la Ortografía
+ *     de la lengua española (2010)»,
+ *     https://www.rae.es/sites/default/files/Principales_novedades_de_la_Ortografia_de_la_lengua_espanola.pdf
+ *     — «El abecedario del español queda así reducido a las veintisiete
+ *     letras siguientes: a, b, c, d, e, f, g, h, i, j, k, l, m, n, ñ, o, p, q,
+ *     r, s, t, u, v, w, x, y, z.» La «ñ» es una letra, no una «n» con tilde.
+ *     La diéresis no aparece en ese documento. Que la Ortografía la trate como
+ *     signo diacrítico distinto de la tilde: [DOC, NO LEÍDA] la sección «Signos
+ *     diacríticos», https://www.rae.es/ortografía/signos-diacríticos (403 al
+ *     abrirla, 30/09; solo el resumen del buscador: en español actual son dos,
+ *     la tilde y la diéresis).
+ *     Las formas se normalizan con las mismas opciones que la palabra (los dos
+ *     lados igual). Una palabra casa si está entre las formas o si la regex la
+ *     acepta (probada sobre la palabra normalizada; con minúsculas se le añade
+ *     la bandera «i»).
  *   · Ámbito «frase»: la regex corre sobre la frase ORIGINAL tal cual, sin
  *     normalizar; con minúsculas se añade la bandera «i»; las tildes no se
  *     aplican (el autor escribe las variantes en la regex; lo dice el $comment
@@ -64,7 +78,7 @@ export interface Senal {
 function normalizador({ minusculas, tildes }: ParametrosPatron['normalizar']): (s: string) => string {
   return (s) => {
     let r = minusculas ? s.toLocaleLowerCase('es') : s;
-    if (tildes) r = r.normalize('NFD').replace(/\p{M}/gu, '');
+    if (tildes) r = r.normalize('NFD').replaceAll('\u0301', '').normalize('NFC');
     return r;
   };
 }

@@ -66,10 +66,29 @@ describe('detectarPatron', () => {
     );
   });
 
-  // HALLAZGO (30/09): quitar \p{M} tras NFD quita también la virgulilla de la «ñ» y la diéresis de
-  // la «ü»: con tildes:true, «año» y «ano» son la misma forma. Es la regla del encargo 4.1, tal cual.
-  test('con tildes:true, «año» no coincide con la forma «ano»', { todo: 'quitar \\p{M} tras NFD quita la virgulilla: «año» → «ano»' }, () => {
-    const s = detectarPatron(regla({ formas: ['ano'], ambito: 'palabra', normalizar: { minusculas: true, tildes: true } }), analizarTexto('Fue un buen año.'));
-    assert.deepEqual(s, []);
+});
+
+// Encargo 4.2, cabo 1: «tildes» quita solo el acento agudo (U+0301); la «ñ» es letra y la diéresis
+// es otro signo. Era un `todo` del 4.1 (quitar \p{M} tras NFD quitaba también la virgulilla y la diéresis).
+describe('detectarPatron: tildes:true quita solo el acento agudo', () => {
+  const conTildes = (formas: string[]) => regla({ formas, ambito: 'palabra', normalizar: { minusculas: true, tildes: true } });
+  const fragmentos = (formas: string[], texto: string) => detectarPatron(conTildes(formas), analizarTexto(texto)).map((s) => s.fragmento);
+
+  test('«año» no coincide con la forma «ano»', () => {
+    assert.deepEqual(fragmentos(['ano'], 'Fue un buen año.'), []);
+  });
+
+  test('«pingüino» conserva la ü: no coincide con «pinguino» y sí con «pingüino»', () => {
+    assert.deepEqual(fragmentos(['pinguino'], 'Vimos un pingüino.'), []);
+    assert.deepEqual(fragmentos(['pingüino'], 'Vimos un Pingüino.'), ['Pingüino']);
+  });
+
+  test('«Málaga» coincide con la forma «malaga», y «malaga» con la forma «Málaga» (los dos lados igual)', () => {
+    assert.deepEqual(fragmentos(['malaga'], 'Llegó a Málaga.'), ['Málaga']);
+    assert.deepEqual(fragmentos(['Málaga'], 'Llegó a malaga.'), ['malaga']);
+  });
+
+  test('una «ñ» escrita descompuesta (n + U+0303) coincide con la forma «año» precompuesta: se recompone con NFC', () => {
+    assert.deepEqual(fragmentos(['año'], 'Fue un buen an\u0303o.'), ['an\u0303o']);
   });
 });
