@@ -428,6 +428,552 @@
           "—¿Vienes? —preguntó ella."
         ]
       }
+    },
+    {
+      "id": "lex-frases-de-chatbot",
+      "familia": "lexico",
+      "detector": "patrón",
+      "parametros": {
+        "regex": "(?<!\\p{L})(espero que (esto )?(te|le|les|os) ayude|como (un )?modelo de lenguaje|claro, aqu[ií] tienes?)(?!\\p{L})",
+        "flags": "iu",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": true,
+          "tildes": false
+        }
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Fórmulas con las que un asistente de chat le habla a quien le ha preguntado: «Espero que esto te ayude», «Como modelo de lenguaje…», «Claro, aquí tienes…». En un texto terminado, que alguien firma, no pintan nada: suelen quedarse al copiar la respuesta sin revisarla. Anecdótico: Wikipedia las recoge entre los signos de escritura con IA, con ejemplos y sin frecuencias; en español no hay medición. No demuestra quién escribió el texto.",
+      "sugerencia": "Borra la fórmula: le habla a quien pidió el texto, no a quien lo va a leer.",
+      "excepciones": [
+        "Correos y mensajes personales: «espero que te ayude» es una despedida corriente al mandar un enlace o un consejo.",
+        "Textos que hablan de los asistentes y citan sus respuestas.",
+        "Solo mira dentro de una frase: «¡Claro! Aquí tienes…» son dos frases para el segmentador y no se señala; «¡Claro!» suelto no se busca, porque es corriente en los diálogos."
+      ],
+      "fuente": [
+        {
+          "titulo": "Wikipedia en inglés, «Signs of AI writing» (ensayo editorial con ejemplos, sin frecuencias)",
+          "url": "https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing"
+        }
+      ],
+      "origenLista": "traducción propia de lexico.md § 2 y § 7 (Wikipedia: «I hope this helps», «Certainly, here is…»; fila L1: «Espero que esto te ayude», «Como modelo de lenguaje»); las variantes de tratamiento (te, le, les, os) son [PROPIO]",
+      "nivelEvidencia": "anecdótico",
+      "ejemplos": {
+        "positivos": [
+          "Espero que esto te ayude a preparar la reunión.",
+          "Como modelo de lenguaje, no tengo opiniones propias sobre el tema.",
+          "Claro, aquí tienes un resumen del informe."
+        ],
+        "negativos": [
+          "Te mando el enlace; espero que llegues a tiempo.",
+          "¡Claro! Aquí tienes las llaves."
+        ]
+      }
+    },
+    {
+      "id": "lex-verbos-de-enfasis",
+      "familia": "lexico",
+      "detector": "patrón",
+      "parametros": {
+        "regex": "(?<!\\p{L})(enfati[zc]|desta[cq]|subray|real[zc])(?!amento)\\p{L}*",
+        "flags": "iu",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": true,
+          "tildes": false
+        }
+      },
+      "peso": 3,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Los verbos que ponen algo de relieve —enfatizar, destacar, subrayar, realzar— son el concepto que más se repite en lo que los modelos escriben de más. Juzek (2026) comparó continuaciones de GPT-4.1-mini con la mitad humana de 100.000 frases de prensa por lengua, y los encontró sobreusados en 24 de 34 lenguas; en español, con esos cuatro verbos. Mide cuántas veces aparece por cada 1.000 palabras; una sola no dice nada. El motor no lematiza: busca la raíz, así que cuenta todas las formas del verbo y también «destacado» o «destacable» usados como adjetivos. No demuestra quién escribió el texto.",
+      "sugerencia": "Mira si cada «destaca» o «subraya» añade algo. A menudo basta con contar el hecho; si hace falta el verbo, prueba con «dice», «explica» o «recuerda».",
+      "excepciones": [
+        "Prensa y crónica: «destacar» y «subrayar» son verbos corrientes para citar declaraciones («El ministro destacó que…»). El motor no distingue ese uso: la señal cuenta por acumulación.",
+        "Frecuencia en wordfreq: «destaca», Zipf 4,44, y «destacar», 4,37: aparecen mucho en textos humanos.",
+        "La raíz coge también «destacado», «destacada» o «destacable» como adjetivos («un destacado escritor»); «destacamento» no cuenta.",
+        "Juzek avisa de que las señales léxicas cambian de un modelo a otro (GPT frente a Gemini, ρ = 0,46) y de que su trabajo no está pensado para detectar IA."
+      ],
+      "fuente": [
+        {
+          "titulo": "Juzek (2026), «AI-Associated Lexical Shifts Across 34 Languages», arXiv 2605.25358: Tabla 1 (pág. 5) y Tabla 2 (pág. 7) del PDF",
+          "url": "https://arxiv.org/pdf/2605.25358"
+        },
+        {
+          "titulo": "Juzek (2026), versión HTML, con los apéndices C (Tabla 3, listas del análisis longitudinal) y F.1 (Tabla 5, top-10 del español), que el PDF no trae",
+          "url": "https://arxiv.org/html/2605.25358v1"
+        }
+      ],
+      "origenLista": "lemas medidos por Juzek (2026) en español (Tabla 2: enfatizar, destacar, subrayar, realzar), buscados por raíz con sus variantes de escritura (enfatice, destaque, realce); fuera «destacamento»",
+      "nivelEvidencia": "medido en español",
+      "ejemplos": {
+        "positivos": [
+          "El informe destaca la importancia de la prevención.",
+          "Los autores subrayan que los datos son provisionales y enfatizan la necesidad de repetir el estudio."
+        ],
+        "negativos": [
+          "El destacamento llegó al puerto de madrugada.",
+          "El informe recoge los datos de la campaña de prevención."
+        ]
+      }
+    },
+    {
+      "id": "lex-importancia",
+      "familia": "lexico",
+      "detector": "patrón",
+      "parametros": {
+        "formas": [
+          "importancia"
+        ],
+        "ambito": "palabra",
+        "normalizar": {
+          "minusculas": true,
+          "tildes": false
+        }
+      },
+      "peso": 3,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "El sustantivo «importancia» es de los que los modelos escriben de más: Juzek (2026) encontró los nombres de importancia, relevancia o prioridad sobreusados en 20 de 34 lenguas; en español, «importancia». Mide cuántas veces aparece por cada 1.000 palabras; una sola no dice nada. Es una palabra muy frecuente también en textos humanos (Zipf 4,96), así que la señal solo cuenta cuando se acumula. No demuestra quién escribió el texto.",
+      "sugerencia": "En vez de decir que algo es importante, di por qué: la consecuencia, la cifra o el caso.",
+      "excepciones": [
+        "Es una palabra corriente en cualquier registro (Zipf 4,96 en wordfreq): el motor no puede distinguir el uso humano normal y la señal cuenta por acumulación.",
+        "Textos cuyo tema es la importancia de algo (educación, divulgación).",
+        "Juzek avisa de que las señales léxicas cambian de un modelo a otro (GPT frente a Gemini, ρ = 0,46) y de que su trabajo no está pensado para detectar IA."
+      ],
+      "fuente": [
+        {
+          "titulo": "Juzek (2026), «AI-Associated Lexical Shifts Across 34 Languages», arXiv 2605.25358: Tabla 1 (pág. 5) y Tabla 2 (pág. 7) del PDF",
+          "url": "https://arxiv.org/pdf/2605.25358"
+        },
+        {
+          "titulo": "Juzek (2026), versión HTML, con los apéndices C (Tabla 3, listas del análisis longitudinal) y F.1 (Tabla 5, top-10 del español), que el PDF no trae",
+          "url": "https://arxiv.org/html/2605.25358v1"
+        }
+      ],
+      "origenLista": "lema medido por Juzek (2026) en español (Tabla 2: importancia)",
+      "nivelEvidencia": "medido en español",
+      "ejemplos": {
+        "positivos": [
+          "La importancia del agua es evidente.",
+          "Nadie discute la importancia de dormir bien."
+        ],
+        "negativos": [
+          "La importación de grano creció en marzo.",
+          "Eso nos importa mucho a todos."
+        ]
+      }
+    },
+    {
+      "id": "lex-es-importante-mas-verbo",
+      "familia": "lexico",
+      "detector": "patrón",
+      "parametros": {
+        "regex": "(?<!\\p{L})es importante (destacar|señalar|recordar|saber|tener en cuenta)(?!\\p{L})",
+        "flags": "iu",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": true,
+          "tildes": false
+        }
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "La fórmula «es importante + verbo» («es importante destacar», «es importante tener en cuenta») anuncia que viene algo importante en lugar de decirlo. Anecdótico: la recogen guías en español para reconocer textos de ChatGPT y, en inglés, Wikipedia («it’s important to note»); no hay medición. No demuestra quién escribió el texto.",
+      "sugerencia": "Quita el anuncio y di directamente lo que había que tener en cuenta.",
+      "excepciones": [
+        "Textos didácticos y de divulgación, donde la fórmula es un recurso de la explicación.",
+        "Solo cuenta con uno de esos cinco verbos detrás: «es importante que…» o «es importante destacarlo» no se señalan."
+      ],
+      "fuente": [
+        {
+          "titulo": "Bilateria, «Cómo detectar textos escritos por ChatGPT»: «es importante (recordar/saber/tener en cuenta)»",
+          "url": "https://educacion.bilateria.org/como-detectar-textos-escritos-por-chatgpt"
+        },
+        {
+          "titulo": "Wikipedia en inglés, «Signs of AI writing» (ensayo editorial con ejemplos, sin frecuencias)",
+          "url": "https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing"
+        }
+      ],
+      "origenLista": "fórmula de Bilateria («es importante recordar/saber/tener en cuenta», lexico.md § 3) y traducción de «it’s important to note» de Wikipedia (lexico.md § 2): destacar, señalar",
+      "nivelEvidencia": "anecdótico",
+      "ejemplos": {
+        "positivos": [
+          "Es importante destacar que el plazo termina el viernes.",
+          "Antes de empezar, es importante tener en cuenta el presupuesto."
+        ],
+        "negativos": [
+          "Es importante que llegues a tiempo.",
+          "Para él no es importante."
+        ]
+      }
+    },
+    {
+      "id": "lex-innovador",
+      "familia": "lexico",
+      "detector": "patrón",
+      "parametros": {
+        "formas": [
+          "innovador",
+          "innovadora",
+          "innovadores",
+          "innovadoras"
+        ],
+        "ambito": "palabra",
+        "normalizar": {
+          "minusculas": true,
+          "tildes": false
+        }
+      },
+      "peso": 3,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "El adjetivo «innovador» es de los que los modelos usan de más: Juzek (2026) encontró los adjetivos de innovación y vanguardia sobreusados en 18 de 34 lenguas; en español, «innovador». Mide cuántas veces aparece por cada 1.000 palabras; una sola no dice nada. No demuestra quién escribió el texto.",
+      "sugerencia": "Cuenta qué es lo nuevo en vez de calificarlo: qué hace, qué cambia, qué no se hacía antes.",
+      "excepciones": [
+        "Marketing, notas de prensa y prensa tecnológica y económica, donde es vocabulario de oficio. El motor no distingue ese uso: la señal cuenta por acumulación.",
+        "Solo las cuatro formas del adjetivo: «innovación» no cuenta, porque no está en la lista medida.",
+        "Juzek avisa de que las señales léxicas cambian de un modelo a otro (GPT frente a Gemini, ρ = 0,46) y de que su trabajo no está pensado para detectar IA."
+      ],
+      "fuente": [
+        {
+          "titulo": "Juzek (2026), «AI-Associated Lexical Shifts Across 34 Languages», arXiv 2605.25358: Tabla 1 (pág. 5) y Tabla 2 (pág. 7) del PDF",
+          "url": "https://arxiv.org/pdf/2605.25358"
+        },
+        {
+          "titulo": "Juzek (2026), versión HTML, con los apéndices C (Tabla 3, listas del análisis longitudinal) y F.1 (Tabla 5, top-10 del español), que el PDF no trae",
+          "url": "https://arxiv.org/html/2605.25358v1"
+        }
+      ],
+      "origenLista": "lema medido por Juzek (2026) en español (Tabla 2: innovador), con su género y número",
+      "nivelEvidencia": "medido en español",
+      "ejemplos": {
+        "positivos": [
+          "Presentaron un enfoque innovador para la gestión del agua.",
+          "Las propuestas más innovadoras llegaron de los institutos."
+        ],
+        "negativos": [
+          "La innovación llegó tarde a la fábrica.",
+          "Presentaron un enfoque nuevo para la gestión del agua."
+        ]
+      }
+    },
+    {
+      "id": "lex-imborrable-multidisciplinario-impecable",
+      "familia": "lexico",
+      "detector": "patrón",
+      "parametros": {
+        "formas": [
+          "imborrable",
+          "imborrables",
+          "multidisciplinario",
+          "multidisciplinaria",
+          "multidisciplinarios",
+          "multidisciplinarias",
+          "impecable",
+          "impecables"
+        ],
+        "ambito": "palabra",
+        "normalizar": {
+          "minusculas": true,
+          "tildes": false
+        }
+      },
+      "peso": 3,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Tres adjetivos que el modelo escribe y la prensa humana casi no. En la comparación de Juzek (2026), «imborrable» apareció en 68 continuaciones del modelo y en ninguna humana, y «multidisciplinario», en 28 frente a ninguna; «impecable» está entre los 200 más sobreusados del español. Mide cuántas veces aparece por cada 1.000 palabras; una sola no dice nada. Dependen mucho del tema, y la lista sale de un solo modelo (GPT-4.1-mini). No demuestra quién escribió el texto.",
+      "sugerencia": "Busca una palabra más precisa o cuenta el detalle: qué quedó grabado, qué especialidades trabajaron juntas, qué salió bien.",
+      "excepciones": [
+        "Crítica cultural, gastronómica y deportiva, donde «impecable» es vocabulario corriente (Zipf 3,66).",
+        "Equipos de salud o de investigación, donde «multidisciplinario» es el término técnico. «Multidisciplinar», la forma más usada en España, no cuenta: no está en la lista medida.",
+        "El motor no distingue el uso humano normal: la señal cuenta por acumulación.",
+        "Juzek avisa de que las señales léxicas cambian de un modelo a otro (GPT frente a Gemini, ρ = 0,46) y de que su trabajo no está pensado para detectar IA."
+      ],
+      "fuente": [
+        {
+          "titulo": "Juzek (2026), «AI-Associated Lexical Shifts Across 34 Languages», arXiv 2605.25358: Tabla 1 (pág. 5) y Tabla 2 (pág. 7) del PDF",
+          "url": "https://arxiv.org/pdf/2605.25358"
+        },
+        {
+          "titulo": "Juzek (2026), versión HTML, con los apéndices C (Tabla 3, listas del análisis longitudinal) y F.1 (Tabla 5, top-10 del español), que el PDF no trae",
+          "url": "https://arxiv.org/html/2605.25358v1"
+        }
+      ],
+      "origenLista": "lemas medidos por Juzek (2026) en español: imborrable y multidisciplinario (Tabla 5, top-10, ninguna aparición humana) e impecable (Tabla 3, del top-200); con su género y número",
+      "nivelEvidencia": "medido en español",
+      "ejemplos": {
+        "positivos": [
+          "Aquel viaje dejó un recuerdo imborrable en todos.",
+          "Un equipo multidisciplinario hizo un trabajo impecable."
+        ],
+        "negativos": [
+          "Un equipo multidisciplinar revisó el caso.",
+          "Aquel viaje dejó un buen recuerdo en todos."
+        ]
+      }
+    },
+    {
+      "id": "lex-conector-de-apertura",
+      "familia": "lexico",
+      "detector": "estructural",
+      "parametros": {
+        "posicion": "inicio-frase",
+        "regex": "(Adicionalmente|Cabe destacar|Cabe señalar)(?!\\p{L}),?",
+        "flags": "iu"
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Una frase que empieza por «Adicionalmente», «Cabe destacar» o «Cabe señalar». En inglés está medido: «additionally» es la palabra más sobreusada por GPT-4.1 en prensa (Juzek 2026, LPR 6,74) y una de las que más suben en los resúmenes científicos (Kobak et al.), y Wikipedia la señala al principio de la frase. En español no hay medición: es un traslado. Peso 1, y no 2, el máximo de lo medido en inglés: es un traslado sin medir en español, y la densidad de conectores no es señal —en ensayos, GPT-4 usa menos marcadores del discurso que los humanos (Herbold et al. 2023)—; por eso la regla solo mira estos tres y no «Además» ni «Sin embargo». No demuestra quién escribió el texto.",
+      "sugerencia": "Prueba a quitar el conector: si la frase se entiende igual, sobraba. Si hace falta, «además» o «también» suelen bastar.",
+      "excepciones": [
+        "Escritura escolar y de quien aprende español, que usa más conectores, y sobre todo al principio de la frase (docs/investigacion/discurso.md, § 9).",
+        "Prosa académica y administrativa, donde «cabe señalar» es fórmula de oficio."
+      ],
+      "fuente": [
+        {
+          "titulo": "Juzek (2026), «AI-Associated Lexical Shifts Across 34 Languages», arXiv 2605.25358: Tabla 1 (pág. 5) y Tabla 2 (pág. 7) del PDF",
+          "url": "https://arxiv.org/pdf/2605.25358"
+        },
+        {
+          "titulo": "Kobak, González-Márquez, Horvát y Lause, «Delving into ChatGPT usage in academic writing through excess vocabulary» (Science Advances; arXiv 2406.07016)",
+          "url": "https://arxiv.org/pdf/2406.07016"
+        },
+        {
+          "titulo": "Wikipedia en inglés, «Signs of AI writing» (ensayo editorial con ejemplos, sin frecuencias)",
+          "url": "https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing"
+        },
+        {
+          "titulo": "Herbold et al. (2023), Scientific Reports 13:18617: GPT-4 usa menos marcadores del discurso que los humanos en ensayos (d = 0,98)",
+          "url": "https://www.nature.com/articles/s41598-023-45644-9"
+        }
+      ],
+      "origenLista": "Adicionalmente (traducción de «additionally», lexico.md § 2) y Cabe destacar (lexico.md § 7, fila L8); Cabe señalar [PROPIO], variante de «Cabe destacar»",
+      "nivelEvidencia": "medido en inglés",
+      "ejemplos": {
+        "positivos": [
+          "Adicionalmente, el equipo revisó los datos del año anterior.",
+          "El plazo se amplió. Cabe destacar que nadie lo había pedido."
+        ],
+        "negativos": [
+          "Además, el equipo revisó los datos del año anterior.",
+          "El equipo, adicionalmente, revisó los datos."
+        ]
+      }
+    },
+    {
+      "id": "lex-trigramas-sobreusados",
+      "familia": "lexico",
+      "detector": "patrón",
+      "parametros": {
+        "regex": "(?<!\\p{L})(este art[ií]culo exploraremos|consideraciones [eé]ticas|comenzando a desempeñar)(?!\\p{L})",
+        "flags": "iu",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": true,
+          "tildes": false
+        }
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Tres secuencias de palabras que un análisis de 360 millones de palabras generadas con Llama 3, Gemma y GPT encontró muy por encima de lo humano: «este artículo exploraremos», «consideraciones éticas» y «comenzando a desempeñar». Anecdótico: el análisis no está revisado, no describe el corpus humano con el que compara y sus proporciones, de miles de veces, apuntan a que compara géneros distintos. No demuestra quién escribió el texto.",
+      "sugerencia": "Entra en el tema en vez de anunciarlo, y di qué consideraciones son en lugar de llamarlas «éticas».",
+      "excepciones": [
+        "Textos de filosofía, medicina o investigación, donde «consideraciones éticas» es el nombre de un apartado obligatorio.",
+        "Artículos de blog o de divulgación humanos que anuncian su contenido."
+      ],
+      "fuente": [
+        {
+          "titulo": "Turrado (2024), hilo en X recogido por elEconomista: trigramas «este artículo exploraremos», «consideraciones éticas», «comenzando a desempeñar» (sin revisión)",
+          "url": "https://www.eleconomista.es/tecnologia/noticias/12925132/07/24/de-crucial-a-esencial-estas-son-las-palabras-que-revelan-que-un-texto-esta-escrito-con-ia.html"
+        }
+      ],
+      "origenLista": "trigramas de Turrado (2024; hilo en X recogido por elEconomista, sin revisión)",
+      "nivelEvidencia": "anecdótico",
+      "ejemplos": {
+        "positivos": [
+          "En este artículo exploraremos las ventajas del teletrabajo.",
+          "El proyecto plantea consideraciones éticas sobre el uso de los datos.",
+          "La tecnología está comenzando a desempeñar un papel clave."
+        ],
+        "negativos": [
+          "En este artículo repasamos las ventajas del teletrabajo.",
+          "El proyecto plantea dudas sobre el uso de los datos."
+        ]
+      }
+    },
+    {
+      "id": "lex-traslados-del-ingles",
+      "familia": "lexico",
+      "detector": "patrón",
+      "parametros": {
+        "formas": [
+          "intrincado",
+          "intrincada",
+          "intrincados",
+          "intrincadas",
+          "meticuloso",
+          "meticulosa",
+          "meticulosos",
+          "meticulosas",
+          "meticulosamente",
+          "tapiz",
+          "tapices",
+          "encomiable",
+          "encomiables",
+          "panorama",
+          "panoramas"
+        ],
+        "regex": "^(profundi[zc]|ahond)",
+        "flags": "u",
+        "ambito": "palabra",
+        "normalizar": {
+          "minusculas": true,
+          "tildes": false
+        }
+      },
+      "peso": 2,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Palabras que traducen las más señaladas del inglés: «delve» (profundizar, ahondar), «intricate» (intrincado), «meticulous» (meticuloso), «tapestry» (tapiz), «commendable» (encomiable), «landscape» (panorama). En inglés están medidas: en las reseñas de congresos de IA, «meticulous» se usó 34,7 veces más, «intricate» 11,2 y «commendable» 9,8 (Liang et al. 2024), y «delves» multiplicó por 28 su frecuencia en los resúmenes de PubMed de 2024 (Kobak et al.). En español son una hipótesis: nadie ha medido sus traducciones. Cada una es correcta, y la señal es la acumulación. No demuestra quién escribió el texto.",
+      "sugerencia": "Si la palabra suena a traducción, busca la que usarías hablando: «analizar» por «profundizar», «complicado» por «intrincado», «cuidadoso» por «meticuloso».",
+      "excepciones": [
+        "Cada palabra es correcta y tiene su sitio: «profundizar» es corriente en español (Zipf 3,69), y «panorama», más (Zipf 4,29).",
+        "Estas listas caducan: «delve» e «intricate» bajan desde la primavera de 2024, cuando se hicieron públicas (Geng y Trotta 2025).",
+        "Textos traducidos del inglés.",
+        "La regex coge todas las formas de «profundizar» y «ahondar», pero no «profundidad»."
+      ],
+      "fuente": [
+        {
+          "titulo": "Kobak, González-Márquez, Horvát y Lause, «Delving into ChatGPT usage in academic writing through excess vocabulary» (Science Advances; arXiv 2406.07016)",
+          "url": "https://arxiv.org/pdf/2406.07016"
+        },
+        {
+          "titulo": "Liang et al. (ICML 2024), reseñas de congresos de IA: commendable ×9,8, meticulous ×34,7, intricate ×11,2",
+          "url": "https://arxiv.org/pdf/2403.07183"
+        },
+        {
+          "titulo": "Gray (2024), «ChatGPT “contamination”»: intricate, meticulous, meticulously, commendable",
+          "url": "https://arxiv.org/pdf/2403.16887"
+        },
+        {
+          "titulo": "Matsui (2025), «Delving into PubMed records» (Perspectives on Medical Education): tapestry, intricate, meticulous…",
+          "url": "https://pmejournal.org/articles/10.5334/pme.1929"
+        },
+        {
+          "titulo": "Geng y Trotta (2025), «Human-LLM Coevolution»: delve e intricate caen desde la primavera de 2024",
+          "url": "https://arxiv.org/pdf/2502.09606"
+        }
+      ],
+      "origenLista": "traducción propia de palabras en exceso medidas en inglés (Kobak, Liang, Gray, Matsui; lexico.md § 1 y § 7, fila L10): delve, intricate, meticulous, meticulously, tapestry, commendable, landscape; sin medición en español",
+      "nivelEvidencia": "medido en inglés",
+      "ejemplos": {
+        "positivos": [
+          "Conviene profundizar en un panorama tan intrincado.",
+          "Hicieron un trabajo meticuloso y encomiable."
+        ],
+        "negativos": [
+          "La profundidad del lago sorprendió a todos.",
+          "El paisaje del valle cambia en otoño."
+        ]
+      }
+    },
+    {
+      "id": "lex-no-solo-sino",
+      "familia": "lexico",
+      "detector": "estructural",
+      "parametros": {
+        "posicion": "cualquiera",
+        "regex": "(?<!\\p{L})no s[oó]lo(?!\\p{L})[^.;:!?]{1,80}?(?<!\\p{L})sino(?!\\p{L})( también| que)?",
+        "flags": "iu"
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "La construcción «no solo… sino (también)», que suma una idea a otra con énfasis. Anecdótico: Wikipedia la cuenta entre los paralelismos negativos típicos del texto generado, sin cifras. EQ-Bench mide en inglés una familia vecina, «not X, but Y», que en español es el contraste corriente («no es X, sino Y») y por eso no se busca. Es una construcción normal del español, y la señal es la acumulación. No demuestra quién escribió el texto.",
+      "sugerencia": "Si aparece más de una vez, cambia alguna por una suma sencilla: «X y, además, Y».",
+      "excepciones": [
+        "Es una construcción normativa y frecuente en cualquier registro: una o dos en un texto largo no dicen nada.",
+        "Solo busca «no solo» y «sino» en la misma frase, con menos de 80 caracteres entre los dos."
+      ],
+      "fuente": [
+        {
+          "titulo": "Wikipedia en inglés, «Signs of AI writing» (ensayo editorial con ejemplos, sin frecuencias)",
+          "url": "https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing"
+        },
+        {
+          "titulo": "EQ-Bench, Slop Score: el 25 % de la puntuación son patrones «not X, but Y» (inglés, ficción)",
+          "url": "https://eqbench.com/slop-score.html"
+        }
+      ],
+      "origenLista": null,
+      "nivelEvidencia": "anecdótico",
+      "ejemplos": {
+        "positivos": [
+          "El proyecto no solo ahorra agua, sino que también reduce costes.",
+          "La medida no sólo afecta a los alumnos sino también a sus familias."
+        ],
+        "negativos": [
+          "El proyecto no solo ahorra agua.",
+          "No es un problema de dinero, sino de tiempo."
+        ]
+      }
+    },
+    {
+      "id": "lex-verbos-corporativos",
+      "familia": "lexico",
+      "detector": "patrón",
+      "parametros": {
+        "regex": "(?<!\\p{L})(foment|potenci|aprovech|impuls|optimiz|aline|empoder)(?!(o|os|al|ales|aci[oó]n|aciones|amiento|amientos)(?!\\p{L}))\\p{L}*",
+        "flags": "iu",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": true,
+          "tildes": false
+        }
+      },
+      "peso": 2,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Verbos del lenguaje de empresa —fomentar, potenciar, aprovechar, impulsar, optimizar, alinear, empoderar— que traducen los que en inglés se han medido de más en texto generado: «fostering», «leveraging» y «empowers» en los resúmenes científicos (Kobak et al.), «streamline» en prensa (Juzek 2026), y «align with» entre los signos de Wikipedia. En español no hay medición. El motor busca la raíz y deja fuera sus nombres más comunes (impulso, fomento, potencial, aprovechamiento, alineación, empoderamiento), pero no puede separar «potencia» nombre de «potencia» verbo. No demuestra quién escribió el texto.",
+      "sugerencia": "Di qué se hace en concreto: «dar becas» en vez de «fomentar el talento», «usar» en vez de «aprovechar».",
+      "excepciones": [
+        "Prosa corporativa, de ONG y administrativa, donde son verbos de oficio.",
+        "Falsos positivos que la raíz no evita: «potencia» y «potencias» como nombre («la potencia del motor»), «potencialmente», «impulsor» e «impulsivo»."
+      ],
+      "fuente": [
+        {
+          "titulo": "Kobak, González-Márquez, Horvát y Lause, «Delving into ChatGPT usage in academic writing through excess vocabulary» (Science Advances; arXiv 2406.07016)",
+          "url": "https://arxiv.org/pdf/2406.07016"
+        },
+        {
+          "titulo": "Wikipedia en inglés, «Signs of AI writing» (ensayo editorial con ejemplos, sin frecuencias)",
+          "url": "https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing"
+        },
+        {
+          "titulo": "Juzek (2026), «AI-Associated Lexical Shifts Across 34 Languages», arXiv 2605.25358: Tabla 1 (pág. 5) y Tabla 2 (pág. 7) del PDF",
+          "url": "https://arxiv.org/pdf/2605.25358"
+        }
+      ],
+      "origenLista": "traducción propia de verbos medidos en inglés: fostering, leveraging, empowers (Kobak, lexico.md § 2), align with (Wikipedia), streamline (Juzek 2026, inglés); fomentar, potenciar, aprovechar e impulsar, de lexico.md § 7 (fila L15)",
+      "nivelEvidencia": "medido en inglés",
+      "ejemplos": {
+        "positivos": [
+          "El plan quiere fomentar el empleo y alinear los objetivos de los equipos.",
+          "Siguen potenciando la marca; el año pasado impulsó las ventas.",
+          "La potencia del motor sorprendió en la prueba."
+        ],
+        "negativos": [
+          "El Ministerio de Fomento dio un impulso a la obra.",
+          "El potencial del aprovechamiento del agua es grande.",
+          "La alineación del equipo cambió en el descanso."
+        ]
+      }
     }
   ]
 }
