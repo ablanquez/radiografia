@@ -69,7 +69,8 @@ paquetes de prueba:
   los atenuantes restan. Cómo se muestra el medidor (escala, tope) se decide
   al calibrar con las reglas reales;
 - la **combinación de paquetes**: se analizan varios a la vez, cada señal
-  dice de qué paquete viene y cada paquete lleva su propio desglose.
+  dice de qué paquete viene y cada paquete lleva su propio desglose. Está
+  probada también con los dos paquetes reales juntos.
 
 Las **métricas** del detector estadístico, cada una con su fórmula y su
 fuente en [`motor/src/metricas/`](motor/src/metricas/):
@@ -82,9 +83,9 @@ fuente en [`motor/src/metricas/`](motor/src/metricas/):
 - de puntuación: comas por punto, signos por cada 1.000 palabras y
   paréntesis, comillas y punto y coma por cada 1.000 palabras.
 
-Todo está probado con dos paquetes de prueba internos y con el paquete real
-(abajo, [«Paquetes»](#paquetes)): cada ejemplo positivo dispara su regla y
-ningún negativo. Los percentiles de los paquetes de prueba son inventados:
+Todo está probado con dos paquetes de prueba internos y con los dos paquetes
+reales (abajo, [«Paquetes»](#paquetes)): cada ejemplo positivo dispara su
+regla y ningún negativo. Los percentiles de los paquetes de prueba son inventados:
 los de verdad se miden con textos humanos al escribir las reglas
 estadísticas.
 
@@ -111,7 +112,7 @@ ruta](#hoja-de-ruta).
 En [`paquetes/`](paquetes/):
 
 - **RadiografIA 0.1.0** ([`radiografia.json`](paquetes/radiografia.json)):
-  declara las seis familias y trae cuatro:
+  declara las seis familias y trae cinco:
   - **léxico**: once reglas. Las cuatro de más peso están medidas en
     español (Juzek, 2026): los verbos de énfasis (destacar, subrayar…),
     «importancia», «innovador» e «imborrable», «multidisciplinario» e
@@ -134,14 +135,35 @@ En [`paquetes/`](paquetes/):
     atribución sin nombre («los expertos coinciden») y la fórmula de «retos
     y futuro». Y dos restan, porque son rasgos humanos: una referencia
     concreta a otra parte del texto («véase la tabla 2») y una anécdota en
-    primera persona («recuerdo que», «mi abuela»).
+    primera persona («recuerdo que», «mi abuela»);
+  - **sintaxis**: una regla, la coletilla de gerundio al final de la frase
+    («…, logrando un récord»), medida en inglés: los modelos la usan entre
+    dos y cinco veces más. Solo una, porque las demás candidatas de la
+    familia son métricas del texto entero, que llegan con la calibración, o
+    necesitaban el etiquetado gramatical, que quedó fuera de la v1.
 
-  Sintaxis y estadística están declaradas y vacías. Un juez comprueba que
-  ninguna regla va sin fuente, que el peso no pasa del que permite su nivel
-  de evidencia, que un atenuante solo resta 1 o 2, que la familia canal no
-  suma y que ninguna expresión regular usa `\b` ni `\w`, que en JavaScript no
-  reconocen las letras con tilde ni la eñe.
-- **«español correcto»**: pendiente.
+  Estadística está declarada y vacía. Un juez comprueba que ninguna regla va
+  sin fuente, que el peso, para sumar o para restar, no pasa del que permite
+  su nivel de evidencia, que un atenuante solo resta 1 o 2, que la familia
+  canal no suma y que ninguna expresión regular usa `\b` ni `\w`, que en
+  JavaScript no reconocen las letras con tilde ni la eñe.
+- **Español correcto 0.1.0**
+  ([`espanol-correcto.json`](paquetes/espanol-correcto.json)): siete avisos
+  de norma de la RAE que suelen delatar un calco del inglés o una
+  traducción. **No mide estilo de IA**: cuenta avisos de norma por cada
+  1.000 palabras, y cada regla cita la sección de la *Ortografía* o de la
+  *Nueva gramática* que la respalda. Dos familias:
+  - **gramática**: la pasiva con «ser» y agente, donde el español prefiere
+    la activa o la pasiva con «se» («fue redactado por el comité»), y el
+    posesivo donde va el artículo («levantó su mano»);
+  - **ortotipografía**: el punto o la coma dentro de las comillas de cierre,
+    la mayúscula en cada palabra de un título, los meses y los días con
+    mayúscula, la coma para separar millares («1,500») y el símbolo de la
+    moneda delante de la cifra («$100»). El punto decimal no se avisa: la
+    *Ortografía* admite los dos separadores y recomienda el punto.
+
+  Un juez comprueba que son siete, todas de norma, con peso 1 y con su
+  sección de rae.es, y que ninguna es informativa.
 
 ## Cómo está pensado
 
