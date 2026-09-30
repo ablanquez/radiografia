@@ -334,12 +334,20 @@ Fuente citada en cada ficha (sale del punto 2 y de `CANDIDATAS.md`).
 - [ ] Discurso
 - [ ] Canal (informativa)
 - [ ] Paquete «español correcto» (7 reglas de norma RAE)
-- [ ] **Calibración** (FIRMADA 29/09): percentiles 1/5/50/95/99 de cada
-      métrica estadística en textos humanos por género y tramo de
-      longitud, con corpus de licencia compatible (Spanish Billion Words
-      CC BY-SA, AnCora CC BY); se marca solo con ≥ 2 métricas fuera del
-      p1–p99; **validación con textos humanos apartados: FPR ≤ 5 %** o no
-      se cierra el punto
+- [ ] **Calibración** (FIRMADA 29/09; géneros firmados 30/09): percentiles
+      1/5/50/95/99 (Hyndman & Fan tipo 7) de cada métrica en textos
+      humanos por género y tramo. Géneros de la v1 y sus corpus
+      (`docs/investigacion/corpus.md`): `general` (mezcla estratificada y
+      declarada + Wikipedia ES), `noticia` (AnCora UD, CC BY 4.0),
+      `academico` (CSIC Spanish Corpus CC BY 4.0 + resúmenes SciELO CC BY
+      por artículo), `administrativo` (BOE: art. 13 LPI + licencia tipo
+      2024), `narrativa-clasica` (Gutenberg/Wikisource, dominio público,
+      sesgo de época declarado), `opinion` (MuchoCine, solo cifras,
+      licencia declarada por terceros). `corporativo`: sin corpus, «sin
+      calibración» en la interfaz. Muestras en `data/` solo con licencia
+      verificada; de lo demás, solo cifras. Se marca solo con ≥ 2 métricas
+      fuera del p1–p99 (vía pesos); **validación con textos humanos
+      apartados: FPR ≤ 5 %** o no se cierra el punto
 - [ ] El paquete pasa el validador y todos sus ejemplos pasan los jueces
 - [ ] El eslogan y los textos de la propia web pasan por el motor: si los
       marca, se cambian (dicho en el brainstorming). **PUNTO 5 CERRADO**

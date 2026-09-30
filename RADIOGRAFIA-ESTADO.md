@@ -175,6 +175,20 @@ Abierto: el 5.
   citada. **Fernández-Huerta fuera**: definición de F discrepante.
   [PROPIO] en puntuación: «...» cuenta como un signo, un signo entre
   cifras no cuenta, punto seguido de comillas o paréntesis cierra frase.
+- 30/09 — **Decisiones del punto 5 (antes del primer encargo)**: orden de
+  tandas puntuación+canal → léxico → discurso → sintaxis → «español
+  correcto» → estadística con calibración. Pesos iniciales por nivel de
+  evidencia [PROPIO, sin doctrina; la calibración es el juez]: medido en
+  español 3, medido en inglés 2, anecdótico 1, norma 0 (paquete aparte),
+  informativa 0, atenuante −1/−2. Listas cerradas: las escribe Claude Code
+  con `origenLista`; **Antonio lee las de peso 3 y las de peso negativo**;
+  el resto va en el reporte. **Géneros de la v1** (`corpus.md`): general,
+  noticia, academico, administrativo, narrativa-clasica, opinion (solo
+  cifras); corporativo sin calibración; la interfaz lista los géneros
+  desde la calibración del paquete. Comillas curvas entran en los
+  conjuntos de signos; P15 pasa a incluir dos puntos y barras (métrica
+  renombrada en su tanda); abreviaturas ante el segmentador solo si la
+  calibración lo justifica.
 
 ## 6 · Cabos abiertos
 
@@ -211,12 +225,15 @@ Abierto: el 5.
 - Fuentes no leídas enteras que las fichas tendrán que abrir en el punto
   5: PDF de Pham 2026 (cifras por categoría), PUCP-Metrix, Berber
   Sardinha 2024, `license.txt` de SUBTLEX-ESP.
-- Corpus humano para calibrar (punto 5): Spanish Billion Words (CC BY-SA)
-  y AnCora (CC BY 4.0 en Zenodo/UD, GPL en ELRA/HF: usar Zenodo). ROBOT-
-  TALK solo si la UCM lo cede.
+- Corpus humano para calibrar (punto 5): decidido el 30/09 en
+  `docs/investigacion/corpus.md` (CSIC, BOE, Gutenberg, MuchoCine,
+  AnCora, Wikipedia ES). ROBOT-TALK solo si la UCM lo cede.
 
 ## Nevera
 
+- **Géneros v1.1**: opinión contemporánea (columnas, blogs), narrativa
+  contemporánea, corporativo/marketing y variedad americana: sin corpus
+  abierto con licencia (30/09).
 - **POS y sus reglas** (L6, L7, S10, S6, S11, E4, E16; filtrado de S4/S12):
   v1.1. Dos vías que la medida dejó a la vista sin probar: «que» tras
   determinante (810/810 PRON en AnCora train) y participios como ADJ.
