@@ -46,20 +46,21 @@
  *     `texto.parrafos` (contando los de no-prosa, para poder volver a él);
  *     `indiceFrase`, la posición de la frase DENTRO de su párrafo.
  *
- * [PROPIO] En ámbito «frase» se usa solo la regex. Si una regla de ámbito
- *    «frase» no la trae, el detector lo dice con un error en vez de no
- *    señalar nada en silencio (el esquema permite formas sin regex en
- *    cualquier ámbito; propuesto para el paso 2 del validador).
+ * En ámbito «frase» se usa solo la regex, y la regla la trae siempre: lo
+ * comprueba el paso 2 de validar.ts (encargo 4.2) y el tipo lo dice
+ * (`ParametrosPatron` en ámbito «frase» exige `regex`). Hasta el 4.2 el
+ * detector lanzaba un error si faltaba.
  */
 import type { Texto } from './texto.ts';
 
-export interface ParametrosPatron {
-  formas?: string[];
-  regex?: string;
-  flags?: string;
-  ambito: 'palabra' | 'frase';
-  normalizar: { minusculas: boolean; tildes: boolean };
+interface Normalizar {
+  minusculas: boolean;
+  tildes: boolean;
 }
+
+export type ParametrosPatron =
+  | { ambito: 'palabra'; formas?: string[]; regex?: string; flags?: string; normalizar: Normalizar }
+  | { ambito: 'frase'; regex: string; formas?: string[]; flags?: string; normalizar: Normalizar };
 
 export interface ReglaDePatron {
   id: string;
@@ -75,7 +76,7 @@ export interface Senal {
   indiceParrafo: number;
 }
 
-function normalizador({ minusculas, tildes }: ParametrosPatron['normalizar']): (s: string) => string {
+function normalizador({ minusculas, tildes }: Normalizar): (s: string) => string {
   return (s) => {
     let r = minusculas ? s.toLocaleLowerCase('es') : s;
     if (tildes) r = r.normalize('NFD').replaceAll('\u0301', '').normalize('NFC');
@@ -112,7 +113,6 @@ export function detectarPatron(regla: ReglaDePatron, texto: Texto): Senal[] {
     return senales;
   }
 
-  if (p.regex === undefined) throw new Error(`regla ${regla.id}: el ámbito «frase» necesita una regex`);
   const regex = new RegExp(p.regex, banderas(p, 'g'));
   texto.parrafos.forEach((parrafo, indiceParrafo) => {
     if (!parrafo.prosa) return;

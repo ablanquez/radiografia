@@ -15,7 +15,10 @@
  *      compile con sus `flags` (new RegExp; si no, el mensaje del propio
  *      motor de expresiones regulares), y que en ámbito «palabra» ninguna
  *      forma lleve espacios (una expresión de varias palabras va por regex en
- *      ámbito «frase»: una palabra nunca contiene un espacio).
+ *      ámbito «frase»: una palabra nunca contiene un espacio). Y desde el 4.2:
+ *      que una regla de patrón en ámbito «frase» traiga regex (el esquema
+ *      pide «formas» o «regex» en cualquier ámbito, pero en «frase» las formas
+ *      no se usan: sin regex, la regla no señalaría nunca nada, en silencio).
  *
  * [DOC] https://ajv.js.org/json-schema.html#draft-2020-12 — «To use
  *    draft-2020-12 schemas you need to import a different Ajv class»: Ajv2020.
@@ -294,6 +297,15 @@ function comprobarCoherencia(paquete: PaqueteConForma): ErrorDeValidacion[] {
       } catch (fallo) {
         errores.push(crear({ indice, id: regla.id }, 'parametros.regex', `no compila: ${(fallo as Error).message}`));
       }
+    }
+    if (ambito === 'frase' && regex === undefined) {
+      errores.push(
+        crear(
+          { indice, id: regla.id },
+          'parametros.regex',
+          `falta, y en ámbito "frase" la regla se aplica con su regex: las formas solo se comparan en ámbito "palabra"`,
+        ),
+      );
     }
     if (ambito === 'palabra') {
       formas?.forEach((forma, i) => {
