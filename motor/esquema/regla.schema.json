@@ -92,6 +92,12 @@
       "enum": ["medido en español", "medido en inglés", "anecdótico", "sin fuente", "norma"],
       "$comment": "«sin fuente» se QUEDA en el enum (hallazgo 1, 3.1): este esquema es del motor y sirve también paquetes de terceros sin fuente, como la guía de estilo de una empresa. Lo que CLAUDE.md prohíbe es que lo use el paquete RadiografIA, y eso lo vigilará un juez del punto 5, no este esquema. «norma» es [PROPIO] (hallazgo 2, 3.1): para el paquete «español correcto», cuyas reglas no están medidas ni son anécdota, sino norma RAE."
     },
+    "generos": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+      "$comment": "[PROPIO] Encargo 5.3. Opcional: sin él, la regla se aplica en cualquier género. Con él, solo cuando el género del análisis (entrada de analizar, «general» por defecto; encargo 4.3) está en la lista; si no, la regla no se evalúa y el resultado la lista en «noAplicadas» con el motivo. «general» nunca activa una regla con generos, y no puede ir en la lista (lo rechaza el paso 2 de validar.ts; decisión de Antonio, parada 1 del 5.3). Para las ausencias que solo son indicio en ciertos géneros (discurso.md § 11: marcadores epistémicos y automenciones, en opinión y académico)."
+    },
     "ejemplos": {
       "type": "object",
       "additionalProperties": false,
@@ -165,12 +171,15 @@
         "sobreNoProsa": {
           "type": "boolean",
           "$comment": "[PROPIO] Encargo 5.1. Opcional; sin él, false. Con true, el detector mira también los párrafos de no-prosa que son viñetas, encabezados o tablas (texto.ts); los bloques de código (entre vallas ``` o ~~~) quedan SIEMPRE fuera: ahí los asteriscos y las almohadillas son código. Para las reglas que buscan formato pegado (familia «canal»). No cambia el conteo de palabras: el umbral y la puntuación cuentan solo las de prosa."
-        }
+        },
+        "minimo": { "$ref": "#/$defs/minimo" },
+        "minimoPorCoincidencia": { "$ref": "#/$defs/minimoPorCoincidencia" },
+        "ausencia": { "$ref": "#/$defs/ausencia" }
       },
       "anyOf": [{ "required": ["formas"] }, { "required": ["regex"] }]
     },
     "parametrosEstructural": {
-      "$comment": "Detector estructural: una expresión regular en una posición de la frase, del párrafo o del texto; «minimo», cuántas coincidencias tiene que haber en todo el texto para que la regla señale (por debajo, no señala ninguna).",
+      "$comment": "Detector estructural: una expresión regular en una posición de la frase, del párrafo o del texto. «minimo», «minimoPorCoincidencia» y «ausencia», como en patrón ($defs).",
       "type": "object",
       "additionalProperties": false,
       "required": ["posicion", "regex"],
@@ -181,12 +190,28 @@
         },
         "regex": { "type": "string", "minLength": 1 },
         "flags": { "$ref": "#/$defs/flags" },
-        "minimo": { "type": "integer", "minimum": 1 },
         "sobreNoProsa": {
           "type": "boolean",
           "$comment": "[PROPIO] Encargo 5.1. Opcional; sin él, false. Con true, el detector mira también los párrafos de no-prosa que son viñetas, encabezados o tablas (texto.ts); los bloques de código (entre vallas ``` o ~~~) quedan SIEMPRE fuera: ahí los asteriscos y las almohadillas son código. Para las reglas que buscan formato pegado (familia «canal»). No cambia el conteo de palabras: el umbral y la puntuación cuentan solo las de prosa."
-        }
+        },
+        "minimo": { "$ref": "#/$defs/minimo" },
+        "minimoPorCoincidencia": { "$ref": "#/$defs/minimoPorCoincidencia" },
+        "ausencia": { "$ref": "#/$defs/ausencia" }
       }
+    },
+    "minimo": {
+      "type": "integer",
+      "minimum": 1,
+      "$comment": "Patrón (desde el encargo 5.3) y estructural (4.2). Opcional. Sin ausencia: cuántas coincidencias tiene que haber en los párrafos que la regla mira, en todo el texto, para que señale (por debajo, no señala ninguna). Con ausencia: por debajo de cuántas coincidencias se señala la ausencia (sin él, 1: ninguna). Cuenta las que quedan tras minimoPorCoincidencia. [DOC] Precedente: Vale, «occurrence» (https://docs.vale.sh/checks/occurrence), con «min» y «max» de apariciones de un token en un ámbito."
+    },
+    "minimoPorCoincidencia": {
+      "type": "integer",
+      "minimum": 2,
+      "$comment": "[PROPIO] Encargo 5.3. Opcional. Las coincidencias se agrupan por su forma —su texto en minúsculas, sin blancos ni puntuación al principio o al final (recuento.ts)— y solo cuentan, y señalan, las de las formas que aparecen al menos este número de veces en el texto; las demás no cuentan. Se aplica antes que «minimo». Para «el mismo marcador repetido» (discurso.md § 11, D2), no para «muchos marcadores». Precedente: Vale, «repetition» (https://docs.vale.sh/checks/repetition), que señala un token repetido; allí la repetición es SEGUIDA («is is»), aquí es la misma forma en cualquier punto del texto."
+    },
+    "ausencia": {
+      "type": "boolean",
+      "$comment": "[PROPIO sobre el precedente de Vale] Encargo 5.3. Opcional; sin él, false. Con true, la regla no señala sus coincidencias: da UNA señal del texto entero (ámbito «texto», sin desplazamientos, con el recuento de coincidencias) cuando las coincidencias que cuentan son menos que «minimo» (1 por defecto: ninguna). Puntúa por presencia. En un texto «poco fiable» (100-299 palabras de prosa) no se juzga: el resultado la lista en «noAplicadas». [DOC] Precedente: Vale, «occurrence» (https://docs.vale.sh/checks/occurrence): «min makes absence a violation: a scope with fewer than min matches is flagged»."
     },
     "parametrosEstadistico": {
       "$comment": "Detector estadístico: una métrica del texto entero contra los percentiles humanos de la cabecera (cabecera.calibracion, por métrica × género × tramo; plan, punto 4). El género y el tramo NO van en la ficha (corrección del 4.1, encargo 4.3): el género lo elige quien analiza y el tramo sale de la longitud del texto. «percentil» dice qué banda es la normal: con «p95», dispara «mayor» si el valor es > p95, «menor» si es < p5, y «ambas» si queda fuera de [p5, p95]; con «p99», lo mismo con p99, p1 y [p1, p99]. Una regla estadística señala el texto entero, una vez: puntúa por presencia.",

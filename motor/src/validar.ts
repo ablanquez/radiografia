@@ -26,7 +26,11 @@
  *      el registro del motor (metricas/nombres.ts), que cabecera.calibracion
  *      la traiga con el género «general» en algún tramo, y que en cada celda
  *      p1 ≤ p5 ≤ p50 ≤ p95 ≤ p99 (JSON Schema no compara un número con otro
- *      del mismo dato).
+ *      del mismo dato). Y desde el 5.3: que `generos` no nombre el género por
+ *      defecto, «general» (decisión de Antonio, parada 1 del 5.3): «general»
+ *      nunca activa una regla con generos. El esquema no lo ve porque
+ *      «general» es un nombre kebab-case como cualquier otro, y el nombre sale
+ *      de GENERO_POR_DEFECTO, no se copia.
  *      [PROPIO] «Sin escapar» = con un número par de barras inversas delante;
  *      el encargo dice «sin barra inversa delante», y `\\$` (barra escapada y
  *      ancla) lleva una barra delante y sigue siendo ancla.
@@ -110,6 +114,7 @@ export interface PaqueteConForma {
     id: string;
     familia: string;
     informativa: boolean;
+    generos?: string[];
     detector: string;
     parametros: { regex?: string; flags?: string; formas?: string[]; ambito?: string; posicion?: string; metrica?: string };
   }[];
@@ -338,6 +343,16 @@ function comprobarCoherencia(paquete: PaqueteConForma): ErrorDeValidacion[] {
           { indice, id: regla.id },
           'informativa',
           `vale false, pero la familia "${regla.familia}" es informativa y el motor no puntúa sus reglas: tiene que ser true`,
+        ),
+      );
+    }
+
+    if (regla.generos?.includes(GENERO_POR_DEFECTO)) {
+      errores.push(
+        crear(
+          { indice, id: regla.id },
+          'generos',
+          `"${GENERO_POR_DEFECTO}" no puede ir en generos: es el género por defecto del análisis y no activa reglas condicionadas; quítalo o nombra géneros concretos`,
         ),
       );
     }

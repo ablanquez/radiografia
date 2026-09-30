@@ -36,7 +36,9 @@ function cargar(fichero: string): unknown {
  * Y los paquetes de prueba del motor (interno, 4.1; secundario, 4.2), cuyos
  * ejemplos juzga ejemplos.spec.ts. Y `valido-sobre-no-prosa.json` (encargo
  * 5.1): sobreNoProsa en true en una regla de patrón y en una estructural, y en
- * false en otra de patrón.
+ * false en otra de patrón. Y `valido-recuento-y-generos.json` (encargo 5.3):
+ * minimo en patrón, minimoPorCoincidencia, ausencia en patrón y en
+ * estructural, y generos en una regla de ausencia y en una de presencia.
  */
 const VALIDOS = [
   'valido.json',
@@ -46,6 +48,7 @@ const VALIDOS = [
   'paquete-prueba-interno.json',
   'paquete-prueba-secundario.json',
   'valido-sobre-no-prosa.json',
+  'valido-recuento-y-generos.json',
 ] as const;
 
 /**
@@ -217,6 +220,42 @@ const INVALIDOS: readonly CasoInvalido[] = [
     campo: 'parametros.sobreNoProsa',
     mensajeIncluye: 'true o false',
   },
+  // ── Encargo 5.3: cada uno a un solo diff de valido-recuento-y-generos.json ──
+  {
+    // minimo 0 en una regla de patrón.
+    fichero: 'invalido-minimo-cero-en-patron.json',
+    regla: { indice: 0, id: 'd6-referencia-interna' },
+    campo: 'parametros.minimo',
+    mensajeIncluye: 'como mínimo 1',
+  },
+  {
+    // «sí» en vez de true.
+    fichero: 'invalido-ausencia-no-booleano.json',
+    regla: { indice: 3, id: 'sin-opinion' },
+    campo: 'parametros.ausencia',
+    mensajeIncluye: 'true o false',
+  },
+  {
+    // minimoPorCoincidencia 1: repetir es aparecer al menos dos veces.
+    fichero: 'invalido-minimo-por-coincidencia-uno.json',
+    regla: { indice: 2, id: 'conector-repetido' },
+    campo: 'parametros.minimoPorCoincidencia',
+    mensajeIncluye: 'como mínimo 2',
+  },
+  {
+    // generos vacío.
+    fichero: 'invalido-generos-vacio.json',
+    regla: { indice: 3, id: 'sin-opinion' },
+    campo: 'generos',
+    mensajeIncluye: 'al menos 1 elemento',
+  },
+  {
+    // «general» dentro de generos: el esquema lo deja pasar (es kebab-case) y lo caza el paso 2.
+    fichero: 'invalido-generos-con-general.json',
+    regla: { indice: 3, id: 'sin-opinion' },
+    campo: 'generos',
+    mensajeIncluye: '"general" no puede ir en generos',
+  },
 ];
 
 describe('validarPaquete', () => {
@@ -224,9 +263,9 @@ describe('validarPaquete', () => {
    * Ningún fixture sin juez: si entra uno nuevo en la carpeta y nadie lo añade
    * aquí, esto se pone rojo en vez de dejarlo sin mirar.
    */
-  test('la carpeta de fixtures tiene exactamente los treinta y uno que se juzgan', () => {
-    assert.equal(VALIDOS.length, 7, 'siete válidos');
-    assert.equal(INVALIDOS.length, 24, 'veinticuatro inválidos');
+  test('la carpeta de fixtures tiene exactamente los treinta y siete que se juzgan', () => {
+    assert.equal(VALIDOS.length, 8, 'ocho válidos');
+    assert.equal(INVALIDOS.length, 29, 'veintinueve inválidos');
     const esperados = [...VALIDOS, ...INVALIDOS.map((c) => c.fichero)].sort();
     // Solo los FICHEROS de la raíz: los paquetes. Las subcarpetas (fixtures/referencia/)
     // guardan datos de referencia de otros jueces (encargo 3.3).

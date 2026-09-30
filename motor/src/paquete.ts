@@ -65,6 +65,8 @@ interface ReglaComun {
   fuente: { titulo: string; url: string }[];
   origenLista: string | null;
   nivelEvidencia: 'medido en español' | 'medido en inglés' | 'anecdótico' | 'sin fuente' | 'norma';
+  /** Encargo 5.3: si está, la regla solo se evalúa en esos géneros. */
+  generos?: string[];
   ejemplos: { positivos: string[]; negativos: string[] };
 }
 
