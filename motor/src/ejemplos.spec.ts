@@ -3,7 +3,8 @@
  * ejemplo positivo dispara, cada negativo no»): por cada regla de cada
  * paquete de PAQUETES, cada ejemplo positivo produce al menos una señal y cada
  * negativo ninguna. Desde el encargo 5.1 juzga también el paquete real,
- * paquetes/radiografia.json (en la raíz del repo, junto a data/).
+ * paquetes/radiografia.json (en la raíz del repo, junto a data/), y desde el
+ * 5.4 el segundo paquete incluido, paquetes/espanol-correcto.json.
  *
  * Desde el 4.2 aplica a cada regla su detector con `detectar` de analizar.ts,
  * el mismo reparto que usa el motor: patrón y estructural. Cada ejemplo se
@@ -38,6 +39,7 @@ const PAQUETES = [
   new URL('../fixtures/paquete-prueba-interno.json', import.meta.url),
   new URL('../fixtures/paquete-prueba-secundario.json', import.meta.url),
   new URL('../../paquetes/radiografia.json', import.meta.url),
+  new URL('../../paquetes/espanol-correcto.json', import.meta.url),
 ];
 
 /** El ejemplo con sus saltos de línea y sus caracteres invisibles a la vista, para el nombre del test. */

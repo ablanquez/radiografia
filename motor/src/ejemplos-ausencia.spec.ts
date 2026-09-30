@@ -36,6 +36,7 @@ const PAQUETES = [
   new URL('../fixtures/paquete-prueba-interno.json', import.meta.url),
   new URL('../fixtures/paquete-prueba-secundario.json', import.meta.url),
   new URL('../../paquetes/radiografia.json', import.meta.url),
+  new URL('../../paquetes/espanol-correcto.json', import.meta.url),
 ];
 
 /** Las seis primeras palabras del ejemplo, para el nombre del test (los de ausencia son textos enteros). */
