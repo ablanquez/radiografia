@@ -36,6 +36,12 @@ export interface Manifiesto {
   filtros: string[];
   unidad: string;
   descarga: { fecha: string; herramienta: string; peticiones: number; bytes: number; segundos: number; notas?: string[] };
+  /** Comprobaciones hechas sobre el corpus al descargarlo (qué se comprobó y qué salió). */
+  verificaciones?: { que: string; resultado: string }[];
+  /** Lo que salió mal o fuera de lo previsto durante la descarga, dicho. */
+  incidencias?: string[];
+  /** Notas que calibrar.ts lleva al fichero de calibración del género. */
+  notas?: string[];
   semilla?: string;
   motor?: { commit: string; limpio: boolean };
   n: {
