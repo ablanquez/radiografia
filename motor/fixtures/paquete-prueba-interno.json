@@ -1,0 +1,72 @@
+{
+  "$schema": "https://raw.githubusercontent.com/ablanquez/radiografia/main/motor/esquema/paquete.schema.json",
+  "cabecera": {
+    "nombre": "Paquete de prueba interno del motor",
+    "version": "0.1.0",
+    "idioma": "es",
+    "descripcion": "Paquete de PRUEBA del motor (encargo 4.1): dos reglas de patrón para juzgar el detector con sus ejemplos. NO es el paquete RadiografIA v1 ni tiene valor lingüístico.",
+    "autor": "Antonio Blánquez Cabeza",
+    "licencia": "Apache-2.0",
+    "familias": [
+      {
+        "id": "prueba",
+        "nombre": "Prueba del motor",
+        "informativa": false
+      }
+    ]
+  },
+  "reglas": [
+    {
+      "id": "prueba-formas-palabra",
+      "familia": "prueba",
+      "detector": "patrón",
+      "parametros": {
+        "formas": ["innovador", "crucial", "decision"],
+        "ambito": "palabra",
+        "normalizar": {
+          "minusculas": true,
+          "tildes": true
+        }
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Regla de prueba del motor: señala las formas de una lista cerrada, palabra a palabra, sin distinguir mayúsculas ni tildes.",
+      "sugerencia": "Ninguna: es una regla de prueba.",
+      "excepciones": [],
+      "fuente": [],
+      "origenLista": "lista de prueba del motor, sin valor lingüístico",
+      "nivelEvidencia": "sin fuente",
+      "ejemplos": {
+        "positivos": ["Es un enfoque INNOVADOR.", "Fue una decisión rápida.", "Un paso crucial para todos."],
+        "negativos": ["Es un enfoque nuevo.", "Innovó en su campo.", "Decidió rápido."]
+      }
+    },
+    {
+      "id": "prueba-regex-frase",
+      "familia": "prueba",
+      "detector": "patrón",
+      "parametros": {
+        "regex": "\\ben (?:conclusión|resumen)\\b",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": true,
+          "tildes": false
+        }
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Regla de prueba del motor: señala una expresión regular sobre la frase entera, sin distinguir mayúsculas.",
+      "sugerencia": "Ninguna: es una regla de prueba.",
+      "excepciones": [],
+      "fuente": [],
+      "origenLista": null,
+      "nivelEvidencia": "sin fuente",
+      "ejemplos": {
+        "positivos": ["En conclusión, todo salió bien.", "Y, en resumen, nada cambió."],
+        "negativos": ["Concluyó que todo salió bien.", "Resumió el informe en una página."]
+      }
+    }
+  ]
+}

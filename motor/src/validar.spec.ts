@@ -33,8 +33,15 @@ function cargar(fichero: string): unknown {
  * terceros; que RadiografIA no la use lo vigilará un juez del punto 5).
  * Y un válido por detector (encargo 4.1, parametros cerrados): el de patrón es
  * valido.json; valido-detector-estructural.json y valido-detector-estadistico.json.
+ * Y el paquete de prueba interno del motor (4.1), cuyos ejemplos juzga ejemplos.spec.ts.
  */
-const VALIDOS = ['valido.json', 'valido-sin-fuente.json', 'valido-detector-estructural.json', 'valido-detector-estadistico.json'] as const;
+const VALIDOS = [
+  'valido.json',
+  'valido-sin-fuente.json',
+  'valido-detector-estructural.json',
+  'valido-detector-estadistico.json',
+  'paquete-prueba-interno.json',
+] as const;
 
 /**
  * Lo que cada inválido tiene que decir: qué regla (o `null` si el error es de
@@ -154,8 +161,8 @@ describe('validarPaquete', () => {
    * Ningún fixture sin juez: si entra uno nuevo en la carpeta y nadie lo añade
    * aquí, esto se pone rojo en vez de dejarlo sin mirar.
    */
-  test('la carpeta de fixtures tiene exactamente los veinte que se juzgan', () => {
-    assert.equal(VALIDOS.length, 4, 'cuatro válidos');
+  test('la carpeta de fixtures tiene exactamente los veintiuno que se juzgan', () => {
+    assert.equal(VALIDOS.length, 5, 'cinco válidos');
     assert.equal(INVALIDOS.length, 16, 'dieciséis inválidos');
     const esperados = [...VALIDOS, ...INVALIDOS.map((c) => c.fichero)].sort();
     // Solo los FICHEROS de la raíz: los paquetes. Las subcarpetas (fixtures/referencia/)
