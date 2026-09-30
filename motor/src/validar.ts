@@ -246,7 +246,7 @@ function mensajeEnCastellano(e: ErrorObject, valor: unknown, alternativas: reado
       return 'falta este campo obligatorio';
     case 'additionalProperties':
       // En la calibración, las claves de métrica y de género son nombres (patternProperties) y las de tramo, tres fijas.
-      if (nivelDeCalibracion === 0) return 'una métrica de la calibración se nombra en kebab-case: minúsculas, cifras y guiones';
+      if (nivelDeCalibracion === 0) return 'una clave de la calibración es una métrica en kebab-case (minúsculas, cifras y guiones) o el total de un paquete, "_total-" y su nombre en kebab-case';
       if (nivelDeCalibracion === 1) return 'un género de la calibración se nombra en kebab-case: minúsculas, cifras y guiones';
       if (nivelDeCalibracion === 2) return 'no es un tramo: los tramos son "100-299", "300-599" y "600+"';
       return 'este campo no existe en el esquema (¿una errata?)';

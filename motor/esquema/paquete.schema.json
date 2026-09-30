@@ -66,24 +66,15 @@
           "additionalProperties": false,
           "patternProperties": {
             "^[a-z0-9]+(-[a-z0-9]+)*$": {
-              "type": "object",
-              "additionalProperties": false,
-              "patternProperties": {
-                "^[a-z0-9]+(-[a-z0-9]+)*$": {
-                  "type": "object",
-                  "additionalProperties": false,
-                  "properties": {
-                    "100-299": { "$ref": "#/$defs/celda" },
-                    "300-599": { "$ref": "#/$defs/celda" },
-                    "600+": { "$ref": "#/$defs/celda" }
-                  },
-                  "$comment": "Un género: sus tramos de longitud (los del umbral, 4.1)."
-                }
-              },
-              "$comment": "Una métrica: sus géneros, cada uno con un nombre kebab-case («general», «noticia»…)."
+              "$ref": "#/$defs/porGenero",
+              "$comment": "Una métrica del registro del motor (metricas/nombres.ts)."
+            },
+            "^_total-[a-z0-9]+(-[a-z0-9]+)*$": {
+              "$ref": "#/$defs/porGenero",
+              "$comment": "Encargo 5.5: total de un paquete calculado por la herramienta de calibración; no es una métrica del motor y ninguna regla puede pedirla (parametros.metrica es kebab-case y el paso 2 la busca en el registro). El guion bajo marca a la vista que no es métrica."
             }
           },
-          "$comment": "Opcional (encargo 4.3): los percentiles humanos contra los que las reglas estadísticas comparan su métrica, por métrica × género × tramo (plan, punto 5: calibración firmada el 29/09). Las claves de métrica son las de parametros.metrica de las reglas. Si el paquete tiene reglas estadísticas, validar.ts exige que la métrica de cada una esté aquí con el género «general» [PROPIO: el género por defecto del análisis] en algún tramo, y que en cada celda p1 ≤ p5 ≤ p50 ≤ p95 ≤ p99."
+          "$comment": "Opcional (encargo 4.3): los percentiles humanos contra los que las reglas estadísticas comparan su métrica, por métrica × género × tramo (plan, punto 5: calibración firmada el 29/09). Las claves de métrica son las de parametros.metrica de las reglas. Si el paquete tiene reglas estadísticas, validar.ts exige que la métrica de cada una esté aquí con el género «general» [PROPIO: el género por defecto del análisis] en algún tramo, y que en cada celda p1 ≤ p5 ≤ p50 ≤ p95 ≤ p99. Desde el 5.5 lleva también el total de un paquete, «_total-<nombre>» (p. ej. «_total-radiografia»)."
         }
       }
     },
@@ -94,6 +85,23 @@
     }
   },
   "$defs": {
+    "porGenero": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[a-z0-9]+(-[a-z0-9]+)*$": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "100-299": { "$ref": "#/$defs/celda" },
+            "300-599": { "$ref": "#/$defs/celda" },
+            "600+": { "$ref": "#/$defs/celda" }
+          },
+          "$comment": "Un género: sus tramos de longitud (los del umbral, 4.1)."
+        }
+      },
+      "$comment": "Una clave de la calibración (una métrica o el total de un paquete): sus géneros, cada uno con un nombre kebab-case («general», «noticia»…)."
+    },
     "celda": {
       "type": "object",
       "additionalProperties": false,
