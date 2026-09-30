@@ -37,7 +37,8 @@ el texto ni las reglas.
 
 **En construcción.** Hoy (30/09/2026) existe el plan firmado, la
 investigación de las familias en [`docs/investigacion/`](docs/investigacion/)
-y, en la carpeta [`motor/`](motor/):
+y, en la carpeta [`motor/`](motor/), un motor que ya analiza un texto de
+principio a fin, por ahora con paquetes de prueba:
 
 - el **esquema del paquete y de la ficha de regla** (JSON Schema 2020-12),
   con los parámetros de cada tipo de detector ya cerrados, y un
@@ -48,10 +49,20 @@ y, en la carpeta [`motor/`](motor/):
   exactas sobre el original y cada párrafo marcado como prosa o no (viñetas,
   tablas y código no cuentan);
 - el **umbral de longitud**: menos de 100 palabras de prosa, texto
-  insuficiente; de 100 a 299, resultado poco fiable; 300 o más, completo;
-- el **detector de patrón** (formas o expresiones regulares, por palabra o
-  por frase), probado con un paquete de prueba interno: cada ejemplo
-  positivo dispara y ningún negativo.
+  insuficiente y no se analiza; de 100 a 299, resultado poco fiable; 300 o
+  más, completo;
+- los **detectores de patrón y estructural**: formas o expresiones regulares
+  por palabra o por frase, y expresiones en una posición (principio o final
+  de frase o de párrafo, último párrafo, o en cualquier punto de un párrafo);
+- la **puntuación**: puntos por 1.000 palabras de prosa, con su desglose por
+  familia y por regla; las reglas informativas se enseñan pero no suman y
+  los atenuantes restan. Cómo se muestra el medidor (escala, tope) se decide
+  al calibrar con las reglas reales;
+- la **combinación de paquetes**: se analizan varios a la vez, cada señal
+  dice de qué paquete viene y cada paquete lleva su propio desglose.
+
+Todo está probado con dos paquetes de prueba internos: cada ejemplo positivo
+dispara su regla y ningún negativo.
 
 Las piezas de apoyo que las reglas necesitarán están **medidas contra
 referencias ajenas**, no dadas por buenas:
@@ -67,9 +78,9 @@ referencias ajenas**, no dadas por buenas:
   necesitaban; su código se retiró. La medida entera, en
   [`docs/investigacion/pos-medida.md`](docs/investigacion/pos-medida.md).
 
-Faltan los detectores estructural y estadístico y la puntuación (el
-medidor). No hay ninguna regla real y no hay pantalla. Todo lo que se
-afirma más arriba es lo que se va a construir, en el orden de la
+Falta el detector estadístico. No hay ninguna regla real y no hay
+pantalla: lo que promete la entrada de este README (subrayados, medidor,
+catálogo) es lo que se va a construir, en el orden de la
 [hoja de ruta](#hoja-de-ruta).
 
 ## Cómo está pensado
@@ -92,7 +103,8 @@ afirma más arriba es lo que se va a construir, en el orden de la
   **origen de la lista** («inventario propio…» cuando lo es), **nivel de
   evidencia** (medido en español, medido en inglés, anecdótico, sin fuente
   o norma) y ejemplos positivos y negativos. Los ejemplos son la
-  documentación y serán los tests. El esquema está en
+  documentación y son los tests: cada positivo tiene que disparar la regla y
+  cada negativo no. El esquema está en
   [`motor/esquema/`](motor/esquema/).
 - **Catálogo público** con una página por regla.
 - **Informe PDF** desde la propia página.
