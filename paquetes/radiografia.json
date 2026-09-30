@@ -221,7 +221,7 @@
       "familia": "canal",
       "detector": "patrón",
       "parametros": {
-        "regex": "\\u202F",
+        "regex": "(?<!\\d)\\u202F(?!\\d)",
         "ambito": "frase",
         "normalizar": {
           "minusculas": false,
@@ -236,7 +236,7 @@
       "sugerencia": "Quita los caracteres invisibles: pega el texto como texto sin formato, o cambia los espacios estrechos por espacios normales con «buscar y reemplazar».",
       "excepciones": [
         "Tipografía francesa: el espacio estrecho va delante de ; : ! ?",
-        "Cifras: los miles separados con un espacio fino (10 000), como recomienda la RAE, se pueden escribir con este carácter, y el motor los señala igual.",
+        "Cifras: los miles separados con un espacio fino (10 000), como recomienda la RAE, se pueden escribir con este carácter; por eso la regla no cuenta un U+202F que va detrás o delante de una cifra (10 000, 5 %).",
         "Textos que vienen de un programa de maquetación.",
         "Un U+202F entre dos frases o en el borde de un párrafo no se ve: el motor lo toma por un espacio y lo recorta."
       ],
@@ -257,7 +257,8 @@
           "El informe\u202Fllega el lunes."
         ],
         "negativos": [
-          "El informe llega el lunes."
+          "El informe llega el lunes.",
+          "La cifra llegó a 10\u202F000 visitantes."
         ]
       }
     },
