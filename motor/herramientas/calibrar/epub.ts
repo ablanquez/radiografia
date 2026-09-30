@@ -23,7 +23,8 @@
  *    Gutenberg; del HTML de cada fichero solo cuenta su `<body>`. Sin sus
  *    títulos (h1-h6), sin llamadas a nota, sin números de página y sin el
  *    texto de las imágenes (sinImagenes); el resto pasa por html.ts. Fuera,
- *    con su motivo: los paratextos (esParatexto) y la licencia de Gutenberg.
+ *    con su motivo: los paratextos (esParatexto, y lo que el índice anida en
+ *    un prólogo) y la licencia de Gutenberg.
  */
 import { lineasDeHtml, limpiarHtml, textoPlano } from './html.ts';
 
@@ -42,6 +43,15 @@ export interface CapitulosDeEpub {
 
 const PARATEXTO =
   /^\s*(pr[oó]logo|prefacio|pr[eé]face|preface|dedicatoria|introducci[oó]n|introduction|advertencias|advertencia|dedicatorias|aclaraciones|aclaraci[oó]n|proemio|obras citadas|significado de|al lector|nota|notas|notes|footnotes|[ií]ndice|index|contents|contenido|sumario|tabla|glosario|vocabulario|vocabulary|abbreviations|exercises|ejercicios|erratas|fe de erratas|tasa|privilegio|aprobaci[oó]n|colof[oó]n|ap[eé]ndice|bibliograf[ií]a|codificaci[oó]n|ediciones)\b/iu;
+
+/**
+ * [PROPIO, bitácora del 2026-09-30] Los paratextos que tienen secciones: lo
+ * que el índice anida dentro de uno de ellos también es paratexto (el
+ * «PRÓLOGO» de Unamuno en pg55916, con sus secciones «I»…«VI»). Solo estos: en
+ * pg63402 las «CRISI» cuelgan de una «NOTA» y son el libro. Pérdida a la
+ * vista: el «Prólogo» de Tirano Banderas (pg68154) es narración y queda fuera.
+ */
+const CON_SECCIONES = /^\s*(pr[oó]logo|prefacio|pr[eé]face|preface|introducci[oó]n|introduction|proemio|advertencia|al lector)\b/iu;
 
 /** Las letras espaciadas de un título («D E D I C A T O R I A»), juntas. */
 const juntarEspaciadas = (etiqueta: string) => (/^\s*(?:\S\s)+\S\s*$/u.test(etiqueta) ? etiqueta.replace(/\s+/g, '') : etiqueta);
@@ -187,9 +197,26 @@ export function capitulosDeEpub(zip: ReadonlyMap<string, Buffer>): CapitulosDeEp
     return { orden: i + 1, etiqueta: textoPlano(m[1]!), posicion };
   });
 
+  // El anidamiento del índice: de cada entrada, las que la contienen.
+  const contenedoras: number[][] = [];
+  const abiertas: number[] = [];
+  let n = 0;
+  for (const [marca] of ncx.matchAll(/<navPoint\b|<\/navPoint>/g)) {
+    if (marca === '</navPoint>') abiertas.pop();
+    else {
+      n++;
+      contenedoras[n] = [...abiertas];
+      abiertas.push(n);
+    }
+  }
+  if (n !== entradas.length) throw new Error(`epub: el índice tiene ${n} navPoint y ${entradas.length} entradas legibles`);
+  const etiquetaDe = new Map(entradas.map((e) => [e.orden, e.etiqueta]));
+  const dentroDeUnPrologo = (orden: number) => contenedoras[orden]!.some((c) => CON_SECCIONES.test(juntarEspaciadas(etiquetaDe.get(c)!)));
+
   const salida: CapitulosDeEpub = { capitulos: [], fuera: [] };
   const ordenadas = entradas.filter((e) => e.posicion >= 0).sort((a, b) => a.posicion - b.posicion);
   for (const e of entradas.filter((x) => x.posicion < 0)) salida.fuera.push({ orden: e.orden, etiqueta: e.etiqueta, motivo: 'su ancla no está en el libro' });
+  // Las secciones numeradas de un prólogo también marcan dónde acaban los preliminares: lo que sigue al prólogo es el libro (pg39613).
   const primeraNumerada = ordenadas.find((e) => esDivisionNumerada(e.etiqueta))?.posicion ?? -1;
   const anunciosFinales = ordenadas.find((e) => FINAL.test(e.etiqueta))?.posicion ?? Infinity;
   ordenadas.forEach((e, i) => {
@@ -203,6 +230,10 @@ export function capitulosDeEpub(zip: ReadonlyMap<string, Buffer>): CapitulosDeEp
     }
     if (esParatexto(e.etiqueta)) {
       salida.fuera.push({ orden: e.orden, etiqueta: e.etiqueta, motivo: 'paratexto' });
+      return;
+    }
+    if (dentroDeUnPrologo(e.orden)) {
+      salida.fuera.push({ orden: e.orden, etiqueta: e.etiqueta, motivo: 'paratexto: dentro de un prólogo' });
       return;
     }
     if (esPortada(e.etiqueta)) {

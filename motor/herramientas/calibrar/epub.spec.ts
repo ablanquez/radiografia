@@ -20,13 +20,13 @@ describe('capitulosDeEpub', () => {
     const { capitulos } = capitulosDeEpub(PRUEBA);
     assert.deepEqual(capitulos, [
       {
-        orden: 3,
+        orden: 6,
         etiqueta: 'CAPÍTULO PRIMERO',
         texto: 'Era una noche de julio y llovía.\n—¿Quién va? —preguntó la vieja.\nNadie contestó.\nNi una voz.\nY amaneció al fin sobre el pueblo.',
         problemas: [],
       },
       {
-        orden: 4,
+        orden: 7,
         etiqueta: 'CAPÍTULO II',
         texto: 'El segundo capítulo empieza aquí.\nSEÑOR mío, dijo el ama.\nAunque llovía, salió.\nLLEGÓ el otoño.',
         problemas: [],
@@ -49,16 +49,19 @@ describe('capitulosDeEpub', () => {
     for (const [html, esperado] of casos) assert.equal(sinImagenes(html), esperado, html);
   });
 
-  test('fuera, con su motivo: la portada, el prólogo, el teatro, la tabla, las notas, los anuncios finales y la licencia de Gutenberg', () => {
+  test('fuera, con su motivo: la portada, la carta preliminar, el prólogo y sus secciones, el teatro, la tabla, las notas, los anuncios finales y la licencia de Gutenberg', () => {
     assert.deepEqual(capitulosDeEpub(PRUEBA).fuera, [
       { orden: 1, etiqueta: 'EL LIBRO DE PRUEBA', motivo: 'portada: el título del libro' },
-      { orden: 2, etiqueta: 'PRÓLOGO', motivo: 'paratexto' },
-      { orden: 5, etiqueta: 'ESCENA PRIMERA', motivo: 'teatro' },
-      { orden: 6, etiqueta: 'T A B L A', motivo: 'paratexto' },
-      { orden: 7, etiqueta: 'FOOTNOTES:', motivo: 'paratexto' },
-      { orden: 8, etiqueta: 'OBRAS DEL MISMO AUTOR', motivo: 'final: anuncios del editor u obras del autor' },
-      { orden: 9, etiqueta: 'EL OTRO LIBRO', motivo: 'final: anuncios del editor u obras del autor' },
-      { orden: 10, etiqueta: 'THE FULL PROJECT GUTENBERG™ LICENSE', motivo: 'licencia de Project Gutenberg' },
+      { orden: 2, etiqueta: 'CARTA DEL AUTOR', motivo: 'preliminar: antes de la primera división numerada' },
+      { orden: 3, etiqueta: 'PRÓLOGO', motivo: 'paratexto' },
+      { orden: 4, etiqueta: 'I', motivo: 'paratexto: dentro de un prólogo' },
+      { orden: 5, etiqueta: 'II', motivo: 'paratexto: dentro de un prólogo' },
+      { orden: 8, etiqueta: 'ESCENA PRIMERA', motivo: 'teatro' },
+      { orden: 9, etiqueta: 'T A B L A', motivo: 'paratexto' },
+      { orden: 10, etiqueta: 'FOOTNOTES:', motivo: 'paratexto' },
+      { orden: 11, etiqueta: 'OBRAS DEL MISMO AUTOR', motivo: 'final: anuncios del editor u obras del autor' },
+      { orden: 12, etiqueta: 'EL OTRO LIBRO', motivo: 'final: anuncios del editor u obras del autor' },
+      { orden: 13, etiqueta: 'THE FULL PROJECT GUTENBERG™ LICENSE', motivo: 'licencia de Project Gutenberg' },
     ]);
   });
 
