@@ -57,8 +57,8 @@ const leer = (): Paquete => JSON.parse(readFileSync(RUTA, 'utf8')) as Paquete;
 
 const FAMILIAS = ['lexico', 'sintaxis', 'puntuacion-formato', 'estadistica', 'discurso', 'canal'];
 
-/** El prefijo del id de cada familia con reglas (encargos 5.1, 5.2 y 5.3). Las demás lo deciden en su tanda. */
-const PREFIJOS: Readonly<Record<string, string>> = { canal: 'canal-', 'puntuacion-formato': 'pf-', lexico: 'lex-', discurso: 'disc-' };
+/** El prefijo del id de cada familia con reglas (encargos 5.1 a 5.4). Las demás lo deciden en su tanda. */
+const PREFIJOS: Readonly<Record<string, string>> = { canal: 'canal-', 'puntuacion-formato': 'pf-', lexico: 'lex-', discurso: 'disc-', sintaxis: 'sint-' };
 
 /** Lo que puede restar un atenuante (encargo 5.3). */
 const ATENUANTES: readonly number[] = [-1, -2];
@@ -177,8 +177,17 @@ describe('el juez de RadiografIA caza cada condición rota', () => {
       ['ids'],
       (p) => {
         const r = regla(p, 'pf-raya-espaciada');
+        r.familia = 'estadistica';
+        r.id = 'estadistica-raya-espaciada';
+      },
+    ],
+    [
+      'una regla de sintaxis con el prefijo «sint-» (sin problema)',
+      [],
+      (p) => {
+        const r = regla(p, 'pf-raya-espaciada');
         r.familia = 'sintaxis';
-        r.id = 'sintaxis-raya-espaciada';
+        r.id = 'sint-raya-espaciada';
       },
     ],
     ['medido en inglés con peso 3 (máximo 2)', ['peso'], (p) => (regla(p, 'pf-raya-densidad').peso = 3)],
