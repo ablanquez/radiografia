@@ -45,7 +45,10 @@
  * que ninguna novela larga copa un tramo; hasta que cada tramo tenga MINIMO
  * documentos de calibración o se agote el tiempo (30 minutos de descarga EN
  * TOTAL, sumando ejecuciones: fuente/registro.json; lo ya descargado, en
- * caché). Un tramo que no llegue: su celda no existe (calibrar.ts).
+ * caché). Un tramo que no llegue: su celda no existe (calibrar.ts); el tope
+ * no se sube para llenarlo (parada de narrativa). Lo que la revisión a mano
+ * vio que no es narración, o es traducción, sale por las listas FUERA_POR_*,
+ * con su motivo en el manifiesto.
  */
 import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
@@ -79,16 +82,57 @@ const REVISADOS_A_MANO = [
   'pg12457 (El Diablo Cojuelo): entran los diez trancos; fuera la portada, la carta y el soneto preliminares (antes del primer tranco), las dedicatorias, los prólogos, las notas, el índice y la licencia; sin llamadas a nota',
   'piloto de 40 EPUB: fuera los anuncios finales de pg29831 y la «ACLARACIÓN» de pg32364, y el glosario «ABBREVIATIONS» de pg29731 (docs/BITACORA.md, 2026-09-30)',
   'los 127 capítulos de 100-299 de la primera descarga completa, uno a uno: unos 30 no eran narración (portadas con el título del libro, «TASA», «TABLA», «D E D I C A T O R I A», «Codificación», el año «1872» tomado por capítulo, escenas de teatro, duplicados entre libros); corregido en epub.ts y aquí, y revisado de nuevo',
+  'a la parada de narrativa: las etiquetas de todos los capítulos de 300-599 y 600+ y el arranque de los sospechosos; salieron teatro, prólogos con otro nombre o con secciones, obras en diálogo, ensayos dentro de libros de ficción, crítica literaria y el texto alternativo de las imágenes (docs/BITACORA.md, 2026-09-30); corregido en epub.ts, gutenberg.ts y en las listas de abajo',
 ];
 
 /**
- * Lo que la revisión a mano (30/09/2026) vio que NO es narración y sigue
- * dentro: ninguna regla general lo separa sin ajustarse a un solo libro. Se
- * declara; no se quita a mano sin decisión de Antonio.
+ * Fuera a mano (decisión de Antonio a la parada de narrativa, 30/09/2026):
+ * lo que la revisión vio y ninguna regla general separa sin ajustarse a un
+ * solo libro. Autores y libros, antes de leer el EPUB; capítulos, DESPUÉS del
+ * tope por libro, sin sustituirlos (así cada id de la lista es uno que se leyó
+ * a mano). Un id de la lista que no esté en la muestra para la descarga: la
+ * lista ya no describe la muestra.
  */
-const RESIDUOS_CONOCIDOS = [
-  '100-299 (tramo sin celda): pg14995-036 («1872»: datos de librería), pg14796-016 y -019 (teatro alegórico y sus notas), pg28281-055 (bibliografía), pg42440-002 (soneto preliminar), pg62691-017 (dedicatoria), pg65685-001 y -002 (portada y arranque de una antología), pg26929-006 y pg49149-022 y -026 (ensayos del autor), pg39444-032 y pg39613-039 (casi el mismo texto en dos antologías)',
-  '300-599: pg14311-041 (lista de traducciones de Galdós), pg1619-004 (carta «El auctor» de La Celestina), pg62691-003 (dedicatoria de El criticón); dudoso: pg65689-023',
+const FUERA_POR_AUTOR: Readonly<Record<string, string>> = {
+  'Sudermann, Hermann':
+    'autor de lengua alemana según el catálogo (Bookshelves de «El deseo»: «Category: German Literature»; Subjects: «Love stories, German»; sin traductor, dos libros en alemán y dos en español, empate que lenguasPropias da al español): su texto en español es una traducción sin acreditar',
+  'Dourliac, Arthur':
+    'autor de lengua francesa (https://www.academie-francaise.fr/node/16125: «Pseudonyme de Arthur Couillard (1848-1905)», prix Montyon 1904 por «Trop marquise !»); el catálogo solo tiene «Liette», en español y sin traductor, y no dice su lengua: su texto en español es una traducción sin acreditar',
+};
+const FUERA_POR_LIBRO: Readonly<Record<number, string>> = {
+  1619: 'La Celestina: obra en diálogo, sin narrador (como el teatro que epub.ts deja fuera)',
+  50291: 'Retrato de la Lozana andaluza: obra en diálogo (mamotretos), sin narrador',
+};
+const FUERA_POR_CAPITULO: Readonly<Record<string, string>> = {
+  'pg14995-036': '«1872»: datos de librería al final del libro',
+  'pg14796-016': 'teatro alegórico («ACTO UNICO»)',
+  'pg14796-019': '«TELÓN.»: final y notas de la pieza de teatro',
+  'pg28281-055': '«ARTICULOS EN REVISTAS»: bibliografía',
+  'pg62691-003': '«PRIMERA PARTE»: dedicatoria de El criticón («Á don Pablo de Parada»)',
+  'pg62691-017': '«SEGUNDA PARTE»: dedicatoria de El criticón («Al serenísimo señor don Juan de Austria»)',
+  'pg65685-001': '«LIBROS DE CABALLERÍAS»: portada y advertencia del editor de la antología',
+  'pg65685-002': '«AMADÍS DE GAULA»: rúbrica del título y títulos del editor',
+  'pg26929-006': '«LA PRIMER CUARTILLA»: ensayo del autor sobre el arte, a modo de prólogo',
+  'pg49149-022': '«RAZÓN DE MÉTODO»: el tratado de cocotología que cierra la novela (ensayo)',
+  'pg49149-023': '«ETIMOLOGÍA»: el tratado de cocotología (ensayo)',
+  'pg49149-026': '«LUGAR QUE OCUPA ENTRE LAS DEMÁS CIENCIAS…»: el tratado de cocotología (ensayo)',
+  'pg65689-019': '«EL ORIGEN DEL UNIVERSO»: el ensayo de cosmogonía que cierra el libro de Lugones',
+  'pg65689-023': '«EL ESPACIO Y EL TIEMPO»: el ensayo de cosmogonía de Lugones',
+  'pg65689-029': '«LA VIDA DE LA MATERIA»: el ensayo de cosmogonía de Lugones',
+  'pg14311-041': '«DE Don BENITO PEREZ GALDOS»: lista de obras y traducciones del autor',
+  'pg15115-024': '«EL RETABLO DE LAS MARAVILLAS»: entremés (teatro)',
+  'pg15115-027': '«JORNADA SEGUNDA»: La Numancia (teatro en verso)',
+  'pg55448-002': '«BREVE NOTICIA»: prólogo del autor',
+  'pg38814-003': '«ANTES DE EMPEZAR»: prólogo del autor',
+  'pg36573-002': '«INVOCACIÓN»: proemio lírico',
+};
+
+/** Lo que la revisión vio, dudoso, y se queda dentro (declarado). */
+const DENTRO_DECLARADO = [
+  'cuadros de costumbres y crónicas en libros que el catálogo da por ficción (pg61244 «Cosas que fueron»; pg71369, pg72768 de Pereda)',
+  'pg62359: capítulos de «Viaje a China» de Enrique Gaspar, relato de viaje que el catálogo da por ficción («China -- Fiction»)',
+  'pg15206: «En el jardín» y «En la Historia», de la fantasía «Theros» de Galdós, en forma de apóstrofe a los meses',
+  'La Quimera (pg49756): las «meditaciones» de la protagonista, en primera persona',
 ];
 
 const CORPUS = fileURLToPath(new URL('../../corpus/narrativa-clasica/', import.meta.url));
@@ -139,10 +183,21 @@ const lenguas = lenguasPropias(libros);
 const fueraDelFiltro: Record<string, number> = {};
 const suma = (r: Record<string, number>, motivo: string, n = 1) => (r[motivo] = (r[motivo] ?? 0) + n);
 const elegibles: Libro[] = [];
+const fueraAMano: string[] = [];
 for (const l of libros.filter((x) => x.lenguas.includes('es'))) {
   const r = filtrarLibro(l, ULTIMO_ANIO_DE_MUERTE, lenguas);
+  const autor = l.personas.find((p) => p.papel === null && p.nombre in FUERA_POR_AUTOR);
   if ('fuera' in r) suma(fueraDelFiltro, r.fuera.replace(/ \(.*\)$/, ''));
-  else elegibles.push(l);
+  else if (autor !== undefined) {
+    suma(fueraDelFiltro, 'fuera a mano: autor de otra lengua (traducción sin acreditar)');
+    fueraAMano.push(autor.nombre);
+  } else if (l.id in FUERA_POR_LIBRO) {
+    suma(fueraDelFiltro, 'fuera a mano: obra en diálogo, sin narrador');
+    fueraAMano.push(String(l.id));
+  } else elegibles.push(l);
+}
+for (const k of [...Object.keys(FUERA_POR_AUTOR), ...Object.keys(FUERA_POR_LIBRO)]) {
+  if (!fueraAMano.includes(k)) throw new Error(`PARA: «${k}», fuera a mano, no está entre los libros que pasan el filtro`);
 }
 const epubDe = new Map<number, string>();
 let urlHarvest: string | null = HARVEST;
@@ -170,7 +225,8 @@ const tomadas = new Set<string>();
 const descartados: Record<string, number> = {};
 const fueraDelIndice: Record<string, number> = {};
 const librosUsados: Libro[] = [];
-const cuenta = (t: TramoDeCalibracion) => hechos.filter((h) => h.tramo === t && h.reparto === 'calibracion').length;
+const capitulosFueraAMano: string[] = [];
+const cuenta =(t: TramoDeCalibracion) => hechos.filter((h) => h.tramo === t && h.reparto === 'calibracion').length;
 let agotado: string | null = null;
 let epubsLeidos = 0;
 try {
@@ -207,8 +263,10 @@ try {
       const nuevos = medidos.filter((m) => m.tramo === t && !tomadas.has(huella(m.texto)));
       suma(descartados, 'idéntico a un capítulo ya tomado de otro libro', medidos.filter((m) => m.tramo === t).length - nuevos.length);
       const delTramo = ordenDeMuestra(SEMILLA, nuevos, (m) => m.id);
-      for (const m of delTramo.slice(0, TOPE_POR_LIBRO)) tomadas.add(huella(m.texto));
-      hechos.push(...delTramo.slice(0, TOPE_POR_LIBRO));
+      const tomados = delTramo.slice(0, TOPE_POR_LIBRO);
+      for (const m of tomados) tomadas.add(huella(m.texto));
+      for (const m of tomados.filter((x) => x.id in FUERA_POR_CAPITULO)) capitulosFueraAMano.push(m.id);
+      hechos.push(...tomados.filter((x) => !(x.id in FUERA_POR_CAPITULO)));
       if (delTramo.length > 0) usadoAlguno = true;
       suma(descartados, `más de ${TOPE_POR_LIBRO} capítulos del mismo libro en su tramo`, Math.max(0, delTramo.length - TOPE_POR_LIBRO));
     }
@@ -222,6 +280,9 @@ try {
   agotado = e.message;
 }
 guardarRegistro();
+const sobran = Object.keys(FUERA_POR_CAPITULO).filter((id) => !capitulosFueraAMano.includes(id));
+if (sobran.length > 0) throw new Error(`PARA: fuera a mano y no en la muestra (la lista ya no la describe): ${sobran.join(', ')}`);
+suma(descartados, 'fuera a mano: no es narración (lista por id, sin sustituir)', capitulosFueraAMano.length);
 for (const k of Object.keys(descartados)) if (descartados[k] === 0) delete descartados[k];
 
 // ── Textos y manifiesto ──
@@ -267,9 +328,11 @@ const manifiesto = prepararManifiesto(
     ],
     filtros: [
       'catálogo: Type «Text», Language exactamente «es», «fiction» en Subjects, sin «[Translator]» (decisiones de la parada 1)',
-      'catálogo, a la parada: fuera la traducción probable por Subjects («Translations into Spanish» o literatura no hispánica) y los libros de un autor cuya lengua propia en el catálogo (más libros sin traductor) no es el español',
+      'catálogo, heurísticas [PROPIO] aprobadas a la parada de narrativa: fuera la traducción probable por Subjects («Translations into Spanish» o literatura no hispánica) y los libros de un autor cuya lengua propia en el catálogo (la de su mayoría de libros sin traductor) no es el español',
+      'catálogo: «fiction» solo con «-- History and criticism» es crítica, no ficción (los tres tomos de «Orígenes de la novela»)',
+      `fuera a mano, con su motivo en las verificaciones: ${Object.keys(FUERA_POR_AUTOR).length} autores, ${Object.keys(FUERA_POR_LIBRO).length} libros y ${Object.keys(FUERA_POR_CAPITULO).length} capítulos (estos, después del tope por libro y sin sustituirlos)`,
       `catálogo: todas las personas del registro, con cualquier papel, con año de muerte y ${ULTIMO_ANIO_DE_MUERTE} o antes; sin año, fuera`,
-      'documento = capítulo (epub.ts): de una entrada de toc.ncx a la siguiente, sin cabecera ni pie de Gutenberg, sin títulos, llamadas a nota ni números de página; fuera paratextos, preliminares (antes de la primera división numerada) y licencia',
+      'documento = capítulo (epub.ts): de una entrada de toc.ncx a la siguiente, sin cabecera ni pie de Gutenberg, sin títulos, llamadas a nota, números de página ni el texto alternativo de las imágenes y sus pies; fuera paratextos (y las secciones anidadas en un prólogo), preliminares (antes de la primera división numerada), teatro por su etiqueta y licencia',
       `libros en el orden de sha256("semilla|muestra|libro"); de cada libro, como mucho ${TOPE_POR_LIBRO} capítulos en cada tramo (los primeros por huella); hasta ${MINIMO} documentos de calibración por tramo`,
       'fuera: capítulos con problemas de extracción y de menos de 100 palabras de prosa',
     ],
@@ -287,8 +350,15 @@ const manifiesto = prepararManifiesto(
       ],
     },
     verificaciones: [
+      {
+        que: 'dominio público, comprobado en el BOE en cada ejecución',
+        resultado: `TRLPI consolidado (arts. 26 y 30, DT 4.ª) y Ley de 10 de enero de 1879 (art. 6, «por el término de ochenta años»), literales en la página descargada: entran autores fallecidos en ${ULTIMO_ANIO_DE_MUERTE} o antes`,
+      },
       { que: 'extracción de capítulos revisada a mano', resultado: REVISADOS_A_MANO.join('; ') },
-      { que: 'lo que la revisión a mano vio que no es narración y sigue dentro (sin regla general que lo separe)', resultado: RESIDUOS_CONOCIDOS.join('; ') },
+      { que: 'autores fuera a mano, con su motivo', resultado: Object.entries(FUERA_POR_AUTOR).map(([a, m]) => `${a}: ${m}`).join('; ') },
+      { que: 'libros fuera a mano, con su motivo', resultado: Object.entries(FUERA_POR_LIBRO).map(([l, m]) => `pg${l}: ${m}`).join('; ') },
+      { que: 'capítulos fuera a mano (después del tope, sin sustituir), con su motivo', resultado: Object.entries(FUERA_POR_CAPITULO).map(([id, m]) => `${id}: ${m}`).join('; ') },
+      { que: 'dudoso, visto en la revisión, y dentro', resultado: DENTRO_DECLARADO.join('; ') },
       {
         que: 'libros del catálogo con «es» en Language, fuera del filtro por motivo',
         resultado: Object.entries(fueraDelFiltro).map(([m, n]) => `${m}: ${n}`).join('; '),
@@ -306,14 +376,16 @@ const manifiesto = prepararManifiesto(
       { que: 'autores de los libros de la muestra (para revisar a mano las traducciones que se cuelen)', resultado: autoresUsados.join(' · ') },
     ],
     incidencias: [
-      '30/09/2026: el harvest enlaza los EPUB en https://aleph.gutenberg.org, cuyo certificado TLS es de aleph.pglaf.org (ERR_TLS_CERT_ALTNAME_INVALID). Se piden las mismas URL por http; cada EPUB se comprueba por el CRC-32 de sus entradas.',
-      '30/09/2026: el harvest de «txt» en español devuelve dos libros; se usa el de «epub.noimages» (914 enlaces en 11 páginas).',
+      '30/09/2026: el harvest enlaza los EPUB en https://aleph.gutenberg.org, cuyo certificado TLS es de aleph.pglaf.org (ERR_TLS_CERT_ALTNAME_INVALID). Se piden las mismas URL por http (su robots.txt da 404: RFC 9309 § 2.3.1.3, se permite todo); cada EPUB se comprueba por el CRC-32 de sus entradas.',
+      '30/09/2026: el harvest de «txt» en español devuelve dos libros; se usa el de «epub.noimages» (914 enlaces en 11 páginas): solo EPUB.',
     ],
     notas: [
       `«narrativa-clasica»: capítulos de novelas y cuentos en español de autores muertos en ${ULTIMO_ANIO_DE_MUERTE} o antes (dominio público en España): SESGO DE ÉPOCA (siglos XVI a XX, sobre todo XIX); no es narrativa contemporánea.`,
-      'Las traducciones sin traductor declarado se filtran por heurísticas del catálogo (Subjects y lengua propia del autor); puede colarse alguna: los autores de la muestra están en el manifiesto.',
-      `Documento = capítulo; como mucho ${TOPE_POR_LIBRO} por libro en cada tramo.`,
-      `Revisión a mano: quedan dentro, declarados, unos pocos capítulos que no son narración (${RESIDUOS_CONOCIDOS.join('; ')}).`,
+      'Las traducciones sin traductor declarado se filtran por heurísticas del catálogo (Subjects y lengua propia del autor) y por una lista a mano (Sudermann, Dourliac); puede colarse alguna: los autores de la muestra están en el manifiesto.',
+      `Documento = capítulo; como mucho ${TOPE_POR_LIBRO} por libro en cada tramo (fijado antes de ver resultados; no se sube para llenar un tramo).`,
+      `Fuera a mano, tras la revisión: ${Object.keys(FUERA_POR_AUTOR).length} autores, ${Object.keys(FUERA_POR_LIBRO).length} obras en diálogo y ${Object.keys(FUERA_POR_CAPITULO).length} capítulos que no son narración (teatro, prólogos con otro nombre, ensayos, dedicatorias, listas); dentro, declarado, lo dudoso: ${DENTRO_DECLARADO.join('; ')}.`,
+      'Pérdida aceptada, no contaminación: la regla de preliminares deja fuera narración real en libros que numeran tarde («Noli me tángere» y otros), y la de prólogos, el «Prólogo» narrativo de Tirano Banderas.',
+      'Límites del texto de las imágenes: una capitular cuyo texto alternativo no es la letra pierde esa letra («PENAS» por «APENAS», pg75382), y una letra repetida delante de una palabra en mayúsculas queda doble («CCAPÍTULO», pg62359).',
     ],
     libros: librosUsados
       .map((l) => ({ id: l.id, titulo: l.titulo, autores: l.autores, muerte: Math.max(...l.personas.map((p) => p.muerte!)), materias: l.materias }))
