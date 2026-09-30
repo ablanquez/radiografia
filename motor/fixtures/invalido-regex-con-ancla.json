@@ -27,7 +27,7 @@
       "detector": "estructural",
       "parametros": {
         "posicion": "inicio-frase",
-        "regex": "(?:Como se ve en|Véase)\\b",
+        "regex": "^(?:Como se ve en|Véase)\\b",
         "flags": "i",
         "minimo": 1
       },

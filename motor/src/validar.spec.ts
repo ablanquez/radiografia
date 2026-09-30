@@ -162,6 +162,14 @@ const INVALIDOS: readonly CasoInvalido[] = [
     campo: 'parametros.regex',
     mensajeIncluye: 'ámbito "frase"',
   },
+  // ── Encargo 4.2, pieza c: en las posiciones ancladas el ancla la pone el motor ──
+  {
+    // inicio-frase con «^» escrito por el autor (un solo diff de valido-detector-estructural.json).
+    fichero: 'invalido-regex-con-ancla.json',
+    regla: { indice: 0, id: 'd6-referencia-interna' },
+    campo: 'parametros.regex',
+    mensajeIncluye: '"inicio-frase"',
+  },
 ];
 
 describe('validarPaquete', () => {
@@ -169,9 +177,9 @@ describe('validarPaquete', () => {
    * Ningún fixture sin juez: si entra uno nuevo en la carpeta y nadie lo añade
    * aquí, esto se pone rojo en vez de dejarlo sin mirar.
    */
-  test('la carpeta de fixtures tiene exactamente los veintidós que se juzgan', () => {
+  test('la carpeta de fixtures tiene exactamente los veintitrés que se juzgan', () => {
     assert.equal(VALIDOS.length, 5, 'cinco válidos');
-    assert.equal(INVALIDOS.length, 17, 'diecisiete inválidos');
+    assert.equal(INVALIDOS.length, 18, 'dieciocho inválidos');
     const esperados = [...VALIDOS, ...INVALIDOS.map((c) => c.fichero)].sort();
     // Solo los FICHEROS de la raíz: los paquetes. Las subcarpetas (fixtures/referencia/)
     // guardan datos de referencia de otros jueces (encargo 3.3).
@@ -209,6 +217,28 @@ describe('validarPaquete', () => {
     );
     const { $schema: _quitado, ...sinSchema } = cargar('valido.json') as Record<string, unknown>;
     assert.deepEqual(validarPaquete(sinSchema).errores, [], 'y sin $schema también pasa: es opcional');
+  });
+
+  /**
+   * El «$» del final es ancla solo si no está escapado: con un número PAR de
+   * barras delante (cero, dos…). `5\$` es un dólar literal; `fin\\$` es una
+   * barra literal y, detrás, el ancla. Sobre la regla fin-frase del válido
+   * estructural (reglas[2]).
+   */
+  test('en fin-frase, el «$» escapado es texto y el que sigue a una barra escapada es ancla', () => {
+    const conRegex = (regex: string): unknown => {
+      const paquete = cargar('valido-detector-estructural.json') as { reglas: { parametros: { posicion?: string; regex?: string } }[] };
+      assert.equal(paquete.reglas[2]!.parametros.posicion, 'fin-frase');
+      paquete.reglas[2]!.parametros.regex = regex;
+      return paquete;
+    };
+    const barra = String.fromCharCode(92);
+    assert.deepEqual(validarPaquete(conRegex(`cuesta 5${barra}$`)).errores, [], 'un dólar escapado no es ancla');
+    const conAncla = validarPaquete(conRegex(`fin${barra}${barra}$`));
+    assert.deepEqual(
+      conAncla.errores.map((e) => [e.regla, e.campo]),
+      [[{ indice: 2, id: 'exclamacion-doble' }, 'parametros.regex']],
+    );
   });
 
   for (const caso of INVALIDOS) {

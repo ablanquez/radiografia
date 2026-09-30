@@ -4,7 +4,7 @@
     "nombre": "Fixture mínimo válido",
     "version": "0.1.0",
     "idioma": "es",
-    "descripcion": "Paquete mínimo para los jueces del validador: una regla con la forma de RadiografIA y otra con la de «español correcto». No es un paquete real.",
+    "descripcion": "Paquete mínimo para los jueces del validador: una regla con la forma de RadiografIA, otra con la de «español correcto» y una estructural más por cada posición (encargo 4.2). No es un paquete real.",
     "autor": "Antonio Blánquez Cabeza",
     "licencia": "Apache-2.0",
     "familias": [
@@ -27,7 +27,7 @@
       "detector": "estructural",
       "parametros": {
         "posicion": "inicio-frase",
-        "regex": "^(?:Como se ve en|Véase)\\b",
+        "regex": "(?:Como se ve en|Véase)\\b",
         "flags": "i",
         "minimo": 1,
         "formas": [
@@ -114,6 +114,139 @@
         ],
         "negativos": [
           "La reunión es el próximo lunes, 3 de octubre."
+        ]
+      }
+    },
+    {
+      "id": "exclamacion-doble",
+      "familia": "discurso",
+      "detector": "estructural",
+      "parametros": {
+        "posicion": "fin-frase",
+        "regex": "!{2,}"
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Fixture de la posición fin-frase: dos o más signos de exclamación al final de una frase.",
+      "sugerencia": "Ninguna: es una regla de fixture.",
+      "excepciones": [],
+      "fuente": [],
+      "origenLista": null,
+      "nivelEvidencia": "sin fuente",
+      "ejemplos": {
+        "positivos": [
+          "¡Qué sorpresa!! Nadie lo esperaba."
+        ],
+        "negativos": [
+          "¡Qué sorpresa! Nadie lo esperaba."
+        ]
+      }
+    },
+    {
+      "id": "apertura-de-parrafo",
+      "familia": "discurso",
+      "detector": "estructural",
+      "parametros": {
+        "posicion": "inicio-parrafo",
+        "regex": "(?:Además|Adicionalmente|Cabe destacar)\\b"
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Fixture de la posición inicio-parrafo: un conector al principio del párrafo.",
+      "sugerencia": "Ninguna: es una regla de fixture.",
+      "excepciones": [],
+      "fuente": [],
+      "origenLista": null,
+      "nivelEvidencia": "sin fuente",
+      "ejemplos": {
+        "positivos": [
+          "Además, el plan se retrasó dos semanas."
+        ],
+        "negativos": [
+          "El plan, además, se retrasó dos semanas."
+        ]
+      }
+    },
+    {
+      "id": "parrafo-sin-cierre",
+      "familia": "discurso",
+      "detector": "estructural",
+      "parametros": {
+        "posicion": "fin-parrafo",
+        "regex": "\\p{L}+",
+        "flags": "u"
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Fixture de la posición fin-parrafo: un párrafo que acaba en una palabra, sin puntuación final.",
+      "sugerencia": "Ninguna: es una regla de fixture.",
+      "excepciones": [],
+      "fuente": [],
+      "origenLista": null,
+      "nivelEvidencia": "sin fuente",
+      "ejemplos": {
+        "positivos": [
+          "El plan se retrasó dos semanas"
+        ],
+        "negativos": [
+          "El plan se retrasó dos semanas."
+        ]
+      }
+    },
+    {
+      "id": "cierre-de-plantilla",
+      "familia": "discurso",
+      "detector": "estructural",
+      "parametros": {
+        "posicion": "ultimo-parrafo",
+        "regex": "^(?:En conclusión|En resumen|En definitiva|Para concluir)\\b",
+        "flags": "i"
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Fixture de la posición ultimo-parrafo: el último párrafo empieza por una fórmula de cierre. Aquí el «^» lo escribe el autor.",
+      "sugerencia": "Ninguna: es una regla de fixture.",
+      "excepciones": [],
+      "fuente": [],
+      "origenLista": null,
+      "nivelEvidencia": "sin fuente",
+      "ejemplos": {
+        "positivos": [
+          "El plan se retrasó dos semanas.\nEn resumen, hubo que rehacerlo."
+        ],
+        "negativos": [
+          "En resumen, hubo que rehacerlo.\nEl plan se retrasó dos semanas."
+        ]
+      }
+    },
+    {
+      "id": "no-solo-sino",
+      "familia": "discurso",
+      "detector": "estructural",
+      "parametros": {
+        "posicion": "cualquiera",
+        "regex": "\\bno solo\\b.*?\\bsino\\b",
+        "flags": "i"
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Fixture de la posición cualquiera: «no solo… sino» dentro de un párrafo, aunque cruce frases.",
+      "sugerencia": "Ninguna: es una regla de fixture.",
+      "excepciones": [],
+      "fuente": [],
+      "origenLista": null,
+      "nivelEvidencia": "sin fuente",
+      "ejemplos": {
+        "positivos": [
+          "No solo llegó tarde. Sino que además se fue pronto."
+        ],
+        "negativos": [
+          "Llegó tarde y se fue pronto."
         ]
       }
     }

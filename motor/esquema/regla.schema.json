@@ -166,12 +166,15 @@
       "anyOf": [{ "required": ["formas"] }, { "required": ["regex"] }]
     },
     "parametrosEstructural": {
-      "$comment": "Detector estructural: una expresión regular en una posición de la frase, del párrafo o del texto; «minimo», cuántas veces tiene que aparecer para señalar.",
+      "$comment": "Detector estructural: una expresión regular en una posición de la frase, del párrafo o del texto; «minimo», cuántas coincidencias tiene que haber en todo el texto para que la regla señale (por debajo, no señala ninguna).",
       "type": "object",
       "additionalProperties": false,
       "required": ["posicion", "regex"],
       "properties": {
-        "posicion": { "enum": ["inicio-frase", "fin-frase", "inicio-parrafo", "ultimo-parrafo", "cualquiera"] },
+        "posicion": {
+          "enum": ["inicio-frase", "fin-frase", "inicio-parrafo", "fin-parrafo", "ultimo-parrafo", "cualquiera"],
+          "$comment": "[PROPIO] (encargo 4.2) Solo en párrafos de prosa, y siempre sobre la frase o el párrafo SIN blancos al final: Intl.Segmenter deja dentro de cada segmento el espacio que lo sigue, y el motor lo recorta. La señal lleva el [inicio, fin) del texto original. · inicio-frase: la regex anclada al principio de cada frase. · fin-frase: anclada al final de cada frase. · inicio-parrafo: anclada al principio de la primera frase de cada párrafo. · fin-parrafo: anclada al final de la última frase de cada párrafo. · ultimo-parrafo: sin ancla añadida, sobre el último párrafo de prosa entero. · cualquiera: sin ancla añadida, sobre cada párrafo de prosa entero (para patrones que cruzan frases, como «no solo… sino»). En las cuatro posiciones ancladas el ancla la pone el motor y el autor NO la escribe: validar.ts rechaza la regex que empieza por «^» o termina en un «$» sin escapar. En ultimo-parrafo y cualquiera el autor puede escribir ^ y $, y la bandera m si la quiere (un párrafo es una línea: sin m, ^ y $ anclan a su principio y a su final)."
+        },
         "regex": { "type": "string", "minLength": 1 },
         "flags": { "$ref": "#/$defs/flags" },
         "minimo": { "type": "integer", "minimum": 1 }

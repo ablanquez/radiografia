@@ -18,7 +18,13 @@
  *      ámbito «frase»: una palabra nunca contiene un espacio). Y desde el 4.2:
  *      que una regla de patrón en ámbito «frase» traiga regex (el esquema
  *      pide «formas» o «regex» en cualquier ámbito, pero en «frase» las formas
- *      no se usan: sin regex, la regla no señalaría nunca nada, en silencio).
+ *      no se usan: sin regex, la regla no señalaría nunca nada, en silencio);
+ *      y que en las cuatro posiciones estructurales ancladas (inicio-frase,
+ *      fin-frase, inicio-parrafo, fin-parrafo) la regex no empiece por «^» ni
+ *      termine en un «$» sin escapar: esa ancla la pone el motor.
+ *      [PROPIO] «Sin escapar» = con un número par de barras inversas delante;
+ *      el encargo dice «sin barra inversa delante», y `\\$` (barra escapada y
+ *      ancla) lleva una barra delante y sigue siendo ancla.
  *
  * [DOC] https://ajv.js.org/json-schema.html#draft-2020-12 — «To use
  *    draft-2020-12 schemas you need to import a different Ajv class»: Ajv2020.
@@ -96,7 +102,7 @@ export interface PaqueteConForma {
     familia: string;
     informativa: boolean;
     detector: string;
-    parametros: { regex?: string; flags?: string; formas?: string[]; ambito?: string };
+    parametros: { regex?: string; flags?: string; formas?: string[]; ambito?: string; posicion?: string };
   }[];
 }
 
@@ -290,12 +296,24 @@ function comprobarCoherencia(paquete: PaqueteConForma): ErrorDeValidacion[] {
       );
     }
 
-    const { regex, flags, formas, ambito } = regla.parametros;
+    const { regex, flags, formas, ambito, posicion } = regla.parametros;
     if (regex !== undefined) {
       try {
         new RegExp(regex, flags ?? '');
       } catch (fallo) {
         errores.push(crear({ indice, id: regla.id }, 'parametros.regex', `no compila: ${(fallo as Error).message}`));
+      }
+    }
+    if (regex !== undefined && posicion !== undefined && ANCLADAS.includes(posicion)) {
+      const anclas = [regex.startsWith('^') ? 'empieza por "^"' : null, terminaEnAncla(regex) ? 'termina en "$"' : null].filter((a) => a !== null);
+      if (anclas.length > 0) {
+        errores.push(
+          crear(
+            { indice, id: regla.id },
+            'parametros.regex',
+            `${anclas.join(' y ')}, y en posición "${posicion}" el ancla la pone el motor: escribe la regex sin ella`,
+          ),
+        );
       }
     }
     if (ambito === 'frase' && regex === undefined) {
@@ -322,6 +340,21 @@ function comprobarCoherencia(paquete: PaqueteConForma): ErrorDeValidacion[] {
     }
   });
   return errores;
+}
+
+/** Las posiciones del detector estructural en las que el motor pone el ancla (regla.schema.json, «posicion»). */
+const ANCLADAS: readonly string[] = ['inicio-frase', 'fin-frase', 'inicio-parrafo', 'fin-parrafo'];
+
+/**
+ * Si la regex termina en un «$» que es ancla: el «$» final no está escapado,
+ * es decir, lo precede un número PAR de barras inversas (cero, dos…). `5\$`
+ * es un dólar literal; `fin\\$` es una barra literal y, detrás, el ancla.
+ */
+function terminaEnAncla(regex: string): boolean {
+  if (!regex.endsWith('$')) return false;
+  let barras = 0;
+  for (let i = regex.length - 2; i >= 0 && regex[i] === '\\'; i--) barras++;
+  return barras % 2 === 0;
 }
 
 // ── El texto legible ────────────────────────────────────────────────────────
