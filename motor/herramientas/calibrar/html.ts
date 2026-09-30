@@ -21,6 +21,7 @@ const NOMBRADAS: Readonly<Record<string, string>> = {
   iexcl: '¡', iquest: '¿', ordf: 'ª', ordm: 'º', deg: '°', middot: '·', ndash: '–', mdash: '—', hellip: '…', bull: '•',
   euro: '€', pound: '£', cent: '¢', yen: '¥', sect: '§', para: '¶', copy: '©', reg: '®', trade: '™',
   sup1: '¹', sup2: '²', sup3: '³', frac12: '½', frac14: '¼', frac34: '¾', times: '×', divide: '÷', plusmn: '±', micro: 'µ', permil: '‰',
+  prime: '′', Prime: '″', acute: '´', aring: 'å', Aring: 'Å', szlig: 'ß',
   aacute: 'á', eacute: 'é', iacute: 'í', oacute: 'ó', uacute: 'ú', Aacute: 'Á', Eacute: 'É', Iacute: 'Í', Oacute: 'Ó', Uacute: 'Ú',
   agrave: 'à', egrave: 'è', igrave: 'ì', ograve: 'ò', ugrave: 'ù', Agrave: 'À', Egrave: 'È', Igrave: 'Ì', Ograve: 'Ò', Ugrave: 'Ù',
   acirc: 'â', ecirc: 'ê', icirc: 'î', ocirc: 'ô', ucirc: 'û', Acirc: 'Â', Ecirc: 'Ê', Icirc: 'Î', Ocirc: 'Ô', Ucirc: 'Û',
@@ -28,7 +29,7 @@ const NOMBRADAS: Readonly<Record<string, string>> = {
   ntilde: 'ñ', Ntilde: 'Ñ', ccedil: 'ç', Ccedil: 'Ç', atilde: 'ã', otilde: 'õ', Atilde: 'Ã', Otilde: 'Õ',
 };
 
-function decodificar(s: string): { texto: string; desconocidas: string[] } {
+export function decodificar(s: string): { texto: string; desconocidas: string[] } {
   const desconocidas: string[] = [];
   const texto = s.replace(/&(#\d+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);/g, (entera: string, cuerpo: string) => {
     if (cuerpo.startsWith('#')) {

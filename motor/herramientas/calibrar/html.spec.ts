@@ -6,7 +6,17 @@
  */
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import { conservaElTexto, textoPlano } from './html.ts';
+import { conservaElTexto, decodificar, textoPlano } from './html.ts';
+
+describe('decodificar', () => {
+  test('entidades numéricas y con nombre; las que no lo son se quedan tal cual y se dicen', () => {
+    assert.deepEqual(decodificar('&ldquo;Bien&rdquo; &hellip; 5&prime; 2&Prime; caf&eacute; &aring;&szlig;&acute; &#233;'), {
+      texto: '“Bien” … 5′ 2″ café åß´ é',
+      desconocidas: [],
+    });
+    assert.deepEqual(decodificar('Cohen&Cohen; y <Pero'), { texto: 'Cohen&Cohen; y <Pero', desconocidas: ['&Cohen;'] });
+  });
+});
 
 describe('textoPlano', () => {
   test('sin etiquetas, con las entidades decodificadas y el espacio colapsado (para buscar un literal en una página)', () => {
