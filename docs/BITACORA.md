@@ -14,6 +14,32 @@
 
 ---
 
+## [2026-09-30] 🔴 ABIERTA — Los capítulos de EPUB dejaban entrar anuncios, glosarios y preliminares con los jueces en verde
+
+**Categoría:** herramienta de calibración (extracción de corpus)
+**Síntoma:** en el piloto de narrativa-clasica (40 EPUB de Gutenberg), entre los documentos del tramo 100-299 estaban el catálogo de anuncios del editor de pg29831 («OBRAS DEL MISMO AUTOR», «PSICOLOGÍA ALEMANA… 3,50 pesetas») y la «ACLARACIÓN» de pg32364; en 600+, un glosario inglés «ABBREVIATIONS» de 14.831 palabras (pg29731). Ningún dato publicado: se vio antes de calibrar.
+**⭐ Qué dio verde mientras el fallo estaba vivo:** los jueces de `epub.ts` en el commit `4f5c0e9`, ejecutados en un clon limpio de ese commit, y en el mismo clon el fallo:
+```
+$ node --test herramientas/calibrar/epub.spec.ts
+✔ capitulosDeEpub (4.9125ms)
+✔ esDivisionNumerada (0.321ms)
+✔ esParatexto (0.339ms)
+ℹ tests 8
+ℹ pass 8
+ℹ fail 0
+esDivisionNumerada('D. ARMANDO PALACIO VALDÉS') → true
+pg29831 capítulos dentro: OBRAS DEL MISMO AUTOR · PSICOLOGÍA ALEMANA CONTEMPORÁN · CALDERÓN DE LA BARCA
+```
+**Cómo se cazó:** ojo humano (revisión a mano de los capítulos de 100-299 del piloto)
+**Causa raíz:** ⏳ PENDIENTE
+**Arreglo aplicado:** ⏳ PENDIENTE
+**Commit:** ⏳ PENDIENTE
+**Ley que sale de aquí:** un fixture sintético solo juzga lo que su autor imaginó: antes de calibrar, se leen a mano documentos reales de cada tramo.
+**Traza:** `motor/herramientas/calibrar/epub.ts` (`esDivisionNumerada`, `esParatexto`, `capitulosDeEpub`); `motor/herramientas/calibrar/epub.spec.ts`; `motor/herramientas/calibrar/fixtures/prueba.epub`.
+**Nota:** el arreglo ya había comenzado al abrir esta entrada.
+
+---
+
 ## [2026-09-29] ✅ CERRADA — `grep -c $'\r'` dentro de `"$( )"` cuenta todas las líneas, no los CR
 
 **Categoría:** instrumento de medida
