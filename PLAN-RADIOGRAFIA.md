@@ -255,8 +255,24 @@ Todo lo demás cuelga de aquí. Se cierra antes de escribir el motor.
 
 Sin interfaz. Solo funciones y jueces.
 
-- [ ] Carga y valida un paquete
-- [ ] Detector de patrón (lista de frases / regex)
+- [x] Carga y valida un paquete → punto 3; `parametros` cerrados por
+      detector con `if/then` (4.1, 29-30/09): patrón (formas y/o regex,
+      ámbito palabra/frase, normalizar), estructural (posición + regex),
+      estadístico (métrica, género, tramo, dirección); Vale como
+      precedente [DOC]; regex que compilan y formas sin espacio en ámbito
+      palabra comprobadas en el paso 2
+- [x] Texto segmentado (`texto.ts`, 4.1): párrafos = líneas no vacías,
+      frases y palabras con `Intl.Segmenter` locale «es» [DOC MDN,
+      Baseline 2024], desplazamientos exactos sobre el original (sin
+      normalizar; CRLF probado), prosa/no-prosa según CommonMark (§5.2 y
+      §4.5) [DOC]. Hallazgos ICU como `todo`: «Sr.» parte la frase;
+      «coche-cama» son dos palabras
+- [x] Detector de patrón (`detector-patron.ts`, 4.1): formas y/o regex por
+      palabra o por frase; normalización solo palabra a palabra (protege
+      los desplazamientos); solo prosa. Paquete interno de prueba y juez
+      de ejemplos (positivos ≥ 1 señal, negativos 0) que reutilizará el
+      punto 5. Hallazgo: `tildes:true` quitaba también ñ y ü → se corrige
+      al abrir el 4.2
 - [ ] Detector estructural (frase y párrafo)
 - [ ] Detector estadístico (texto entero contra **percentiles humanos por
       género × tramo de longitud**, nunca umbral absoluto)
@@ -264,7 +280,8 @@ Sin interfaz. Solo funciones y jueces.
       reglas informativas no suman; atenuantes restan
 - [ ] Longitud mínima 100/300 sobre **palabras de prosa** (sin viñetas,
       tablas ni código): «texto insuficiente» bajo 100, aviso entre 100 y
-      299, con juez en ambos lados de cada borde
+      299, con juez en ambos lados de cada borde → **HECHO** en 4.1
+      (`umbral.ts`, jueces 99/100, 299/300, 400 con 350 en viñetas)
 - [ ] Combinación de varios paquetes con origen en cada señal
 - [ ] Jueces alimentados por los ejemplos de las fichas: cada ejemplo
       positivo dispara, cada negativo no. Vistos en rojo antes del verde.

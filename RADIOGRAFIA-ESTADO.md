@@ -5,19 +5,18 @@ El ejecutor reporta descubrimientos; no toca este fichero.
 
 ---
 
-## ESTADO ACTUAL — 29 de septiembre de 2026
+## ESTADO ACTUAL — 30 de septiembre de 2026
 
-**⭐ PUNTOS 1, 2 Y 3 CERRADOS (29/09).** Existe el motor base en `motor/`:
-esquema del paquete y de la ficha (JSON Schema 2020-12), validador con
-errores legibles y cuatro comprobaciones posteriores, 2 fixtures válidos +
-11 inválidos, validador standalone para el navegador (65 KB, sin Ajv),
-silabeador incorporado (silabea, 57/60 contra la RAE), lista de
-frecuencias de wordfreq en `data/` (CC BY-SA aparte), referencias de
-AnCora UD; NOTICES con tres guardianes (software, datos, código
-incorporado). **91 jueces: 88 en verde, 3 `todo`**, `tsc` limpio, `npm
-audit` 0. Dos bitácoras escritas y cerradas. **POS medido y FUERA de la v1**
-(`docs/investigacion/pos-medida.md`). No hay motor de análisis, no hay
-ninguna regla real, no hay pantalla. **Siguiente: punto 4, el motor.**
+**⭐ PUNTOS 1, 2 Y 3 CERRADOS (29/09). PUNTO 4 A MEDIAS (30/09, encargo
+4.1):** el motor ya segmenta texto (`Intl.Segmenter`, desplazamientos
+exactos, prosa según CommonMark), aplica el umbral 100/300, valida
+`parametros` cerrados por detector y **detecta patrones** (formas y regex
+por palabra o frase) sobre un paquete interno de prueba; el juez de
+ejemplos de las fichas ya existe y lo reutilizará el punto 5. **136 jueces:
+130 en verde, 6 `todo`** (3 sílabas, 2 del segmentador ICU, 1 de ñ/ü),
+`tsc` limpio. Ocho commits locales de Claude Code sobre `e101b9f`.
+Faltan del punto 4: detector estructural, estadístico, puntuación y
+combinación de paquetes (4.2). No hay reglas reales ni pantalla.
 
 ## 1 · Identidad
 
@@ -59,7 +58,8 @@ antes del verde, push = despliegue, bitácora por la skill
 
 ## 4 · El plan
 
-`PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1, 2 y 3 (29/09). Abierto: el 4.
+`PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1, 2 y 3 (29/09). Abierto: el 4
+(4.1 hecho; 4.2 pendiente).
 
 ## 5 · Decisiones
 
@@ -143,9 +143,24 @@ antes del verde, push = despliegue, bitácora por la skill
   §1.5 «código de terceros incorporado» con guardián por sha256.
 - 29/09 — Datos de terceros viven en `data/` con su LICENSE al lado y
   ficha en NOTICES §2 con guardián; nunca mezclados con el código Apache.
+- 30/09 — **Decisiones del 4.1**: segmentación con `Intl.Segmenter` [DOC
+  MDN, Baseline 2024], sin librería; párrafo = línea no vacía [PROPIO];
+  sin normalizar la cadena, desplazamientos sobre el original; no-prosa
+  según CommonMark §5.2/§4.5 [DOC]; `parametros` por detector con Vale
+  como precedente; normalización (minúsculas, tildes) solo palabra a
+  palabra, nunca sobre la frase (protege los desplazamientos); flags de
+  regex limitadas a i m s u, la g la pone el motor; tramos estadísticos
+  100-299 / 300-599 / 600+ [PROPIO]. Hallazgos ICU («Sr.», «coche-cama»)
+  no se parchean: `todo` y decisión con datos en el punto 5.
 
 ## 6 · Cabos abiertos
 
+- Para el 4.2 (abrir con ellos): `tildes:true` quita también ñ y ü (NFD
+  + \p{M}) → quitar solo el acento agudo U+0301; y «ámbito frase exige
+  regex» como tercera comprobación del paso 2, con fixture.
+- Para el punto 5: abreviaturas («Sr.») parten la frase y los compuestos
+  con guión cuentan dos palabras; decidir con datos si hace falta una
+  lista de abreviaturas antes del segmentador.
 - Para el punto 6 (de los encargos 3.1/3.2): `validar.ts` compila Ajv al
   importarse → separar formateador y comprobaciones posteriores en un
   módulo sin Ajv; el navegador usa `validador.standalone.js` (65 KB, sobre
