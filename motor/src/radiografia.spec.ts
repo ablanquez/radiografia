@@ -18,7 +18,10 @@
  *      debajo, la explicación o una excepción dicen «peso» con el porqué.
  *      [PROPIO, decisión del 30/09, sin doctrina; la calibración es el juez]
  *      medido en español 3, medido en inglés 2, anecdótico 1, norma 0; una
- *      regla informativa, o de familia informativa, 0.
+ *      regla informativa, o de familia informativa, 0. Desde el 5.3, un peso
+ *      negativo (un atenuante: rasgo humano que resta, discurso.md § 11) solo
+ *      puede ser −1 o −2; y como queda por debajo del máximo, su ficha también
+ *      dice «peso».
  *   8. regex-ascii (encargo 5.2) — ninguna regex lleva \b ni \w (ni sus
  *      contrarios \B y \W), sin escapar: en JavaScript son ASCII y «á», «é» o
  *      «ñ» cuentan como no-palabra. Los límites se escriben con (?<!\p{L}) y
@@ -52,8 +55,11 @@ const leer = (): Paquete => JSON.parse(readFileSync(RUTA, 'utf8')) as Paquete;
 
 const FAMILIAS = ['lexico', 'sintaxis', 'puntuacion-formato', 'estadistica', 'discurso', 'canal'];
 
-/** El prefijo del id de cada familia con reglas (encargos 5.1 y 5.2). Las demás lo deciden en su tanda. */
-const PREFIJOS: Readonly<Record<string, string>> = { canal: 'canal-', 'puntuacion-formato': 'pf-', lexico: 'lex-' };
+/** El prefijo del id de cada familia con reglas (encargos 5.1, 5.2 y 5.3). Las demás lo deciden en su tanda. */
+const PREFIJOS: Readonly<Record<string, string>> = { canal: 'canal-', 'puntuacion-formato': 'pf-', lexico: 'lex-', discurso: 'disc-' };
+
+/** Lo que puede restar un atenuante (encargo 5.3). */
+const ATENUANTES: readonly number[] = [-1, -2];
 
 /** El peso máximo de cada nivel de evidencia. «sin fuente» no tiene: ya lo prohíbe la condición 2. */
 const MAXIMO: Readonly<Partial<Record<Regla['nivelEvidencia'], number>>> = {
@@ -105,6 +111,7 @@ function comprobar(paquete: Paquete): Problema[] {
     if (prefijo === undefined) mal('ids', `regla "${r.id}": la familia "${r.familia}" no tiene prefijo decidido en PREFIJOS`);
     else if (!r.id.startsWith(prefijo)) mal('ids', `regla "${r.id}": no empieza por "${prefijo}", el prefijo de "${r.familia}"`);
 
+    if (r.peso < 0 && !ATENUANTES.includes(r.peso)) mal('peso', `regla "${r.id}": peso ${r.peso}, y un atenuante solo resta 1 o 2 (−1 o −2)`);
     const informativa = r.informativa || familia.get(r.familia)?.informativa === true;
     const maximo = informativa ? 0 : MAXIMO[r.nivelEvidencia];
     if (maximo === undefined) continue;
@@ -178,6 +185,27 @@ describe('el juez de RadiografIA caza cada condición rota', () => {
       (p) => {
         const r = regla(p, 'pf-raya-densidad');
         r.explicacion = cambiar(r.explicacion, 'Peso 1, y no 2', 'Uno, y no dos');
+      },
+    ],
+    // Encargo 5.3: los atenuantes (peso negativo) restan 1 o 2, y la familia discurso lleva «disc-».
+    ['un atenuante de −3 (solo −1 o −2)', ['peso'], (p) => (regla(p, 'pf-raya-densidad').peso = -3)],
+    ['un atenuante de −2, con «peso» en la ficha (sin problema)', [], (p) => (regla(p, 'pf-raya-densidad').peso = -2)],
+    [
+      'una regla de discurso con el prefijo «disc-» (sin problema)',
+      [],
+      (p) => {
+        const r = regla(p, 'pf-raya-espaciada');
+        r.familia = 'discurso';
+        r.id = 'disc-raya-espaciada';
+      },
+    ],
+    [
+      'una regla de discurso sin el prefijo «disc-»',
+      ['ids'],
+      (p) => {
+        const r = regla(p, 'pf-raya-espaciada');
+        r.familia = 'discurso';
+        r.id = 'raya-espaciada';
       },
     ],
     // Encargo 5.2: ni \b ni \w, y \p{…} solo con la bandera u.
