@@ -58,7 +58,8 @@ describe('detectarPatron', () => {
   });
 
   test('solo párrafos de prosa, con indiceParrafo e indiceFrase (dentro del párrafo)', () => {
-    const texto = ['- crucial en una viñeta', 'Nada aquí. Esto es crucial.'].join('\n');
+    // Línea en blanco desde el 6.1: sin ella, la segunda línea es continuación del ítem (CommonMark § 5.2).
+    const texto = ['- crucial en una viñeta', 'Nada aquí. Esto es crucial.'].join('\n\n');
     const s = detectarPatron(regla({ formas: ['crucial'], ambito: 'palabra', normalizar: { minusculas: true, tildes: false } }), analizarTexto(texto));
     assert.deepEqual(
       s.map((x) => [x.reglaId, x.fragmento, x.indiceParrafo, x.indiceFrase, texto.slice(x.inicio, x.fin)]),

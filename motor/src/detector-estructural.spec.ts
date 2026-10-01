@@ -157,9 +157,10 @@ describe('detectarEstructural: minimo, prosa e índices', () => {
   });
 
   test('solo prosa: una viñeta o un encabezado no señalan ni cuentan para el mínimo; indiceParrafo cuenta todos los párrafos', () => {
-    // «# Además, título» (0, encabezado) «- Además, viñeta» (1, viñeta) «Además, prosa.» [34, 48) (2).
-    const texto = '# Además, título\n- Además, viñeta\nAdemás, prosa.';
-    assert.deepEqual(senales(texto, { posicion: 'inicio-frase', regex: 'Además' }), [['Además', 34, 40, 2, 0]]);
+    // «# Además, título» (0, encabezado) «- Además, viñeta» (1, viñeta) «Además, prosa.» [35, 49) (2).
+    // Línea en blanco desde el 6.1: sin ella, «Además, prosa.» es continuación del ítem (CommonMark § 5.2).
+    const texto = '# Además, título\n- Además, viñeta\n\nAdemás, prosa.';
+    assert.deepEqual(senales(texto, { posicion: 'inicio-frase', regex: 'Además' }), [['Además', 35, 41, 2, 0]]);
     assert.deepEqual(senales(texto, apertura), []);
   });
 });

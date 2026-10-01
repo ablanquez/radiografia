@@ -11,14 +11,69 @@
  *    librería. El juez de texto.spec.ts comprueba que este Node soporta "es".
  *
  * [PROPIO] Sin normalizar la cadena: todos los desplazamientos son sobre el
- *    original. El segmentador trabaja sobre una copia en la que «\r» se cambia
- *    por un espacio —misma longitud, así que los índices valen igual—: un
- *    «\r\n» pegado de Windows no crea frases ni palabras de más.
- * [PROPIO] Párrafo = cada línea no vacía, sin los espacios de sus bordes: un
- *    textarea pega un solo salto entre párrafos. Las líneas vacías no son
- *    párrafo.
+ *    original. El segmentador trabaja sobre una copia en la que «\r» y «\n»
+ *    se cambian por un espacio —misma longitud, así que los índices valen
+ *    igual—: un «\r\n» pegado de Windows no crea frases ni palabras de más, y
+ *    un salto dentro de un párrafo se segmenta como espacio. Medido (Node
+ *    24.19.0, encargo 6.1): Intl.Segmenter parte la frase en cada «\n»
+ *    («Esta frase sigue\nen la otra línea.» da dos frases); sin la copia,
+ *    cada línea de un texto cortado a mano sería una frase.
+ *
+ * Párrafos según CommonMark (encargo 6.1, firmado el 01/10; sustituye el
+ * [PROPIO] del 4.1 «párrafo = cada línea no vacía»):
+ *    [DOC] CommonMark 0.31.2, https://spec.commonmark.org/0.31.2/:
+ *      § 4.8 Paragraphs: «A sequence of non-blank lines that cannot be
+ *        interpreted as other kinds of blocks forms a paragraph. […] The
+ *        paragraph's raw content is formed by concatenating the lines and
+ *        removing initial and final spaces or tabs.»
+ *      § 6.8 Soft line breaks: «A regular line ending (not in a code span or
+ *        HTML tag) that is not preceded by two or more spaces or a backslash
+ *        is parsed as a softbreak», que se pinta «either as a line ending or
+ *        as a space». Aquí, espacio.
+ *      § 5.2 List items, regla 5 (Laziness): las líneas sin sangría que
+ *        serían continuación de párrafo siguen dentro del ítem («lazy
+ *        continuation lines»). Y la excepción 1 de la regla 1: cuando una
+ *        lista interrumpe un párrafo, «the lines Ls must not begin with a
+ *        blank line, and (b) if the list item is ordered, the start number
+ *        must be 1».
+ *    [DOC] RFC 3676 (R. Gellens, 2004), https://www.rfc-editor.org/rfc/rfc3676:
+ *      § 3.2, el «embarrassing line wrap» del correo cortado a mano; § 4.1,
+ *      «A series of one or more flowed lines followed by one fixed line is
+ *      considered a paragraph». Allí una línea «flowed» es la que acaba en
+ *      espacio; el texto pegado no trae esa marca. Se cita como respaldo de
+ *      la idea (unir las líneas en el párrafo lógico), no de la regla exacta
+ *      (parada 1 del 6.1): aquí todo salto simple es espacio, salvo la
+ *      excepción web.
+ *    Así:
+ *      · un párrafo es un tramo [inicio, fin) del ORIGINAL, de la primera a la
+ *        última de sus líneas (sin los espacios de los bordes), con los
+ *        saltos dentro; acaba en una línea en blanco o en la que empieza otro
+ *        bloque. Las líneas en blanco no son párrafo;
+ *      · encabezado, valla, línea de código y fila de tabla: cada uno es su
+ *        propio bloque de una línea, como en el 4.1. También la regla
+ *        horizontal («---», «***», «___»): § 4.1 Thematic breaks, «Thematic
+ *        breaks can interrupt a paragraph»; queda con la clase que le daba el
+ *        4.1 (prosa sin palabras, o viñeta si es «* * *» o «- - -»);
+ *      · viñeta: la línea con marca empieza un ítem (no-prosa), y las
+ *        siguientes sin marca ni línea en blanco son continuación del ítem.
+ *        Una línea SANGRADA (empieza por espacio o tabulador) sigue en el
+ *        ítem siempre, también tras un signo de cierre (§ 5.2, regla 1: las
+ *        líneas siguientes del ítem van sangradas; parada 1 del 6.1);
+ *      · una marca ordenada que no es 1 no corta un párrafo de prosa (§ 5.2,
+ *        excepción 1): «…en el año\n2010. Después…» sigue siendo un párrafo.
+ *        Detrás de un ítem, cualquier marca empieza otro ítem.
+ * [PROPIO, firmada el 01/10] La excepción web: el texto copiado de una web
+ *    trae UN solo salto entre párrafos. Un salto tras un signo de cierre de
+ *    frase (. ! ? … » " ”) seguido de una línea que empieza por mayúscula,
+ *    «¿», «¡», «—», «« » o comilla (" “ ‘ ') es párrafo nuevo; también detrás
+ *    de un ítem de viñeta si la línea no va sangrada (firmado en la parada 1
+ *    del 6.1, como la regla del 1, la regla horizontal y las comillas). Los
+ *    demás saltos simples son espacio. Coste
+ *    conocido: en un texto cortado a mano, una línea que acaba justo en punto
+ *    parte el párrafo. Eso no cambia las frases, pero sí qué párrafo es el
+ *    último o el primero para las reglas de posición.
  * [PROPIO] No-prosa (no cuenta para el umbral de longitud ni la miran los
- *    detectores). Una línea es no-prosa si, por este orden:
+ *    detectores). Un bloque es no-prosa si su primera línea, por este orden:
  *      · es una valla de código (empieza por ``` o por ~~~) o está entre una
  *        valla y la siguiente DEL MISMO TIPO → «código»;
  *      · es un encabezado Markdown: 1 a 6 «#» y un espacio (o nada más) → «encabezado»;
@@ -97,12 +152,38 @@ function vallaDe(linea: string): Valla | null {
   return null;
 }
 
-function motivoDeLinea(linea: string, abierta: Valla | null): Motivo | null {
-  if (abierta !== null || vallaDe(linea) !== null) return 'código';
+/** Regla horizontal (CommonMark § 4.1): tres o más «-», «_» o «*» iguales, con espacios o tabuladores entre ellos. */
+const esReglaHorizontal = (linea: string): boolean => /^(?:(?:-[ \t]*){3,}|(?:_[ \t]*){3,}|(?:\*[ \t]*){3,})$/.test(linea);
+
+/** El bloque de una sola línea que es la línea (fuera de una valla abierta), si lo es. */
+function bloqueDeUnaLinea(linea: string): 'encabezado' | 'tabla' | null {
   if (/^#{1,6}(?:[ \t]|$)/.test(linea)) return 'encabezado';
-  if (/^(?:[-+*•]|\d{1,9}[.)])[ \t]/.test(linea)) return 'viñeta';
   if ((linea.match(/\|/g)?.length ?? 0) >= 2) return 'tabla';
   return null;
+}
+
+/** La marca de viñeta con la que empieza la línea; `ordenada` con su número. */
+function marcaDe(linea: string): { ordenada: boolean; numero: number } | null {
+  const m = /^(?:([-+*•])|(\d{1,9})[.)])[ \t]/.exec(linea);
+  if (m === null) return null;
+  return m[1] !== undefined ? { ordenada: false, numero: 0 } : { ordenada: true, numero: Number(m[2]) };
+}
+
+const CIERRES = new Set(['.', '!', '?', '…', '»', '"', '”']);
+const APERTURAS = new Set(['¿', '¡', '—', '«', '"', '“', '‘', "'"]);
+
+/** La excepción web: la línea anterior acaba en signo de cierre y la siguiente empieza por mayúscula o por signo de apertura. */
+function esSaltoDeParrafo(anterior: string, linea: string): boolean {
+  return CIERRES.has(anterior.at(-1) ?? '') && (APERTURAS.has(linea[0] ?? '') || /^\p{Lu}/u.test(linea));
+}
+
+/** El bloque que sigue abierto mientras lleguen líneas de continuación: un párrafo de prosa o un ítem de viñeta. */
+interface Abierto {
+  inicio: number;
+  fin: number;
+  motivo: 'viñeta' | null;
+  /** La última línea, recortada: la excepción web mira su último carácter. */
+  ultima: string;
 }
 
 function palabrasDe(original: string, trabajo: string, inicio: number, fin: number): Palabra[] {
@@ -132,31 +213,53 @@ export function seMira(parrafo: Parrafo, sobreNoProsa: boolean): boolean {
 }
 
 export function analizarTexto(original: string): Texto {
-  const trabajo = original.replaceAll('\r', ' ');
+  const trabajo = original.replace(/[\r\n]/g, ' ');
   const parrafos: Parrafo[] = [];
-  let abierta: Valla | null = null;
+  const bloque = (inicio: number, fin: number, motivo: Motivo | null): null => {
+    parrafos.push({ texto: original.slice(inicio, fin), inicio, fin, prosa: motivo === null, motivo, frases: frasesDe(original, trabajo, inicio, fin) });
+    return null;
+  };
+  const cerrar = (a: Abierto | null): null => (a === null ? null : bloque(a.inicio, a.fin, a.motivo));
+  let abierto: Abierto | null = null;
+  let valla: Valla | null = null;
   let desde = 0;
-  while (desde <= trabajo.length) {
-    const salto = trabajo.indexOf('\n', desde);
-    const hasta = salto < 0 ? trabajo.length : salto;
+  while (desde <= original.length) {
+    const salto = original.indexOf('\n', desde);
+    const hasta = salto < 0 ? original.length : salto;
     const [inicio, fin] = recortar(trabajo, desde, hasta);
-    if (inicio < fin) {
-      const linea = trabajo.slice(inicio, fin);
-      const motivo = motivoDeLinea(linea, abierta);
-      const valla = vallaDe(linea);
-      if (abierta === null && valla !== null) abierta = valla;
-      else if (abierta !== null && valla === abierta) abierta = null;
-      parrafos.push({
-        texto: original.slice(inicio, fin),
-        inicio,
-        fin,
-        prosa: motivo === null,
-        motivo,
-        frases: frasesDe(original, trabajo, inicio, fin),
-      });
+    const linea = trabajo.slice(inicio, fin);
+    if (linea === '') {
+      abierto = cerrar(abierto);
+    } else if (valla !== null) {
+      bloque(inicio, fin, 'código');
+      if (vallaDe(linea) === valla) valla = null;
+    } else if (vallaDe(linea) !== null) {
+      abierto = cerrar(abierto);
+      valla = vallaDe(linea);
+      bloque(inicio, fin, 'código');
+    } else if (esReglaHorizontal(linea)) {
+      abierto = cerrar(abierto);
+      bloque(inicio, fin, marcaDe(linea) !== null ? 'viñeta' : null);
+    } else if (bloqueDeUnaLinea(linea) !== null) {
+      abierto = cerrar(abierto);
+      bloque(inicio, fin, bloqueDeUnaLinea(linea));
+    } else {
+      const marca = marcaDe(linea);
+      const empiezaItem = marca !== null && (abierto === null || abierto.motivo === 'viñeta' || !marca.ordenada || marca.numero === 1);
+      if (empiezaItem) {
+        abierto = cerrar(abierto);
+        abierto = { inicio, fin, motivo: 'viñeta', ultima: linea };
+      } else if (abierto !== null && ((abierto.motivo === 'viñeta' && /^[ \t]/.test(original.slice(desde, hasta))) || !esSaltoDeParrafo(abierto.ultima, linea))) {
+        abierto.fin = fin;
+        abierto.ultima = linea;
+      } else {
+        abierto = cerrar(abierto);
+        abierto = { inicio, fin, motivo: null, ultima: linea };
+      }
     }
     if (salto < 0) break;
     desde = salto + 1;
   }
+  cerrar(abierto);
   return { original, parrafos };
 }

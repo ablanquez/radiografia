@@ -11,6 +11,7 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { analizarTexto, type Texto } from './texto.ts';
+import { evaluarLongitud } from './umbral.ts';
 
 /** Las frases de todos los párrafos, como texto. */
 const frases = (t: Texto): string[] => t.parrafos.flatMap((p) => p.frases.map((f) => f.texto));
@@ -135,7 +136,8 @@ describe('analizarTexto: casos límite (esperados escritos antes de ejecutar)', 
   });
 
   test('«+» seguido de espacio es viñeta (CommonMark § 5.2)', () => {
-    const t = analizarTexto(['+ una viñeta con más', 'Y esto es prosa.'].join('\n'));
+    // Línea en blanco desde el 6.1: sin ella, «Y esto es prosa.» es continuación del ítem (CommonMark § 5.2).
+    const t = analizarTexto(['+ una viñeta con más', 'Y esto es prosa.'].join('\n\n'));
     assert.deepEqual(
       t.parrafos.map((p) => [p.texto, p.prosa, p.motivo]),
       [
@@ -161,11 +163,156 @@ describe('analizarTexto: casos límite (esperados escritos antes de ejecutar)', 
   });
 
   test('lo que parece marca pero no lo es sigue siendo prosa («1.000 personas», «*Nota*», «#etiqueta»)', () => {
-    const t = analizarTexto(['1.000 personas vinieron.', '*Nota*: esto es prosa.', '#etiqueta pegada, sin espacio.'].join('\n'));
+    // Líneas en blanco desde el 6.1: con un solo salto, las tres son un párrafo (tras «.», un salto seguido de «*» o «#» es espacio).
+    const t = analizarTexto(['1.000 personas vinieron.', '*Nota*: esto es prosa.', '#etiqueta pegada, sin espacio.'].join('\n\n'));
     assert.deepEqual(
       t.parrafos.map((p) => p.prosa),
       [true, true, true],
     );
+  });
+});
+
+/**
+ * Encargo 6.1: párrafos según CommonMark (§4.8, §6.8 y §5.2), con la
+ * excepción web [PROPIO, firmada el 01/10]. Esperados escritos antes de
+ * ejecutar el texto.ts nuevo; con el viejo («párrafo = cada línea») dan rojo.
+ */
+describe('analizarTexto: párrafos según CommonMark (encargo 6.1)', () => {
+  /** El texto de cada párrafo, sin los saltos (para comparar con la versión sin cortar). */
+  const enUnaLinea = (s: string) => s.replace(/\r?\n/g, ' ');
+  const SIN_CORTAR =
+    'El tren de las ocho salió ayer de Atocha con cuarenta minutos de retraso, y los viajeros que esperaban en el andén tuvieron que buscar otra forma de llegar a Valladolid. La avería afectó a una catenaria cerca de Chamartín.';
+  // El mismo párrafo cortado a 76 columnas: ninguna línea acaba en signo de cierre.
+  const CORTADO =
+    'El tren de las ocho salió ayer de Atocha con cuarenta minutos de retraso, y\nlos viajeros que esperaban en el andén tuvieron que buscar otra forma de\nllegar a Valladolid. La avería afectó a una catenaria cerca de Chamartín.';
+
+  test('(1) un párrafo de tres líneas cortadas a 76 columnas es UN párrafo, con sus dos frases', () => {
+    const t = analizarTexto(CORTADO);
+    assert.equal(t.parrafos.length, 1);
+    assert.equal(t.parrafos[0]!.texto, CORTADO);
+    assert.deepEqual(frases(t).map(enUnaLinea), frases(analizarTexto(SIN_CORTAR)));
+    assert.deepEqual(palabras(t), palabras(analizarTexto(SIN_CORTAR)));
+    desplazamientosExactos(t);
+  });
+
+  test('(2) dos párrafos de dos líneas, separados por una línea en blanco, son DOS', () => {
+    const t = analizarTexto('El primer párrafo empieza aquí y\nsigue en esta línea.\n\nEl segundo empieza\nen otra y acaba aquí.');
+    assert.deepEqual(
+      t.parrafos.map((p) => p.texto),
+      ['El primer párrafo empieza aquí y\nsigue en esta línea.', 'El segundo empieza\nen otra y acaba aquí.'],
+    );
+    desplazamientosExactos(t);
+  });
+
+  test('(3) la excepción web: tras signo de cierre y con mayúscula, párrafo nuevo; si no, el salto es espacio', () => {
+    assert.deepEqual(
+      analizarTexto('La primera parte terminó bien.\nLa segunda parte empezó tarde.').parrafos.map((p) => p.texto),
+      ['La primera parte terminó bien.', 'La segunda parte empezó tarde.'],
+    );
+    assert.deepEqual(
+      analizarTexto('La primera parte terminó\nbien la cosa.').parrafos.map((p) => p.texto),
+      ['La primera parte terminó\nbien la cosa.'],
+    );
+  });
+
+  test('(3) la excepción web, signo a signo: cierres . ! ? … » " ” y aperturas mayúscula ¿ ¡ — « " “', () => {
+    for (const cierre of ['.', '!', '?', '…', '»', '"', '”']) {
+      assert.equal(analizarTexto(`Acabó así${cierre}\nOtra frase.`).parrafos.length, 2, `cierre «${cierre}»`);
+    }
+    for (const apertura of ['¿Vienes?', '¡Ya!', '—Sí, dijo.', '«Bien», dijo.', '"Bien", dijo.', '“Bien”, dijo.']) {
+      assert.equal(analizarTexto(`Acabó así.\n${apertura}`).parrafos.length, 2, `apertura «${apertura}»`);
+    }
+    // Sin signo de cierre, o con minúscula o cifra detrás: el salto es espacio.
+    assert.equal(analizarTexto('Capítulo primero\nEl tren salió tarde.').parrafos.length, 1, 'título sin punto');
+    assert.equal(analizarTexto('Acabó así.\nluego siguió.').parrafos.length, 1, 'minúscula');
+    assert.equal(analizarTexto('Llegaron a las.\n10 de la noche.').parrafos.length, 1, 'cifra');
+    assert.equal(analizarTexto('Dijo esto:\n—Sí.').parrafos.length, 1, 'dos puntos');
+  });
+
+  test('(4) una viñeta de dos líneas es UN ítem de no-prosa con la segunda línea dentro, y esa línea no cuenta como prosa', () => {
+    const t = analizarTexto('- primera línea de la viñeta, que sigue\nen la segunda línea sin marca\n\nEste es el párrafo de prosa.');
+    assert.deepEqual(
+      t.parrafos.map((p) => [p.texto, p.prosa, p.motivo]),
+      [
+        ['- primera línea de la viñeta, que sigue\nen la segunda línea sin marca', false, 'viñeta'],
+        ['Este es el párrafo de prosa.', true, null],
+      ],
+    );
+    assert.equal(evaluarLongitud(t).palabrasProsa, 6);
+    desplazamientosExactos(t);
+  });
+
+  test('(4) la sangría (CommonMark § 5.2, parada 1 del 6.1): una línea sangrada tras un ítem sigue en el ítem aunque la anterior acabe en punto', () => {
+    const t = analizarTexto('- primera línea del ítem, que acaba aquí.\n  Segunda línea, sangrada: sigue en el ítem.\nY esta, sin sangría, es un párrafo de prosa.');
+    assert.deepEqual(
+      t.parrafos.map((p) => [p.texto, p.prosa, p.motivo]),
+      [
+        ['- primera línea del ítem, que acaba aquí.\n  Segunda línea, sangrada: sigue en el ítem.', false, 'viñeta'],
+        ['Y esta, sin sangría, es un párrafo de prosa.', true, null],
+      ],
+    );
+    desplazamientosExactos(t);
+  });
+
+  test('(4) detrás de un ítem, la excepción web también abre párrafo (firmada en la parada 1 del 6.1)', () => {
+    const t = analizarTexto('- el último punto de la lista.\nEl párrafo siguiente, pegado de una web con un solo salto.');
+    assert.deepEqual(
+      t.parrafos.map((p) => [p.prosa, p.motivo]),
+      [
+        [false, 'viñeta'],
+        [true, null],
+      ],
+    );
+  });
+
+  test('(4) regla del 1 (CommonMark § 5.2, excepción 1): una marca ordenada que no es 1 no corta un párrafo; el 1 y las viñetas, sí', () => {
+    assert.deepEqual(
+      analizarTexto('El plazo se amplió en el año\n2010. Después volvió a cambiar.').parrafos.map((p) => p.motivo),
+      [null],
+    );
+    assert.deepEqual(
+      analizarTexto('Se convoca el concurso siguiente\n1. Entidad adjudicadora: el ministerio.').parrafos.map((p) => p.motivo),
+      [null, 'viñeta'],
+    );
+    assert.deepEqual(
+      analizarTexto('Se convoca el concurso siguiente\n- con una viñeta.').parrafos.map((p) => p.motivo),
+      [null, 'viñeta'],
+    );
+    assert.deepEqual(
+      analizarTexto('1. Primero.\n2. Segundo.').parrafos.map((p) => p.motivo),
+      ['viñeta', 'viñeta'],
+    );
+  });
+
+  test('regla horizontal (CommonMark § 4.1): corta el párrafo y es su propio bloque, con la clase del 4.1', () => {
+    assert.deepEqual(
+      analizarTexto('Primera parte.\n---\nsegunda parte.').parrafos.map((p) => [p.texto, p.motivo]),
+      [
+        ['Primera parte.', null],
+        ['---', null],
+        ['segunda parte.', null],
+      ],
+    );
+    assert.deepEqual(
+      analizarTexto('Texto\n* * *\nmás texto').parrafos.map((p) => [p.texto, p.motivo]),
+      [
+        ['Texto', null],
+        ['* * *', 'viñeta'],
+        ['más texto', null],
+      ],
+    );
+  });
+
+  test('(5) cortado con «\\r\\n», las mismas frases que con «\\n», y desplazamientos exactos', () => {
+    const conCRLF = CORTADO.replaceAll('\n', '\r\n');
+    const t = analizarTexto(conCRLF);
+    assert.equal(t.parrafos.length, 1);
+    assert.deepEqual(
+      frases(t).map((f) => f.replaceAll('\r\n', '\n')),
+      frases(analizarTexto(CORTADO)),
+    );
+    assert.equal(frases(t).length, 2);
+    desplazamientosExactos(t);
   });
 });
 
