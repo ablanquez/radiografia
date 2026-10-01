@@ -209,7 +209,8 @@ muestra; sin licencia al menos declarada no hay cifra.**
   cada uno con su género, hecho por `motor/herramientas/calibrar/validar.ts`.
 - **Qué se usó:** los mismos textos que en cada género, analizados y descartados. Aquí solo
   quedan, por género y tramo, los ids de los documentos (los de sus manifiestos), recuentos,
-  proporciones y percentiles.
+  proporciones y percentiles; por género, el intervalo de Wilson de su FPR, y en
+  administrativo, la decisión firmada sobre su resultado (texto del proyecto, no del corpus).
 - **Licencia: la de cada corpus de origen**, sin cambios, como `general.json`: noticia (CC BY
   4.0), administrativo (art. 13 LPI y licencia tipo del BOE; cita «Basado en datos de la Agencia
   Estatal Boletín Oficial del Estado»), narrativa-clasica (dominio público; texto y marca de
