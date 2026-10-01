@@ -94,7 +94,7 @@ describe('bandaHumana: sin calibración, con su motivo', () => {
 
 describe('analizar() lleva la banda en el resultado de cada paquete', () => {
   const leer = (fichero: string): Paquete => JSON.parse(readFileSync(new URL(`../../paquetes/${fichero}`, import.meta.url), 'utf8')) as Paquete;
-  // 120 palabras de prosa, en una noticia escrita para el 5.6.
+  // 123 palabras de prosa (tramo 100-299), en una noticia escrita para el 5.6.
   const NOTICIA =
     'El tren de las ocho salió ayer de Atocha con cuarenta minutos de retraso, y los viajeros que esperaban en el andén 5 tuvieron que buscar otra forma de llegar a Valladolid. Según Adif, la avería afectó a una catenaria cerca de Chamartín; los técnicos la repararon a media mañana. Renfe ofreció autobuses a quienes no podían esperar, aunque muchos prefirieron quedarse en la cafetería de la estación. «Llevo tres semanas así», contaba una enfermera que trabaja en el Clínico. El ministerio ha prometido revisar el contrato de mantenimiento, firmado en 2019, y publicar en marzo un informe con las incidencias de toda la línea. Mientras tanto, la asociación de usuarios pide que se devuelva el importe del billete en todos los casos.';
 
