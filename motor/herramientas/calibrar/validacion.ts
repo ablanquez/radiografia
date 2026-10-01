@@ -18,6 +18,19 @@
  *     documento ya supera el 5 % (1/19 = 5,3 %), y el criterio celda a celda
  *     se queda en «cero documentos»; juntos, cada género tiene de 61
  *     (académico) a 742 (opinión). Las celdas se siguen enseñando una a una.
+ *   · intervaloDeWilson — el intervalo de confianza al 95 % de esa FPR
+ *     (respuesta a la parada tras e) del 5.6: administrativo queda en 5 de
+ *     98, y el intervalo dice si la muestra distingue esa proporción del 5 %).
+ *     [DOC] La fórmula, la de NIST/SEMATECH e-Handbook of Statistical
+ *     Methods, § 7.2.4.1 «Confidence intervals»
+ *     (https://www.itl.nist.gov/div898/handbook/prc/section2/prc241.htm):
+ *       (p̂ + z²/2n ± z·√(p̂(1 − p̂)/n + z²/4n²)) / (1 + z²/n)
+ *     «introduced by Wilson (1927)», «based on inverting the hypothesis
+ *     test», y recomendada por Agresti y Coull (1998) «for virtually all
+ *     combinations of n and p». Wilson, E. B. (1927), «Probable Inference,
+ *     the Law of Succession, and Statistical Inference», Journal of the
+ *     American Statistical Association 22(158), 209-212,
+ *     doi:10.1080/01621459.1927.10502953 (la ficha, de Crossref).
  *   · comprobarReparto — el juez del reparto: cada documento de cada celda es
  *     de reparto «validacion» en el manifiesto de su género y de su tramo,
  *     están todos los de cada celda, y n cuadra. Nunca uno de calibración:
@@ -79,6 +92,8 @@ export interface FicheroDeValidacion {
       omitidas: { tramo: TramoDeCalibracion; motivo: string; n: number }[];
       /** El género con sus tramos juntos (resumirGenero): la FPR que se juzga. */
       conjunto?: ConjuntoDeGenero;
+      /** El intervalo de Wilson al 95 % de la FPR del conjunto. */
+      intervaloFpr?: IntervaloDeWilson;
     }
   >;
 }
@@ -124,6 +139,27 @@ export function resumirGenero(celdas: FicheroDeValidacion['generos'][string]['ce
   const suma = (f: (c: CeldaDeValidacion) => number) => lista.reduce((s, c) => s + f(c), 0);
   const n = suma((c) => c.n);
   return { n, fpr: proporcion(suma((c) => c.fpr.documentos), n), alMenosUna: proporcion(suma((c) => c.alMenosUna.documentos), n) };
+}
+
+/** El cuantil 0,975 de la normal estándar (Python, statistics.NormalDist().inv_cdf(0.975)): el intervalo al 95 %, de dos colas. */
+export const Z_95 = 1.9599639845400536;
+
+export interface IntervaloDeWilson {
+  metodo: 'Wilson (1927)';
+  confianza: 0.95;
+  inferior: number;
+  superior: number;
+}
+
+export function intervaloDeWilson(k: number, n: number): IntervaloDeWilson {
+  if (!Number.isInteger(n) || n <= 0) throw new Error(`intervaloDeWilson: n = ${n} no es un entero positivo`);
+  if (!Number.isInteger(k) || k < 0 || k > n) throw new Error(`intervaloDeWilson: k = ${k} no es un entero de 0 a ${n}`);
+  const p = k / n;
+  const z2 = Z_95 * Z_95;
+  const denominador = 1 + z2 / n;
+  const centro = p + z2 / (2 * n);
+  const semiancho = Z_95 * Math.sqrt((p * (1 - p)) / n + z2 / (4 * n * n));
+  return { metodo: 'Wilson (1927)', confianza: 0.95, inferior: redondear((centro - semiancho) / denominador), superior: redondear((centro + semiancho) / denominador) };
 }
 
 export function comprobarReparto(fichero: FicheroDeValidacion, manifiestos: Readonly<Record<string, Manifiesto>>): string[] {

@@ -6,7 +6,9 @@
  * sin texto, data/calibracion/validacion.json (validacion.ts):
  * la FPR de la familia estadística (≥ 2 reglas «est-» que puntúan), la
  * proporción con al menos una, la tasa de disparo de todas las reglas y el
- * total en validación frente a la celda de calibración. Se ejecuta a mano:
+ * total en validación frente a la celda de calibración; por género, con los
+ * tramos juntos, la FPR que se juzga y su intervalo de Wilson al 95 %.
+ * Se ejecuta a mano:
  *
  *   node herramientas/calibrar/validar.ts        (desde motor/)
  *
@@ -28,7 +30,7 @@ import { CLAVE_TOTAL_RADIOGRAFIA } from '../../src/metricas/nombres.ts';
 import { SEMILLA, TRAMOS, huella, medirLongitud, reparto } from './comun.ts';
 import { GENEROS_CALIBRADOS, unirCalibraciones } from './inyeccion.ts';
 import { nombreDeFichero, type Manifiesto } from './manifiesto.ts';
-import { comprobarReparto, resumirCelda, resumirGenero, type DocumentoValidado, type FicheroDeValidacion, type ReglaResumida } from './validacion.ts';
+import { comprobarReparto, intervaloDeWilson, resumirCelda, resumirGenero, type DocumentoValidado, type FicheroDeValidacion, type ReglaResumida } from './validacion.ts';
 
 const MOTOR = fileURLToPath(new URL('../../', import.meta.url));
 const DATOS = new URL('../../../data/calibracion/', import.meta.url);
@@ -96,6 +98,7 @@ for (const { genero, celdas } of calibraciones) {
     resultado.celdas[tramo] = resumirCelda(tramo, documentos, reglas, celda);
   }
   resultado.conjunto = resumirGenero(resultado.celdas);
+  resultado.intervaloFpr = intervaloDeWilson(resultado.conjunto.fpr.documentos, resultado.conjunto.n);
   fichero.generos[genero] = resultado;
 }
 
@@ -112,7 +115,7 @@ for (const [genero, { celdas, omitidas }] of Object.entries(fichero.generos)) {
   for (const o of omitidas) console.log(`  ${genero.padEnd(18)} ${o.tramo.padEnd(8)} omitida (${o.n} documentos): ${o.motivo}`);
 }
 console.log('por género, con sus tramos juntos (lo que se juzga contra el 5 %):');
-for (const [genero, { conjunto }] of Object.entries(fichero.generos)) {
+for (const [genero, { conjunto, intervaloFpr }] of Object.entries(fichero.generos)) {
   const c = conjunto!;
-  console.log(`  ${genero.padEnd(18)} n ${String(c.n).padStart(4)} · FPR ${pct(c.fpr.proporcion).padStart(7)} (${c.fpr.documentos}) · ≥ 1 ${pct(c.alMenosUna.proporcion).padStart(7)} (${c.alMenosUna.documentos})${c.fpr.proporcion > 0.05 ? '   ← por encima del 5 %' : ''}`);
+  console.log(`  ${genero.padEnd(18)} n ${String(c.n).padStart(4)} · FPR ${pct(c.fpr.proporcion).padStart(7)} (${c.fpr.documentos}; Wilson 95 %: ${pct(intervaloFpr!.inferior)} a ${pct(intervaloFpr!.superior)}) · ≥ 1 ${pct(c.alMenosUna.proporcion).padStart(7)} (${c.alMenosUna.documentos})${c.fpr.proporcion > 0.05 ? '   ← por encima del 5 %' : ''}`);
 }

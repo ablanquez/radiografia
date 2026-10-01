@@ -11,7 +11,7 @@ import { readFileSync } from 'node:fs';
 import type { Celda } from '../../src/paquete.ts';
 import type { Manifiesto } from './manifiesto.ts';
 import { GENEROS_CALIBRADOS } from './inyeccion.ts';
-import { comprobarReparto, resumirCelda, resumirGenero, type CeldaDeValidacion, type DocumentoValidado, type FicheroDeValidacion, type ReglaResumida } from './validacion.ts';
+import { Z_95, comprobarReparto, intervaloDeWilson, resumirCelda, resumirGenero, type CeldaDeValidacion, type DocumentoValidado, type FicheroDeValidacion, type ReglaResumida } from './validacion.ts';
 
 const REGLAS: ReglaResumida[] = [
   { id: 'est-a', estadistica: true, puntua: true },
@@ -88,6 +88,40 @@ describe('resumirGenero', () => {
 
   test('sin celdas: para', () => {
     assert.throws(() => resumirGenero({}), /ninguna celda/);
+  });
+});
+
+/**
+ * Respuesta a la parada tras e) del 5.6: el intervalo de Wilson al 95 % de la
+ * FPR de cada género. Cifras a mano con la fórmula de NIST § 7.2.4.1 (en
+ * Python, aparte del código), z = 1,9599639845400536, redondeadas a 6
+ * decimales:
+ *   5/98 → 0,021987 a 0,113925 · 2/40 → 0,013821 a 0,165039 ·
+ *   0/10 → 0 a 0,277533 · 10/10 → 0,722467 a 1
+ */
+describe('intervaloDeWilson', () => {
+  test('5 de 98 (administrativo) y 2 de 40, con cifras a mano', () => {
+    assert.deepEqual(intervaloDeWilson(5, 98), { metodo: 'Wilson (1927)', confianza: 0.95, inferior: 0.021987, superior: 0.113925 });
+    assert.deepEqual(intervaloDeWilson(2, 40), { metodo: 'Wilson (1927)', confianza: 0.95, inferior: 0.013821, superior: 0.165039 });
+  });
+
+  test('en los extremos no se sale de [0, 1]: 0 de 10 y 10 de 10', () => {
+    assert.deepEqual(intervaloDeWilson(0, 10), { metodo: 'Wilson (1927)', confianza: 0.95, inferior: 0, superior: 0.277533 });
+    assert.deepEqual(intervaloDeWilson(10, 10), { metodo: 'Wilson (1927)', confianza: 0.95, inferior: 0.722467, superior: 1 });
+  });
+
+  test('es la inversión del contraste (NIST): en cada extremo L, |p̂ − L| / √(L(1 − L)/n) = z', () => {
+    for (const [k, n] of [[5, 98], [9, 287], [8, 742]] as const) {
+      const { inferior, superior } = intervaloDeWilson(k, n);
+      for (const L of [inferior, superior]) assert.ok(Math.abs(Math.abs(k / n - L) / Math.sqrt((L * (1 - L)) / n) - Z_95) < 1e-3, `${k}/${n}, extremo ${L}`);
+    }
+  });
+
+  test('n que no es un entero positivo, o k fuera de 0..n: para', () => {
+    assert.throws(() => intervaloDeWilson(0, 0), /n/);
+    assert.throws(() => intervaloDeWilson(6, 5), /k/);
+    assert.throws(() => intervaloDeWilson(-1, 5), /k/);
+    assert.throws(() => intervaloDeWilson(1.5, 5), /k/);
   });
 });
 
