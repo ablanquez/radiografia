@@ -128,9 +128,9 @@
       "su tramo ya tiene el mínimo": 7
     },
     "porTramo": {
-      "100-299": 118,
+      "100-299": 117,
       "300-599": 124,
-      "600+": 119
+      "600+": 120
     },
     "reparto": {
       "calibracion": 300,
@@ -237,7 +237,7 @@
     {
       "id": "csic-124091701",
       "sha256": "d485454d6d8708b48e3389b7fe133662e4b26310bf101ac82e4298d09dc114f5",
-      "palabrasProsa": 6794,
+      "palabrasProsa": 7253,
       "tramo": "600+",
       "byte": 124091701,
       "trozo": 43,
@@ -441,7 +441,7 @@
     {
       "id": "csic-175123787",
       "sha256": "8b3c71f5ded65268ddd54613c964958678dc1c5026367552c2c9526bbf302f05",
-      "palabrasProsa": 496,
+      "palabrasProsa": 526,
       "tramo": "300-599",
       "byte": 175123787,
       "trozo": 1,
@@ -501,7 +501,7 @@
     {
       "id": "csic-197959492",
       "sha256": "06bca56a18f2949edbd506628c743066d15b54e4326087ad8c6e5bdfe077c54f",
-      "palabrasProsa": 582,
+      "palabrasProsa": 535,
       "tramo": "300-599",
       "byte": 197959492,
       "trozo": 87,
@@ -585,7 +585,7 @@
     {
       "id": "csic-212960521",
       "sha256": "df3b9f0ea09dbcb92f8b70ad82ab936cf30225e878f31b017842806a9b4e262d",
-      "palabrasProsa": 8075,
+      "palabrasProsa": 8138,
       "tramo": "600+",
       "byte": 212960521,
       "trozo": 40,
@@ -729,7 +729,7 @@
     {
       "id": "csic-235104869",
       "sha256": "be22ccaaaf94aefebbc91058d2f2cb8869ccf3532c842b72422c1ce11287bf2d",
-      "palabrasProsa": 3018,
+      "palabrasProsa": 3025,
       "tramo": "600+",
       "byte": 235104869,
       "trozo": 12,
@@ -765,8 +765,8 @@
     {
       "id": "csic-244032646",
       "sha256": "f4fa379f0a0aee9fc9c9602b6bd06efb67df6e5cdb3c216e9f1aef680e3a3a99",
-      "palabrasProsa": 590,
-      "tramo": "300-599",
+      "palabrasProsa": 640,
+      "tramo": "600+",
       "byte": 244032646,
       "trozo": 91,
       "palabrasDelDocumento": 16635,
@@ -1077,7 +1077,7 @@
     {
       "id": "csic-296844349",
       "sha256": "4b1e336088e6aac91137c4f22e1561d83bd57a07994c816213311ff92ab7b3ce",
-      "palabrasProsa": 12129,
+      "palabrasProsa": 12241,
       "tramo": "600+",
       "byte": 296844349,
       "trozo": 92,
@@ -1305,7 +1305,7 @@
     {
       "id": "csic-313108163",
       "sha256": "9f806b30dc0c2aadc66a579e1afbd4719e5e8125442103c2a048a4374d94e448",
-      "palabrasProsa": 5921,
+      "palabrasProsa": 6251,
       "tramo": "600+",
       "byte": 313108163,
       "trozo": 28,
@@ -1401,7 +1401,7 @@
     {
       "id": "csic-317738617",
       "sha256": "65a8f4fe6bd47543e6e27013906a091fa33af5ea0a90bdf0c0a0a3d55a2d2d1a",
-      "palabrasProsa": 6434,
+      "palabrasProsa": 6843,
       "tramo": "600+",
       "byte": 317738617,
       "trozo": 47,
@@ -1497,7 +1497,7 @@
     {
       "id": "csic-319099565",
       "sha256": "3a6c864858edc5932b6552999f368f366a275bce95e7f6d8cd282a6d590fc1c6",
-      "palabrasProsa": 4126,
+      "palabrasProsa": 4063,
       "tramo": "600+",
       "byte": 319099565,
       "trozo": 32,
@@ -1521,7 +1521,7 @@
     {
       "id": "csic-319234629",
       "sha256": "ecfe62cce0a7d905137426e5c9c695e1c013bf966a634fae1ad4b7bc4bfcf4e0",
-      "palabrasProsa": 7248,
+      "palabrasProsa": 7259,
       "tramo": "600+",
       "byte": 319234629,
       "trozo": 32,
@@ -1677,7 +1677,7 @@
     {
       "id": "csic-341589477",
       "sha256": "e193619d205dbe3e462903dd05e81f2a3195b39e3102630e2b0ec153a162e41b",
-      "palabrasProsa": 7303,
+      "palabrasProsa": 7308,
       "tramo": "600+",
       "byte": 341589477,
       "trozo": 37,
@@ -1725,7 +1725,7 @@
     {
       "id": "csic-347614330",
       "sha256": "1236f08ea3f6b1b214490a5c92243862bef6aa48480f36abf3d88bcf23faf82b",
-      "palabrasProsa": 467,
+      "palabrasProsa": 487,
       "tramo": "300-599",
       "byte": 347614330,
       "trozo": 36,
@@ -1845,7 +1845,7 @@
     {
       "id": "csic-373268820",
       "sha256": "66dc86479fa0fc190be0e04386c15f11618aea14dde6afa2d0e0f123f922000d",
-      "palabrasProsa": 177,
+      "palabrasProsa": 185,
       "tramo": "100-299",
       "byte": 373268820,
       "trozo": 23,
@@ -1881,7 +1881,7 @@
     {
       "id": "csic-373349618",
       "sha256": "c297ba2f38f2e25604f8f8b669e91e946c0ff545fd7e658f3682027628672cae",
-      "palabrasProsa": 12231,
+      "palabrasProsa": 12236,
       "tramo": "600+",
       "byte": 373349618,
       "trozo": 23,
@@ -1929,7 +1929,7 @@
     {
       "id": "csic-380412295",
       "sha256": "72dab23bd4e9822d00086070a377fd73aa2c55672789586aa3099aaf90ce3142",
-      "palabrasProsa": 8040,
+      "palabrasProsa": 8179,
       "tramo": "600+",
       "byte": 380412295,
       "trozo": 6,
@@ -2013,7 +2013,7 @@
     {
       "id": "csic-390480155",
       "sha256": "4baad809de2fa55257588692b9190132e132daeb83db28ba5e94cf7954db190d",
-      "palabrasProsa": 2703,
+      "palabrasProsa": 2749,
       "tramo": "600+",
       "byte": 390480155,
       "trozo": 81,
@@ -2397,7 +2397,7 @@
     {
       "id": "csic-506596930",
       "sha256": "168fbe1b388531d7f258689c5dd0ddf19f47e3a25dc65f298f7dd3f71eab67fe",
-      "palabrasProsa": 7928,
+      "palabrasProsa": 7965,
       "tramo": "600+",
       "byte": 506596930,
       "trozo": 11,
@@ -2565,7 +2565,7 @@
     {
       "id": "csic-573794387",
       "sha256": "c3d3a5232bebc2af79fd40f1bda94b5c063932ae2efbb0a83c1fa6fb3be557b5",
-      "palabrasProsa": 177,
+      "palabrasProsa": 204,
       "tramo": "100-299",
       "byte": 573794387,
       "trozo": 65,
@@ -2745,7 +2745,7 @@
     {
       "id": "csic-5937098",
       "sha256": "0ffcd4ea533b5250cc3b8509b78be97bad0c93365fb16d3a95b3cce9185096e0",
-      "palabrasProsa": 5337,
+      "palabrasProsa": 5437,
       "tramo": "600+",
       "byte": 5937098,
       "trozo": 19,
@@ -2865,7 +2865,7 @@
     {
       "id": "csic-604156531",
       "sha256": "11442e3e50d5f891e0814a472bda2de711c28468f53cd49e30048b21b215829d",
-      "palabrasProsa": 5110,
+      "palabrasProsa": 5251,
       "tramo": "600+",
       "byte": 604156531,
       "trozo": 74,
@@ -2877,7 +2877,7 @@
     {
       "id": "csic-606030241",
       "sha256": "e96c9afa1ac38efc69792b43c0928ae9009e22f82f5b4a302a090ec152baca28",
-      "palabrasProsa": 9277,
+      "palabrasProsa": 9397,
       "tramo": "600+",
       "byte": 606030241,
       "trozo": 76,
@@ -2913,7 +2913,7 @@
     {
       "id": "csic-606197715",
       "sha256": "261c22eda92ebcbab1ef7ee412177d352f56d3be84c46209f9a8196d08ee2e4b",
-      "palabrasProsa": 8780,
+      "palabrasProsa": 8944,
       "tramo": "600+",
       "byte": 606197715,
       "trozo": 76,
@@ -2985,7 +2985,7 @@
     {
       "id": "csic-624837355",
       "sha256": "613f51f53d9ccaff74f4d31326619bfe657d938c463a6e9681c5e604fba417b8",
-      "palabrasProsa": 26801,
+      "palabrasProsa": 26907,
       "tramo": "600+",
       "byte": 624837355,
       "trozo": 52,
@@ -3057,7 +3057,7 @@
     {
       "id": "csic-637430421",
       "sha256": "730f7d9540a6ea49821879168a944c94ed08dc3271f96d2d602f2829451ff9b6",
-      "palabrasProsa": 15391,
+      "palabrasProsa": 15431,
       "tramo": "600+",
       "byte": 637430421,
       "trozo": 2,
@@ -3117,7 +3117,7 @@
     {
       "id": "csic-65038437",
       "sha256": "ca8127bba2dcdb100a80535110310919c672eb8bc65047996d69b6bb6c131d49",
-      "palabrasProsa": 7019,
+      "palabrasProsa": 7097,
       "tramo": "600+",
       "byte": 65038437,
       "trozo": 9,
@@ -3177,7 +3177,7 @@
     {
       "id": "csic-664915855",
       "sha256": "3aa99021c3c48addac0e95192909e6afc88b40af29e495cc9c027d0529e2d31b",
-      "palabrasProsa": 4116,
+      "palabrasProsa": 4061,
       "tramo": "600+",
       "byte": 664915855,
       "trozo": 54,
@@ -3189,7 +3189,7 @@
     {
       "id": "csic-664998224",
       "sha256": "fa9057500b9fef63a2be576da7fb312c1bb4769d3ff89e1e313eb31f90460d42",
-      "palabrasProsa": 235,
+      "palabrasProsa": 226,
       "tramo": "100-299",
       "byte": 664998224,
       "trozo": 54,
@@ -3345,7 +3345,7 @@
     {
       "id": "csic-692494276",
       "sha256": "6baf91f4523e47bcb582ab429cb48a78079775c288b75228a52c0385fc4b7b7d",
-      "palabrasProsa": 4857,
+      "palabrasProsa": 4676,
       "tramo": "600+",
       "byte": 692494276,
       "trozo": 17,
@@ -3609,7 +3609,7 @@
     {
       "id": "csic-738155913",
       "sha256": "1254c857380b7a3b30591fe00f700849fbf02167b28c4e646e73c52618753b58",
-      "palabrasProsa": 7676,
+      "palabrasProsa": 7693,
       "tramo": "600+",
       "byte": 738155913,
       "trozo": 18,
@@ -3921,8 +3921,8 @@
     {
       "id": "csic-812724832",
       "sha256": "805830622d18d327802e0b8d9790f89cd3a93bdef328d70a0d81c93dc90c7fc4",
-      "palabrasProsa": 279,
-      "tramo": "100-299",
+      "palabrasProsa": 315,
+      "tramo": "300-599",
       "byte": 812724832,
       "trozo": 41,
       "palabrasDelDocumento": 8246,
@@ -3945,7 +3945,7 @@
     {
       "id": "csic-812824063",
       "sha256": "120f4123202635b60000d197f18ff3c8d7ba3c8ff25ed3a2ace7c814933bc1be",
-      "palabrasProsa": 10049,
+      "palabrasProsa": 10094,
       "tramo": "600+",
       "byte": 812824063,
       "trozo": 41,
@@ -3957,7 +3957,7 @@
     {
       "id": "csic-812889698",
       "sha256": "c19f25f8e8fef8050d1fce202128dd8a347af9ad53213717c0e8584a9d0c1f36",
-      "palabrasProsa": 6826,
+      "palabrasProsa": 6845,
       "tramo": "600+",
       "byte": 812889698,
       "trozo": 41,
@@ -3969,7 +3969,7 @@
     {
       "id": "csic-8225471",
       "sha256": "94834eaf58a2b2a0ab99ac57877b5c9bab69a6702e6892c264074c6eec75d71c",
-      "palabrasProsa": 4923,
+      "palabrasProsa": 4976,
       "tramo": "600+",
       "byte": 8225471,
       "trozo": 38,
@@ -4017,7 +4017,7 @@
     {
       "id": "csic-837582459",
       "sha256": "c625079e1bab641ab4b83e2b916cb58f0f6ee624c30a319d3cca113fc3232977",
-      "palabrasProsa": 7000,
+      "palabrasProsa": 7040,
       "tramo": "600+",
       "byte": 837582459,
       "trozo": 64,
@@ -4077,7 +4077,7 @@
     {
       "id": "csic-838192070",
       "sha256": "308caaeefe39244cf13848dabe621d6017ab20372a5096f7b7aed23aa46ee39e",
-      "palabrasProsa": 3661,
+      "palabrasProsa": 3709,
       "tramo": "600+",
       "byte": 838192070,
       "trozo": 95,
@@ -4089,7 +4089,7 @@
     {
       "id": "csic-838214179",
       "sha256": "0aa57a0e3a221a6bdb7d6e074dd91b5d7132704424ed20eadef3e48250b858d8",
-      "palabrasProsa": 11836,
+      "palabrasProsa": 12558,
       "tramo": "600+",
       "byte": 838214179,
       "trozo": 95,
@@ -4125,7 +4125,7 @@
     {
       "id": "csic-840675304",
       "sha256": "1ee4beeadcc74c56e35453eac185d5cf8b734a190cf7662bd624f3f969b93da0",
-      "palabrasProsa": 8254,
+      "palabrasProsa": 8279,
       "tramo": "600+",
       "byte": 840675304,
       "trozo": 80,
@@ -4173,7 +4173,7 @@
     {
       "id": "csic-841051498",
       "sha256": "289f82eee06e067c0cda025833b8f3f62eba41b901b28a0e9f7d27d35271a25f",
-      "palabrasProsa": 8042,
+      "palabrasProsa": 8137,
       "tramo": "600+",
       "byte": 841051498,
       "trozo": 13,
@@ -4221,7 +4221,7 @@
     {
       "id": "csic-855658961",
       "sha256": "ad7cd2b5f9cc0bc6cd652140cc0c1d1d77cd3fffa35d6fdb3204b65ee4f889ff",
-      "palabrasProsa": 1957,
+      "palabrasProsa": 1970,
       "tramo": "600+",
       "byte": 855658961,
       "trozo": 0,
@@ -4245,7 +4245,7 @@
     {
       "id": "csic-855701220",
       "sha256": "44441793db68fe83cfdcf219c5480d6186eba408af1b00702ff7374cd6993b04",
-      "palabrasProsa": 911,
+      "palabrasProsa": 887,
       "tramo": "600+",
       "byte": 855701220,
       "trozo": 0,
@@ -4353,7 +4353,7 @@
     {
       "id": "csic-917734618",
       "sha256": "80d08ed912b79191868bb346c6dbdd43e04e8c346e85f9cb06cc739df827ff28",
-      "palabrasProsa": 9131,
+      "palabrasProsa": 9348,
       "tramo": "600+",
       "byte": 917734618,
       "trozo": 56,
@@ -4401,7 +4401,7 @@
     {
       "id": "csic-920514965",
       "sha256": "d8dc881aae35f2c699c6f8dc66532ed59a6c5ac1bf21bb7044bd8ad653cdc58c",
-      "palabrasProsa": 4860,
+      "palabrasProsa": 4900,
       "tramo": "600+",
       "byte": 920514965,
       "trozo": 62,
@@ -4473,7 +4473,7 @@
   ],
   "semilla": "radiografia-calibracion-2026",
   "motor": {
-    "commit": "835505be8f94a4c6a24e5ed2baa8658e11bf3795",
+    "commit": "8eea55f18b4b82b84643f7ea36e357ee0e969f1a",
     "limpio": true
   }
 }
