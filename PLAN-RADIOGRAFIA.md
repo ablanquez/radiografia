@@ -1,9 +1,9 @@
 # PLAN — 005 RadiografIA
 
-Estado a 30/09/2026: **FIRMADO por Antonio el 29/09/2026**, publicado en
-`73ef265`. **PUNTOS 1, 2 y 3 CERRADOS el 29/09; PUNTO 4 CERRADO el 30/09.**
-Se tacha lo hecho y lo nuevo se añade en su punto, y solo por decisión de
-Antonio.
+Estado a 01/10/2026: **FIRMADO por Antonio el 29/09/2026**, publicado en
+`73ef265`. **PUNTOS 1, 2 y 3 CERRADOS el 29/09; 4 el 30/09; 5 el 01/10
+(salvo los textos de la web, que pasan al punto 6).** Se tacha lo hecho y
+lo nuevo se añade en su punto, y solo por decisión de Antonio.
 
 Origen: BRAINSTORMING (1), 28-29/09/2026, y las decisiones de Antonio
 del 29/09 al cerrar el plan. Lo que no está en «Alcance cerrado» está en
@@ -30,7 +30,8 @@ La v1 entrega, y solo entrega, esto:
    analiza elige.
 2. **Paquete RadiografIA v1**: reglas en **seis** familias — léxico,
    sintaxis, puntuación y formato, estadística, discurso y **canal**
-   (informativa: Markdown residual, Unicode invisible, emojis) — cada una
+   (informativa: Markdown residual, Unicode invisible; los emojis quedaron
+   fuera el 30/09 por falta de fuente) — cada una
    nacida de una **investigación a fondo con fuentes** (Regla Cero). Más
    un **segundo paquete incluido, «español correcto»**: siete avisos de
    norma RAE (pasiva por refleja, posesivo por artículo, punto dentro de
@@ -44,8 +45,11 @@ La v1 entrega, y solo entrega, esto:
    paquetes de terceros, prohibido en RadiografIA por juez), visibles en
    el catálogo y en la interfaz. Los ejemplos
    son a la vez documentación y test automático.
-4. **Analizador**: pegas texto → subrayados por familia, medidor de
-   estilo IA, explicación y sugerencia por señal.
+4. **Analizador**: pegas texto y eliges el género (los que trae la
+   calibración del paquete; «general» por defecto) → subrayados por
+   familia, medidor de estilo IA cuya escala es la **banda respecto a los
+   textos humanos del mismo género y longitud** (decisión 01/10; sin tope
+   ni veredicto), explicación y sugerencia por señal.
 5. **Catálogo público de reglas**: página por regla con URL propia,
    buscador y filtros; enlace cruzado desde cada subrayado.
 6. **Cargador de paquetes**: paquetes incluidos en desplegable; cargar
@@ -379,7 +383,18 @@ Fuente citada en cada ficha (sale del punto 2 y de `CANDIDATAS.md`).
       (exige métrica). P13 (exclusión de diálogos) NO en el motor: en las
       excepciones de las fichas; la calibración dirá. Doble puntuación
       P11+P12 en una raya espaciada: para la calibración
-- [ ] Estadística
+- [x] Estadística (5.6, 01/10): 13 reglas `est-` contra los percentiles
+      humanos de género × tramo. Puntúan 7: frases cortas (S1, mayor,
+      p95, peso 3), poca puntuación secundaria (P15, menor, p95, 3), y en
+      **p99** tras la validación: pocas comas (P14, 3; depende de S1), poca
+      puntuación (P16, 3; contiene a P15), ritmo uniforme (S2, 2),
+      nominalización (S5, 2), repetición de secuencias (E5, 1 justificado:
+      Welleck mide greedy). Contexto informativas (peso 0, «ambas»): MATTR,
+      MTLD, HD-D, IFSZ, TTR, pronombres anafóricos. Ninguna con `generos`.
+      Ejemplos como textos ≥ 300 palabras; `ejemplos-estadisticos.spec.ts`
+      con el paquete real. Fichas con el corte, el porqué del p99 y los
+      falsos positivos de formato (tablas pasadas a texto, párrafos
+      numerados, títulos sin punto)
 - [x] Discurso (5.3, 30/09): 10 reglas, prefijo `disc-`. Ninguna medida en
       español. Peso 2: marcador repetido (D2, `minimoPorCoincidencia: 3`,
       ocho conectores con procedencia PDTB; NO se puntúa la cantidad de
@@ -441,17 +456,31 @@ Fuente citada en cada ficha (sale del punto 2 y de `CANDIDATAS.md`).
       Bloque `disparos` por fichero (aceptado 01/10). Tres bitácoras
       (EPUB). La expectativa «4-6 frases por 100» del encargo no tenía
       fuente: la investigación da ~3,7 y AnCora 3,5
-- [ ] **Calibración — validación** (5.6): `_total-radiografia` se
-      recalcula tras añadir las reglas estadísticas; se marca solo con
-      ≥ 2 métricas fuera del p1–p99 (vía pesos); **validación con los
-      textos humanos apartados (20 %): FPR ≤ 5 %** o no se cierra el punto.
-      Datos ya conocidos que la validación debe corregir: en MuchoCine
-      (300-599) las ausencias disparan en 852/1.663 (epistémicos) y
-      617/1.663 (automenciones); en narrativa 600+ `pf-raya-densidad`
-      dispara en 814/895 y el gerundio final en 586/895
-- [ ] El paquete pasa el validador y todos sus ejemplos pasan los jueces
+- [x] **Calibración — validación** (5.6, 01/10): `_total-radiografia`
+      recalculado con el paquete completo y reinyectado; ajustes elegidos
+      con el 80 % (calibración) y confirmados con el 20 % apartado, nunca
+      al revés. **FPR por género (tramos juntos; [PROPIO]: con 18-32
+      documentos por celda hacen falta dos para pasar del 5 %)**, con
+      intervalo de Wilson al 95 % (NIST §7.2.4.1; Wilson 1927): general
+      3,1 % (1,7-5,9), noticia 2,4 % (1,0-5,6), **administrativo 5,1 %
+      (2,2-11,4)**, narrativa 2,9 % (1,5-5,7), académico 3,3 % (0,9-11,2),
+      opinión 1,1 % (0,5-2,1); conjunto 37/1.667 = 2,2 %. **Criterio
+      modificado por Antonio el 01/10**: administrativo (5 de 98: cuatro
+      tablas del BOE pasadas a texto y una fórmula legal repetida) se
+      acepta con declaración en README, validacion.json y la ficha del
+      género; la muestra no distingue 5,1 % de 5 %. Solo opinión queda
+      entera por debajo del 5 %; el README lo dice. Límite del método: una
+      sola validación, misma muestra. **Escala** (decisión 01/10):
+      `bandaHumana()` devuelve la banda del total respecto a los humanos
+      del género y tramo (mediana, p95, p99); sin tope ni veredicto
+- [x] El paquete pasa el validador y todos sus ejemplos pasan los jueces
+      (839 jueces, 832 en verde, 2 saltados con motivo, 5 `todo`; 01/10)
 - [ ] El eslogan y los textos de la propia web pasan por el motor: si los
-      marca, se cambian (dicho en el brainstorming). **PUNTO 5 CERRADO**
+      marca, se cambian (dicho en el brainstorming). **Decisión 01/10**: los
+      textos del README ya pasaron (solo `est-frases-cortas` por el corte
+      de línea a 76 columnas, declarado; una frase cambiada); el eslogan
+      tiene 5 palabras (bajo el umbral) y los textos de la web se pasan en
+      el punto 6 cuando existan. **PUNTO 5 CERRADO salvo esta casilla**
 
 ## 6 — La pantalla mínima (aquí ya existe la demo)
 
@@ -465,13 +494,22 @@ Astro, sin diseño todavía: funciona, no luce.
       `calibracion`; sobre todo los esquemas con sus `$comment`: valorar
       quitarlos en build). El aviso MIT de `ucs2length`
       (Ajv) viaja con ese fichero
-- [ ] Área de texto + botón «Pon tu texto a contraluz»
+- [ ] Área de texto + selector de género (listado desde
+      `cabecera.calibracion`, «general» por defecto; decisión 30/09) +
+      botón «Pon tu texto a contraluz»
 - [ ] Subrayados por familia sobre el texto
-- [ ] Medidor global con desglose por familia
+- [ ] Medidor global con desglose por familia: la **banda humana**
+      (`bandaHumana()`), con «sin señales» cuando el total es 0 (en seis
+      celdas la mediana es 0 y un texto limpio caería «entre la mediana y
+      el p95»), y «sin calibración» cuando no hay celda
 - [ ] Al tocar un subrayado: explicación y sugerencia de la regla
 - [ ] Nota «analiza estilo, no demuestra autoría» junto al medidor
 - [ ] Textos de ejemplo precargados (el de Antonio, pasado por el motor
       y con el resultado documentado)
+- [ ] Los textos de la web pasan por los dos paquetes (casilla heredada
+      del punto 5, decisión 01/10): si RadiografIA los marca, se cambian o
+      se declara por qué no; de paso, «subrayado» entra en los FP declarados
+      de lex-verbos-de-enfasis
 - [ ] **CICLO ENTERO VISTO POR ANTONIO EN CHROME. PUNTO 6 CERRADO**
 
 ## 7 — Catálogo de reglas

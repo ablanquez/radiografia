@@ -7,17 +7,18 @@ El ejecutor reporta descubrimientos; no toca este fichero.
 
 ## ESTADO ACTUAL — 1 de octubre de 2026
 
-**⭐ PUNTOS 1-4 CERRADOS (29-30/09). PUNTO 5 EN MARCHA (01/10):** los dos
-paquetes reales existen. **RadiografIA 0.1.0** tiene cinco familias
-rellenas (canal 6, puntuación 2, léxico 11, discurso 10, sintaxis 1) y ya
-lleva **calibración humana real**: 238 celdas de percentiles (14 claves ×
-6 géneros) medidas con el motor sobre AnCora, BOE, Gutenberg, CSIC y
-MuchoCine, con manifiestos reproducibles y sin texto en el repo. **Español
-correcto 0.1.0** con sus siete avisos. **737 jueces: 730 en verde, 2
-saltados con motivo, 5 `todo`**, `tsc` limpio. Cinco bitácoras, todas
-cerradas. Falta el 5.6: reglas estadísticas en el paquete, validación FPR
-≤ 5 % sobre el 20 % apartado, escala del medidor y cierre del punto 5. No
-hay pantalla.
+**⭐ PUNTOS 1-4 CERRADOS (29-30/09). PUNTO 5 CERRADO (01/10) salvo la
+casilla de los textos de la web, que se pasan en el punto 6.** Los dos
+paquetes reales están completos: **RadiografIA 0.1.0** con las seis
+familias (canal 6 informativas, puntuación 2, léxico 11, discurso 10,
+sintaxis 1, estadística 13), calibración humana de seis géneros (238
+celdas) y **validación sobre el 20 % apartado** (FPR por género con
+intervalo de Wilson; administrativo 5,1 % aceptado con declaración); y
+**Español correcto 0.1.0** con sus siete avisos. El motor devuelve la
+**banda del total respecto a los humanos** del género y tramo. **839
+jueces: 832 en verde, 2 saltados con motivo, 5 `todo`**, `tsc` limpio.
+Cinco bitácoras cerradas. **Siguiente: punto 6, la pantalla mínima: aquí
+ya existe la demo.** No hay pantalla todavía.
 
 ## 1 · Identidad
 
@@ -61,10 +62,8 @@ antes del verde, push = despliegue, bitácora por la skill
 
 ## 4 · El plan
 
-`PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1, 2 y 3 (29/09), 4 (30/09).
-Abierto: el 5 (5.1 canal y puntuación, 5.2 léxico, 5.3 discurso, 5.4
-sintaxis + «Español correcto», 5.5 calibración hechos; queda 5.6 reglas
-estadísticas, validación FPR y escala).
+`PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1, 2 y 3 (29/09), 4 (30/09),
+5 (01/10, salvo los textos de la web). Abierto: el 6.
 
 ## 5 · Decisiones
 
@@ -245,12 +244,46 @@ estadísticas, validación FPR y escala).
   0.1.0.** Corrección de la estrategia: la expectativa «4-6 frases por
   100» no tenía fuente (~3,7 según sintaxis.md; AnCora anota 28,56
   palabras por frase).
+- 01/10 — **Decisiones del 5.6**: siete reglas estadísticas puntuables y
+  seis de contexto; ajustes de percentil elegidos con la calibración (80 %)
+  y confirmados con la validación (20 %), nunca al revés: S1 y P15 en p95
+  (medidas en español, independientes), P14/P16/S2/S5/E5 en p99. **FPR
+  juzgada por género** con tramos juntos [PROPIO] y publicada por celda,
+  con intervalo de Wilson al 95 %. **Criterio del plan modificado por
+  Antonio**: administrativo 5,1 % (5/98; cuatro tablas del BOE pasadas a
+  texto y una fórmula legal) aceptado con declaración; la muestra no
+  distingue 5,1 % de 5 %; nada se excluye ni se ajusta tras ver la
+  validación. **Escala del medidor**: banda respecto a los humanos del
+  mismo género y tramo (`bandaHumana()`), sin tope ni veredicto. Textos
+  del README pasados por los dos paquetes; los de la web, en el punto 6.
+  Celdas con tasa > 25 % en una sola celda: no se declaran (criterio por
+  género). «subrayado» (nombre de función del producto) se añade a los FP
+  declarados de lex-verbos-de-enfasis en la pasada de textos del punto 6.
+  **Severidad**: se queda «baja» en todas las reglas de la v1; la
+  calibración no dio criterio para subirla y la escala del medidor es la
+  banda, no la severidad.
 
 ## 6 · Cabos abiertos
 
-- Del 5.5 (01/10), para 5.6 y después: residuo de coma flotante en
-  `puntuar.ts` (−1,1·10⁻¹⁶ donde debe salir 0; `sinMenosCero` solo quita
-  el −0) → arreglar en 5.6; `general.json` registra el motor 430075b
+- **Del 5.6 (01/10), PROPUESTA PENDIENTE DE FIRMA para el punto 6**: el
+  motor trata cada línea como párrafo (decisión [PROPIO] del 4.1). Un texto
+  cortado a mano (PDF o correo pegado, Markdown a 76 columnas) cuenta una
+  frase por línea: en los 287 textos de validación de «general» cortados a
+  76 columnas, `est-frases-cortas` pasa del 4,2 % al 43,2 % y la FPR del
+  3,1 % al 8,0 %; también infla el recuento de prosa (las líneas de
+  continuación de viñetas cuentan). Los corpus de calibración no están
+  afectados (0-2 documentos por género). Propuesta: casilla nueva en el
+  punto 6 «unir líneas cortadas a mano antes de segmentar» (heurística
+  con jueces + recalibración reproducible). Se escribe en el plan solo si
+  Antonio la firma.
+- Para el punto 6: en las seis celdas con mediana del total en 0, un texto
+  sin señales cae en «entre la mediana y el p95»; la interfaz debe decir
+  «sin señales» cuando el total sea 0 antes de pintar la banda. P22
+  subraya solo «$1» (ampliar regex). La sección «Paquetes» del README
+  dispara 44,3 en RadiografIA por MENCIONAR las formas que busca: el
+  motor no distingue mención de uso (declarado).
+- Del 5.5 (01/10): residuo de coma flotante en `puntuar.ts` → ARREGLADO
+  en 5.6 (redondeo a 6 decimales); `general.json` registra el motor 430075b
   (src idéntico al de su constructor); el manifiesto de noticia solo
   cuenta su última ejecución (desde caché); los registros de descarga
   sobrestiman el tiempo de red (incluyen medir); dos peticiones a la API
@@ -266,14 +299,13 @@ estadísticas, validación FPR y escala).
   -ando («Nando») en S4; «Conocí a Mayo»; «Ministerio de Asuntos
   Exteriores y Cooperación». La comprobación del 5 % de FP en AnCora es
   débil (100 frases sin material): se hace en la calibración con corpus.
-- **Para la validación y la escala (5.6), el primero**: la escala pesa las
-  ausencias mucho menos que las densidades (una ausencia = su peso una
-  vez, 2 puntos; «Además» ×3 en 346 palabras = 17,34), y `discurso.md`
-  §12 pide «más peso a las ausencias que a las presencias». Decidir escala
-  o factor de presencia con los datos de `_total-radiografia`. También:
-  una regla estadística con `generos` no tendría juez
-  (`ejemplos-estadisticos.spec.ts` analiza con «general»); D6 resta en
-  cualquier género aunque Pham es académico (declarado).
+- Escala ausencias/densidades (del 5.3): RESUELTO en 5.6 por la escala
+  relativa (banda respecto a humanos del género): una ausencia vale su
+  peso una vez y las densidades lo suyo, pero el medidor compara con la
+  distribución humana real, no con una cifra absoluta. Pesos de las otras
+  familias sin tocar en la v1. Sigue abierto: una regla estadística con
+  `generos` no tendría juez (hoy ninguna lo lleva); D6 resta en cualquier
+  género (declarado).
 - `discurso.md` corregido el 30/09 con las fuentes primarias: «In
   conclusion» en 166/180 (92 %), no 100 %; 53/90 estudiantes también
   cierran con fórmula; los epistémicos de Herbold son 14 regex de su código
@@ -334,6 +366,10 @@ estadísticas, validación FPR y escala).
 
 ## Nevera
 
+- **Tablas del BOE pasadas a texto como no-prosa** (v1.1): los cinco ids
+  aceptados en la validación de administrativo (BOE-B-2010-33306,
+  BOE-B-2012-3733, BOE-A-2012-3750, BOE-B-2010-33269, BOE-A-2012-7964)
+  son los casos de prueba.
 - **Wikipedia ES en `general`** y **narrativa-clasica 100-299**: fuera de
   la v1 (volcado pre-2022 de gigas; 65 capítulos < 100). Calibración por
   **subgénero del BOE** y filtro de OCR en académico: el manifiesto ya
