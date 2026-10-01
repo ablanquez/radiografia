@@ -5,7 +5,7 @@
   "licencia": "Art. 13 LPI y licencia tipo del BOE de 27/06/2024 (verificada en origen: aviso legal y art. 13 del TRLPI consolidado, leídos en cada ejecución)",
   "semilla": "radiografia-calibracion-2026",
   "motor": {
-    "commit": "4159d6b6b14b4674cc1665fba73e7495936fdef6",
+    "commit": "8eea55f18b4b82b84643f7ea36e357ee0e969f1a",
     "limpio": true
   },
   "metodo": "hyndman-fan-7",
@@ -730,6 +730,7 @@
     "Excluidos por el filtro: sección 4 (IV. Administración de Justicia): 1804; epígrafe de tratados o acuerdos internacionales: 11; título con «traducción»: 3; Tribunal Constitucional: ninguna sección suya en los sumarios leídos.",
     "Con aviso del BOE de imágenes que solo están en el PDF, conservados sin ese contenido: 43 documentos de los descargados.",
     "Vetados por robots.txt: 0. Incidencia: 30/09/2026, diseño de la parada 1: una petición a https://www.boe.es/diario_boe/xml.php?id=BOE-A-2010-4000 ANTES de leer el robots.txt, que veta xml.php. No se repitió; la herramienta lee robots.txt antes de cada petición.",
+    "Textos regenerados el 2026-10-01 desde la caché de descargas (fuente/), sin red, con regenerar-textos.ts (encargo 6.1): los mismos 463 documentos; cada bloque del original es un párrafo separado del siguiente por una línea en blanco, y un <br> es un salto simple dentro del párrafo. Quitados los blancos, cada texto es idéntico al de antes. Huella, palabras de prosa y tramo, con el motor de hoy (párrafos según CommonMark).",
     "filtro del corpus: fechas de 2000-01-01 a 2021-12-31, en el orden de sha256(\"semilla|muestra|fecha\"); días sin BOE (404), saltados",
     "filtro del corpus: subgénero por sección: 1 → disposición general; 2A, 2B y 3 → resolución; 5A y 5B → anuncio",
     "filtro del corpus: fuera: sección 4 (Administración de Justicia), 5C (anuncios particulares: no los cubre el art. 13 LPI), Tribunal Constitucional y cualquier otra sección",

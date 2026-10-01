@@ -117,7 +117,8 @@
     "Por tramo: 600+ — con tope: ningún subgénero pasa de 3/5. Calibración 110 (disposición general 66, 60,0 %; resolución 41, 37,3 %; anuncio 3, 2,7 %). Validación 32 (disposición general 19, 59,4 %; resolución 10, 31,3 %; anuncio 3, 9,4 %). Descargados antes del tope (calibración + validación): disposición general 92 + 26; resolución 41 + 10; anuncio 3 + 3.",
     "Excluidos por el filtro: sección 4 (IV. Administración de Justicia): 1804; epígrafe de tratados o acuerdos internacionales: 11; título con «traducción»: 3; Tribunal Constitucional: ninguna sección suya en los sumarios leídos.",
     "Con aviso del BOE de imágenes que solo están en el PDF, conservados sin ese contenido: 43 documentos de los descargados.",
-    "Vetados por robots.txt: 0. Incidencia: 30/09/2026, diseño de la parada 1: una petición a https://www.boe.es/diario_boe/xml.php?id=BOE-A-2010-4000 ANTES de leer el robots.txt, que veta xml.php. No se repitió; la herramienta lee robots.txt antes de cada petición."
+    "Vetados por robots.txt: 0. Incidencia: 30/09/2026, diseño de la parada 1: una petición a https://www.boe.es/diario_boe/xml.php?id=BOE-A-2010-4000 ANTES de leer el robots.txt, que veta xml.php. No se repitió; la herramienta lee robots.txt antes de cada petición.",
+    "Textos regenerados el 2026-10-01 desde la caché de descargas (fuente/), sin red, con regenerar-textos.ts (encargo 6.1): los mismos 463 documentos; cada bloque del original es un párrafo separado del siguiente por una línea en blanco, y un <br> es un salto simple dentro del párrafo. Quitados los blancos, cada texto es idéntico al de antes. Huella, palabras de prosa y tramo, con el motor de hoy (párrafos según CommonMark)."
   ],
   "n": {
     "documentos": 463,
@@ -142,7 +143,7 @@
   "documentos": [
     {
       "id": "BOE-A-2000-1001",
-      "sha256": "9d89ccb67e8308aedc5c6d4bc2c95b2d3de0a93dffb310d59f60c928817a1e7c",
+      "sha256": "be1a076ee8040f68b393d341f6884ed66d10e2cf5a5d6915103ca57cdb0a684f",
       "palabrasProsa": 310,
       "tramo": "300-599",
       "subgenero": "disposicion-general",
@@ -153,7 +154,7 @@
     },
     {
       "id": "BOE-A-2000-1002",
-      "sha256": "359973bf1f9fd7df86b73b6571e48c2b8d2b5da926198a5c2807a499d04743bb",
+      "sha256": "908e6dfba6fec4ecd6910794b62437786c757398599b65b9489e068975670dfa",
       "palabrasProsa": 581,
       "tramo": "300-599",
       "subgenero": "disposicion-general",
@@ -164,7 +165,7 @@
     },
     {
       "id": "BOE-A-2000-1003",
-      "sha256": "fa4e86b9375a9aca21d60ff4bcd799450b1c8e08d62aa4bba1a30720615c90b9",
+      "sha256": "2d00a4d7e011db2de682c701a2a5e03c0eeaa8084ae918d8335611c69c35c9f3",
       "palabrasProsa": 1573,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -175,7 +176,7 @@
     },
     {
       "id": "BOE-A-2000-1005",
-      "sha256": "564000f3ea4bd21ea0209b8c1ea84b9b6f4c55c10374ee1c4d79945f33cf45c9",
+      "sha256": "318bd13c800dec4d0a4be0e00d8655baa949bf7491c8f37532b0b6e81af4e083",
       "palabrasProsa": 424,
       "tramo": "300-599",
       "subgenero": "disposicion-general",
@@ -186,7 +187,7 @@
     },
     {
       "id": "BOE-A-2000-1006",
-      "sha256": "7469b04ea70c601ad7a727742edffd6db1a77207177ab7713510ad8a3c646f48",
+      "sha256": "6e7d081bdececb1fd2f2baa1f7bfbacf6061e4c8ac7e22a5df249680be85d122",
       "palabrasProsa": 4197,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -197,7 +198,7 @@
     },
     {
       "id": "BOE-A-2000-1007",
-      "sha256": "2b8a0697a9a32cefffb9b75a213a1dd24d1bb10030fe002c5392de9b87c68795",
+      "sha256": "64f82ae0437eb25b8a9cf5dc7fc00c18c953b45074087f1b99b105e11c6cec2f",
       "palabrasProsa": 2264,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -208,7 +209,7 @@
     },
     {
       "id": "BOE-A-2000-1008",
-      "sha256": "bd4a7e5c222fde002074a34f936c90077ffbb2943b676a77bb4d7c8c7c5bfeba",
+      "sha256": "8af1f9ee92c81fd4ad0e70c7c436ae0d37057fb94b7824fd787a99686bfca84c",
       "palabrasProsa": 8059,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -219,7 +220,7 @@
     },
     {
       "id": "BOE-A-2000-1009",
-      "sha256": "aecc2bf2888bf27f653c4b2fa3422cfaa26151857fc7e83b9fca6a651caef5ba",
+      "sha256": "07f08117f05babd94d0bc4e1ecd639a1a577173d25dea0c3cc07e1494ee02a20",
       "palabrasProsa": 4319,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -230,7 +231,7 @@
     },
     {
       "id": "BOE-A-2000-1010",
-      "sha256": "d1df18c7c65bfc77f25b5d20ed80c7679172b055b9ee06d9e34d1aa7a52a5ae0",
+      "sha256": "f598e8264b9d32fdfedd54ff00157c0012d37049a1be45c59d4906ae3d6af729",
       "palabrasProsa": 505,
       "tramo": "300-599",
       "subgenero": "disposicion-general",
@@ -241,7 +242,7 @@
     },
     {
       "id": "BOE-A-2000-1011",
-      "sha256": "d9c8c3579b19ed5ea2121b410d728eabbf5f66b9d783b56c2f3e6f10b90915b5",
+      "sha256": "9d944ab2f7fe8870b4552c166a8511b2d304a13b94b7cf4756aa8219d99eccf4",
       "palabrasProsa": 14888,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -252,7 +253,7 @@
     },
     {
       "id": "BOE-A-2000-1012",
-      "sha256": "33bb0c2ddc87ec92c74ffbea3923d372fb0f00766ab1d3efb9a9ca9fb59e0ebc",
+      "sha256": "cd4badbaff0de033ce0aa3a46e98870f84d9836ea879b8084f935d7062cfb1d0",
       "palabrasProsa": 337,
       "tramo": "300-599",
       "subgenero": "disposicion-general",
@@ -263,7 +264,7 @@
     },
     {
       "id": "BOE-A-2000-1013",
-      "sha256": "4934b03432997e7957ff0e4291435adb661de8e4478a30e8889a0fe87d5b2a24",
+      "sha256": "6486f1348a433813906bcef5d9603470fe3f4034a126f9b119c44327f2616e5b",
       "palabrasProsa": 5470,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -274,7 +275,7 @@
     },
     {
       "id": "BOE-A-2000-1014",
-      "sha256": "c8075379f97c0313f7ceb49fecfaecefa860fa8a68667406cb74f46ab9c5d081",
+      "sha256": "16135c3f40339655b4113c7961f1f08d41f3e3d5626cd530b4e1b0c76a7e98d2",
       "palabrasProsa": 5662,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -285,7 +286,7 @@
     },
     {
       "id": "BOE-A-2000-15060",
-      "sha256": "9d8d0c65c4ec11d41d4c6d7606d82811c50767a4342eb60de25bc4d0bd728b1d",
+      "sha256": "52acf22083a0a1714e8115c93ef2d2128464cf36f731919740a09235253643f5",
       "palabrasProsa": 5295,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -296,7 +297,7 @@
     },
     {
       "id": "BOE-A-2000-15061",
-      "sha256": "dbd2ccd1f4ff62f0c27d63a8208efe28f1f4b218ac7250c24f5bc2bc9a41fdb8",
+      "sha256": "297a9b4a52c3bab2f961df71016ebeb36c0bc2ce2513087875d49211678cd8ba",
       "palabrasProsa": 516,
       "tramo": "300-599",
       "subgenero": "disposicion-general",
@@ -307,7 +308,7 @@
     },
     {
       "id": "BOE-A-2000-15062",
-      "sha256": "baf7117e6c8ceb59195f2310ec66a77310197735a2a28f8e8b81d5759e896d03",
+      "sha256": "3ab06794d1d4d56b46657b7e4c235b32d1a1de0f53fa5ef029bb3f310c7b086e",
       "palabrasProsa": 2636,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -318,7 +319,7 @@
     },
     {
       "id": "BOE-A-2000-15063",
-      "sha256": "9689d9e80f13577d5545c2dd2d39152bf3ec18e3421ee5dbeb08f92024d1f725",
+      "sha256": "8d7f13a2d80ae55de60b271a27b76de188d555c1cacfc874bd85bb7893d100be",
       "palabrasProsa": 963,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -329,7 +330,7 @@
     },
     {
       "id": "BOE-A-2000-17754",
-      "sha256": "90785cd5ea68a5688b4ac9fc035de43f3f86a53e6f848b6619ce6e179a3d0e8a",
+      "sha256": "211d05a1b96405846db51833dc94bb300d13b9a1e1833255cbd7379782ac9f08",
       "palabrasProsa": 187,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -340,7 +341,7 @@
     },
     {
       "id": "BOE-A-2000-17756",
-      "sha256": "0558ba11594d3498b0263f004f0cdc0ae526ecb8f2c765d1f3dad1b56119aa3e",
+      "sha256": "4d28fe4c8e3126762fbd16446469dfed3c9961f0b8c726c6ed966bdc5361b2cd",
       "palabrasProsa": 101,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -351,7 +352,7 @@
     },
     {
       "id": "BOE-A-2000-17757",
-      "sha256": "b7943d18f615e07c7f16dcb0ec56f192dc4e83599507d86db262d22bbbe748ef",
+      "sha256": "e4c824885dfeb349ffa99a69b0cbfca1c8b3d5d190e8ce59e208b77fda1623c7",
       "palabrasProsa": 357,
       "tramo": "300-599",
       "subgenero": "disposicion-general",
@@ -362,7 +363,7 @@
     },
     {
       "id": "BOE-A-2000-17759",
-      "sha256": "e3aac743e74c0137c5360acdcf91234feed2eff58701565036df1b085ea6c6cf",
+      "sha256": "c1699c417a4bc361d2fd1380e2c7148ff11bc2198a6457c60909def9723637bb",
       "palabrasProsa": 115,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -373,7 +374,7 @@
     },
     {
       "id": "BOE-A-2001-18184",
-      "sha256": "c5bd76a91936ff69d3054df9746b26b9f29b6b48f7a11325285a2e6d61cb4bef",
+      "sha256": "272026aed2961dc3ef55af71b6921abcf58a8f13ed44637771d5c02671da3a35",
       "palabrasProsa": 308,
       "tramo": "300-599",
       "subgenero": "disposicion-general",
@@ -384,7 +385,7 @@
     },
     {
       "id": "BOE-A-2001-18185",
-      "sha256": "b8734eb0faf423838256990a483b53ba55e92e8db3ff0f5aa226eb5093391a0e",
+      "sha256": "569d3a78c2482606496354666e58363d4de6a42ce228d3c1fce8d7a989db22f7",
       "palabrasProsa": 586,
       "tramo": "300-599",
       "subgenero": "disposicion-general",
@@ -395,7 +396,7 @@
     },
     {
       "id": "BOE-A-2001-7228",
-      "sha256": "cbbce2a80674ddb41bd693913d5ca7fb0f881f41a8c106c5dc7bbd35e78887ca",
+      "sha256": "31aae7992f1dadc2a3e15d72c0d2fd1776b06f5f6036ca97807502544658f775",
       "palabrasProsa": 385,
       "tramo": "300-599",
       "subgenero": "disposicion-general",
@@ -406,7 +407,7 @@
     },
     {
       "id": "BOE-A-2001-7229",
-      "sha256": "093297eb008c6de017b9b090ff7e8928fee090ba860b28a372a0aca78490c825",
+      "sha256": "31d2677bf3e4ea3c6b248acc1af57962bcda9a7c90a2efe1c30a0ed951466e83",
       "palabrasProsa": 635,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -417,7 +418,7 @@
     },
     {
       "id": "BOE-A-2001-7230",
-      "sha256": "0fb95fd4949b429981cddd9ebb08c5aa4fa4a60bd93d3fa8057ec44a10295b4a",
+      "sha256": "88abb8884f1b4218a5e0ff9f4bf8a2c62fa9bbac428da31accebeaf43da81a92",
       "palabrasProsa": 1101,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -428,7 +429,7 @@
     },
     {
       "id": "BOE-A-2001-7421",
-      "sha256": "f5f2afc014f0a664a0672b4fbdc90f3bc8c1a11016f9120ba92d290b141e9246",
+      "sha256": "4ff125a8effdef583f17d8261f271577e7e20142b50827908e9c1f053a19db99",
       "palabrasProsa": 407,
       "tramo": "300-599",
       "subgenero": "disposicion-general",
@@ -439,7 +440,7 @@
     },
     {
       "id": "BOE-A-2001-7422",
-      "sha256": "9e4c502561ffef40dc91dc9326d3ac44ae3bfbd12ea99d7a60ddff5908147038",
+      "sha256": "2d9aacec05e5ea1bfa0da726360034d246e7fcc984313001766e4f626444eeae",
       "palabrasProsa": 4918,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -450,7 +451,7 @@
     },
     {
       "id": "BOE-A-2001-7423",
-      "sha256": "9ed1d4cf6208410a9fae8cd59fc54016613a5d3c637ce70d972c4233e8874e5f",
+      "sha256": "661eb4b3162519ee9e9298312a99835d62d34df57b2d0edaa4e5cee5571227ac",
       "palabrasProsa": 390,
       "tramo": "300-599",
       "subgenero": "disposicion-general",
@@ -461,7 +462,7 @@
     },
     {
       "id": "BOE-A-2001-7424",
-      "sha256": "8a07908814e175635baa9343f550041cd43723ca4bff20b7e6222e50696f31ac",
+      "sha256": "92683b1c35919b42e3e7b6966bf291be107736035743e476098ba6649a964a43",
       "palabrasProsa": 281,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -472,7 +473,7 @@
     },
     {
       "id": "BOE-A-2001-7425",
-      "sha256": "3ac704f69a2c406b468805146041c86c7f311f59db8f24dbe2cbb67fd3e8c8a5",
+      "sha256": "795f84399271f22d6623f9eb81cebd224eb9a577706bf34bf648ef14702ef3c9",
       "palabrasProsa": 915,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -483,7 +484,7 @@
     },
     {
       "id": "BOE-A-2001-7426",
-      "sha256": "41de06d92ec4e213600f71f39e5962753cf01e5ec381d3cd8c3d298a268c1a1a",
+      "sha256": "21f812435a20cf2bf4984cb641bad3aead7ac6b896c24eccd4ee277f0ce6ce91",
       "palabrasProsa": 155,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -494,7 +495,7 @@
     },
     {
       "id": "BOE-A-2001-7427",
-      "sha256": "ba0cf1341cc63e769aefd44182ac1521646b0c308180b8a8d1f571e6c649d58c",
+      "sha256": "8c83d831c35780dc47d7298050ce653ab99cc4dfa85f05badb7ff502d73ef485",
       "palabrasProsa": 439,
       "tramo": "300-599",
       "subgenero": "disposicion-general",
@@ -505,7 +506,7 @@
     },
     {
       "id": "BOE-A-2003-10386",
-      "sha256": "0e3015035cb332a0364c157bc9dd15798be587a6c0ca5690d5259c349f615836",
+      "sha256": "5fd421e4a5c88eb74fd4c63e39e5d7532f2303c4d1809862a5af28d869d98764",
       "palabrasProsa": 592,
       "tramo": "300-599",
       "subgenero": "disposicion-general",
@@ -516,7 +517,7 @@
     },
     {
       "id": "BOE-A-2003-18257",
-      "sha256": "8b060ad073ddb0e7fc7bff980d2d29e4573bdce9c6fc9be24e0bcbd4b02b8bab",
+      "sha256": "1b5ffc828ab73cd794442432a0f577d8f9e5f5923fc94a92213d50fafc7784c3",
       "palabrasProsa": 840,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -527,7 +528,7 @@
     },
     {
       "id": "BOE-A-2003-18258",
-      "sha256": "3fcf3daa8fcfc0e2ef918a15e6b0c0982e798cf759c68aa787c0dcceac34d34a",
+      "sha256": "f8fcb6c911783f708e1e524329e71a5a4010a7371e60b146dd29165487afef4b",
       "palabrasProsa": 856,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -538,7 +539,7 @@
     },
     {
       "id": "BOE-A-2003-18259",
-      "sha256": "8241adc65869c9075cc5f95eb6500cd3ccb73630dc949d6e845b7db6d9242b4f",
+      "sha256": "e7f5a73c3cb3ee93d6d3e768a0010c5ff7364e0bce72d18e53a294e0213d9478",
       "palabrasProsa": 123,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -549,7 +550,7 @@
     },
     {
       "id": "BOE-A-2003-18261",
-      "sha256": "33e9860fa2c029711d692937a9a21c16c5ff42b0c0fb96b7b2406c28bc93f17e",
+      "sha256": "56df846ef3114c16926542805dee3ce45b599087d2360c4cc5f90c3ac47af6a1",
       "palabrasProsa": 1302,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -560,7 +561,7 @@
     },
     {
       "id": "BOE-A-2003-18262",
-      "sha256": "d9668ecd6524a66dfc7771fbd623d8c8d35590f55f8d5af931628ffd7d748c69",
+      "sha256": "6d3e7028c056b017f881a1bba9e5a4d3a5f4de8e6aedee86cb9cd4dc37474088",
       "palabrasProsa": 7088,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -571,7 +572,7 @@
     },
     {
       "id": "BOE-A-2003-21840",
-      "sha256": "14e5cc4e327e3edce3bd54cc532c765fb1dff73a0df26c769e69429c9a968b58",
+      "sha256": "71555b3b6cbc1ef43fefb03f5ae3e363ee6a7138c14b17a47323da671751de6b",
       "palabrasProsa": 339,
       "tramo": "300-599",
       "subgenero": "disposicion-general",
@@ -582,7 +583,7 @@
     },
     {
       "id": "BOE-A-2003-21841",
-      "sha256": "47fdb2009d5f6fff35fb27a44c1a49991725f273e8866da2bcb8d4a9914a14bf",
+      "sha256": "2cf20807c13d669eb6c4b9a15530f72e47ccfca0c7491b2cb5b1db1df52b1c39",
       "palabrasProsa": 563,
       "tramo": "300-599",
       "subgenero": "disposicion-general",
@@ -593,7 +594,7 @@
     },
     {
       "id": "BOE-A-2003-21843",
-      "sha256": "24b9f64a564384d1d36e29cd10fc8efe9befaf6d72d0d83caefad16dd10d94df",
+      "sha256": "b484fea37b4f7f9b9e37b6137cc903653264af87fc4259a560f0e8ca582ef09d",
       "palabrasProsa": 739,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -604,7 +605,7 @@
     },
     {
       "id": "BOE-A-2003-21844",
-      "sha256": "b85f1a2833db28e9aa07a28acbc94ebb6448edb7f1b9bf3c54119e8865b041f0",
+      "sha256": "4876cb7ebb069dd5b32021c6311b9fb238f82d1f7bfa5746e66d8c80375014ea",
       "palabrasProsa": 773,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -615,7 +616,7 @@
     },
     {
       "id": "BOE-A-2003-21845",
-      "sha256": "0cc205c216b957ae5e4da51f0810cc4a5f8a27bc6bd81ec6545b05c916aca03a",
+      "sha256": "3eb55939994587022b850d5a6b45f52877c51fc1d84918f24fcdd5be6a66d79f",
       "palabrasProsa": 13645,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -626,7 +627,7 @@
     },
     {
       "id": "BOE-A-2003-21846",
-      "sha256": "4f7a57b079b36bdc69a68565c088340adf4e8c67f6903c17793f6b21ecd7d38f",
+      "sha256": "8f1888daf2eb4beb8db58a9cb1150884f59aac8495b66f1fde7d6e4da567d4e3",
       "palabrasProsa": 3473,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -637,7 +638,7 @@
     },
     {
       "id": "BOE-A-2003-21847",
-      "sha256": "a1675ab7a1ffdc83648b2ff7a59e6d38cf535b8d17ae00fcb0ba512cc244bf4a",
+      "sha256": "43d38fcb5caaa603fd9694a1e6c5d657701da8cd0b030b8103be98a3e7761d98",
       "palabrasProsa": 1729,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -648,7 +649,7 @@
     },
     {
       "id": "BOE-A-2003-21848",
-      "sha256": "9cd9ab887cb3abe82daf4d2d6d780915d73d8b36bf3f4f417dd6bcf9be66c585",
+      "sha256": "5ff4f578e30eb15d5d24cd52332b4c6d3e18cdf9e0e7f35ab40506f43c00750d",
       "palabrasProsa": 1364,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -659,7 +660,7 @@
     },
     {
       "id": "BOE-A-2003-21849",
-      "sha256": "29acef3610e150f525b07504b7f71da6bc41dede2be84140f92c30926f73011c",
+      "sha256": "813a14ea5030b3b2fb3c5aada2e21cda029b8781d067c04c98b75608877a50c4",
       "palabrasProsa": 416,
       "tramo": "300-599",
       "subgenero": "disposicion-general",
@@ -670,7 +671,7 @@
     },
     {
       "id": "BOE-A-2003-21850",
-      "sha256": "1ea374520958ee3ecd4b5ac3692dbe214e1386ca98c72cba00f6a730476580ad",
+      "sha256": "f0e138c371eafd2f3f235236e4398f15798bf2f25cca894e6caa2a2b6e9cfeec",
       "palabrasProsa": 172,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -681,7 +682,7 @@
     },
     {
       "id": "BOE-A-2004-20741",
-      "sha256": "78406d6cd8c8e6851e3205a56cd2126b59895167b6d32ed67f62a1992e2e06f7",
+      "sha256": "322842d5f2503ebb6de1407e68e1f92d23b34b8270ce7aef953b7273c46dadc2",
       "palabrasProsa": 2498,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -692,7 +693,7 @@
     },
     {
       "id": "BOE-A-2004-20742",
-      "sha256": "f2626199758f23008b2504f5dc112fa8e1651f423175971f13c67e8a3649c6cf",
+      "sha256": "c07921af64fae60536f302362303cf62171df46903bb135c4da5701e77e17a12",
       "palabrasProsa": 785,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -703,7 +704,7 @@
     },
     {
       "id": "BOE-A-2006-7899",
-      "sha256": "f8e0fac486fe87474d8af677401c654fe9645e805feec49bc30e4663c8214f1e",
+      "sha256": "1a0bba7c76381629235aa0ae02e120a627b8b9915e155ea5900d7b5ea83d4731",
       "palabrasProsa": 21481,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -714,7 +715,7 @@
     },
     {
       "id": "BOE-A-2006-7900",
-      "sha256": "84f6e644a8d21ef66f71fa01cc6d8149b2c35c3b7a8540f870e0fc77c7002f1d",
+      "sha256": "290cc9b58b381b40e0b0bcf84add80e9c1788c94a46d5f8e98305277db3c739d",
       "palabrasProsa": 783,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -725,7 +726,7 @@
     },
     {
       "id": "BOE-A-2006-8041",
-      "sha256": "911d4663fc3d3556c9a7c0edfb212dcd7316cb7f17d29032e7d7b818b5a07b2c",
+      "sha256": "13a0610b1f7decf1d1b338b30887ff995600234947fc7b6437fe4c85bb1a5fbf",
       "palabrasProsa": 3524,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -736,7 +737,7 @@
     },
     {
       "id": "BOE-A-2006-9543",
-      "sha256": "0669dae2d8ba704634674437577d90be4a503492d0a9472e26c9b0a1cfa6c43c",
+      "sha256": "18b5c3845be539b6507bb33cb75e4f6a9e87fd284e3a3e4ebe7a016b9e2df81d",
       "palabrasProsa": 1833,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -747,7 +748,7 @@
     },
     {
       "id": "BOE-A-2006-9544",
-      "sha256": "862169116a16de0cf3fe1949b957f3960994c22302d72d579fa71d6a5426c8f5",
+      "sha256": "a7f8a21968c32cff2c86d6f45b811e63dfbf3e66103779e4151bc74766146b41",
       "palabrasProsa": 819,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -758,7 +759,7 @@
     },
     {
       "id": "BOE-A-2008-12489",
-      "sha256": "bd1810cf461eb1d3c298d8b2a9be504bd13b7ab6addbc1b06e52077e0679d737",
+      "sha256": "dea71b5082631cbdbaf4dc03a2b70b670ace8ac3b881880bf76c865f4cadc235",
       "palabrasProsa": 304,
       "tramo": "300-599",
       "subgenero": "disposicion-general",
@@ -769,7 +770,7 @@
     },
     {
       "id": "BOE-A-2008-12490",
-      "sha256": "80024484db62c8336ee46302f2a385f3241909e4be7c06da11273641c97f215f",
+      "sha256": "ea939cff1ae4e2c06543599d38a0299a2d18a9046e8d082c2effd530b2cbc61d",
       "palabrasProsa": 5436,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -780,7 +781,7 @@
     },
     {
       "id": "BOE-A-2008-12491",
-      "sha256": "a9a48286e4178196a3914908479b53a77e0d8186bd79cd46b85fdd00b92a02bc",
+      "sha256": "548f3d3be20639c3a4290ecc1271f63c675ee0ea90d4d6ebfe24d356885ae55c",
       "palabrasProsa": 511,
       "tramo": "300-599",
       "subgenero": "disposicion-general",
@@ -791,7 +792,7 @@
     },
     {
       "id": "BOE-A-2008-12492",
-      "sha256": "2183e90b52d5820c48800078c6aa474abd2741bf06eaf75b60e67b63f5baebfb",
+      "sha256": "d476900930aa04607fa0bfbb44d4e1e9a50d172a299b9c6c874caec4d1cd1e35",
       "palabrasProsa": 9319,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -802,7 +803,7 @@
     },
     {
       "id": "BOE-A-2008-20149",
-      "sha256": "246da520b8c7a87041dfb78167c9d71f2a5bdcaf678a94cca14d505f3e9b9bd1",
+      "sha256": "70a4ac09456b858c98027194a803a00b6349a60169fdc5f6274756e67212ecc1",
       "palabrasProsa": 1377,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -813,7 +814,7 @@
     },
     {
       "id": "BOE-A-2008-20151",
-      "sha256": "a939a397702882d9c830a09c261ae14f8f9ba0406fa9e22843a193478edfb059",
+      "sha256": "9c0f11ff491d57565efe887e2a2fe9073c982400882e6d0aa5fa762bbf4c504f",
       "palabrasProsa": 1197,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -824,7 +825,7 @@
     },
     {
       "id": "BOE-A-2008-20152",
-      "sha256": "6df169d923556d692a4f491ca38c5f81cb21dc3eac94f0da4418def99916f107",
+      "sha256": "951a3e1b00a396198030a31d886a6eae15aff5ab5e9338c6ad5ab4c0761ce051",
       "palabrasProsa": 1650,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -835,7 +836,7 @@
     },
     {
       "id": "BOE-A-2010-14897",
-      "sha256": "1ffce6f13ddd6c616c37b3854dc25810b800f918c544c8d849735695c3d26853",
+      "sha256": "846d68d8673132c81eccb0a3bc8c32c3fed5c2290a0d1f8ce09ab11af2270e3e",
       "palabrasProsa": 128,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -846,7 +847,7 @@
     },
     {
       "id": "BOE-A-2010-14898",
-      "sha256": "a4be23ec3c2a1da03e2cd420c56115205bd7f31529c3ceed99b33feb28943418",
+      "sha256": "73424978c51905817b8400c62dc0fe5dfe9ba3caf208a5a91876df9169c88056",
       "palabrasProsa": 102,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -857,7 +858,7 @@
     },
     {
       "id": "BOE-A-2010-14899",
-      "sha256": "6ccc273c5bdc0aba9713a22a75ca9434856502b951e266d60205ae8231ee16a2",
+      "sha256": "bb0e9851c3fab6c791bd0308193194f9ff4b3dda5fafed7850408a390fc679a0",
       "palabrasProsa": 130,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -868,7 +869,7 @@
     },
     {
       "id": "BOE-A-2010-14900",
-      "sha256": "bfba44aeffbe829347e75a19f7714236e54247715d59319a175b1f8964ab78fd",
+      "sha256": "8aa8c0be54aaec3e5de20028d56a620a502657bd855f6640adae4110ff1ac322",
       "palabrasProsa": 130,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -879,7 +880,7 @@
     },
     {
       "id": "BOE-A-2010-14901",
-      "sha256": "e531d0d767afa84860e5415053fa485a42dc8c9b8c23c8b7560f58176f5cdf31",
+      "sha256": "8ccaf2dd90f43c615962f1e92ae023fadd0eec08271543945d8471bed9dacd87",
       "palabrasProsa": 143,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -890,7 +891,7 @@
     },
     {
       "id": "BOE-A-2010-14902",
-      "sha256": "a28ce0c82d57197ec4c47ccfc844c91678569b4cb8f0dba5faa3e163a750cc4f",
+      "sha256": "70d4213adc4f3074f522207855145a4cd44fbfb6800a180bd6c461faeb9f8eab",
       "palabrasProsa": 460,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -901,7 +902,7 @@
     },
     {
       "id": "BOE-A-2010-14903",
-      "sha256": "8cd6a4367f6da6b932afa40bfa07e122b9325c70822e6101cd30d9ea3c52c9d2",
+      "sha256": "87f4fc32f43e460e52899bae096b1823635bd18084afa851554be162bc6fa3a3",
       "palabrasProsa": 308,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -912,7 +913,7 @@
     },
     {
       "id": "BOE-A-2010-14905",
-      "sha256": "3b97d488fbb6af4c61b51cea1069469015c99a2abd1ffa3be6c6e030831263f9",
+      "sha256": "c7cc6ed0314661e527a1c4f8e5703333debc3c1ca674913ef5eca01671cf57cb",
       "palabrasProsa": 839,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -923,7 +924,7 @@
     },
     {
       "id": "BOE-A-2010-14906",
-      "sha256": "bc216c6fc91df4211a3787437acb373fe97954e962dc9eb564e25651416f2876",
+      "sha256": "ca18da1be1467880b14481452d2887e476a2ccdf765462d11022f0e862ad9be4",
       "palabrasProsa": 122,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -934,7 +935,7 @@
     },
     {
       "id": "BOE-A-2010-14908",
-      "sha256": "c5f1baa62edff7111abfdefa3492ac867f61df7ba28e053e2e8ad3d62872809a",
+      "sha256": "1b6d585ed2826f52bde943200e8d47b8ef4cc63c9c2e076ba7d73c855001142f",
       "palabrasProsa": 239,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -945,7 +946,7 @@
     },
     {
       "id": "BOE-A-2010-14909",
-      "sha256": "345d3a1b9a42bfa5b746e362c912b17acb3983e4fcb69da40921fc3a14c9b481",
+      "sha256": "56257ffc3a29dc4e007fb3eb2c49bd140876b49cef3a0dd1242a79450adfd86d",
       "palabrasProsa": 4290,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -956,7 +957,7 @@
     },
     {
       "id": "BOE-A-2010-14910",
-      "sha256": "d99823bac3781db1b8b3910caeff0a338960a24a90b72dc42d85c3f43d73d01c",
+      "sha256": "25b50eb595d6c21b4abacc7662b0c814db2ea57a165fe4c99b7fe053ec18f3e5",
       "palabrasProsa": 1155,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -967,7 +968,7 @@
     },
     {
       "id": "BOE-A-2010-14911",
-      "sha256": "7ac6e03d58214ee544e33232ebd8455a4574d8c123b8395645f20c8b30462345",
+      "sha256": "4a5ea42d8aa143c98bfe7f5d57dfb73bb3a278a87e3a7954ecc16fe0c516c387",
       "palabrasProsa": 1316,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -978,7 +979,7 @@
     },
     {
       "id": "BOE-A-2010-14912",
-      "sha256": "eb797d99a7176d3f8d5f3107f0ee1600f3c3a6367531f97889bac3cf76e01139",
+      "sha256": "c3e9a8793b62fbdc7679a56f99cd15992c24bd1920061830098cfdf4f6699e06",
       "palabrasProsa": 3972,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -989,7 +990,7 @@
     },
     {
       "id": "BOE-A-2010-14913",
-      "sha256": "0f29e0fa02187f73f1493b840f5cd951dc81f840e1c13a006006b8a8a8730b35",
+      "sha256": "b08392268c39f6a1f8ce8f3356f328b7ff4766f839cba2c10e1366180dec2ed5",
       "palabrasProsa": 1058,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1000,7 +1001,7 @@
     },
     {
       "id": "BOE-A-2010-14914",
-      "sha256": "07bd4011daa327ed8ad97f85cf7dba5f3394f335286240826e7f6b6f7f90fd5c",
+      "sha256": "4abb398afd7a9e6d894247e960e436eb996924d6c5ca7eab3fbb36fbe0cfb2cb",
       "palabrasProsa": 2346,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1011,7 +1012,7 @@
     },
     {
       "id": "BOE-A-2010-14915",
-      "sha256": "e5e845f7c7a30524c9955b6ba3083add40683c3b0d433e576be2f0eaee54d56a",
+      "sha256": "e73b1fcddcf5ccc49f1b33c106fedb3990948939927f5473136b25773952b6a7",
       "palabrasProsa": 998,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1022,7 +1023,7 @@
     },
     {
       "id": "BOE-A-2010-14916",
-      "sha256": "1146258bf0432053cbf9225a1834f9a9126d8eed8151224beaae8eefa88e48b9",
+      "sha256": "62727676a0776be07ef72d65aaef71505a86c26f5adcc1e48d4a2ad46fdcbad3",
       "palabrasProsa": 1022,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1033,7 +1034,7 @@
     },
     {
       "id": "BOE-A-2010-14918",
-      "sha256": "c70488f24ae3cf5cf267f251b0f06b07832ececa2899c581664cc64b7664ca75",
+      "sha256": "98f67ec360ab497e1d53d1527d9699f33ea2990beab60edbbe0c586849dbd2a6",
       "palabrasProsa": 2125,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1045,7 +1046,7 @@
     },
     {
       "id": "BOE-A-2010-14919",
-      "sha256": "58d8e9f9f8b9c9a1ed58ee103c2634d4e31bb49142ed255f0c77b6d16fa5c9e4",
+      "sha256": "2e76441c5c2c09db3301e156a1b14be6e054e73faa9c4da598249314ee8d43d8",
       "palabrasProsa": 5058,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1056,7 +1057,7 @@
     },
     {
       "id": "BOE-A-2010-14920",
-      "sha256": "54bf158d9a7230d460aa0752581cde4c0d8759a6021e5724450404c5a2ce4089",
+      "sha256": "767d83106f083ec40e67ccd6f24cc7395959fd07eeea07c1e7229875821223fb",
       "palabrasProsa": 2473,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1068,7 +1069,7 @@
     },
     {
       "id": "BOE-A-2010-14921",
-      "sha256": "659a372e8885e5d07173022f414e65a15ee893e2e5da7b85205f4a7b2eb20e0f",
+      "sha256": "d81169f47179e0c61305e55a5bf546ddfde72ce9d8c12cc3544280fa3f8b0db2",
       "palabrasProsa": 1536,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1080,7 +1081,7 @@
     },
     {
       "id": "BOE-A-2010-14922",
-      "sha256": "6a7ef8c27e0bf4826c54627941b59c7b70453c4897486c489b1ea2307efbb104",
+      "sha256": "1ca4b98fd75398a8a5ea925339495f6b859b7c93884eb33ac5b03391308287b9",
       "palabrasProsa": 1440,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1092,7 +1093,7 @@
     },
     {
       "id": "BOE-A-2010-14923",
-      "sha256": "1e0b3b40bd3b1f3bbeed9dba0f59b1d17e5b0d450a8ec56481e2ee46d6de1abe",
+      "sha256": "935ea86a4ef847758fcdd5c0076002e9f78acf9e207a09c96f2b6f7a16fbc301",
       "palabrasProsa": 1490,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1104,7 +1105,7 @@
     },
     {
       "id": "BOE-A-2010-14925",
-      "sha256": "0973866d01db4a3a6fc303bdb5c72498bf3ac9ae5c189df0296fd8c7bfe1e194",
+      "sha256": "bf7bdc9619ee9aaf9f681113d9f0fa49969f22a1a23f7b12c4a4d63a5f391b4e",
       "palabrasProsa": 540,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -1115,7 +1116,7 @@
     },
     {
       "id": "BOE-A-2010-14926",
-      "sha256": "4c915db7cfd07465049834335ca596582624a1d0c9f2ab991e98433d2751ec3f",
+      "sha256": "83b57441e1cb1755aaa09bdf9f042475762459d0d8dab6c713bc01f69d07c648",
       "palabrasProsa": 250,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -1126,7 +1127,7 @@
     },
     {
       "id": "BOE-A-2010-14928",
-      "sha256": "8509b12639800be63df9a665256e98d171b24b46270480094790da8e2ca26052",
+      "sha256": "917d38a6b641ca9b146f91d3c9b955a67656e03db4fa8e460ae00401fcc1cb59",
       "palabrasProsa": 1084,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1137,7 +1138,7 @@
     },
     {
       "id": "BOE-A-2010-14929",
-      "sha256": "7aff56984bc533ce18fbc53e2abe7670ed098173aa3326f3595d1fefd729b0b2",
+      "sha256": "8c95cf0377545af435f87deb5416545b91466ab0713b43f5ca6d12e5d22d4b69",
       "palabrasProsa": 1132,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1148,7 +1149,7 @@
     },
     {
       "id": "BOE-A-2010-14930",
-      "sha256": "8ec1d58bdf55af8a79261e9db685e869a6fedc133c3bc9fe38d20a36fe774384",
+      "sha256": "03c2dde353686b5d7cc2d2038589d68c09cedc941fc6691ce4eee2cea6d32806",
       "palabrasProsa": 1168,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1159,7 +1160,7 @@
     },
     {
       "id": "BOE-A-2010-14931",
-      "sha256": "6e1da377922be78aa49e9b1f1e7676d6bff1f7f8c8ed940584947101bfc22583",
+      "sha256": "fcc856586516018483ea04debd8e36fdea9726bac1e2a2199be0509f97200d6e",
       "palabrasProsa": 1160,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1170,7 +1171,7 @@
     },
     {
       "id": "BOE-A-2010-14932",
-      "sha256": "d887a4d8d807634a286c8d811fbc991d7d58ce2c55d283c1f1900caac75934f7",
+      "sha256": "cff2649dbc5d8379930181b69ef8ea6d9bc8b89df045803e06e68b8b60c0c53b",
       "palabrasProsa": 1194,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1181,7 +1182,7 @@
     },
     {
       "id": "BOE-A-2010-14933",
-      "sha256": "566e9d8a63dad178e5b62004448f5fef7de504012ea306ace80238047c9ac2d7",
+      "sha256": "b3bde98dfd9bb5ef671f60aea29f76e1a443bc1b49e79bbd577fadb3585441e5",
       "palabrasProsa": 1160,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1192,7 +1193,7 @@
     },
     {
       "id": "BOE-A-2010-14934",
-      "sha256": "27f5a7e732cc8548da2e4264e51380a7355e12965782b8a84fbc9aae0efc4faf",
+      "sha256": "69771d061cb289c2930016f2d37b39210001f6d8ae70e38c2071c5ce435c1537",
       "palabrasProsa": 1114,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1203,7 +1204,7 @@
     },
     {
       "id": "BOE-A-2010-14935",
-      "sha256": "4149016045500c142e0a36c24f5bd3cce17b540575139ecedf59cb4c1d15cae7",
+      "sha256": "fd0181ea6f57af46ab1d2969fc3c5fd10534079df6b45529debb151cbad913aa",
       "palabrasProsa": 1166,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1214,7 +1215,7 @@
     },
     {
       "id": "BOE-A-2010-14936",
-      "sha256": "55d9606962ff248a049f7f62cc0754e7dff6fdc7ca51e03d08e2df8cca51a354",
+      "sha256": "2e7bb5020f10c0e841369ceab08ce93305484f7f991188f00022d6cfec204b06",
       "palabrasProsa": 1089,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1225,7 +1226,7 @@
     },
     {
       "id": "BOE-A-2010-14937",
-      "sha256": "5d30b0077167e410abe2212e2de466f632123371afde45f683c95203cc567cd5",
+      "sha256": "00034d12822b24789adade3163f0355c09536bd1232bdd63a676b2d23652e80e",
       "palabrasProsa": 1071,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1236,7 +1237,7 @@
     },
     {
       "id": "BOE-A-2010-14938",
-      "sha256": "0231d9f7263597adc706256b3015c184a3d298c05834de28402b996acd6efa3c",
+      "sha256": "a26eeef76cb7f697936e83e3d6bd755cfcae10ef85b053dc4e51b7cdb6931be8",
       "palabrasProsa": 1162,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1247,7 +1248,7 @@
     },
     {
       "id": "BOE-A-2010-14939",
-      "sha256": "97dba1e92700f06db0f3718df04131554ff3217b62854594625c2eacf64ac58a",
+      "sha256": "a2d082d180d1b01e23417478c3b0e4371b8f65866b117de33e47b5f92a254716",
       "palabrasProsa": 1112,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1258,7 +1259,7 @@
     },
     {
       "id": "BOE-A-2011-16279",
-      "sha256": "f78202cd635194e1e19e2082d62cb914cc7fd42854cfe20a59547b37c1f9a38f",
+      "sha256": "d1878e6a80d962924db5b21765605d325953ca88d73a2d399de0f39cc9f9c7c4",
       "palabrasProsa": 119,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -1269,7 +1270,7 @@
     },
     {
       "id": "BOE-A-2011-16280",
-      "sha256": "ca777ad6ef4b929078a489573d60adb5c46ace511e23aae1960dea25cdf675e3",
+      "sha256": "c3ecc136e8245b943a969ff7fa3ffffa6e4db789fcbade37996cb206e504abf4",
       "palabrasProsa": 406,
       "tramo": "300-599",
       "subgenero": "disposicion-general",
@@ -1280,7 +1281,7 @@
     },
     {
       "id": "BOE-A-2011-16285",
-      "sha256": "aab3c2ff0bae984369cb676d49ea4e07e4cdc2cc3aa3ea7cf6f387e18093fa59",
+      "sha256": "13df2a793a6e732edc5d20f97a3b86764b33dd78b7ef27b5ba77e0dc797a430c",
       "palabrasProsa": 333,
       "tramo": "300-599",
       "subgenero": "disposicion-general",
@@ -1291,7 +1292,7 @@
     },
     {
       "id": "BOE-A-2011-16288",
-      "sha256": "02dda1997881e674d18422136fc6e52c45e6ec0a1580ad35b1bb5c17aae9cd04",
+      "sha256": "8d41a7cfd5fd04d48096b04e582dda09b857430bb5446480aeca775b0ac7a37f",
       "palabrasProsa": 595,
       "tramo": "300-599",
       "subgenero": "disposicion-general",
@@ -1302,7 +1303,7 @@
     },
     {
       "id": "BOE-A-2011-16289",
-      "sha256": "8755c5c7016fc71f5b59a453e1a178fe1f2961ab82db609414b7b3cb52fb4f91",
+      "sha256": "5dc300c717adb526b3486173b63e20e6a160396b711e9d8f2cb3894723afd9e1",
       "palabrasProsa": 181,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -1313,7 +1314,7 @@
     },
     {
       "id": "BOE-A-2011-18400",
-      "sha256": "7f04e82027226ca4494125272382ca991d375c25bb8318a7edab510f876f3974",
+      "sha256": "97cb40926c685a41b4098a42d86fdda13d7bb3b5a0de3092983f75101d57b215",
       "palabrasProsa": 100,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -1324,7 +1325,7 @@
     },
     {
       "id": "BOE-A-2011-18402",
-      "sha256": "ed156e143c7bd70d3620c8b141e16120a617eaf68a5b4ad45a0a5c245838a3f7",
+      "sha256": "62ce7d54926d9aa89bd88fb29afd3139e7aa158fd4228223cc24f8421687fbe4",
       "palabrasProsa": 251,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -1335,7 +1336,7 @@
     },
     {
       "id": "BOE-A-2011-18403",
-      "sha256": "3c9054e6ef22b00f8ed4264d6a3b5c98d254f36428135ea2e1b3b6459dd1d8a2",
+      "sha256": "4e4f7e9c87dfbd17940e2a227cae44122ef402de4129817ba6f5fa7d8134b8a0",
       "palabrasProsa": 644,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -1346,7 +1347,7 @@
     },
     {
       "id": "BOE-A-2011-18404",
-      "sha256": "acc0c4d5ab9f4249dabaea2bcada47b0ebfb7dcb56e4dbdeed36c0b345e42a14",
+      "sha256": "f21a6e6ce168fb76f573b13705830934508dbe2dc7e51213e07e1ee5aeddadf2",
       "palabrasProsa": 36608,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -1357,7 +1358,7 @@
     },
     {
       "id": "BOE-A-2012-1674",
-      "sha256": "241b3f96246f1660d452fdff3a8d85298022cb5a1c0c4b750213167a960b835d",
+      "sha256": "c73c31fdd28ed442b53e6a2785955f7198fd44d0087c8dd18894ebea57700bd3",
       "palabrasProsa": 9609,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -1368,7 +1369,7 @@
     },
     {
       "id": "BOE-A-2012-1676",
-      "sha256": "f9b1a8d8be32c59d9d0af63f6c5f2abf2ce3b0c960975e0ffe42816724b9f639",
+      "sha256": "337a94045fd1c0ff5f5f7493c8ad149efff499044a2e5fae7b1cc16723738278",
       "palabrasProsa": 343,
       "tramo": "300-599",
       "subgenero": "disposicion-general",
@@ -1379,7 +1380,7 @@
     },
     {
       "id": "BOE-A-2012-1677",
-      "sha256": "51cf127b6c104e427c2c6997ae147f39a1cc18c2d3fb474f1da261c57d64ae13",
+      "sha256": "79211a26a101cea82b54583b067bbc5247afb04cf1f387b2d1e0daa563cdea7d",
       "palabrasProsa": 5154,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -1390,7 +1391,7 @@
     },
     {
       "id": "BOE-A-2012-1678",
-      "sha256": "8722ccd8bc22af15a580d599f3a73034d8612d8d747e844b82760c10128e4e7f",
+      "sha256": "9c00813da9fd599c6e2c682967d2f4e4148338e3563abc7c7c9ff1a5c84379eb",
       "palabrasProsa": 2319,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -1401,7 +1402,7 @@
     },
     {
       "id": "BOE-A-2012-1679",
-      "sha256": "0df4cd79ca3a8d69a62ba36507f9dfc80e59382db5ad422a9424c29d40c497d3",
+      "sha256": "55388a1e40f8c4081fb0e4822f7d7398c56da2d1fcf657b51e8f705786da1ed7",
       "palabrasProsa": 3089,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -1412,7 +1413,7 @@
     },
     {
       "id": "BOE-A-2012-1680",
-      "sha256": "354a563ede04400ffa8b61a0d1afdb9683bdebc815f096c8e2aff1748f270c15",
+      "sha256": "10f94d4f224bef52d4c5f71e1af2c079e82384684128aa2cba6187d75c330e6c",
       "palabrasProsa": 127,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -1423,7 +1424,7 @@
     },
     {
       "id": "BOE-A-2012-1681",
-      "sha256": "d5f156f869215d8881f4d17daf185ffc25ad34f1db6555b3ce25f362b36fa06d",
+      "sha256": "5f71010daa4f5da08ab1841439c7ba651f7a25c1a020790febe74546495fe1cb",
       "palabrasProsa": 151,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -1434,7 +1435,7 @@
     },
     {
       "id": "BOE-A-2012-1682",
-      "sha256": "0eb0daf92d23f99c6b5de0ab928a4d7ca17f2c2e13b71d595d4845a42be477c1",
+      "sha256": "a8d8cc05fc5f1c5de84d55b836896d8ec19bc56c96bbe26ec626be25c6750659",
       "palabrasProsa": 5539,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -1445,7 +1446,7 @@
     },
     {
       "id": "BOE-A-2012-1683",
-      "sha256": "dca5bd073d72caee4faf37c49b742c11d1805b5742edc36a3350dce4081e7d31",
+      "sha256": "b2ab8a359141f6b115d4d9034ccd3bad4b3e49dfe1667438ac93a8ce391df376",
       "palabrasProsa": 4212,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -1456,7 +1457,7 @@
     },
     {
       "id": "BOE-A-2012-1684",
-      "sha256": "af81ffddd139ba4b10e8b3390b0fe0c12fdeba52818c3de4c91f520f634246f7",
+      "sha256": "fc54c506fff2b9b1add7e1210b995b8d8a090ea42b3d59d96d407b010fbe0020",
       "palabrasProsa": 3178,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -1467,7 +1468,7 @@
     },
     {
       "id": "BOE-A-2012-1685",
-      "sha256": "ab9a7752b408f07d5bf007105e34057a86026f1111e1a7d83d57be49f50bca90",
+      "sha256": "c5f95ce125d7de6e3b23a033c648dd93a8b042c46830f3c16466d196cb8f1e1e",
       "palabrasProsa": 5385,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -1478,7 +1479,7 @@
     },
     {
       "id": "BOE-A-2012-1686",
-      "sha256": "2216111003dfb332e012453e0cc2535c284ce1bd4b5c23b818a0fd7cd0e6f533",
+      "sha256": "65637af7eeca566e9f1dbced98c7c440caed609eae37d759f7159a3f2fe1a2f6",
       "palabrasProsa": 2154,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -1489,7 +1490,7 @@
     },
     {
       "id": "BOE-A-2012-1687",
-      "sha256": "678d816969c75da6c8aa4d2bd2fb9b8b350f68a3d280673378002618b3d601c7",
+      "sha256": "6e9cd56c677948fdbd4ca836983ad0351a3d4d4af2beb8804f3a4723d656e137",
       "palabrasProsa": 9171,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -1500,7 +1501,7 @@
     },
     {
       "id": "BOE-A-2012-1688",
-      "sha256": "5fe78e93a9713e48b361a55572b7d5ef750600ab0903319d253692d3cec5ba98",
+      "sha256": "421432ba598c8cf2630b2529d05a0de5c9e19345c96e392a253a6edaff11252d",
       "palabrasProsa": 1865,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -1511,7 +1512,7 @@
     },
     {
       "id": "BOE-A-2012-1689",
-      "sha256": "24c0568077d2e2935dfb060dafce4649ec1f385200c393f1a69a9936c90245fc",
+      "sha256": "9d57e58b628d0375d3c18bc397af1d5567b16f1f0fd827d6148f7290fc5f3691",
       "palabrasProsa": 131,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -1522,7 +1523,7 @@
     },
     {
       "id": "BOE-A-2012-1699",
-      "sha256": "4ef66ed24d943d548e57d3fa4fbec4e7e6f6825ffb59c4168dd59e8f3438e9ea",
+      "sha256": "c44acaaf050195cbf306a863ba65fee714b0c19f1ece49ff142e339ba15953d5",
       "palabrasProsa": 125,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -1533,7 +1534,7 @@
     },
     {
       "id": "BOE-A-2012-1717",
-      "sha256": "a470b8ff6de9abdb7fa892fd30ccbffb6d003d1bedd85f447634a54845dd09a3",
+      "sha256": "cb54583a01df030cfeb0901d4c3bdf77b10bd6b2eb24ff16b8c19a63b4dd2f52",
       "palabrasProsa": 110,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -1544,7 +1545,7 @@
     },
     {
       "id": "BOE-A-2012-1718",
-      "sha256": "1980f1554e883ac0041cb5d60f5b1b37e4a3a975f93b4f74d037ceb6df0a756d",
+      "sha256": "9c911793675d5e89697079d268f690cd872830b9cff6c1e55faa97fe50e6d040",
       "palabrasProsa": 212,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -1555,7 +1556,7 @@
     },
     {
       "id": "BOE-A-2012-1719",
-      "sha256": "68a70ca25213f0873de61eac08a6376d7798373d7dac54b181212520361a1855",
+      "sha256": "edf66184757e44059c55c023ad6882c04b74f3897c8151ab7c43d65812c42a4a",
       "palabrasProsa": 328,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -1566,7 +1567,7 @@
     },
     {
       "id": "BOE-A-2012-1720",
-      "sha256": "c256ee6607d2027f29236210574248af64c50d0d1f12070922d1b35faba8d124",
+      "sha256": "85e26bbccfa87324d977ec8c4ee068d48e8376a39ad78c6ef659bc142a2a7fe3",
       "palabrasProsa": 165,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -1577,7 +1578,7 @@
     },
     {
       "id": "BOE-A-2012-1721",
-      "sha256": "ad66c97715afb541be38517d02a46417b6c5f6e6f8625faf3651ff496e4c3184",
+      "sha256": "54b74d5dca9fae1bc7ffb3c6812e5eca58ec188f223cbbcd8c8567be6bb3f1ad",
       "palabrasProsa": 371,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -1588,7 +1589,7 @@
     },
     {
       "id": "BOE-A-2012-1722",
-      "sha256": "7d52127f873f7a125897a2319d1038d04eff86cf02d1e10b3c63e6777dfc35c0",
+      "sha256": "1af88e9f480b9280750cadce19ae3deef4c2acb2527615a5dbfd8761a8bbdda1",
       "palabrasProsa": 375,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -1599,7 +1600,7 @@
     },
     {
       "id": "BOE-A-2012-1723",
-      "sha256": "ad2fedd556b499d6b385714044435b8e5090ccefc78682bfdf8d913b0806fc9e",
+      "sha256": "0aea3153e9403332500746bd2a50829a7b6377efab25698b420d2f634ad59667",
       "palabrasProsa": 154,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -1610,7 +1611,7 @@
     },
     {
       "id": "BOE-A-2012-1724",
-      "sha256": "2b47c8fbadac367187fa7adb3a53a028daa5a303285ad9737fecece340b8a069",
+      "sha256": "8d03cf7c154271bba450ca0de706efcba8ea012c238b061c8fdcc52889047649",
       "palabrasProsa": 283,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -1621,7 +1622,7 @@
     },
     {
       "id": "BOE-A-2012-1725",
-      "sha256": "692f18b3fbc955b6e7f4963801c279a04295c5db38d4627b0f84210a20ee326e",
+      "sha256": "460722b643ef5edc4307d84cf1aedf152d913a8f7cdae9836268d75efe3b0654",
       "palabrasProsa": 318,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -1632,7 +1633,7 @@
     },
     {
       "id": "BOE-A-2012-1726",
-      "sha256": "3bf9648f662a4166c9ad92febf9c283e17cd2b0d9b79d81619e9ce3d6bc3c785",
+      "sha256": "52fcebc02164e54dca0159348e7af4ed0aa8679d233b328e5ba3f6c877729f83",
       "palabrasProsa": 221,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -1643,7 +1644,7 @@
     },
     {
       "id": "BOE-A-2012-1727",
-      "sha256": "78e63d4f5ec5e27bfa2f5dd8e68221932a04261bd840f94b481c1ecd7b6ff530",
+      "sha256": "00b587d0e90c676414fbf5fc50a9508d4a13f49d8677058bd456a898954717a0",
       "palabrasProsa": 6879,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1655,7 +1656,7 @@
     },
     {
       "id": "BOE-A-2012-1728",
-      "sha256": "4306c1c8e137b943e34aac772fbf4c3dcc595fcae809aa52160bb577a36d1671",
+      "sha256": "304843c9484866d46944e22b389313d0f93ec11176d119701ac1edb975dfff92",
       "palabrasProsa": 3942,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1667,7 +1668,7 @@
     },
     {
       "id": "BOE-A-2012-1729",
-      "sha256": "fa9261c0498a38ca191785220c515335f72a3b48640ad9e41ef9897bdb3dffdd",
+      "sha256": "279848d56ac431fca26e75d4af4f14897f9f92dd61f3221deb73e6fd619ddd9c",
       "palabrasProsa": 6443,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1679,7 +1680,7 @@
     },
     {
       "id": "BOE-A-2012-1730",
-      "sha256": "f2982280191c5f571a90fc06ae6ae0d58d6eb152d963a4e23d4e20e73f8464d4",
+      "sha256": "35df2bbfecf2053633a6fbb00cd5570dcbda79439fec4fc884c21e496e8fc2dd",
       "palabrasProsa": 2406,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1690,7 +1691,7 @@
     },
     {
       "id": "BOE-A-2012-1732",
-      "sha256": "278e499d765b567cf6d9ed804641afdc9fbdf4461890c22dde526f635db696e5",
+      "sha256": "394e12b7ea1f4d5674705346845201fac7853ab9cd1a1455e72f00475dd1439b",
       "palabrasProsa": 505,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -1701,7 +1702,7 @@
     },
     {
       "id": "BOE-A-2012-1733",
-      "sha256": "364e226ba8852f2e9170505f4e043fb23cb811e72e382e912f7d53b3d891f0e8",
+      "sha256": "0f881dcd738dc14db6a4af8549e8ee2547ad9b70b4199eeb15348bf7b75fa401",
       "palabrasProsa": 2065,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1712,7 +1713,7 @@
     },
     {
       "id": "BOE-A-2012-1734",
-      "sha256": "76c2eb95f5e5d68c5643d9c28424539d7dab2feded76a21c0259fc846d8ef267",
+      "sha256": "0fe7d8e45123b3b9cf5b2256367afc2d8d75340663e3d1ade52138401c5e439a",
       "palabrasProsa": 1253,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -1723,7 +1724,7 @@
     },
     {
       "id": "BOE-A-2012-3749",
-      "sha256": "c149095d12dee1f6cbbd9a7c801541782360ec8bc8608571cf4c4f2f434daa5a",
+      "sha256": "d6dd4a7bf27f872ae4eec34c6d6a8d27da55566f042b516bd317e753f3ebcdb3",
       "palabrasProsa": 107,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -1734,7 +1735,7 @@
     },
     {
       "id": "BOE-A-2012-3750",
-      "sha256": "eb3919c91f6d526041791acad4daae4eb7ee655f4e7621e63a04064637d95f57",
+      "sha256": "59e34407635d42718efb5572376a9419ee8ca0a12c7f2e33096d8afdb7184462",
       "palabrasProsa": 812,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -1745,7 +1746,7 @@
     },
     {
       "id": "BOE-A-2012-3751",
-      "sha256": "450bd42ea99eb2e2266594fe49a63325fb373914b49273dfa18172a7868df16b",
+      "sha256": "d8bf81e99bf7ffa7d565ed49efaa8e4551782347b6dd7aee882a982a2f02464c",
       "palabrasProsa": 267,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -1756,7 +1757,7 @@
     },
     {
       "id": "BOE-A-2012-3752",
-      "sha256": "cafe4828bd233fe1c2eca2c47d103002b6bb149a9b1f02b89103df29a19e3439",
+      "sha256": "26670db517ace7193cefd8a46d49f70538c259b4ef4d98ad81e0c8736f84b48e",
       "palabrasProsa": 1519,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -1767,7 +1768,7 @@
     },
     {
       "id": "BOE-A-2012-3753",
-      "sha256": "a0ccad60a4156884456b808867d574b2c10c8d898d350094b5da049684bc6b35",
+      "sha256": "c039ae2990be2a18831c82b629cda65408edc0b7f364182c6293f67076ab73a1",
       "palabrasProsa": 2135,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -1778,7 +1779,7 @@
     },
     {
       "id": "BOE-A-2012-3754",
-      "sha256": "51440ccb366402f8111e9cf8427be2c9e0bca4471af2bc4f6acbc4bd995d4ac1",
+      "sha256": "309565d626985fc84dcb57dd64e7708b111f822d4c2501ae9de524f51c230530",
       "palabrasProsa": 11416,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -1789,7 +1790,7 @@
     },
     {
       "id": "BOE-A-2012-7911",
-      "sha256": "dc874ce998d9e1df31ede5e92d2564498cd6e066f403d86ee7b520a76b272cce",
+      "sha256": "f98269a26e8a19142b21c996a21cba5c9ebf30403cc092d0ba8cff534a2db246",
       "palabrasProsa": 429,
       "tramo": "300-599",
       "subgenero": "disposicion-general",
@@ -1800,7 +1801,7 @@
     },
     {
       "id": "BOE-A-2012-7912",
-      "sha256": "1fcaaeee111bc39f2a631354d4c3f09da8c86d24ae342327362d643ee9d5fee9",
+      "sha256": "00c85439870ff217f97d4d65796c7e6a15e44babc2bc840b7369b84c4a6a5415",
       "palabrasProsa": 2584,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -1811,7 +1812,7 @@
     },
     {
       "id": "BOE-A-2012-7913",
-      "sha256": "8479c83de9dcbb06f1aeb5e67e6c392a45cd084dda0013d7c1d269accd3290e5",
+      "sha256": "ff07a255cb8fdf826ccf23e165a3a9e4f218f4367606caefc2e07327f3517172",
       "palabrasProsa": 2544,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -1822,7 +1823,7 @@
     },
     {
       "id": "BOE-A-2012-7914",
-      "sha256": "6ba50b9c8491fcd0cec38ee2493b5e4353e5fe62626c3b5262e5b36b2a09af5a",
+      "sha256": "900a1b8cbbe6354e6321c6f24d4dd6d51e0d0fe9677c2772cea98c328fc1e7dd",
       "palabrasProsa": 111,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -1833,7 +1834,7 @@
     },
     {
       "id": "BOE-A-2012-7915",
-      "sha256": "66ac3f4237ae97f761116a0645ffbd9d90c4a2b595f04f10cb3a6ce563a55ca1",
+      "sha256": "33a80c9b024a51d7022b8f679366b647c4ff2b740b6bebedfcd79f5c40a82114",
       "palabrasProsa": 353,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -1844,7 +1845,7 @@
     },
     {
       "id": "BOE-A-2012-7916",
-      "sha256": "6c232d9b3ce7f9c847a933b3737f009e6ee82b5b2ea8a4dea5f5d495359f3bf8",
+      "sha256": "597f26033446250b0ff826597f9eaf426da327b4454ab39cf6bfe0c21c36afae",
       "palabrasProsa": 267,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -1855,7 +1856,7 @@
     },
     {
       "id": "BOE-A-2012-7917",
-      "sha256": "c2bd7af57d248208c68491b132683e93eeecc447c6127d17a4d12b2d33e800b4",
+      "sha256": "0c2223e44d9f7d6ccfe6dfe45bbadc0640cabffc380eb47a1a3fb7bf74a51711",
       "palabrasProsa": 186,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -1866,7 +1867,7 @@
     },
     {
       "id": "BOE-A-2012-7918",
-      "sha256": "d7fd3ada6f887e109613944803362c0650eed3739c46b1a1e0b4b421e89cb2e5",
+      "sha256": "f8e74d08b068b7cd39210dc628f43026bcf3dfd0357c305327a4c4391158d3f2",
       "palabrasProsa": 377,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -1877,7 +1878,7 @@
     },
     {
       "id": "BOE-A-2012-7919",
-      "sha256": "4fc750e626ffe33f3e232f395dd954998650d0487f5763cd0f1ab05e4fc2037f",
+      "sha256": "891fd0457027f1271fb77677a6775a9aa45f51baf64de8149fef4493dea67753",
       "palabrasProsa": 365,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -1888,7 +1889,7 @@
     },
     {
       "id": "BOE-A-2012-7920",
-      "sha256": "26606a6803c9a7b04e3012ab304da96e194174f2949bfc5093a9bd1c09092ba3",
+      "sha256": "51e99d89a328066ce9457b8185792a1037da380b2b7bf12f64ffba2b1a9af052",
       "palabrasProsa": 519,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -1899,7 +1900,7 @@
     },
     {
       "id": "BOE-A-2012-7921",
-      "sha256": "c37a19c79fc32e4cea98b7a7bf4514265503c219da4dfc90f3e3462cf0c8b606",
+      "sha256": "1649e3a918704ee5f322b87c816dbabac7d0e784c4e0c7ab8b57d907cf64327b",
       "palabrasProsa": 544,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -1911,7 +1912,7 @@
     },
     {
       "id": "BOE-A-2012-7922",
-      "sha256": "b5ab737c1584aa73474d4543dd786a8f45c646d90408b7ed0ba68f2f7f07c5a5",
+      "sha256": "53b8878a2a44ed9342bfd09e67467d9d72091ca2cd70b67771728d236c7cbe69",
       "palabrasProsa": 452,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -1922,7 +1923,7 @@
     },
     {
       "id": "BOE-A-2012-7923",
-      "sha256": "f9a3888dbc48778829d4f42c11fd447952dc4b41f67d5280ac7c7092655d55e2",
+      "sha256": "6cb63a23eb99160d3fe3eedce853e2b92b351b9d7baa7ecba8b088d1bc50cde8",
       "palabrasProsa": 397,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -1934,7 +1935,7 @@
     },
     {
       "id": "BOE-A-2012-7924",
-      "sha256": "e8910bf54d0754d2549d999a96caef559d6610d52350974d3a5e92246c25cc34",
+      "sha256": "31341cce0fbc8e289a5c4073e18830a3bc71000fa5a78d61c4751a675fc6e66e",
       "palabrasProsa": 537,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -1945,7 +1946,7 @@
     },
     {
       "id": "BOE-A-2012-7925",
-      "sha256": "000f5fc6b43324b8eef8dd85e2a142f6b885f4384cd400931a62119c6190a235",
+      "sha256": "eaaa5e2f41473bf0af3eaebd91f5c7f949f357eef2ccffe311d724bd104f48f8",
       "palabrasProsa": 420,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -1956,7 +1957,7 @@
     },
     {
       "id": "BOE-A-2012-7927",
-      "sha256": "db7471332d68caf2aa28d8daf3764fc59759ed3ffafc3fa1fe4e78028dcc9ad0",
+      "sha256": "4fcb646325f8a71fef8917b6a73aa5dc8b41a28e4c80bc2a3e15ef4870f5743e",
       "palabrasProsa": 425,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -1967,7 +1968,7 @@
     },
     {
       "id": "BOE-A-2012-7928",
-      "sha256": "d9ad9b771f292879e47709764a23eddecbc3a3cdaa0f9fc1c5321f4341e6cf41",
+      "sha256": "e30286838dc873520e8569bc68464d97d5b42d8a1ae5f008e0499cb2f6567ecc",
       "palabrasProsa": 349,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -1978,7 +1979,7 @@
     },
     {
       "id": "BOE-A-2012-7929",
-      "sha256": "e15109a0333865e3677990e1232ad13374b48e19f7b8c3313ddd2430c5241422",
+      "sha256": "2b9ab1bccda1f9989be0c7725ab52adee51baf2eca4c1d84d3ee7c58293d92f8",
       "palabrasProsa": 385,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -1990,7 +1991,7 @@
     },
     {
       "id": "BOE-A-2012-7930",
-      "sha256": "762073beac13d5dad585d2edb0c85dbed2bfbf21cf59902af3d5dae6c57e918e",
+      "sha256": "368b45016752e127a7327faf1b20ab55ff679b0f4a0847041b9ea88dcf5e96b6",
       "palabrasProsa": 523,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2002,7 +2003,7 @@
     },
     {
       "id": "BOE-A-2012-7931",
-      "sha256": "fe41046a173b056085cbd56a926212b41ef2ea48f086164e835248aa012c7d83",
+      "sha256": "ffc00c79d660d668d2db27b983b5e24a14dc472227bb0252543a6662b3b74378",
       "palabrasProsa": 396,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2014,7 +2015,7 @@
     },
     {
       "id": "BOE-A-2012-7932",
-      "sha256": "eea8b02bd080096712ef58eb99f5cc9db14805e1a865476c42cba47b2ad40587",
+      "sha256": "6922a381e191466a3825b30ac79b9157bd986b36d6af047b35aa5df8264bf9be",
       "palabrasProsa": 288,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2025,7 +2026,7 @@
     },
     {
       "id": "BOE-A-2012-7933",
-      "sha256": "21ef90cf48897b77aa7d669dc2a22760a95e61f6600d5906db4dcbeb5ebce875",
+      "sha256": "8188b2574ef011b70b34f8e206eade216d7e74a6676a60c3edfd80f257040e76",
       "palabrasProsa": 360,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2037,7 +2038,7 @@
     },
     {
       "id": "BOE-A-2012-7934",
-      "sha256": "cedd2a6835a6f5faedc7a2ec4e899894b7763ae140ba99f31f01121036e8e5a3",
+      "sha256": "821e8e5ed9ba86ec09d438a0e3d466389e1cc89b17159a78ae7fa86731c09e70",
       "palabrasProsa": 497,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2049,7 +2050,7 @@
     },
     {
       "id": "BOE-A-2012-7935",
-      "sha256": "e4b86878ce8e4c3487f833572bad990aef82684d2cc0c089b7eb5d6d360f900a",
+      "sha256": "5728e63b6ab079f4a539b70e12bb4b6769de404dcfa497ea8060d1eafebcdf6e",
       "palabrasProsa": 633,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -2061,7 +2062,7 @@
     },
     {
       "id": "BOE-A-2012-7936",
-      "sha256": "4d10852df162bc5570fed002916d22b05bf3340cffb37dc4c5c72dae4a96601c",
+      "sha256": "9325bf90b2d064b7dd6bebb021d5ab6e3fbea017bd40f1820a64ad4a8c113d1d",
       "palabrasProsa": 593,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2073,7 +2074,7 @@
     },
     {
       "id": "BOE-A-2012-7938",
-      "sha256": "e6025fa56077f2f47110664400765e98a3333fbd0156546a65c7eea6ff4378b0",
+      "sha256": "441441786fc6b55111462d921e027a5e5594db015489cc7d1d03131419ac4916",
       "palabrasProsa": 416,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2085,7 +2086,7 @@
     },
     {
       "id": "BOE-A-2012-7939",
-      "sha256": "76c784ad6e04f82ff97b4aacf2481ac43c2ac0fa54415a9f795201b14c3da092",
+      "sha256": "5a45f651cfb7b4ddaaceebe83c4568b1d1b080ceeb8df93ec4dab09daa84bf16",
       "palabrasProsa": 488,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2097,7 +2098,7 @@
     },
     {
       "id": "BOE-A-2012-7940",
-      "sha256": "38757f4f5b1350f6ebdd05484b23414e961884ef56d20453e7f4c4b94ca9596c",
+      "sha256": "ff61901ead8ed450d4d70dead832be24fb9bd1ffbb62f276103480a544e17b3b",
       "palabrasProsa": 396,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2109,7 +2110,7 @@
     },
     {
       "id": "BOE-A-2012-7941",
-      "sha256": "21f7360481efa7ec07614e3437c5efda6c4f50588d9b8c025e8e07955acbfd3f",
+      "sha256": "e9993e15bbb7bc931d5243803da5423969ff202942ab2f9bc3dc0a09bc80157f",
       "palabrasProsa": 424,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2121,7 +2122,7 @@
     },
     {
       "id": "BOE-A-2012-7942",
-      "sha256": "46809ce305b37c119dc66cc5472d817cf8fa81b2459706322d70478d67890c8a",
+      "sha256": "35ad2d4a50287bf4bb7d7026efde84c90e1fc22a4014d5f12c9f35a39129133b",
       "palabrasProsa": 424,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2133,7 +2134,7 @@
     },
     {
       "id": "BOE-A-2012-7943",
-      "sha256": "d5758a419170eaf87f41c1e74ad6a37b833b9729527605cd510549f457cd8e3f",
+      "sha256": "6e9b4eeeb0a38bf333d49382e24eef0ddc6930be8fcb242d39130a88634cd33e",
       "palabrasProsa": 573,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2145,7 +2146,7 @@
     },
     {
       "id": "BOE-A-2012-7944",
-      "sha256": "904ade9cb51375ed37b0a96d04c60aab3786f01fbb9124a91c5155757bc2db9b",
+      "sha256": "1666f7cf962f44d33286873fc8ea080a9182019f94b9b5abc1b69ac003f3e8c3",
       "palabrasProsa": 568,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2157,7 +2158,7 @@
     },
     {
       "id": "BOE-A-2012-7945",
-      "sha256": "cd4dffc3213581090f63030cc044e201ce8e942f597650c6713aeb9ee8d5003f",
+      "sha256": "c48e82d22bb61b1aa9585d5329aca60850d877e35053209de6590e3ed303020c",
       "palabrasProsa": 1002,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -2168,7 +2169,7 @@
     },
     {
       "id": "BOE-A-2012-7946",
-      "sha256": "575f7f38b88ba42d653b915919650dd9f10cd853d57329b59a3c0ea6494e1f10",
+      "sha256": "4dcded2365447d3ebeb05e96c2299f70ffdec09debf827fdaa1c0a318530d612",
       "palabrasProsa": 529,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2180,7 +2181,7 @@
     },
     {
       "id": "BOE-A-2012-7947",
-      "sha256": "195338a41508f8e98d55c14c083ab3e625b8b1d60fde887b06dbc98896fae3dd",
+      "sha256": "b5f9b8faea454eaaf12e82b091e2614254f55409ae44c9478dce575557890a8f",
       "palabrasProsa": 494,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2192,7 +2193,7 @@
     },
     {
       "id": "BOE-A-2012-7948",
-      "sha256": "71587863370de6e2aa7a3a76bf8eff4e51e4dd84a272c1eefa6b70a254c8bded",
+      "sha256": "e9e377abf376daee3548bb324a3747ca81cffc147507caa470f0eaf5fca21cf3",
       "palabrasProsa": 500,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2204,7 +2205,7 @@
     },
     {
       "id": "BOE-A-2012-7949",
-      "sha256": "1b16160e82f38ac19390fff3bf4216b25d28a96e57a6627e50a97cc26ebad764",
+      "sha256": "e9288bd5a35bd4ae11a7d4836824b94cb94cf134d5ac9b49918665589d9c5063",
       "palabrasProsa": 532,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2216,7 +2217,7 @@
     },
     {
       "id": "BOE-A-2012-7950",
-      "sha256": "2560cb9814f45e8d634fdb83d12c17759c002d1e88a9a6d54155faa2250ca180",
+      "sha256": "023461754dc6a9470cfdfe07f0dd10cb8c84173797704b0369373df2cc91cfe1",
       "palabrasProsa": 415,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2228,7 +2229,7 @@
     },
     {
       "id": "BOE-A-2012-7951",
-      "sha256": "bcd0548aedddae6a8550ba1a96ec553967ffbffd22226ac5980c230b62389e38",
+      "sha256": "a912ca5b69eccf4ddc41b19828feba776ccd6c14d3e47d5d08a0cc35a7c9a0c3",
       "palabrasProsa": 617,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -2240,7 +2241,7 @@
     },
     {
       "id": "BOE-A-2012-7952",
-      "sha256": "8735bc924d86e6025b490a6074ecf2c9de93db3f3dbddeb8ee0d4a4f42e6d959",
+      "sha256": "69fe7f25aba095102dc22301506548c82c5f3edfc3ad3591201d6a4587cc96e0",
       "palabrasProsa": 776,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -2251,7 +2252,7 @@
     },
     {
       "id": "BOE-A-2012-7953",
-      "sha256": "d0fd346b1e148b7abd497d0f749be1c4b613541811785b692dbc532b7a2d737c",
+      "sha256": "1011788e49a7ff71ae90d41d4edbe3faaad1852919d1ea401895d0241aaf19fc",
       "palabrasProsa": 398,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2263,7 +2264,7 @@
     },
     {
       "id": "BOE-A-2012-7954",
-      "sha256": "43622d02d4fb7361a1a126876f448943726acc9e1b8c8c56ff27169db0423e98",
+      "sha256": "809aee8970cb81415a872467d93b29591e77871a88dec73ba1edb31618aadfce",
       "palabrasProsa": 828,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -2275,7 +2276,7 @@
     },
     {
       "id": "BOE-A-2012-7955",
-      "sha256": "29760151950f9f43ce5c7ab02c56d0bcc9465b82fe60a8493aec43e3e58f5b6b",
+      "sha256": "5ab114a41b18d4820a638e1f2f2ce55dccdf9d78982f70400356d6a8fefed666",
       "palabrasProsa": 829,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -2287,7 +2288,7 @@
     },
     {
       "id": "BOE-A-2012-7956",
-      "sha256": "30642957448950615308e665cc0c7d19ee7649b4fb24f86f9dcb1ddae4c5e11d",
+      "sha256": "884d25c0232cb9ec25e851a024ac75ba5be8348d48dd0939d67cd2ce8a36d256",
       "palabrasProsa": 436,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2299,7 +2300,7 @@
     },
     {
       "id": "BOE-A-2012-7957",
-      "sha256": "40a5e7ef3c8c3a455ab27582f0f6daf923d20ae963d17e7ef3f00392a7db0179",
+      "sha256": "b43771ffef3e30db9a876c547d14494350c9efab3c87d055716d3ae01d8ce43c",
       "palabrasProsa": 314,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2311,7 +2312,7 @@
     },
     {
       "id": "BOE-A-2012-7958",
-      "sha256": "903e077a0141fd3e1757fc8e660309a215b50e3becf3777000926a928f35920b",
+      "sha256": "b095f9e58ed76e320dca1f422c0a59b9092679084dc430a9151bf5f1341a196d",
       "palabrasProsa": 315,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2323,7 +2324,7 @@
     },
     {
       "id": "BOE-A-2012-7959",
-      "sha256": "a3a4fd92cf77d489f562c7787c7f6775ee46d3b59c035eda842a55bb491abbb2",
+      "sha256": "427b7c5c3fd67ff087b7ff5c3bcbdf89fc531ec2926f4b76490c8dc2cfbf99a4",
       "palabrasProsa": 466,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2335,7 +2336,7 @@
     },
     {
       "id": "BOE-A-2012-7960",
-      "sha256": "7f04a6d0abeaa3af3aee7bae5ccfd0592d240131a540ddf1dee23282e6ece88b",
+      "sha256": "cb1b729466743d05ff60144604093642fad5dce177014c4cdca3a2082d5878d1",
       "palabrasProsa": 463,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2347,7 +2348,7 @@
     },
     {
       "id": "BOE-A-2012-7961",
-      "sha256": "9646c8d9921fb12c5b3c5f2827b6b189790b56987730428dc21ad741afa5bdb9",
+      "sha256": "1d246980a762732afb541be50d1caa705e94f6a568a6ca8594748a29a73d6629",
       "palabrasProsa": 413,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2359,7 +2360,7 @@
     },
     {
       "id": "BOE-A-2012-7962",
-      "sha256": "c343f59bd75a0e70db03fa605c6efd8851274cc347337014058712798e701634",
+      "sha256": "c3a7f4bd0e3f38b694c27301f4f6702ffc0ad525d7e15b718a45b1ca4234ac06",
       "palabrasProsa": 459,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2371,7 +2372,7 @@
     },
     {
       "id": "BOE-A-2012-7963",
-      "sha256": "4dcbcdac4b9e49dd7e16c6dcfc59a7fc09162f99b4f7a8ce94e220ce11ca0f14",
+      "sha256": "9b0afde014e35895994ceea5098e0c20f00c063d2a4ccea7d8f7aaf212618e08",
       "palabrasProsa": 1085,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -2383,7 +2384,7 @@
     },
     {
       "id": "BOE-A-2012-7964",
-      "sha256": "b3131036a805f5753e1388f66f246faf60fd65de272d9c6380065ff471476093",
+      "sha256": "0cbc2a0cdbcbaf66a2c3ed544f2816386a6a2d72bae9828c95d79bacc5c2c09e",
       "palabrasProsa": 280,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2394,7 +2395,7 @@
     },
     {
       "id": "BOE-A-2012-7965",
-      "sha256": "0873317a741ca7d2199957041be95bc513b1ab75cb8b424e24e724b1954247e0",
+      "sha256": "7c238afa6ca3d22c8046aabd19667cd143ab1bcd9307fe74eace339152a4fbb2",
       "palabrasProsa": 150,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2405,7 +2406,7 @@
     },
     {
       "id": "BOE-A-2012-7966",
-      "sha256": "d36e0e0e5b50c53c734f5bd9c99bc4e8003fd2986ae6c805dc0ec556552cbeb1",
+      "sha256": "080a8362b7e7589603c89d6758ace6aeeb6a20375a9fa3896d45c759193d7bf2",
       "palabrasProsa": 136,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2416,7 +2417,7 @@
     },
     {
       "id": "BOE-A-2012-7967",
-      "sha256": "c9e69e198ee3f69fe8abcc212fd3947717e8a043c3541c97e5abfb93c802fdba",
+      "sha256": "a5b7d615bbb98012a68122301b87defdf9ce5f825296ffd49414b9871260b2b3",
       "palabrasProsa": 120,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2427,7 +2428,7 @@
     },
     {
       "id": "BOE-A-2012-7968",
-      "sha256": "19e9458d42ac282cdb29f8d6cadd8746c0ca63cea775ca2c869b711f8f489520",
+      "sha256": "2d8857a741a7bf4e606676e2fbd3bd23b6b0d802206b4cc96f43582e629cd377",
       "palabrasProsa": 168,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2438,7 +2439,7 @@
     },
     {
       "id": "BOE-A-2012-7969",
-      "sha256": "8182ba5ea835ded81577dcd960b865755ec9e406cdbdc4a3f474aee769809db9",
+      "sha256": "3c589f277bd8fee9ec9bffa15e4a18ada422a2cebd537a8de3d702f1f7fc93bf",
       "palabrasProsa": 157,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2449,7 +2450,7 @@
     },
     {
       "id": "BOE-A-2012-7970",
-      "sha256": "748c2bba8d9e91715730cd58a5185adf3730646386f0bc9c823674fffb952325",
+      "sha256": "113ff902ddfa732f282e2326fc684e3e8acaeb52a68f61a9505f84625675917d",
       "palabrasProsa": 235,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2460,7 +2461,7 @@
     },
     {
       "id": "BOE-A-2012-7971",
-      "sha256": "1c9ddf336c79086e35831a801b7ee2ba0eb61b88372a66c22c9a9f53486deb70",
+      "sha256": "4a5b1ae9eddb07c2bd8f5600dc49ea38f4532816f6cc3efd3cf443431dfd0486",
       "palabrasProsa": 493,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2471,7 +2472,7 @@
     },
     {
       "id": "BOE-A-2012-7972",
-      "sha256": "979be8126cc392e363c7d0e34994949cad0f6475ee544c538c2891b9a0a9d695",
+      "sha256": "aa49192d96425acc9092f9f7eda6fb35d2728a0bc085b9d159d5c90d85ffcc65",
       "palabrasProsa": 139,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2482,7 +2483,7 @@
     },
     {
       "id": "BOE-A-2012-7973",
-      "sha256": "ecbd38d20161bb3e097d0543536d5db01659e8111fa8349197566ab1117d459d",
+      "sha256": "d77456aa486d96a5058aa33c00ef9866a9853f4f5ef47f5968223acbdabb82b0",
       "palabrasProsa": 2428,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -2493,7 +2494,7 @@
     },
     {
       "id": "BOE-A-2012-7975",
-      "sha256": "94555060cf556beb900782c41537fa42d601e22c6affa7356f1d50e44390bdac",
+      "sha256": "9ad12f46321039656fea142b2ed01346a5d813e0eacf85573ae3efc0dc455c95",
       "palabrasProsa": 1376,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -2504,7 +2505,7 @@
     },
     {
       "id": "BOE-A-2012-7976",
-      "sha256": "a5b7869e7d24495b85d67ef5121df040079b712f3c152a1147374cb4cc60ab03",
+      "sha256": "68cc6fb0e4567d364fb5d6e30a51cf49acedfe19bf128e029b03e752d93398a7",
       "palabrasProsa": 571,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2515,7 +2516,7 @@
     },
     {
       "id": "BOE-A-2012-7977",
-      "sha256": "ffdd0951aaf6596469663eef640adb210f61879f955d8217f6103775d01b6c10",
+      "sha256": "5aa0b003693c8e9274eccac883f5d7a5fd28aa7b896b5d5b066cbdc0e37fba3e",
       "palabrasProsa": 151,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2526,7 +2527,7 @@
     },
     {
       "id": "BOE-A-2012-7978",
-      "sha256": "2ae5d6492884bca114adff5f5b77aa9a459c9b5589b22d562ed911d611309825",
+      "sha256": "67e3c21aaceb2db7a3f78afff4387d89b7fc7f5033ff14565d5a49c15c51b1bc",
       "palabrasProsa": 254,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2537,7 +2538,7 @@
     },
     {
       "id": "BOE-A-2012-7979",
-      "sha256": "1fdb49d1c4580a5ce7d457c0615d1c022bdb112acffe9744648a27a44c43e0f6",
+      "sha256": "585b21c0cb540d25f61c6689344e0c84ae741514d74d0554b4be8c0374c673c4",
       "palabrasProsa": 243,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2548,7 +2549,7 @@
     },
     {
       "id": "BOE-A-2012-7980",
-      "sha256": "6b019bb072f9b64ce694f6bc002dfb406c79ca613c12e82eec6defc30933b642",
+      "sha256": "66ce2e73235ed59450425bbef5cac76040b90399c50eacf82eb4b71a7db507d7",
       "palabrasProsa": 270,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2559,7 +2560,7 @@
     },
     {
       "id": "BOE-A-2012-7981",
-      "sha256": "85b4e2ab18565385eea479bae99eed9ab75a6b8a6deb54f514168b898a1d4f28",
+      "sha256": "836577a00d5168d13e7d15b28b476a0afc0305d94ba1ce49b39cfc17c1972624",
       "palabrasProsa": 1035,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -2570,7 +2571,7 @@
     },
     {
       "id": "BOE-A-2012-7982",
-      "sha256": "7a73ae64410ad4f5dcc8f5c77ec1eb3d80f5d1084b39b4589aabdbdd07050c8c",
+      "sha256": "86976f38ae48be26bef195f6b13384cd4f464e6d538fd25baff9b1de184ea7d2",
       "palabrasProsa": 2827,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -2581,7 +2582,7 @@
     },
     {
       "id": "BOE-A-2012-7983",
-      "sha256": "e2a4de00314ac869fb6a59e9d1a07d1d2d6f834ca9d88c77c226d7750784be90",
+      "sha256": "7343a73f481a53ef4dac18c5ea1321adf2cbd50cf04495e7e775a7763fd14eba",
       "palabrasProsa": 189,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2592,7 +2593,7 @@
     },
     {
       "id": "BOE-A-2012-7984",
-      "sha256": "42050691d360e2c41a5eb999c70e574415f299e2f6411302e596ef54846a4703",
+      "sha256": "e0620ffeb1c6c16c1988a645f034d88074a6419f26c2a881b0e526f3318ef860",
       "palabrasProsa": 801,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -2603,7 +2604,7 @@
     },
     {
       "id": "BOE-A-2012-7985",
-      "sha256": "8f63b402654b4ebc4402839bc8a834d71377ea102c4b04f0fffcde746d654ed8",
+      "sha256": "5193e6b2f142a2037fa6b2b96cdb9aa49971e8f18441ae5b9a579bfaf3b8c77c",
       "palabrasProsa": 596,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2614,7 +2615,7 @@
     },
     {
       "id": "BOE-A-2012-7986",
-      "sha256": "3cbec6175b10db296e0019134bd9756108d8da29105eb22b361c6cf440362c6e",
+      "sha256": "6425bfbd20b6dce87e33fe9b7b5b00272c7a1e5cc894dcb58cc9770416626668",
       "palabrasProsa": 269,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2626,7 +2627,7 @@
     },
     {
       "id": "BOE-A-2012-7987",
-      "sha256": "33ad1f9a01e1299f256ec2b1c1380ab53af784431434756df69e6f24a31da14b",
+      "sha256": "c07cd59ca6b1d493a82329cf033a7a8a564fea8cdc64fa110ddf2992a311d495",
       "palabrasProsa": 8577,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -2637,7 +2638,7 @@
     },
     {
       "id": "BOE-A-2012-7988",
-      "sha256": "ae979a8728828aec1f03f0090cc471ad596c5a370f1846d8a8a6264d4d47b3df",
+      "sha256": "bb12149effff41e887c4b5ed4f2fef9654b401610a65fc98cfb0c9227a69a2bf",
       "palabrasProsa": 8745,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -2648,7 +2649,7 @@
     },
     {
       "id": "BOE-A-2012-7989",
-      "sha256": "1ac46e58c7ed8d4bf0b9045a6b325e5cd034d53f814841bc47ef60b5e6bc2d36",
+      "sha256": "09b47fc046890868d4851f611a788ffb7db49f63ee2572ddd5bc47d7cc5a269d",
       "palabrasProsa": 625,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -2659,7 +2660,7 @@
     },
     {
       "id": "BOE-A-2012-7990",
-      "sha256": "d15e0d6a5978ca16deef4e0b04847176f5bc23933a4fef840fccce6246d0d249",
+      "sha256": "a0c2084fcb70920a42a7e41129d0584506399e287635980db63ee356c5cb85ee",
       "palabrasProsa": 1334,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -2670,7 +2671,7 @@
     },
     {
       "id": "BOE-A-2012-7991",
-      "sha256": "985f75a242afca8c0526e56b52c9bc977257ee381fb23becd5dcf5cbe65803f1",
+      "sha256": "1ae6157eff3da457894c9da105db1b1f7e0ed9ef774968f9ee0b4a5e75a6c4ad",
       "palabrasProsa": 197,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2681,7 +2682,7 @@
     },
     {
       "id": "BOE-A-2012-7992",
-      "sha256": "ebc4492943e3c5be6edfb0050335faf965525cf947b6caaac2843414ccfabe15",
+      "sha256": "ea0e3a3ded717c18e2d2c7414e64d556f6acb93c2e3f56f2d125e40a46625c48",
       "palabrasProsa": 675,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -2692,7 +2693,7 @@
     },
     {
       "id": "BOE-A-2012-7993",
-      "sha256": "771cb5ceb6d611a30beee50b40e2641ab527d2f6b8078aa9f99bddb61fb816a0",
+      "sha256": "3de66b5b3905e9057fc3d143051df1dad8bf1d02c6b0f838f5a8a5a5e30d80b0",
       "palabrasProsa": 127,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2703,7 +2704,7 @@
     },
     {
       "id": "BOE-A-2012-7995",
-      "sha256": "64d27f4e4ed01002e039c48fc01586641313926dd8a19b2c0c5062262246b798",
+      "sha256": "004ddcf9fbe968e857f26866f08acc8e7a6fe3433ead373dd25add7320cba4ff",
       "palabrasProsa": 184,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2714,7 +2715,7 @@
     },
     {
       "id": "BOE-A-2012-7996",
-      "sha256": "291126bfb3d0910bdeca2c69fcba1d35b1dee04040735d71be26c669ba55f55e",
+      "sha256": "9dc46de64d0d5f0f819eb98386b16030775cf00496052cdfebd3335d494ac2e1",
       "palabrasProsa": 188,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2725,7 +2726,7 @@
     },
     {
       "id": "BOE-A-2012-7997",
-      "sha256": "f778e1336c52009e2ee225b9d2c7b89f8b1ed8b5ee120b13908c5ea5161277db",
+      "sha256": "698d726910718d5e90649a9c0c2c56dfc6ba8912e402129c41014f001da70904",
       "palabrasProsa": 200,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2736,7 +2737,7 @@
     },
     {
       "id": "BOE-A-2012-7998",
-      "sha256": "0406cae5ea7625397cebd7ccabf87a71ee0282118af0d75829ad3bd2797ba3d3",
+      "sha256": "df376a3c453b11d163d29862b297bb03c66739c4b9cef4f424aede9fe73d2b8a",
       "palabrasProsa": 282,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2747,7 +2748,7 @@
     },
     {
       "id": "BOE-A-2012-7999",
-      "sha256": "9e23d1d6f5ec4982469f1d786817abe76f658d77d458438762aeac1920e43124",
+      "sha256": "480bc3b835ae4a14ac92c8cc25066775ec500631bd1284a904921f64a2b0bce2",
       "palabrasProsa": 318,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2758,7 +2759,7 @@
     },
     {
       "id": "BOE-A-2012-8000",
-      "sha256": "c2ec54e166b63e6021ccca0c93a4e489b74cd92428c69d8d09e025f54125754a",
+      "sha256": "feacebd57564a8c71b3ab9454a3e51ede2b86fea8428eb75e04118dca5bb5ae5",
       "palabrasProsa": 361,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2769,7 +2770,7 @@
     },
     {
       "id": "BOE-A-2012-8001",
-      "sha256": "84ae56e7cf208f8b10fb7edcfea5ab709a214cd7c3c0da1d8386efc7c70e1e9f",
+      "sha256": "8f614904dc0e0200a5cb932f604f853e7994e8e91ac2c63409be743daccb348a",
       "palabrasProsa": 239,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2780,7 +2781,7 @@
     },
     {
       "id": "BOE-A-2012-8002",
-      "sha256": "5f1dd6a3dd2eec3df38d41a5da349244ee006509bfe3841bc31f10a68104261b",
+      "sha256": "b8360652a9be91abe11bb5b7b7c949ab1be23e63a4aac9a44a3b5678802f477a",
       "palabrasProsa": 236,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2791,7 +2792,7 @@
     },
     {
       "id": "BOE-A-2012-8003",
-      "sha256": "2064685487a352e1aaca83bcc40f953dd3373845f37eda6bfaf081a4ce240813",
+      "sha256": "e8ff94ff22a70ded7e7a724058c2df3cf0e18f80db67eebc13ec17ab8bc5f1ce",
       "palabrasProsa": 270,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2802,7 +2803,7 @@
     },
     {
       "id": "BOE-A-2012-8004",
-      "sha256": "89e34dcbc01c3fe6047b8c137a1e8a051a8e56df368bef36ff859a68f0520068",
+      "sha256": "7539e11ad88c14345300cb8b7609aca95f7ea3de35ae9919a29c44956f05648c",
       "palabrasProsa": 268,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2813,7 +2814,7 @@
     },
     {
       "id": "BOE-A-2012-8005",
-      "sha256": "db4ce7d4e58a2c193e3b02a415d582c6b7af358c4c6cbc1c28ff365554c03618",
+      "sha256": "38f1513d19ca84f76e4369fb0c243a1de1dde1ef29c79e9cdb5c048eacd302c0",
       "palabrasProsa": 712,
       "tramo": "600+",
       "subgenero": "resolucion",
@@ -2824,7 +2825,7 @@
     },
     {
       "id": "BOE-A-2012-8006",
-      "sha256": "07deb77cf27cc793e0a660f640cbd7fc1b12636374aa6a28a5e859470bc89026",
+      "sha256": "45a8086e98ab350a7416c3c317f1d9e83ebabacada581f50133084362a1cb702",
       "palabrasProsa": 278,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2835,7 +2836,7 @@
     },
     {
       "id": "BOE-A-2012-8007",
-      "sha256": "e7a4b7be51a7105228e165b4b151190cf8749bbc233ee8b5a56bc3cef90227b5",
+      "sha256": "2661224e9ba0141988576382ec772a94e5e4f4c8946d94f565808d6f46b52dac",
       "palabrasProsa": 285,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2846,7 +2847,7 @@
     },
     {
       "id": "BOE-A-2012-8008",
-      "sha256": "2ffccf658e4c31d2d462e84fa015c4585705517ef8256f5dd90efec32d238077",
+      "sha256": "b9e4e4c28c349c482f57fdbe3c940a28e6954cc12b4c46186f5dd348556aa5d1",
       "palabrasProsa": 470,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2857,7 +2858,7 @@
     },
     {
       "id": "BOE-A-2012-8009",
-      "sha256": "fe5d2d275e9a9480b0ddc239d21f6ca376bafeab5473edb3025f22168806e25f",
+      "sha256": "78b520a3b8b41ff9c1ed0c8aed2f4ee6f01d4f535947c64d7f49ac606115dec8",
       "palabrasProsa": 278,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2868,7 +2869,7 @@
     },
     {
       "id": "BOE-A-2012-8011",
-      "sha256": "c6cf7d591d1b998a4c4fc04f54aa11561d0cf4a366cf7d8dcbd484a0d1fe0301",
+      "sha256": "a636d96d11d227c94e0e2992a443148811b4a461b82b2ab45dc6465763e6ae5a",
       "palabrasProsa": 265,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2879,7 +2880,7 @@
     },
     {
       "id": "BOE-A-2012-8012",
-      "sha256": "24a1143cd0b52aef448beec1d2376d3c51d0b16cda11e5c8a929c6faca524507",
+      "sha256": "dc12f87caf3ca0aaf5403d79debc770f59853746bb1d45eac97a7dfec1bd510c",
       "palabrasProsa": 235,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2890,7 +2891,7 @@
     },
     {
       "id": "BOE-A-2012-8013",
-      "sha256": "3ec56349e640939d5dc8f42327b95cf4f9f1dbdccbdc4b7c1d64cfd015c174b2",
+      "sha256": "356d0950b39959cb2b81356a47e32fc5a9de8361d5d95dbae6a94539a902f701",
       "palabrasProsa": 316,
       "tramo": "300-599",
       "subgenero": "resolucion",
@@ -2901,7 +2902,7 @@
     },
     {
       "id": "BOE-A-2012-8014",
-      "sha256": "10cea118a9998790ccff27eb866d64a60c6908329ba286e15cc4e3b6ab486f86",
+      "sha256": "b7e49a7669bcbf414bfad68af8bc46ee3eaf013fb4e9f1e69303c5a52e0e5f21",
       "palabrasProsa": 272,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2912,7 +2913,7 @@
     },
     {
       "id": "BOE-A-2012-8015",
-      "sha256": "a795a8558eb1e5f20fbc61a889afa6c1cb550c1432ce95b6abb03192c9ed54ef",
+      "sha256": "514dde740914ec4ffe2ecf521fd8ef912924d1195511d54ef70e27f32aa680cf",
       "palabrasProsa": 237,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2923,7 +2924,7 @@
     },
     {
       "id": "BOE-A-2012-8019",
-      "sha256": "c1adaf980e0f0a5b6c093c7dc6dcd29e1eafc121cee0c6fd35e09b574f658f62",
+      "sha256": "d3403648cc50be5b87fe35c4699078f5b2e079e34a13aa5f589a49525399677e",
       "palabrasProsa": 176,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2934,7 +2935,7 @@
     },
     {
       "id": "BOE-A-2012-8020",
-      "sha256": "3422feda994080d651ae815c03addbf2a2aa26733375622fa143bddac2ec7a31",
+      "sha256": "55669b80e01e0c718eb92e25d7a166511d122b4489b40b77d7716d22b6f334c6",
       "palabrasProsa": 187,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2945,7 +2946,7 @@
     },
     {
       "id": "BOE-A-2012-8021",
-      "sha256": "9727ac435e37a94ffc2b226b22193a194e4acc1df15cf6795f8f09bdf0b0ee92",
+      "sha256": "c4788d7f23a7405df218d84121d3044a99546de39daa4222df8974b5c705a6a9",
       "palabrasProsa": 191,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2956,7 +2957,7 @@
     },
     {
       "id": "BOE-A-2012-8022",
-      "sha256": "06e2b922e2b715d809d9d74ba0b72cee6e0cdd11bb627714055e7b88c6a7659d",
+      "sha256": "2cddf1a99c213793a97f0b4a307113593e1bc91305d85ada78fdae6aa4845804",
       "palabrasProsa": 262,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2967,7 +2968,7 @@
     },
     {
       "id": "BOE-A-2012-8023",
-      "sha256": "036db9c92e6b6e5c03e6716f6996075700a1c137a3d60fb6c900aa6f04aa054b",
+      "sha256": "5a4f91e97979ce42f9655041544a0856f4918e1a2107521ac47bf20fdd19069b",
       "palabrasProsa": 179,
       "tramo": "100-299",
       "subgenero": "resolucion",
@@ -2978,7 +2979,7 @@
     },
     {
       "id": "BOE-A-2014-13173",
-      "sha256": "a0f75ccf99649bd24ea352952e662a3a0b87475d94cfec71a8aee35e2fb2242e",
+      "sha256": "47842c3989fdcdfc334866661276b4856e3782f42604b98203e339eddf08bf0e",
       "palabrasProsa": 130,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -2989,7 +2990,7 @@
     },
     {
       "id": "BOE-A-2014-13174",
-      "sha256": "88a4db96f62024564413bd15c69daa08c1e5101d9db3c54200408653e90d9108",
+      "sha256": "e567dfad35147f53d5bd489a217a510f9f5d996d551ba3432b757dcca3d9b326",
       "palabrasProsa": 203,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -3000,7 +3001,7 @@
     },
     {
       "id": "BOE-A-2014-13175",
-      "sha256": "5c35fd01c987307eca74eb131a53a89804ee0a64ba047f9f3d2ec558b3bb5500",
+      "sha256": "75b8c2515da7851fb67041534c29be696414b314ad14869bdae025531be3aad1",
       "palabrasProsa": 187,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -3011,7 +3012,7 @@
     },
     {
       "id": "BOE-A-2014-13176",
-      "sha256": "52a2340bc6b473c2a0956acd008c6176b196851f056708222a057a4a0d90818d",
+      "sha256": "143d5d0c6244d330f42d7806cee42f28ba43f19fbcf640f28add241afc763327",
       "palabrasProsa": 175,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -3022,7 +3023,7 @@
     },
     {
       "id": "BOE-A-2014-13177",
-      "sha256": "15081609b3de6b268ae99269a9de4871ea450364bb793b797fc35718028af804",
+      "sha256": "f4717d2542c0e4fe21226717481bed669da6f8b8d571f2351609db4e738148a1",
       "palabrasProsa": 196,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -3033,7 +3034,7 @@
     },
     {
       "id": "BOE-A-2014-13178",
-      "sha256": "5e679781798562be7f67e3fd509651030e9e03f609f63fb006a5a856f1399ac3",
+      "sha256": "b638a62d1bebb3898a397e20c46f3e6d88d5b6ae728c4ac12e22cb294b6b2db6",
       "palabrasProsa": 184,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -3044,7 +3045,7 @@
     },
     {
       "id": "BOE-A-2014-13179",
-      "sha256": "ee12faddcb54565a9e3ebd520929c69371f042009cd95151ba08b3d91a883530",
+      "sha256": "30584a2fc997f933765545bc33e5a16de5936da0a4a0924d7cccc5f6b4ca1c3e",
       "palabrasProsa": 261,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -3055,7 +3056,7 @@
     },
     {
       "id": "BOE-A-2014-13180",
-      "sha256": "0a99ea3ff55a06ad28c7b3744685a0ee9b4b4529f7ee5c478329b080d8651cc0",
+      "sha256": "84c24f296d0e3f785023cc039769b7844f845f8c220a4bea39684642c67f9cf3",
       "palabrasProsa": 3671,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3066,7 +3067,7 @@
     },
     {
       "id": "BOE-A-2014-13181",
-      "sha256": "7dc1c8caae9ffb6d049861e6f0b6534d65148a412aa97988f8310a227aa3b32d",
+      "sha256": "eea04177135e4916cb5ccc9525c33bc4877ef89dde3774944e5fe00723e737cb",
       "palabrasProsa": 1246,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3077,7 +3078,7 @@
     },
     {
       "id": "BOE-A-2014-13182",
-      "sha256": "e0e6a794106398242bb71e8d91505b54e4bfcc32ac51cfee7c82f9c4fbc62aee",
+      "sha256": "36dcc914e0cf31e52fb5b438e855eb40ebaa97bd725a534af876dbcdb305fbfb",
       "palabrasProsa": 136,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -3088,7 +3089,7 @@
     },
     {
       "id": "BOE-A-2014-13183",
-      "sha256": "af9ea7a86e13a3481b75877931ede3178a8d7f1732799b057a269d14e5f78b13",
+      "sha256": "75c1bb34eebd1789320ff95e026c48670b08117b21b9fc403a808ceb7cdb1ed0",
       "palabrasProsa": 3345,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3099,7 +3100,7 @@
     },
     {
       "id": "BOE-A-2014-13184",
-      "sha256": "02c77864ab4532b497e2ec77ea0fe50113382a1243d252a8f50e425bcc5676b1",
+      "sha256": "c68523d9a8b63292da3c010708ff10c08611eeb7127ec19d18b5aee2fd6be8f0",
       "palabrasProsa": 223,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -3110,7 +3111,7 @@
     },
     {
       "id": "BOE-A-2014-13185",
-      "sha256": "46307d9b991e15657e91fb5beb42d8a2aa8e9b30addb687ca69ab9fcbf2f1bf9",
+      "sha256": "abd3a1352640a8dffb1b6bdfce6da94dc41e7b26704b095dc9f69626d9e455e1",
       "palabrasProsa": 3334,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3121,7 +3122,7 @@
     },
     {
       "id": "BOE-A-2014-4513",
-      "sha256": "883ee99376b71f483d0702b258fb39e59f647d68ab57a02806d9347cd3680caf",
+      "sha256": "b182caa2bf682a65de45f6b743a1b632331652cef8584535f2dbee281bf2193c",
       "palabrasProsa": 1123,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3132,7 +3133,7 @@
     },
     {
       "id": "BOE-A-2014-4514",
-      "sha256": "a51b97d7e65fffac99d3d5f35b0ab279f37806912ab5e92e53e0dee54e5a0c69",
+      "sha256": "f646c86b93a8968472b966d7d54c119a488aa5bd0d77acf26511eff7d7cbf66d",
       "palabrasProsa": 3580,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3143,7 +3144,7 @@
     },
     {
       "id": "BOE-A-2014-4515",
-      "sha256": "879c3e4b92aee3858c63dacdbd2e485551faf304a8562b0ed178bec18ce1156b",
+      "sha256": "7c02b70dde9d1adf4d9f36bf821d7f2a5a9d7c91e7b524547292d70edeeb255a",
       "palabrasProsa": 1369,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3154,7 +3155,7 @@
     },
     {
       "id": "BOE-A-2014-9956",
-      "sha256": "214606c671d42348211001f9b9381fdd94073fff886f7ff584f496ba4292d7b1",
+      "sha256": "fc0cfb444c7595bbd9df0cfc07fa361a96bc5b5edcdb904d0bcbcc1d078b95ab",
       "palabrasProsa": 116,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -3165,7 +3166,7 @@
     },
     {
       "id": "BOE-A-2014-9957",
-      "sha256": "d7d2b5fdd8567fb3018341dea7cf33b006b0adc6bb7acdad998076dc7ae0e763",
+      "sha256": "7babdbb3a9be4fa1630701294286c112e53515d0bd4d8403f5f1bbe771a9566d",
       "palabrasProsa": 712,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3176,7 +3177,7 @@
     },
     {
       "id": "BOE-A-2014-9958",
-      "sha256": "dd8f94a3e593811ec609029e277aa896d139e2032cdbceb2faf5c657f7fc4fd6",
+      "sha256": "6c114903c954d37de8029872a1b942b78a0a1ebb96469595ba56b2e2f47f0590",
       "palabrasProsa": 689,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3187,7 +3188,7 @@
     },
     {
       "id": "BOE-A-2014-9959",
-      "sha256": "5d8861e33e9882b9ee7e6d2b8d1568c434dcbd713a4ef07504d1209164586544",
+      "sha256": "924df84dba03eab337b7dfab0440fa73306e576d4d1288ef6585fd5961fda194",
       "palabrasProsa": 13142,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3198,7 +3199,7 @@
     },
     {
       "id": "BOE-A-2014-9960",
-      "sha256": "92621f707388eb4b9734541b3bbb97a3668b02bd45a1a05d1fa80dd39f160261",
+      "sha256": "f68bf4416555be0af3e17d795da2868d1b6496a1ffa855fd3621e85fbd4c912a",
       "palabrasProsa": 6824,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3209,7 +3210,7 @@
     },
     {
       "id": "BOE-A-2014-9961",
-      "sha256": "25c2a55493c93d00a871d1bd5342c6a50e3167b85e753f897008d2a23c030aa0",
+      "sha256": "1943a3a91aa4288aeebb108fadcaa1cdacce709bf62ebd48607d578231c8649f",
       "palabrasProsa": 14439,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3220,7 +3221,7 @@
     },
     {
       "id": "BOE-A-2016-4441",
-      "sha256": "77b89f90f4c8858a089dba349e9e0b30c9dffe7a4489c32c1ab634a7b4aff42f",
+      "sha256": "3dd79c7c4071aa088061ff1320fe9ea9696cfa119757d913b5649f53a3441d9c",
       "palabrasProsa": 1216,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3231,7 +3232,7 @@
     },
     {
       "id": "BOE-A-2016-4442",
-      "sha256": "b0506f6a6c895be27d73c2b06248ed013fc2e964008dfb22c9c72230cb065d52",
+      "sha256": "91806a527cdddfff48e6ce8d27e7ab4798566870c98cf3d1ae90e22b808d995c",
       "palabrasProsa": 7725,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3242,7 +3243,7 @@
     },
     {
       "id": "BOE-A-2016-4443",
-      "sha256": "bf69ee402f32c30874c5dc8ba0b371befc6453b8d867fd8a68d68f23fd8fd5f7",
+      "sha256": "756bbe2177f8b99044552a13c8b5ed14547db270a76ef6de957a16c1cf52147c",
       "palabrasProsa": 4060,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3253,7 +3254,7 @@
     },
     {
       "id": "BOE-A-2016-4444",
-      "sha256": "aeebd3c89ad27d48f2a0df5d006ef60daae1f304f2b41248b278450297be976d",
+      "sha256": "e11384ad176feae2cb8f94d020e223f205a35e863f7506f4d7ba89b7c3b277c0",
       "palabrasProsa": 10560,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3264,7 +3265,7 @@
     },
     {
       "id": "BOE-A-2016-4445",
-      "sha256": "6f4dbe063f076d653d3ff111deb00ebb67d2b5ea8b2dba2b599d3173121471b1",
+      "sha256": "6e941cb1198055a2e9191bdeedaa77fb19f378886e97ca4d6edb2dde4707c2ee",
       "palabrasProsa": 3329,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3275,7 +3276,7 @@
     },
     {
       "id": "BOE-A-2017-6731",
-      "sha256": "9423d1b66b93745fa9900e69c5d7b45cbf589a09feab6e6c5e7824bea2f5b390",
+      "sha256": "6d0968d6612743cb7b02ba5fbcc431043e5c580a485b74e188f703c4201e85f5",
       "palabrasProsa": 158,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -3286,7 +3287,7 @@
     },
     {
       "id": "BOE-A-2017-6732",
-      "sha256": "491e7489008e60b7c2d0457381c984295e6ec113d8434df831abcdc449a2789b",
+      "sha256": "182e58319624c65ec9a834e56e6d6c8a19be208224dacb778988a506bf5a5ebe",
       "palabrasProsa": 112,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -3297,7 +3298,7 @@
     },
     {
       "id": "BOE-A-2017-6733",
-      "sha256": "87f300b98b008b0725c7779a2c373136e860ada4d77cf0f0ee289d5a786a2b0d",
+      "sha256": "05198c2d2dc58cb7d6459df4b7c1add9f435bb02036bdc4ac822de5a5b7b7447",
       "palabrasProsa": 138,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -3308,7 +3309,7 @@
     },
     {
       "id": "BOE-A-2017-6734",
-      "sha256": "48eae208994f8a6d034d95182efdaad633e7bffd12345e89d3f13596a9ebd5f4",
+      "sha256": "65affafc195248551c13566b7a43813f5b8185caed8b890d9cfa1dd98e45585c",
       "palabrasProsa": 235,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -3319,7 +3320,7 @@
     },
     {
       "id": "BOE-A-2017-6736",
-      "sha256": "1b2473ac0265b4762034f259f8dfc76cfe718790a04a2295dc079da254bcad64",
+      "sha256": "d401a6872116fd4d7c7b0ff2f42c7991eae395f0a0de450861d3d55233a1711b",
       "palabrasProsa": 577,
       "tramo": "300-599",
       "subgenero": "disposicion-general",
@@ -3330,7 +3331,7 @@
     },
     {
       "id": "BOE-A-2018-14802",
-      "sha256": "ec044743f1f4435a813041f9bab5f3c5ec56a57403660bc396b8b7a602cdbdef",
+      "sha256": "059835c688dd72c9c559923ac64a0578eae99d2f0c4e8fb5340421aaee22404e",
       "palabrasProsa": 2148,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3341,7 +3342,7 @@
     },
     {
       "id": "BOE-A-2018-14803",
-      "sha256": "dbfb2d6300b7da5136aa276a7a8478ff02c5426361e1dabbc3d78272abab057c",
+      "sha256": "a119eaab77959f97e5af65a2ae3d65873f6996d2a881ef7ef81632b4e1796df7",
       "palabrasProsa": 12289,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3352,7 +3353,7 @@
     },
     {
       "id": "BOE-A-2018-14804",
-      "sha256": "cb1b75cb00c648db32a1e150139582aa80d16ef00cf2bf89ec492970fbb06cd5",
+      "sha256": "9cbebcbb729a52c14633e8048208fcfc7cc5755646ea002a563f7ccbede52a7e",
       "palabrasProsa": 12431,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3363,7 +3364,7 @@
     },
     {
       "id": "BOE-A-2018-14805",
-      "sha256": "c79fbfa019e2a4675f71600371955dfaf70a5dd34aabc8630e349a394ee92e8a",
+      "sha256": "766245f3bea98e707a51ca1aa9bfe0a1bfebbe6938e4936c5c45ac68cfa01b26",
       "palabrasProsa": 1633,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3374,7 +3375,7 @@
     },
     {
       "id": "BOE-A-2018-14806",
-      "sha256": "d571f49913af0214f93ff1b09865d6a6125f5ca55fb2aa67e5bfcbad41d3a68d",
+      "sha256": "14e8582387b0500ae783f73f124c6ed55eedf95d4ade0e726b75a4635766060c",
       "palabrasProsa": 1115,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3385,7 +3386,7 @@
     },
     {
       "id": "BOE-A-2018-14807",
-      "sha256": "ba6947e6062223987e0bf392d72a060622d281663337aabf04a0e409287f518a",
+      "sha256": "e39e1eeb307aaaa17c535eb76201da758113bd8a5a8f09d9a13adcd6c823734f",
       "palabrasProsa": 197,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -3396,7 +3397,7 @@
     },
     {
       "id": "BOE-A-2018-6399",
-      "sha256": "ac3b774e0371b961e662830688b5b9be9a289d1a79d45acfb39bce5b25fa2216",
+      "sha256": "8c09a275e3b1b4899d67b2bbceb31747f806bda518e28a2269cad21af0ebfd9a",
       "palabrasProsa": 108,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -3407,7 +3408,7 @@
     },
     {
       "id": "BOE-A-2018-6400",
-      "sha256": "a0b79785f2c61f387ac297543c138d69a5adbb82b29ceab5394f2fcd63d74fae",
+      "sha256": "cf55a605717dc1a186d99f89e65a6a49d0ff528b4e612622e621424127c57abe",
       "palabrasProsa": 1086,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3418,7 +3419,7 @@
     },
     {
       "id": "BOE-A-2018-6401",
-      "sha256": "3543e46c444954b67ff9c2a1e74b9ba4cd205efc7b408d764ad632faa2df3993",
+      "sha256": "a421bb14dbd9884eec95aaf40675f67359d7af506b486a62791a46545ba5383a",
       "palabrasProsa": 513,
       "tramo": "300-599",
       "subgenero": "disposicion-general",
@@ -3429,7 +3430,7 @@
     },
     {
       "id": "BOE-A-2018-6402",
-      "sha256": "f06abd8eba0b843544798bb7ff30fe7c4cdb62733ec5f9df99676ca73ef7797f",
+      "sha256": "c238fae85fb083909e142f428c7e6a144ce86c9d9569046bcb65872826ba966e",
       "palabrasProsa": 9886,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3440,7 +3441,7 @@
     },
     {
       "id": "BOE-A-2018-6403",
-      "sha256": "de04a392a884ecb7fb07a0b59acd9d41bed9563d5e598176691e747c548a1010",
+      "sha256": "e1a04aaf6f1116eb527cfba9f1bf46279beb476715878ed76506671a79cbad4f",
       "palabrasProsa": 4769,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3451,7 +3452,7 @@
     },
     {
       "id": "BOE-A-2018-6404",
-      "sha256": "e3efa8ad200591be50927f4a676d4f5c6ee7e97b724e21d719b0d18048b1f51a",
+      "sha256": "7e45168d7846adcedbdac592b9ef0e97e2028f9d2d0691561f7dee8e1be6b106",
       "palabrasProsa": 433,
       "tramo": "300-599",
       "subgenero": "disposicion-general",
@@ -3462,7 +3463,7 @@
     },
     {
       "id": "BOE-A-2018-6405",
-      "sha256": "c6dfb532dbfa4d624a2c356c269775477ac51f3b21862a789dad97968d4cdd47",
+      "sha256": "25288fa9a29ddb120e5464a6a55a42dfcf568972c051c4b89de89a8a20ff413d",
       "palabrasProsa": 6739,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3473,7 +3474,7 @@
     },
     {
       "id": "BOE-A-2018-6830",
-      "sha256": "ca29f15035663a4643e46236db719ebdcb719db3d448f3bc8541f44dc73b4589",
+      "sha256": "dbeeb06e7c2c97e76287a186d53ea1d0f30ee08687ba34abcd0bf138a25e1974",
       "palabrasProsa": 200,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -3484,7 +3485,7 @@
     },
     {
       "id": "BOE-A-2020-4198",
-      "sha256": "e5a34fba0fcabb4e543bcc390ea11e410b1068b8dbd31131d0c5abccf54a117a",
+      "sha256": "c34dc90a0e341c7bcff207c23b078f8b0eac27d3594e7b3090c78ea51cb3c8e8",
       "palabrasProsa": 1177,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3495,7 +3496,7 @@
     },
     {
       "id": "BOE-A-2020-4199",
-      "sha256": "0748277df19a8bb75ec98e19011ca5c90a07611fa40c8dc60c0fc025a4dc570a",
+      "sha256": "d84281a792d303e542bae593d58385762ced5a225b3c912f49c77ee98bdd49ea",
       "palabrasProsa": 884,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3506,7 +3507,7 @@
     },
     {
       "id": "BOE-A-2021-18978",
-      "sha256": "6ee42b2477f209408eec5d811485896525085df7463a26282f0fb56ecb6cbfef",
+      "sha256": "2a7262e47560e4a8bf220af877c209f512ce1456aa1502a835d7369ad5534fd9",
       "palabrasProsa": 1575,
       "tramo": "600+",
       "subgenero": "disposicion-general",
@@ -3517,7 +3518,7 @@
     },
     {
       "id": "BOE-A-2021-18979",
-      "sha256": "d73b114bb00d8c85e8ce6b3d9b5da3ec4ea0e9fd3e66c261eb9362aaf585f555",
+      "sha256": "9da5e44a28c1559783867b5632e0271dea6d8300cda56f2ba24938275f00facb",
       "palabrasProsa": 240,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -3528,7 +3529,7 @@
     },
     {
       "id": "BOE-A-2021-18980",
-      "sha256": "81e0477e57260f8c6a524830d79c3c58b2061e0f76f9215cd6bd1b9d46eed318",
+      "sha256": "da8994d5248ba7b79c1750adbe6179e87d7321c641619d34b19fbd13c55e9e6e",
       "palabrasProsa": 234,
       "tramo": "100-299",
       "subgenero": "disposicion-general",
@@ -3539,7 +3540,7 @@
     },
     {
       "id": "BOE-B-2010-33237",
-      "sha256": "57cb5441409f4e026addbec3186a324bc227d4ad8e0df0782a9ba6d60ea88498",
+      "sha256": "19ab596ea241fb13c8b2e9cd965a314c946dead8de388fa5bceb6ad456d66101",
       "palabrasProsa": 266,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -3550,7 +3551,7 @@
     },
     {
       "id": "BOE-B-2010-33238",
-      "sha256": "07af195ab047137d7055396ed7111ae90530a6d1ceb17234c443c742e4d0ce6b",
+      "sha256": "19b32e0188135703b111e102bb49a965406b25fbc7432906296d75ba35d02e35",
       "palabrasProsa": 1098,
       "tramo": "600+",
       "subgenero": "anuncio",
@@ -3561,7 +3562,7 @@
     },
     {
       "id": "BOE-B-2010-33240",
-      "sha256": "10aac721639fa4a3a7d1131a0006a6a0fa5e026000cfff09c2031d1ef13696e2",
+      "sha256": "a859600696ffced1673ee4d66375a9c3c13efb227d11baa53e50c8c978b5e13d",
       "palabrasProsa": 251,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -3572,7 +3573,7 @@
     },
     {
       "id": "BOE-B-2010-33241",
-      "sha256": "3fe7aec23ffd5a90a1f495235002195bba731f33a12a2d770ef695338bf7e63d",
+      "sha256": "a9626424649f1b41b7ff1488455708480e62b3b92f552d25cb1c85ffb6eca0b5",
       "palabrasProsa": 154,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -3583,7 +3584,7 @@
     },
     {
       "id": "BOE-B-2010-33242",
-      "sha256": "039f327036957c374c710fc7e29076728941831c5616bd76294624d61fe1263e",
+      "sha256": "7efe5e05d4d55adb297153edfde99576430fa44397dba53b8d3d7e5bd56fa00c",
       "palabrasProsa": 145,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -3594,7 +3595,7 @@
     },
     {
       "id": "BOE-B-2010-33243",
-      "sha256": "d787c9f9fe04f7263542e6ea0ee6f7186e9f76844796cce17f0e5e1b83c95be3",
+      "sha256": "b0ee60953546be00a63b42503dfb6b713d35d89da3a4df61cdb61a76af2e3166",
       "palabrasProsa": 291,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -3605,7 +3606,7 @@
     },
     {
       "id": "BOE-B-2010-33244",
-      "sha256": "f6cc5834484b85f5efdab936718604d86329f1ee959ecd82d086991b9bd65e3c",
+      "sha256": "eed162bf1f2d8c46152e6cf9b0ef1cf9d63d89737b6fa07027477879730f77eb",
       "palabrasProsa": 294,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -3616,7 +3617,7 @@
     },
     {
       "id": "BOE-B-2010-33245",
-      "sha256": "254c28ade32b85d93c7250e5e75c76391bbdd1607b6d92a2c2fd9d7430267a9e",
+      "sha256": "37e1563a53b6009beeab2b3db4f75cb644f5139688bf0e8e61a1b16bdaf329c3",
       "palabrasProsa": 364,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -3627,7 +3628,7 @@
     },
     {
       "id": "BOE-B-2010-33246",
-      "sha256": "744a5de886df439ed3813e8cb5afa02b0f12a6b0cf97c4cad0c9b1610963508f",
+      "sha256": "faf3867093890f7f69a2f448940c103c1586418f9e3d25441f39f1dd240aecbb",
       "palabrasProsa": 251,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -3638,7 +3639,7 @@
     },
     {
       "id": "BOE-B-2010-33247",
-      "sha256": "b448133e13aa83fedb6a59b97236e162e86c348ce7f99528c586b8bbd7be41f9",
+      "sha256": "27a16d93725de23770b3d0bd9aa210bf1595a5bf4c07cf9f60d5e37f16436df0",
       "palabrasProsa": 249,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -3649,7 +3650,7 @@
     },
     {
       "id": "BOE-B-2010-33248",
-      "sha256": "82b32b68eca034d40f2df9aac5c8a0b2939d934ad6ace61792fad159b8cc39a9",
+      "sha256": "e80953c42c5229967a2b13f58d1805608a50569c59d187ff4cbe52b88b2d04c7",
       "palabrasProsa": 119,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -3660,7 +3661,7 @@
     },
     {
       "id": "BOE-B-2010-33249",
-      "sha256": "0851cb69990001d09b1f6c0e167c9464007ff55df6d63c8adc3ec400e10660dd",
+      "sha256": "4ac62efd14cad391332bd8c6a7a4652094810d316041753a5fdf9a6139ec048d",
       "palabrasProsa": 365,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -3671,7 +3672,7 @@
     },
     {
       "id": "BOE-B-2010-33250",
-      "sha256": "e5e0183a0749b65bb1d46f5642e0077935388c6918caf6eaec8eb71c1034bf4c",
+      "sha256": "8661580af376efe1b6bfceb8909a7daabeff2df1b11b76ff6e0436161c462146",
       "palabrasProsa": 164,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -3682,7 +3683,7 @@
     },
     {
       "id": "BOE-B-2010-33251",
-      "sha256": "ea6d9aecdadd64b0a02e00d2130f13833462d56223682c5b016ae84dbdcf3a9f",
+      "sha256": "46949142b9a84d3a7fd117e60ad1062a7c57ed58e22bb0ee61dbf19e812a6b8a",
       "palabrasProsa": 457,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -3693,7 +3694,7 @@
     },
     {
       "id": "BOE-B-2010-33252",
-      "sha256": "dbe506af3c00b917b75e1e4142c34f85ea0526952ed8f96314ba9002890eeb2b",
+      "sha256": "14e9109308624332ed69a0993027b035238411f5fc29a06a1976adc63ab66ed5",
       "palabrasProsa": 375,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -3704,7 +3705,7 @@
     },
     {
       "id": "BOE-B-2010-33253",
-      "sha256": "472afd0597565395fa63663e8ece0dfa08c18f4892220c267bbaa149212df411",
+      "sha256": "4806346a2373e3958db06030096c63b4f495d0dea620d01ac17404ce94d28288",
       "palabrasProsa": 303,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -3715,7 +3716,7 @@
     },
     {
       "id": "BOE-B-2010-33254",
-      "sha256": "1570427423273cfb388f07ad3c93d38f0bf4310ec4d656ad03a60d8510ca444a",
+      "sha256": "0bb2319816e98f09444a6f4a6f741c9d6f5507e1b06581771bc3b066b08686fb",
       "palabrasProsa": 140,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -3726,7 +3727,7 @@
     },
     {
       "id": "BOE-B-2010-33255",
-      "sha256": "332fa779f8efa3fa820ab0e7dd15cd218a3a415a5178ecbdadb355576cf467ed",
+      "sha256": "4836d626b0bb6bcbca441e135e53e8347dff9b67a6c7c7aa6635d751545f5fad",
       "palabrasProsa": 163,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -3737,7 +3738,7 @@
     },
     {
       "id": "BOE-B-2010-33256",
-      "sha256": "33bde3640adde1225d025a33db3a1fa25ab555d3cd09c930808dfe47a579b2d9",
+      "sha256": "69703c389ced460ee49c32ca3dbd672f5c0f05510ccec98fb020f641792a05d9",
       "palabrasProsa": 166,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -3748,7 +3749,7 @@
     },
     {
       "id": "BOE-B-2010-33257",
-      "sha256": "b9584c3f5fe3035372c7e39723b9a177e227a20fa056c44940e598b2fbc7f593",
+      "sha256": "11449b6f067efdb8aae8dc453ea6fd08296a1bfdbc7cfdd8ee2de654045c0165",
       "palabrasProsa": 145,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -3759,7 +3760,7 @@
     },
     {
       "id": "BOE-B-2010-33258",
-      "sha256": "5382b12bdd210c7acb2719e62ccc112f7a36db7aa5851ff863e0f6d36a6a5c54",
+      "sha256": "fb0bbdf5bad0d802cb07161627ef50eb0991a3a9338c97cd9e923bd85a067235",
       "palabrasProsa": 213,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -3770,7 +3771,7 @@
     },
     {
       "id": "BOE-B-2010-33259",
-      "sha256": "cfa8e0c2e01b533ec8bf8dea13c9e2988846065fb806ab11a356bdc8163c8aef",
+      "sha256": "08d72bee17c92182c306644267b09da8a58b76489672ec7bb156a3d6c8c541f5",
       "palabrasProsa": 457,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -3781,7 +3782,7 @@
     },
     {
       "id": "BOE-B-2010-33260",
-      "sha256": "d68b333b880c5c6f6f3b0ffa004984991b0dc3c4d7d9d75bc491526d1270e87d",
+      "sha256": "f9e586eb3d7f28f1956f9bf4dac81b17f854605cacc0bd5834c787e5ec2bc63c",
       "palabrasProsa": 475,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -3792,7 +3793,7 @@
     },
     {
       "id": "BOE-B-2010-33261",
-      "sha256": "b4c43e0b71af6e570191f126a08a6bde6c65b58dde3a3469ec9adb65ca1c7769",
+      "sha256": "c11a0692be51a9c00e4203585b33cb26ab81d0d54bd3b5ea76513c59a08a00eb",
       "palabrasProsa": 280,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -3803,7 +3804,7 @@
     },
     {
       "id": "BOE-B-2010-33262",
-      "sha256": "667e892e54b46539c94e880ab2382d61f809730ba2dfd432a65981fcb2751c1d",
+      "sha256": "e617c7d588a417de3a76a062feb2888616b81ca64349ac467d3a50c64ec7df90",
       "palabrasProsa": 139,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -3814,7 +3815,7 @@
     },
     {
       "id": "BOE-B-2010-33263",
-      "sha256": "63e23774b8d40caf43b4f9029c3362c7b70a1cd394139e1df29bd083cb7814cc",
+      "sha256": "6381c4150da73e6c032e180bdb0710a0d2941081dc4d34e1a477edae24a06843",
       "palabrasProsa": 432,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -3825,7 +3826,7 @@
     },
     {
       "id": "BOE-B-2010-33265",
-      "sha256": "5f9a68ba8772d34d20d19379509f38e631a2c53bcaef693977114da0a07670d0",
+      "sha256": "3c14f15abc12e61df19b6d254c094648c8ef5997172b001bc09e4bc08f55fac5",
       "palabrasProsa": 550,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -3836,7 +3837,7 @@
     },
     {
       "id": "BOE-B-2010-33266",
-      "sha256": "3ac7842156937a1ff3274c318d99805a48d91df02100cc8071f0a119e5c83382",
+      "sha256": "431a954386dec6c86b675b1826b1c86fab6fc85a20be5287701b29a6e2391c47",
       "palabrasProsa": 134,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -3847,7 +3848,7 @@
     },
     {
       "id": "BOE-B-2010-33268",
-      "sha256": "a8f48396a4b36ef4e22b9a7b58ac0107cf52a16147f5023dbf82d12d73c25d7c",
+      "sha256": "b3755b523fbeb755a223292df5ec89827dab49f3f5f186039816cc74e82c3c00",
       "palabrasProsa": 340,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -3858,7 +3859,7 @@
     },
     {
       "id": "BOE-B-2010-33269",
-      "sha256": "55296bcac7716d18d1ced8e19631e63353e4d71fbb0a9aad9edc853b4c172f31",
+      "sha256": "55f7791ffbbda8a482ff0a02252c28ee771508a393bcb259343ba2775022de4a",
       "palabrasProsa": 205,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -3869,7 +3870,7 @@
     },
     {
       "id": "BOE-B-2010-33270",
-      "sha256": "ee762da578b74e61a571dba0d25c99cd98af556a6b5c5e8132d1211ef4dee40c",
+      "sha256": "8527fc9e8757d58806a029a118e9b79727d7d86ce57dbd8546b993d91cf274ed",
       "palabrasProsa": 200,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -3880,7 +3881,7 @@
     },
     {
       "id": "BOE-B-2010-33272",
-      "sha256": "4deaff4d5a55111514cdab62e8de64af0bc2850e88ba51fdb11748bed3fbbd83",
+      "sha256": "248cf9752b6647876075abf98d4f3877fec72b264122687ff3f1b347552046fd",
       "palabrasProsa": 148,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -3891,7 +3892,7 @@
     },
     {
       "id": "BOE-B-2010-33273",
-      "sha256": "9beb527f622858a575e96ab334ae1689e7c0d87aebdfdb453938f8b3ac6d883d",
+      "sha256": "4de577c88952f6ed80cb64545f52a066c848453ab0cf5822e531d9cbd9c33a28",
       "palabrasProsa": 159,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -3902,7 +3903,7 @@
     },
     {
       "id": "BOE-B-2010-33274",
-      "sha256": "e8714409618901925647a712b5691aa2d88abc07c93af18fffedc8333e7f9325",
+      "sha256": "5578c93fccbff2a1a639568692079f3b609a54164f2c98d56190a0f7ba754990",
       "palabrasProsa": 179,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -3913,7 +3914,7 @@
     },
     {
       "id": "BOE-B-2010-33275",
-      "sha256": "e2c6bcdf02001c86093f4c4569faaf6dd039d420e4d444084b41d2cad77ceef1",
+      "sha256": "41cc322192fb4b1da68008b7aaa3919a993bb13d7595225827a1cb5728f78856",
       "palabrasProsa": 241,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -3924,7 +3925,7 @@
     },
     {
       "id": "BOE-B-2010-33276",
-      "sha256": "d8a41484f1f1d27e23e8244b3866b6aa72c48838cc05f850a64eff6fdcef2e94",
+      "sha256": "8781c45782fe8a98b6e1e38a1c0177224d31464ea58564e27e86d497c933c74e",
       "palabrasProsa": 391,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -3935,7 +3936,7 @@
     },
     {
       "id": "BOE-B-2010-33277",
-      "sha256": "e3e92b57c8881bd53328adb3960f2af00f1486c703ab088a79b56c7d4bc312f9",
+      "sha256": "58c9ebd84df41af6c4f3396427d64b6eb504cff24ae6d011c4d1fe2998ab7ee7",
       "palabrasProsa": 101,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -3946,7 +3947,7 @@
     },
     {
       "id": "BOE-B-2010-33279",
-      "sha256": "4e90c1541e102fac28a37ec4a63d6d275331263871ff6ed033a96ac9a40755a2",
+      "sha256": "22647584ace41ccdc2db898ae0d5741527f8c367ac8914a9042602245acb8e3a",
       "palabrasProsa": 141,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -3957,7 +3958,7 @@
     },
     {
       "id": "BOE-B-2010-33280",
-      "sha256": "ee2d99bd22fa1fec45880d670abc57f039a179a3aa268024a47c4579061c15cf",
+      "sha256": "d85d4f8bc392a6c75df6ae344401b5856a03c728a82dad6d776e1607fea6c1ec",
       "palabrasProsa": 486,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -3968,7 +3969,7 @@
     },
     {
       "id": "BOE-B-2010-33281",
-      "sha256": "769b56ae5d9e9e82af8a6e0a725bf8c0d8869fb9cca7c6f671e4dc6d6b155014",
+      "sha256": "4735a36d8282fd2d63b5c125befe0868ec00af8d06527b4ac7bf87729b164460",
       "palabrasProsa": 479,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -3979,7 +3980,7 @@
     },
     {
       "id": "BOE-B-2010-33282",
-      "sha256": "289f973e5ef37a04305ed7376fc106242ac96d0609093580423c1f01a897fb7b",
+      "sha256": "0b354b881723731a0530ea09443176d216b52a89e6472daba4e922b2d550ff43",
       "palabrasProsa": 505,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -3990,7 +3991,7 @@
     },
     {
       "id": "BOE-B-2010-33283",
-      "sha256": "91a9cc292c09402114c1038d40cf1b44bcd5eae51c0d6b2fe77ddd8f9188e616",
+      "sha256": "d6b78b7f326df6a58a287865bc2c26bfdc36831e40dc892f5bf0e689e9942198",
       "palabrasProsa": 288,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4001,7 +4002,7 @@
     },
     {
       "id": "BOE-B-2010-33284",
-      "sha256": "72703c5cf8a28f7352a4eeea1862f0b5a6b488e7e0398db6821e681dcf7034a2",
+      "sha256": "b930be8071b6b8d954cf85ccf4d19d2b13826dea8fe675b607e1dd407925827d",
       "palabrasProsa": 126,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4012,7 +4013,7 @@
     },
     {
       "id": "BOE-B-2010-33285",
-      "sha256": "b2364516c0073733b95b528d434b247bb5902f8968c256c1298d419652193ac6",
+      "sha256": "2cdcb08102a90fc7197dc8e2eee8d08bd6f7b737b8605022a99fa6a132fa2e87",
       "palabrasProsa": 443,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -4023,7 +4024,7 @@
     },
     {
       "id": "BOE-B-2010-33286",
-      "sha256": "d8379176649868bb9fcd6f93e58007d81ac032af81da5265fbae6fd8ed58b37a",
+      "sha256": "34427ee41abee0bf390601cbd26af6e9b25bf09eedcc5c2b1697c64119f76e1c",
       "palabrasProsa": 626,
       "tramo": "600+",
       "subgenero": "anuncio",
@@ -4034,7 +4035,7 @@
     },
     {
       "id": "BOE-B-2010-33287",
-      "sha256": "adbca72520c2a79698a991416ae8c123afaa4c38540f91a848394e6b139c90b6",
+      "sha256": "a9a42a230d71a13d093c823d84d677242a074a12e933d641576852010e9cadd0",
       "palabrasProsa": 180,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4045,7 +4046,7 @@
     },
     {
       "id": "BOE-B-2010-33288",
-      "sha256": "72e4be3f7a7c87a64801b740375f2df3beb010206ca5d7be1061da4b70bf872b",
+      "sha256": "7d1baad17350d08bebb4789fe29cebfd8eb7f0712192413a5158dc8d1140d66a",
       "palabrasProsa": 411,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -4056,7 +4057,7 @@
     },
     {
       "id": "BOE-B-2010-33290",
-      "sha256": "12f395e507e2dca20b6fb2a5d1dfa56deb88cfb216de31ae6dac0474b586a33d",
+      "sha256": "1de941236800368ccc40c979f290d3f63ef8ea890950ec1e4b220ef8b08c7356",
       "palabrasProsa": 129,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4067,7 +4068,7 @@
     },
     {
       "id": "BOE-B-2010-33291",
-      "sha256": "9fd49eb6e188bfb2595bd2164ced2f22d293c081b61c4caa058cb3b0fb4e23f5",
+      "sha256": "1e40007e0274bcd53a0b7c6e4309ac5609c89501c6a1e2e2ba7982061b67152d",
       "palabrasProsa": 786,
       "tramo": "600+",
       "subgenero": "anuncio",
@@ -4078,7 +4079,7 @@
     },
     {
       "id": "BOE-B-2010-33292",
-      "sha256": "19d5084ec05469838870f9b5afc0dae45b18100b32c0649861ee0bfb2182107f",
+      "sha256": "a738152f5c6ba493e77aeae28d4b7c767bf46de672c8b8967b40860b57dc9565",
       "palabrasProsa": 297,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4089,7 +4090,7 @@
     },
     {
       "id": "BOE-B-2010-33293",
-      "sha256": "cc6d0c233a22d90d9427baa2d71070d27dba49783eda5167716acb8fd25f2715",
+      "sha256": "b6dfe469911e12839188ef54612550b258978ce0d48defe91829b73c37bd8794",
       "palabrasProsa": 146,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4100,7 +4101,7 @@
     },
     {
       "id": "BOE-B-2010-33294",
-      "sha256": "c6089935cc0388cb2ceaadc5a0231c1d468de9934aaeb8b7c5365887f6536da4",
+      "sha256": "f73c3951b200c6c096407cbbac0df00e4ab89da5ac14b892993c295404b8ec54",
       "palabrasProsa": 177,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4111,7 +4112,7 @@
     },
     {
       "id": "BOE-B-2010-33295",
-      "sha256": "67bc87e9e3331f53d7e9fd579fda6028f3a4ff2d08d98a5782b565ebacb59424",
+      "sha256": "9337b4cce34bccb813fa1d7601f7d1d649d0a24438edd350b4fdf7174f21deb2",
       "palabrasProsa": 396,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -4122,7 +4123,7 @@
     },
     {
       "id": "BOE-B-2010-33296",
-      "sha256": "ab2dc95f07fb4b9d369ec3213b59594dfca18dd0c200d3fc98e9d9cb375e9925",
+      "sha256": "52b44a136fed88a8522fee9be06b3a62a2939cdca029d3a5134c77a6a3d1f704",
       "palabrasProsa": 394,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -4133,7 +4134,7 @@
     },
     {
       "id": "BOE-B-2010-33297",
-      "sha256": "789e47ffb7a5ac281f97f23cbf5f2ea2ccd6cd2e2a3e4f778f29590ffc8e089b",
+      "sha256": "ddde7a9aabe054fd73f6234c174adf14651654aa5637348e9e11513ce0a5c620",
       "palabrasProsa": 392,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -4144,7 +4145,7 @@
     },
     {
       "id": "BOE-B-2010-33298",
-      "sha256": "f917daaecc0ae1f1c23575888ead92bfb1d4a2ea4d8f7bd9a51838acea77a8cb",
+      "sha256": "d8b715b75a56696decd2596873a17a9cc8ad0cc8efff190e0c83f9dbc2456d59",
       "palabrasProsa": 110,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4155,7 +4156,7 @@
     },
     {
       "id": "BOE-B-2010-33299",
-      "sha256": "2be274ce03f85133e0de3515a4ce9f04d5eeaa2ea1a6c072d04c2fc108df1519",
+      "sha256": "e54c4b158a8bc61f8cffe18b6628919cf42ab45ec86375e4624be6d87d44874e",
       "palabrasProsa": 105,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4166,7 +4167,7 @@
     },
     {
       "id": "BOE-B-2010-33300",
-      "sha256": "c84ee85ec1bdff01ad1bbd98d20b008fc0ae89dc1821f92935740336342bc184",
+      "sha256": "7820046dc574a92470c085df2392e51512fe3ba7cb17ebd98f76e57a4a85cf68",
       "palabrasProsa": 337,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -4177,7 +4178,7 @@
     },
     {
       "id": "BOE-B-2010-33301",
-      "sha256": "5e534d4641d74a66fa6e89d341fa329f3f4d4f41c70a0c56a61428b5f21c540b",
+      "sha256": "b4dcad200b424a101ab69ce5b2a3b63838f22dff3fffa213b18a08a99be23eb7",
       "palabrasProsa": 291,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4188,7 +4189,7 @@
     },
     {
       "id": "BOE-B-2010-33302",
-      "sha256": "749ef33c5bbf41c94ba4e8cd6628718655ecff443ac9886d6a4e1204ffc4e03b",
+      "sha256": "70fc1a3f557a4d296355831652277edb4cb7f95070ef56e4599382b963c7dbff",
       "palabrasProsa": 147,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4199,7 +4200,7 @@
     },
     {
       "id": "BOE-B-2010-33303",
-      "sha256": "31c69a75c55c78505cdb904040c241774b13d04073f2dba303fba024de29c43e",
+      "sha256": "d105940bb90cd2f4822912a98d4631bfee36f7250512762636f8080e978d1efc",
       "palabrasProsa": 152,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4210,7 +4211,7 @@
     },
     {
       "id": "BOE-B-2010-33304",
-      "sha256": "dd72487a4fbe79605d981a3b3a9ab58df377bc505da6801b76dcf1888cea6ca7",
+      "sha256": "e1ad103592bdd305df4cd1b5614b30a4a23067d044e45c8c284c6f6f8d02d08b",
       "palabrasProsa": 152,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4221,7 +4222,7 @@
     },
     {
       "id": "BOE-B-2010-33305",
-      "sha256": "09244f32068d2d71b03e5d9a74291d308c765b10aff1a82631d1d424b5f47c29",
+      "sha256": "cc138179bf654929e6c3622edf9f7cd3ab7b22d430d62901435e16438ccdeb59",
       "palabrasProsa": 342,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -4232,7 +4233,7 @@
     },
     {
       "id": "BOE-B-2010-33306",
-      "sha256": "700547334e87aea050c6e747940c72b1186ef517a87bde20c7768ef820619ccf",
+      "sha256": "315bdb07a2aca1bded6bdc84ac9d456a9e8e68d4c36df7d57bb7057886404889",
       "palabrasProsa": 2194,
       "tramo": "600+",
       "subgenero": "anuncio",
@@ -4243,7 +4244,7 @@
     },
     {
       "id": "BOE-B-2010-33307",
-      "sha256": "330b4cbd35a0b59b34d181d8d94ed1af2409f7790353fc46fa23311604461a6d",
+      "sha256": "46da2efb056e862db6216a40993e451ffd1a8b6579e3c11186774c5696a612a5",
       "palabrasProsa": 497,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -4254,7 +4255,7 @@
     },
     {
       "id": "BOE-B-2010-33310",
-      "sha256": "1bfac9e6d5c6bd94c49a02ef24396b3a23321632db457815800219ad7d38bd44",
+      "sha256": "71661241b0bbe9f5d2333a71549121b7faa3a042428d00bc7bbf649928cac6cb",
       "palabrasProsa": 164,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4265,7 +4266,7 @@
     },
     {
       "id": "BOE-B-2010-33311",
-      "sha256": "f71fc7163a95d41df2ef4374a10805093a06f9bb84fc362e785311e4e78cf79b",
+      "sha256": "72d7dc0c91d3b3378382e18201c1761dfbac4e7690544c8120bb64d07e65e2a9",
       "palabrasProsa": 244,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4276,7 +4277,7 @@
     },
     {
       "id": "BOE-B-2010-33312",
-      "sha256": "caa275fb65c85a0c4d7773b2174f4c4a4eae2a4247a0419941d2301af2af96fa",
+      "sha256": "3f31317d0ac01a5c5d47dad9992d7d2fe97272d75c3736a759530efcadb57e95",
       "palabrasProsa": 368,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -4287,7 +4288,7 @@
     },
     {
       "id": "BOE-B-2010-33313",
-      "sha256": "1332996c87b0c0e13f133a7bb79d3bd2878f24f924420f0de9a8721ac610075d",
+      "sha256": "e61bc77f94dbe5ee5cf97b832eaab69e0da908d92dfaca29ed68e160f2e5d0fc",
       "palabrasProsa": 341,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -4298,7 +4299,7 @@
     },
     {
       "id": "BOE-B-2012-3650",
-      "sha256": "338754176e223b34ac97bb852b12e46bef7de2cdf2659312349dd6ba04424bda",
+      "sha256": "6886f943062378d8ce515457dcab2d76ddf304417b0297afb042fea072dbad8f",
       "palabrasProsa": 112,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4309,7 +4310,7 @@
     },
     {
       "id": "BOE-B-2012-3651",
-      "sha256": "c90739295ab57e59477791654cb42b86bf8079d6b8f4acc0609638fd31e9d570",
+      "sha256": "2ac46fd6332911b1835425ffbbea941d6f54f8c6dbf65dbc9a7d4324be1f19cf",
       "palabrasProsa": 105,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4320,7 +4321,7 @@
     },
     {
       "id": "BOE-B-2012-3652",
-      "sha256": "2bef9a167deea1cede0fa9d6703e1d868c3f6005da1d0f75db7098e51344430a",
+      "sha256": "597610ffad956a8859c188bfa69ec4c5813a3f6cdde61d4a8695af27f0d0f757",
       "palabrasProsa": 203,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4331,7 +4332,7 @@
     },
     {
       "id": "BOE-B-2012-3653",
-      "sha256": "3bdcf119ac91ff5d5bd156bb164551c72597d81f89e02b8b15a339503d34608c",
+      "sha256": "f861bb5582d56502185a733168a3083094e67c64178e8adefd07638ba4276170",
       "palabrasProsa": 173,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4342,7 +4343,7 @@
     },
     {
       "id": "BOE-B-2012-3654",
-      "sha256": "5f8b267b61647af8129d11399855927392dc295cf2bd7d8c52c0e3a4985d7912",
+      "sha256": "4cd2706d918a5481aa715f8e3a697daf102aa5bbe70ab58b3aae095ddfd57ea4",
       "palabrasProsa": 265,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4353,7 +4354,7 @@
     },
     {
       "id": "BOE-B-2012-3655",
-      "sha256": "093b2535690e7c4fb0dad1fd67c9b47124aca6de89a4b1de7cc46cd4a10c6d3d",
+      "sha256": "d3952271e159e12f7079cc2b6c275b9b4b3d9b1981c8b1c0d571e07d42da12d3",
       "palabrasProsa": 438,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -4364,7 +4365,7 @@
     },
     {
       "id": "BOE-B-2012-3656",
-      "sha256": "311a7b124991aee8cf7032227e52617024209ff845ffe0383ce2f2f2b0d19e29",
+      "sha256": "b8f5b141cbe38bcbecd96337633c8ff0664ffafb48cd69e77635b658dddc6b99",
       "palabrasProsa": 169,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4375,7 +4376,7 @@
     },
     {
       "id": "BOE-B-2012-3657",
-      "sha256": "9ff8fcba31fbad7e1b1576a24753a5a95c7e409d0f1c5fa98bf3b303582914b0",
+      "sha256": "aa1d59d0a3693b49b46f729bdcd606aca512c3cb37c7ac47ebeef67cb103db0d",
       "palabrasProsa": 136,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4386,7 +4387,7 @@
     },
     {
       "id": "BOE-B-2012-3658",
-      "sha256": "abffe394bc21e963023fe80bc693e1d2aeb16aa7d7b9bcc224738cab5a949f71",
+      "sha256": "b8f1f24cf32bebfe0299cd5e5512439250d69208c48ab122224d73382c88c5f5",
       "palabrasProsa": 141,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4397,7 +4398,7 @@
     },
     {
       "id": "BOE-B-2012-3659",
-      "sha256": "3a96c24c310694563fab54620d29749819a40116569e8510cbdc75c778c1a743",
+      "sha256": "558391508e2fe8899936963b0cee7fe80fce75443fb944c32912b6267a80dcf4",
       "palabrasProsa": 136,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4408,7 +4409,7 @@
     },
     {
       "id": "BOE-B-2012-3660",
-      "sha256": "86e1c1979d3af38bfd1d58e764a5bec1d53b42b403e0e57fa53ab96646696c1e",
+      "sha256": "ff30720dbfd97549f5486f5af4fc5e539372dc237917d4e1faf0b0eb57f38c97",
       "palabrasProsa": 136,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4419,7 +4420,7 @@
     },
     {
       "id": "BOE-B-2012-3661",
-      "sha256": "d5f1e7a9b2d15e0ab8a283c893e4f710f94ee988f147010ee602efad7da80881",
+      "sha256": "f71fd5adc079280757c1fc908e2c1225eedfd46545a0f4bd4c83d63d0f6b489a",
       "palabrasProsa": 146,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4430,7 +4431,7 @@
     },
     {
       "id": "BOE-B-2012-3662",
-      "sha256": "4d0c278f774745f352ac07dfb820dc9eb298f05cde43dc96552ad7ea24e809dd",
+      "sha256": "3122bde84accd235e5006e9972981d3e57869c10eb5a654eb90bbc5e1aac8fd8",
       "palabrasProsa": 147,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4441,7 +4442,7 @@
     },
     {
       "id": "BOE-B-2012-3663",
-      "sha256": "7e5c06df59ceda3b01483d84111d880f7d9d071ccdc352030d8d7d1551df5b9e",
+      "sha256": "adee17ba102f3bd211cb87a99cd5a9f3857fb84b7ae09ff1439ad3fd36474bc4",
       "palabrasProsa": 150,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4452,7 +4453,7 @@
     },
     {
       "id": "BOE-B-2012-3664",
-      "sha256": "5898f19d97664f5ef63a4f0dbbac5022dbad0b2ff0eaddbe8259fc4662d71091",
+      "sha256": "d6e8763b24562a8ef52f5a21a0cc3b60501b83005f7e62a6be68e69f07f457a3",
       "palabrasProsa": 433,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -4463,7 +4464,7 @@
     },
     {
       "id": "BOE-B-2012-3665",
-      "sha256": "a99d61e0cd0f2ac44eb8833964692be2ac7aa4bfc582b300c4fca9a8cf532dc4",
+      "sha256": "c5120af23edd41a08290abe52400bc0712fe3f28c9b8f4c923397a30d2d247a3",
       "palabrasProsa": 171,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4474,7 +4475,7 @@
     },
     {
       "id": "BOE-B-2012-3666",
-      "sha256": "878d8bd596ecc99e9376d90ffbd9dcf160d7a6d3c35fb230eade85f8d12b9682",
+      "sha256": "6f3e35bdcb21a362973d22699705e5a8ffd24463054c4b5f3a0f17bb75ed8b5c",
       "palabrasProsa": 144,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4485,7 +4486,7 @@
     },
     {
       "id": "BOE-B-2012-3668",
-      "sha256": "006b44cae715321156513c1ac4031ac7da9607c3b75994b66fb235f69bbb0b7f",
+      "sha256": "38cf15916fecd81e56f0797846a12eeba2540a411b031971952ddb5b1959c924",
       "palabrasProsa": 191,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4496,7 +4497,7 @@
     },
     {
       "id": "BOE-B-2012-3669",
-      "sha256": "e36fb14ad7e96ec21ae33d8e605842e54fde63660131fbdd4829a9007d0e6a3b",
+      "sha256": "c57e5bd2ad2413e9f38d4e46e076ef2378fb615838dea4711347ee3f6d4189c1",
       "palabrasProsa": 179,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4507,7 +4508,7 @@
     },
     {
       "id": "BOE-B-2012-3670",
-      "sha256": "f9e0dad004a45f22428d1a8fed82adb35a09b81b3bfcfa818f7fbf4647e95ac2",
+      "sha256": "fa4e0fbcc0b70325cff3d347ccf866eb0d7ba9cba658da761b62f04a568b49a2",
       "palabrasProsa": 170,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4518,7 +4519,7 @@
     },
     {
       "id": "BOE-B-2012-3671",
-      "sha256": "8397d4339f44555d25ae45b993bd5e2653da9cd46003af946d7255ff6a2c7432",
+      "sha256": "6cb2b91fe15bcf2d41ef89cae8b82b3ab341826bc935bd8b99cedc09cda7c09b",
       "palabrasProsa": 224,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4529,7 +4530,7 @@
     },
     {
       "id": "BOE-B-2012-3672",
-      "sha256": "9295fe4a3158f3fea8c5d82e86492cbbb3de11561709f5e46cb1b7d83e62cc1b",
+      "sha256": "710f88b59dc9e730161c5d625530802192f0c64648a82a150b52bb2d317ea9a2",
       "palabrasProsa": 230,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4540,7 +4541,7 @@
     },
     {
       "id": "BOE-B-2012-3673",
-      "sha256": "0e4eac2460d1b55449aba5ff1de68644dfc268056db81f3ef783d173f1ce2d5e",
+      "sha256": "f9ba6c26d14788553064489fb889897fad6f48f8d4674ea97ed42cb06252303c",
       "palabrasProsa": 183,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4551,7 +4552,7 @@
     },
     {
       "id": "BOE-B-2012-3674",
-      "sha256": "06d2a0cfdc7c19ece1b942e4b652b8be3761ffb42aedcea5fe7e93bff9123fc6",
+      "sha256": "21f1dfdfec260a2458921d05030807920ce113af6c540c7a11a971399c112822",
       "palabrasProsa": 217,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4562,7 +4563,7 @@
     },
     {
       "id": "BOE-B-2012-3675",
-      "sha256": "835e379c3445f1deafac4fb8d43a73707254403fea70be8cbb5a25dc9c690071",
+      "sha256": "54aaff5475190bc66ecee7e223513a627cebf118eff46b69de37ecfd8a3ff832",
       "palabrasProsa": 167,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4573,7 +4574,7 @@
     },
     {
       "id": "BOE-B-2012-3676",
-      "sha256": "a7fb82aedb9ab56a646d671f21ea6b8d200f8e26280e209857657170119aca5a",
+      "sha256": "df6b854fb1388cdb7fd2921ee1c9e3582d381d01d417fba478e60fd27e46fa5f",
       "palabrasProsa": 396,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -4584,7 +4585,7 @@
     },
     {
       "id": "BOE-B-2012-3677",
-      "sha256": "c62e1d31073e22b68b00b7d3975e8b27489d875ce0e6f0fdbed8e1d00b73d726",
+      "sha256": "384eae5e0813df844ed79f13bdadeadb0055609f39f6c3b87dff8bc2f57aef17",
       "palabrasProsa": 373,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -4595,7 +4596,7 @@
     },
     {
       "id": "BOE-B-2012-3678",
-      "sha256": "84460bcd6e3e1eb93336f0b6a1f7590a756bedc29bc2515afdd0e7846387ef40",
+      "sha256": "f0b3b556f5fb9f579ea2747a3f74dc8b63df1f9df97fc271e0e2d2f1eb6a5418",
       "palabrasProsa": 512,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -4606,7 +4607,7 @@
     },
     {
       "id": "BOE-B-2012-3681",
-      "sha256": "3948f125d03fd1fd00b25369e17b778a9e1ae4c8ebc392e8710f8135558460e4",
+      "sha256": "62f88de83681ed2f98f4dba2a382955cfe42164689f0383500dd968582aa1b6a",
       "palabrasProsa": 205,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4617,7 +4618,7 @@
     },
     {
       "id": "BOE-B-2012-3684",
-      "sha256": "edf25629dab163e8b7fc861e9ed26c992494a202b340f061158b0ebb25ec655b",
+      "sha256": "c746bc6f8aba9b8f15785bb18cc4c9c52dd480bc730817a5703c3c2eb9e6651d",
       "palabrasProsa": 261,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4628,7 +4629,7 @@
     },
     {
       "id": "BOE-B-2012-3685",
-      "sha256": "6e2b2f27d8f5aa30d1965887822e3be34bef84b460076356b1e04a6fbf571b51",
+      "sha256": "06b7ee5640da47dc75d714808f79d4a95844f723cf92d23f175d5ccbfe5791fb",
       "palabrasProsa": 255,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4639,7 +4640,7 @@
     },
     {
       "id": "BOE-B-2012-3686",
-      "sha256": "9a7a81c16b3120df069179889fb38933fb90baaa7f0bf50f6bd99e7586d6f4e3",
+      "sha256": "b83dc8dc250caac9a9322000ca27d3c49b6d2717a0c67695857cb632b408132a",
       "palabrasProsa": 187,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4650,7 +4651,7 @@
     },
     {
       "id": "BOE-B-2012-3687",
-      "sha256": "e26993965b722641287912d11b246144c52a08efccfa31f5e6762625e7eb4b60",
+      "sha256": "afe4e12b2b715ced0db5d6013896cb16022320b778bb96bd1d8202e4034a54c7",
       "palabrasProsa": 189,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4661,7 +4662,7 @@
     },
     {
       "id": "BOE-B-2012-3688",
-      "sha256": "9defedfac40ff0c29cab6bbe5b7cbdba41d8a51239ff9263bc8b25ee8c34d880",
+      "sha256": "4f33955f3019bbfb7a3823d00d591561485fa1836018a2f422f0b3422b875bf1",
       "palabrasProsa": 196,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4672,7 +4673,7 @@
     },
     {
       "id": "BOE-B-2012-3689",
-      "sha256": "661731112242798e10d64f0d9cc65f6ccc1dbae7fd53a2c797e48cb4f9b158bf",
+      "sha256": "2e07a01a42c714517f8894de2529280ee0dc47863ac792dc0258a871a889c0c4",
       "palabrasProsa": 164,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4683,7 +4684,7 @@
     },
     {
       "id": "BOE-B-2012-3690",
-      "sha256": "1712c2d3b1946e2eea25a5b674a826d49d1df6c233b8872113ac619c0aa2cc81",
+      "sha256": "30670f18573aec82018f4a05fdbe990ad447eb8093cacc62dd7954692576d491",
       "palabrasProsa": 466,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -4694,7 +4695,7 @@
     },
     {
       "id": "BOE-B-2012-3691",
-      "sha256": "5274c1e10a63514c0a26ed23b66ee2258f65b296d8a158231c3895f82fb48ac9",
+      "sha256": "10f5907f76947286feec3669bf80f9950b9208227093bdad9b6330fc7a7eadd9",
       "palabrasProsa": 168,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4705,7 +4706,7 @@
     },
     {
       "id": "BOE-B-2012-3692",
-      "sha256": "7876d57c39132d3f7e484118950627a6639b89560359f2def0e98dc1d249f220",
+      "sha256": "f14d6b59a5b4a5977ca595e065f6c319cb82202a2ea184c72ecc5d6ca3e748eb",
       "palabrasProsa": 166,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4716,7 +4717,7 @@
     },
     {
       "id": "BOE-B-2012-3693",
-      "sha256": "4be323e916bf2d2309fbbc862d7f187469ecbf09558cf2c51dfccc93761c4256",
+      "sha256": "d19ce176669203b4868380bfc5250952b8ae4cf10083384d4495f0d1954cf403",
       "palabrasProsa": 203,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4727,7 +4728,7 @@
     },
     {
       "id": "BOE-B-2012-3694",
-      "sha256": "3b345b5e2348ab40247187fd4b363854b2aa13caffc879d0e4837a6c40bd9bad",
+      "sha256": "85322153de3dec599d9a80dc6e0c1c329ddac97048f14082841da1eae6e7006b",
       "palabrasProsa": 182,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4738,7 +4739,7 @@
     },
     {
       "id": "BOE-B-2012-3695",
-      "sha256": "87939e86121c36a404b7af8996eaf0a2361a283704e68a4e7eac4c90eeb2bdc5",
+      "sha256": "cc9733713ae34a4cf85e09a23a772c9d2547de2caf40db2654ceb729b378cca8",
       "palabrasProsa": 266,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4749,7 +4750,7 @@
     },
     {
       "id": "BOE-B-2012-3696",
-      "sha256": "1e051ba2b83cfd6eabeddca0f2c77c016798b44cca431dc8737bdd134cd243fa",
+      "sha256": "91c6bb8b8f8e7cc0c0fee3ceb494446cb6fe48e262fed3992528c6fafeee36fd",
       "palabrasProsa": 135,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4760,7 +4761,7 @@
     },
     {
       "id": "BOE-B-2012-3697",
-      "sha256": "bc310b38fd92372fc284a2fb18d067660276e7ce473cfa18e01cbab912c1f2f3",
+      "sha256": "b195eee6073b6b935ae139c8ac5c6b3160aedcca650642556717f7cefdb2ddc0",
       "palabrasProsa": 172,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4771,7 +4772,7 @@
     },
     {
       "id": "BOE-B-2012-3698",
-      "sha256": "c0a57dd1e3a751f85b2af11b3f63f87e41d67dda01126d103120c33458c367fb",
+      "sha256": "ca2e4d2fd9feddb4cedb6495db89f80092f7b2a8026ea6c375d234491297666b",
       "palabrasProsa": 125,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4782,7 +4783,7 @@
     },
     {
       "id": "BOE-B-2012-3699",
-      "sha256": "19ad06a5f11253ee554087c39cc66b76fccec81906d525ec7aeae4b10d42cd16",
+      "sha256": "7bb98c20a63fd403af68eb2386ce3fa3158441a376278819f9540433dc2b5873",
       "palabrasProsa": 153,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4793,7 +4794,7 @@
     },
     {
       "id": "BOE-B-2012-3700",
-      "sha256": "7b90dd1d52d8a788014b027274cfb257fc7244862d8aef5f199ef164c5eef7ae",
+      "sha256": "af6bf6eb764181235233471150b819d22e0464145a4d1244a91afa8726d887ee",
       "palabrasProsa": 168,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4804,7 +4805,7 @@
     },
     {
       "id": "BOE-B-2012-3701",
-      "sha256": "c171741b66ce6c3cab5b897195bf08dd6c19362b44718c902c817308a7012943",
+      "sha256": "c7cbb46174703a4680e295604c43e2125acafa4106cd235762c4d537020d02ff",
       "palabrasProsa": 297,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4815,7 +4816,7 @@
     },
     {
       "id": "BOE-B-2012-3702",
-      "sha256": "ddff678bccb5fb2373858a7f32b0bb3704094758be1cb01e75712cd0c98a1122",
+      "sha256": "2ffc53acd6dc10eee9313260e2e58ade6b94ceabf4dcb6455bbdde6c4c8f86a2",
       "palabrasProsa": 411,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -4826,7 +4827,7 @@
     },
     {
       "id": "BOE-B-2012-3703",
-      "sha256": "fc45527d25d1ef433c0cad4962d9503eab29c91897d71eda84667ba681000e31",
+      "sha256": "58568d04741ff8d659e6f5b48cba18026bbc61d155aca16f2f7133871e220546",
       "palabrasProsa": 390,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -4837,7 +4838,7 @@
     },
     {
       "id": "BOE-B-2012-3704",
-      "sha256": "b4e2e1b44435cf97ed7edc6da08c4a708b6476911a2e9070b54b56e08f649471",
+      "sha256": "1fc3843ed7e96cd767c845a8f7fe0a28d85a43a2804480ea4fb87fdc9e670362",
       "palabrasProsa": 285,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4848,7 +4849,7 @@
     },
     {
       "id": "BOE-B-2012-3705",
-      "sha256": "7b8e1a309c606a5d1faca389b955e22dd4abef011b1b4c3179d05ff602c3e439",
+      "sha256": "c48130a7a2d773edc1b526b432999aa27c9a3e20bb50c4f6c5dd999cf83075a2",
       "palabrasProsa": 141,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4859,7 +4860,7 @@
     },
     {
       "id": "BOE-B-2012-3706",
-      "sha256": "fac3ded02808ca8180b29f9a7b972764bd83b862fa4a73d5aec8c72be04776a8",
+      "sha256": "3fe109341e359646b07572c392918c40dee85e39020b335e5ee136bcf42ca582",
       "palabrasProsa": 247,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4870,7 +4871,7 @@
     },
     {
       "id": "BOE-B-2012-3707",
-      "sha256": "b46098abfd3b6ecf6408b9421b6062efd861068f43b658a46414dfbcf10bf371",
+      "sha256": "e91856587722f7704cdd0206a62334d134452bf7caee8aba8a02125a08ae46da",
       "palabrasProsa": 376,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -4881,7 +4882,7 @@
     },
     {
       "id": "BOE-B-2012-3708",
-      "sha256": "4bd5df0ef7328eb15927ded4961254ae86a9c366a7e2c943ac7b3b2a811a1f20",
+      "sha256": "83298e51cf358940374d46fe529a095b57c0918576a29b3959ea59df636a28ff",
       "palabrasProsa": 142,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4892,7 +4893,7 @@
     },
     {
       "id": "BOE-B-2012-3709",
-      "sha256": "44f833733b8752c3151f9934b5eaeebf18a73c6988039c3c3eb460d64ee0a64f",
+      "sha256": "c6a3473bbc54d13695e75ba36fa6c2f35ed106c1d8ae4009322e2d11e161b434",
       "palabrasProsa": 176,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4903,7 +4904,7 @@
     },
     {
       "id": "BOE-B-2012-3710",
-      "sha256": "7231f03ecbec57b3fffa29b2c2ae7e6e47f4df3b6f8390e2e9f71eb81fb61176",
+      "sha256": "f98b9547fab2c7db559bc877fd0286025f64f8e7dbd2f4115e43b5418b47cdd8",
       "palabrasProsa": 175,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4914,7 +4915,7 @@
     },
     {
       "id": "BOE-B-2012-3711",
-      "sha256": "dd7db03d98dbe2e192c1fb851c2a0c2a8123d6656465dd078d16fafff54cbc50",
+      "sha256": "075742a88987451713b003468fa0008babec9242f464700052446aa393581fe2",
       "palabrasProsa": 178,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4925,7 +4926,7 @@
     },
     {
       "id": "BOE-B-2012-3712",
-      "sha256": "4994bf3b813ceebe9aff230a2d38075f733603b3a908d9c06f59ff8ef94bdde3",
+      "sha256": "e3733198e097c2effc2caae1c0bcc5e4e62654d095adb29dc3b6e6a7ab85c5a4",
       "palabrasProsa": 180,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4936,7 +4937,7 @@
     },
     {
       "id": "BOE-B-2012-3713",
-      "sha256": "95c03bcd811332791415474bd9fd47caeac2c61f1a7420c59f125d1c76234770",
+      "sha256": "eaf9182c6120f0d9f8603a2ade31be3e365919bb8e2184e5e6fb4f786397e3a2",
       "palabrasProsa": 134,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4947,7 +4948,7 @@
     },
     {
       "id": "BOE-B-2012-3714",
-      "sha256": "151929a58f443409b4845b212a9fd7471c99d09c61b37a8a930d1ea7364be43c",
+      "sha256": "34593362bf99705aeb86adc03ae22af7271be4b041911638dad7c96895a83c12",
       "palabrasProsa": 109,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4958,7 +4959,7 @@
     },
     {
       "id": "BOE-B-2012-3715",
-      "sha256": "876e02647fecb0d056c44427293ae21f0b50a57f8c441dbdc3b476759dc658f1",
+      "sha256": "0cb5394459d458c9f65fefadccdec5001e11a6867773a351e690c95bc017897e",
       "palabrasProsa": 257,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4969,7 +4970,7 @@
     },
     {
       "id": "BOE-B-2012-3716",
-      "sha256": "459c8bc55d0f14bfea1e30514555b49ceebf3bb92d92544565a0aa13f45c85b6",
+      "sha256": "04f7c59fb61e0aad138e86af6fed1c93bd99772872fc91c07556919232fec005",
       "palabrasProsa": 426,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -4980,7 +4981,7 @@
     },
     {
       "id": "BOE-B-2012-3717",
-      "sha256": "8deb681adcdfc8984890f31541c8557b5d52ba86fc29c9e9fabbf6658b1747d0",
+      "sha256": "8abaf302fa7721937066aa88865b033711fc233a69fff727780c210f6dcd4f8e",
       "palabrasProsa": 140,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -4991,7 +4992,7 @@
     },
     {
       "id": "BOE-B-2012-3718",
-      "sha256": "ac5e9eee584677b3f8d05bccdf0ac9c0adaacb33061b75ec8a166721f6b88760",
+      "sha256": "51b974288e1c261993007e5a487aa0a77c6b86be13092d5cde521d5a5e8ecc26",
       "palabrasProsa": 630,
       "tramo": "600+",
       "subgenero": "anuncio",
@@ -5002,7 +5003,7 @@
     },
     {
       "id": "BOE-B-2012-3719",
-      "sha256": "a4e4231b5b8a14ce5b0d281a8189d26a275f8bd2084c6f98652a1055e98475ef",
+      "sha256": "282e5a31f45a3e5dd675cce1acae022d1708799a5afa98073587a4319739642a",
       "palabrasProsa": 359,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -5013,7 +5014,7 @@
     },
     {
       "id": "BOE-B-2012-3720",
-      "sha256": "b25b4e61f823f8b46c8e9b76b57516608af9f9b553e1ba91b85802a48158b321",
+      "sha256": "a4eb58c7dd985fe8e28a4cc7f59b3a8bd4d71ca6828d6445365a728c0de97c3f",
       "palabrasProsa": 503,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -5024,7 +5025,7 @@
     },
     {
       "id": "BOE-B-2012-3721",
-      "sha256": "feb039cff8c8341ce2ea36e3271532bd9796effa9ab04cb34071d0846a108633",
+      "sha256": "0a523b3ea0e586ab8ac908a421314e69203389642b2c007907eb5327c7e4cca4",
       "palabrasProsa": 457,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -5035,7 +5036,7 @@
     },
     {
       "id": "BOE-B-2012-3722",
-      "sha256": "977eb8772218d098e288734bdf4b6e4b727d2f0719979adabfaeecb81c464e31",
+      "sha256": "78c1f516e10ff4d3af65c082beba3969a51aaa8ca560f7cc19c0feb698c37ad7",
       "palabrasProsa": 198,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -5046,7 +5047,7 @@
     },
     {
       "id": "BOE-B-2012-3724",
-      "sha256": "c369e810df0d84278f2da02176ebb9ae4219c4b90f57b829c95f4b4024d10d2f",
+      "sha256": "bac833dda4ea469a7d29aabfc18caa8d3da247eccf13cc66c5e113ad8ca0a6e2",
       "palabrasProsa": 179,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -5057,7 +5058,7 @@
     },
     {
       "id": "BOE-B-2012-3725",
-      "sha256": "3badaf4d08ce17532b283904c54a463f3ee062d0c630e3d338b18155602b3605",
+      "sha256": "731e99c237b8e80eefda98b32d5736a2d9829e586454d9bae841c4c8fc842c6b",
       "palabrasProsa": 554,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -5068,7 +5069,7 @@
     },
     {
       "id": "BOE-B-2012-3726",
-      "sha256": "e285f2edee010b3b71ab13f7d79068b7d66961d22c14f68f703d0ca3bb702a8c",
+      "sha256": "b314d91b48a5d79c7de5209ed75c8636302283a5882be11eb2422b7be3ba43ed",
       "palabrasProsa": 421,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -5079,7 +5080,7 @@
     },
     {
       "id": "BOE-B-2012-3727",
-      "sha256": "5eebfcaa3c45bb0f57b278e9bffcf49009a59b98eb567f6f76adb128d7c844fe",
+      "sha256": "fab9c685fbbdbb64d2121e4902b38b11f52a906fcda2f0c01eb7ba622b9c62cc",
       "palabrasProsa": 123,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -5090,7 +5091,7 @@
     },
     {
       "id": "BOE-B-2012-3728",
-      "sha256": "4606914ccdc4a214b9adc1573cd5399234fb82a56c54a2710ca2e96b68409cfc",
+      "sha256": "f4bf3f27917cd7edc760fe8d9b17c3d86da038c2cf626a631463130a7ca48f92",
       "palabrasProsa": 172,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -5101,7 +5102,7 @@
     },
     {
       "id": "BOE-B-2012-3729",
-      "sha256": "606ee6f034e14e3e3cbccd378ec53c83a9a49836bec7a9456f358b1d0f1baedf",
+      "sha256": "2dfffead2b85fe28d1fb5a5439ec5a8f2f7610457823d56d6c4222a9d2ca9bdc",
       "palabrasProsa": 164,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -5112,7 +5113,7 @@
     },
     {
       "id": "BOE-B-2012-3730",
-      "sha256": "79335acadb68797b237f9b224719b01c7fb74fcd6b5a4216d6ea2d3f892a2343",
+      "sha256": "ba9736af74b5be2fc85b438035a01436c2fd2bf62978703cf5fe4612841aa5a7",
       "palabrasProsa": 240,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -5123,7 +5124,7 @@
     },
     {
       "id": "BOE-B-2012-3732",
-      "sha256": "f671822ca9c53bcd8d16a6ffd814e1cb5a6967bca1c6bfedacfa24bf6d08709e",
+      "sha256": "c6bc5c62c83de02dc8af87964e2c181f7e830d061d2ff9882aefd1c5dda865db",
       "palabrasProsa": 442,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -5134,7 +5135,7 @@
     },
     {
       "id": "BOE-B-2012-3733",
-      "sha256": "d037b3b97a4b3aee70f0be3e136812c787dbc1ff3498b16960045bdbaf18b544",
+      "sha256": "3419bb27aaee8a7e5cfa8884518503cc709e76b52379149d2a23f7d8bfaa03cf",
       "palabrasProsa": 1057,
       "tramo": "600+",
       "subgenero": "anuncio",
@@ -5145,7 +5146,7 @@
     },
     {
       "id": "BOE-B-2012-3734",
-      "sha256": "97be66d82763f98d05c46dc316beede7bc95d4771ec54868e2664dadace4bb90",
+      "sha256": "f725bc469600d5b1fb05a7e481105152404730a5cd4062f0e89e1f7a01d88817",
       "palabrasProsa": 179,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -5156,7 +5157,7 @@
     },
     {
       "id": "BOE-B-2012-3735",
-      "sha256": "7a29f29771ad5c18540fe7d4e18eceecdb0249dfc1c30707b892c0ff931ef145",
+      "sha256": "a579c5ee3f17daa0bf3ea38214a1f2ae949de3de4e40bc32c29064fb8bfd0ed2",
       "palabrasProsa": 178,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -5167,7 +5168,7 @@
     },
     {
       "id": "BOE-B-2012-3736",
-      "sha256": "51720f77539254873d97acbc3b532ce6bd79063e7e4e9f043d8cb66f604ba1d0",
+      "sha256": "45676c64c165e0191c23c4a0f0138d76fb9fd03cee54071afbe4745155bd738d",
       "palabrasProsa": 371,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -5178,7 +5179,7 @@
     },
     {
       "id": "BOE-B-2012-3737",
-      "sha256": "7a11c83505af807c8fbad157251256a1a2aa40e0f5f4cf45bf4da10fe0218244",
+      "sha256": "cd35fc011d31a8a7c12c0bb17fe45b8bf5f35a581b795af766bb2a03fe1eb144",
       "palabrasProsa": 173,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -5189,7 +5190,7 @@
     },
     {
       "id": "BOE-B-2012-3738",
-      "sha256": "6c84f926c9e342364cacc0731674228ca3e5df928e3fe40c78adbcbe88244117",
+      "sha256": "afb5ce612cf6b6b2274f9df4c78058bed41605d81c51216767d7fcbf5f7b105f",
       "palabrasProsa": 178,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -5200,7 +5201,7 @@
     },
     {
       "id": "BOE-B-2012-3739",
-      "sha256": "5b7dce7b6e431f6576bbbea9a788a2cbd90af4d938fd0d6e19befc3cd959f893",
+      "sha256": "51540b770625c250972388b7331abe3172ccfcb6b0dcb7ed6a97e1b338e6c5ad",
       "palabrasProsa": 188,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -5211,7 +5212,7 @@
     },
     {
       "id": "BOE-B-2012-3741",
-      "sha256": "6c69a69c2ef55f2969d37b47841e3f763ed10a2380d2e1dc19e8e9891b479e6a",
+      "sha256": "67b5c84797ad9d244012578b3fe5615589042a307e961ac8fa62c15b9c620445",
       "palabrasProsa": 321,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -5222,7 +5223,7 @@
     },
     {
       "id": "BOE-B-2012-3742",
-      "sha256": "cac29441ceb129396c3563f5d4541c801307b169888e39a93c0be1f4c1c4c186",
+      "sha256": "e876acb12d9feb049e8e842a4b6dd40c9688352124092b280a5ed4c52a9fbc28",
       "palabrasProsa": 442,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -5233,7 +5234,7 @@
     },
     {
       "id": "BOE-B-2012-3743",
-      "sha256": "48493ca6082eec137d13927a88e9f00c16a86e985dfb7bb52b8241b7800952b1",
+      "sha256": "c1e9c5833ec5898ed1e378e2ec01ae2d8cda7a5d1679a15f1fd317ba8a4fbc82",
       "palabrasProsa": 321,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -5244,7 +5245,7 @@
     },
     {
       "id": "BOE-B-2012-3744",
-      "sha256": "9dd8c7b7966090fadf88f4c6508d6d4a76dafbb6130e1be3f39714400e541b1d",
+      "sha256": "189aee567dae46cd36489285952eaab500a40b1a59167521674519415f537ff2",
       "palabrasProsa": 300,
       "tramo": "300-599",
       "subgenero": "anuncio",
@@ -5255,7 +5256,7 @@
     },
     {
       "id": "BOE-B-2012-3745",
-      "sha256": "f28e25046991f0be41c425da86c3e341bf41c32cfb67ce751c3ea6f7d5b9a2c8",
+      "sha256": "a981f7cf64e6f864d197f31b60195809c57d744ac103294aba0f02d2558cf2e9",
       "palabrasProsa": 198,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -5266,7 +5267,7 @@
     },
     {
       "id": "BOE-B-2012-3753",
-      "sha256": "4583e4ceeafcc49adbfa591a4d8f0dd7c9b89cb3b5749784e868e5b3a516731f",
+      "sha256": "fd8f6552de9bece085ec7070ed81f194101442bb5c3f64039928da00f58370d0",
       "palabrasProsa": 274,
       "tramo": "100-299",
       "subgenero": "anuncio",
@@ -5278,7 +5279,7 @@
   ],
   "semilla": "radiografia-calibracion-2026",
   "motor": {
-    "commit": "4159d6b6b14b4674cc1665fba73e7495936fdef6",
+    "commit": "8eea55f18b4b82b84643f7ea36e357ee0e969f1a",
     "limpio": true
   }
 }
