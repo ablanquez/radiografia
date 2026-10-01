@@ -148,6 +148,10 @@ describe('el fichero real, data/calibracion/validacion.json', () => {
     assert.deepEqual(comprobarReparto(v, manifiestos()), []);
   });
 
+  test('cada género lleva su conjunto: la suma de sus celdas (parada 2 del 5.6)', () => {
+    for (const [genero, g] of Object.entries(leer().generos)) assert.deepEqual(g.conjunto, resumirGenero(g.celdas), genero);
+  });
+
   test('una copia con un documento de calibración colado: el juez lo caza', () => {
     const v = leer();
     const m = manifiestos();
