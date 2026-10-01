@@ -27,7 +27,10 @@
  *      la ficha). Sin género, «general» (GENERO_POR_DEFECTO, validar.ts).
  *   5. Puntúa cada paquete con SUS señales (puntuar.ts); las estadísticas y
  *      las de ausencia, por presencia.
- *   6. Devuelve, por paquete, su puntuación, y aparte, calificadas con
+ *   6. Devuelve, por paquete, su puntuación y su banda (banda.ts, encargo 5.6:
+ *      el total respecto a los humanos del mismo género y tramo, con la clave
+ *      `_total-*` de su calibración; null si el paquete no trae ninguna, y
+ *      «sin calibración» con su motivo si no hay celda), y aparte, calificadas con
  *      { paquete: cabecera.nombre, reglaId }:
  *        · senales — las de patrón y estructural (con [inicio, fin));
  *        · senalesTexto — las del texto entero de las reglas que puntúan: las
@@ -58,6 +61,7 @@ import { detectarEstructural } from './detector-estructural.ts';
 import { detectarEstadistico, type SenalTexto, type SinCalibracion } from './detector-estadistico.ts';
 import { detectarAusencia, type SenalAusencia } from './detector-ausencia.ts';
 import { puntuar, type Puntuacion } from './puntuar.ts';
+import { bandaHumana, clavesDeTotal, type BandaHumana, type SinBanda } from './banda.ts';
 import { GENERO_POR_DEFECTO, validarPaquete, type ErrorDeValidacion } from './validar.ts';
 import type { Paquete, Regla, TramoDeCalibracion } from './paquete.ts';
 
@@ -83,6 +87,8 @@ export interface NoAplicada {
 export interface ResultadoDePaquete {
   paquete: string;
   puntuacion: Puntuacion;
+  /** La escala del medidor (banda.ts); null si el paquete no trae clave `_total-*` en su calibración. */
+  banda: BandaHumana | SinBanda | null;
 }
 
 export interface Resultado {
@@ -216,7 +222,10 @@ export function analizar(textoOriginal: string, paquetes: readonly Paquete[], op
         }
       }
     }
-    return { paquete: nombre, puntuacion: puntuar(propias, paquete, texto) };
+    const puntuacion = puntuar(propias, paquete, texto);
+    const { calibracion } = paquete.cabecera;
+    const banda = clavesDeTotal(calibracion).length > 0 ? bandaHumana(puntuacion.total, genero, tramoCal, calibracion) : null;
+    return { paquete: nombre, puntuacion, banda };
   });
 
   return { genero, palabrasProsa, tramo, tramoDeCalibracion: tramoCal, paquetes: resultados, senales, senalesTexto, contexto, sinCalibracion, noAplicadas };

@@ -52,10 +52,9 @@ export function esMetrica(nombre: string): nombre is NombreDeMetrica {
  * la calcula la herramienta de calibración (motor/herramientas/calibrar/)
  * con analizar(texto, [radiografia.json], { genero }) sobre cada documento
  * humano, tomando la `puntuacion.total` de RadiografIA, con el género del
- * corpus. Servirá para la escala del medidor («percentil respecto a humanos
- * de este género»; 5.6 y punto 6).
- * ⚠️ Hoy el paquete no tiene reglas estadísticas: el total se RECALCULA en
- *    el 5.6, cuando las tenga.
+ * corpus. Es la escala del medidor (bandaHumana, banda.ts; encargo 5.6): la
+ * banda del total respecto a los humanos del mismo género y tramo. Desde el
+ * 5.6 incluye las reglas estadísticas del paquete.
  */
 export const CLAVE_TOTAL_RADIOGRAFIA = '_total-radiografia';
 
