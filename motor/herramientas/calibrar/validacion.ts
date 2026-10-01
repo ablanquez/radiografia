@@ -12,6 +12,12 @@
  *     tasa de disparo de TODAS las reglas del paquete (en cuántos documentos
  *     da alguna señal cada una, puntúe o no); y el total del paquete en
  *     validación (p5, p50, p95, p99) frente a la celda de calibración.
+ *   · resumirGenero — la FPR del género, con sus tramos juntos: es la que se
+ *     juzga contra el 5 %. [PROPIO, parada 2 del 5.6, opción (b) firmada por
+ *     Antonio] Con 18 a 39 documentos de validación por celda, un solo
+ *     documento ya supera el 5 % (1/19 = 5,3 %), y el criterio celda a celda
+ *     se queda en «cero documentos»; juntos, cada género tiene de 61
+ *     (académico) a 742 (opinión). Las celdas se siguen enseñando una a una.
  *   · comprobarReparto — el juez del reparto: cada documento de cada celda es
  *     de reparto «validacion» en el manifiesto de su género y de su tramo,
  *     están todos los de cada celda, y n cuadra. Nunca uno de calibración:
@@ -71,8 +77,16 @@ export interface FicheroDeValidacion {
       celdas: Partial<Record<TramoDeCalibracion, CeldaDeValidacion>>;
       /** Los tramos sin celda de calibración del total: no se validan. */
       omitidas: { tramo: TramoDeCalibracion; motivo: string; n: number }[];
+      /** El género con sus tramos juntos (resumirGenero): la FPR que se juzga. */
+      conjunto?: ConjuntoDeGenero;
     }
   >;
+}
+
+export interface ConjuntoDeGenero {
+  n: number;
+  fpr: Proporcion;
+  alMenosUna: Proporcion;
 }
 
 const redondear = (x: number): number => Math.round(x * 1e6) / 1e6;
@@ -102,6 +116,14 @@ export function resumirCelda(tramo: TramoDeCalibracion, documentos: readonly Doc
       calibracion: { p5: celda.p5, p50: celda.p50, p95: celda.p95, p99: celda.p99, n: celda.n },
     },
   };
+}
+
+export function resumirGenero(celdas: FicheroDeValidacion['generos'][string]['celdas']): ConjuntoDeGenero {
+  const lista = Object.values(celdas);
+  if (lista.length === 0) throw new Error('resumirGenero: ninguna celda');
+  const suma = (f: (c: CeldaDeValidacion) => number) => lista.reduce((s, c) => s + f(c), 0);
+  const n = suma((c) => c.n);
+  return { n, fpr: proporcion(suma((c) => c.fpr.documentos), n), alMenosUna: proporcion(suma((c) => c.alMenosUna.documentos), n) };
 }
 
 export function comprobarReparto(fichero: FicheroDeValidacion, manifiestos: Readonly<Record<string, Manifiesto>>): string[] {

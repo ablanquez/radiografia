@@ -28,7 +28,7 @@ import { CLAVE_TOTAL_RADIOGRAFIA } from '../../src/metricas/nombres.ts';
 import { SEMILLA, TRAMOS, huella, medirLongitud, reparto } from './comun.ts';
 import { GENEROS_CALIBRADOS, unirCalibraciones } from './inyeccion.ts';
 import { nombreDeFichero, type Manifiesto } from './manifiesto.ts';
-import { comprobarReparto, resumirCelda, type DocumentoValidado, type FicheroDeValidacion, type ReglaResumida } from './validacion.ts';
+import { comprobarReparto, resumirCelda, resumirGenero, type DocumentoValidado, type FicheroDeValidacion, type ReglaResumida } from './validacion.ts';
 
 const MOTOR = fileURLToPath(new URL('../../', import.meta.url));
 const DATOS = new URL('../../../data/calibracion/', import.meta.url);
@@ -67,7 +67,7 @@ const fichero: FicheroDeValidacion & Record<string, unknown> = {
   semilla: SEMILLA,
   motor,
   criterio:
-    'FPR de la familia estadística: proporción de documentos humanos de VALIDACIÓN (reparto «validacion»: sha256("semilla|id") ≥ 0,8) en los que disparan 2 o más reglas estadísticas que puntúan; objetivo ≤ 5 % en cada género × tramo con celda (plan, punto 5; encargo 5.6). Cada documento se analiza con el género de su corpus.',
+    'FPR de la familia estadística: proporción de documentos humanos de VALIDACIÓN (reparto «validacion»: sha256("semilla|id") ≥ 0,8) en los que disparan 2 o más reglas estadísticas que puntúan; objetivo ≤ 5 % por GÉNERO, con sus tramos juntos (conjunto), y cada celda género × tramo se enseña aparte. [PROPIO, parada 2 del 5.6, opción (b) firmada por Antonio] Con 18 a 39 documentos por celda, un solo documento ya supera el 5 %. Cada documento se analiza con el género de su corpus.',
   generos: {},
 };
 const manifiestos: Record<string, Manifiesto> = {};
@@ -95,6 +95,7 @@ for (const { genero, celdas } of calibraciones) {
     }
     resultado.celdas[tramo] = resumirCelda(tramo, documentos, reglas, celda);
   }
+  resultado.conjunto = resumirGenero(resultado.celdas);
   fichero.generos[genero] = resultado;
 }
 
@@ -109,4 +110,9 @@ for (const [genero, { celdas, omitidas }] of Object.entries(fichero.generos)) {
     console.log(`  ${genero.padEnd(18)} ${tramo.padEnd(8)} n ${String(c.n).padStart(4)} · FPR ${pct(c.fpr.proporcion).padStart(7)} (${c.fpr.documentos}) · ≥ 1 ${pct(c.alMenosUna.proporcion).padStart(7)} (${c.alMenosUna.documentos})`);
   }
   for (const o of omitidas) console.log(`  ${genero.padEnd(18)} ${o.tramo.padEnd(8)} omitida (${o.n} documentos): ${o.motivo}`);
+}
+console.log('por género, con sus tramos juntos (lo que se juzga contra el 5 %):');
+for (const [genero, { conjunto }] of Object.entries(fichero.generos)) {
+  const c = conjunto!;
+  console.log(`  ${genero.padEnd(18)} n ${String(c.n).padStart(4)} · FPR ${pct(c.fpr.proporcion).padStart(7)} (${c.fpr.documentos}) · ≥ 1 ${pct(c.alMenosUna.proporcion).padStart(7)} (${c.alMenosUna.documentos})${c.fpr.proporcion > 0.05 ? '   ← por encima del 5 %' : ''}`);
 }

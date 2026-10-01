@@ -11,7 +11,7 @@ import { readFileSync } from 'node:fs';
 import type { Celda } from '../../src/paquete.ts';
 import type { Manifiesto } from './manifiesto.ts';
 import { GENEROS_CALIBRADOS } from './inyeccion.ts';
-import { comprobarReparto, resumirCelda, type DocumentoValidado, type FicheroDeValidacion, type ReglaResumida } from './validacion.ts';
+import { comprobarReparto, resumirCelda, resumirGenero, type CeldaDeValidacion, type DocumentoValidado, type FicheroDeValidacion, type ReglaResumida } from './validacion.ts';
 
 const REGLAS: ReglaResumida[] = [
   { id: 'est-a', estadistica: true, puntua: true },
@@ -67,6 +67,27 @@ describe('resumirCelda', () => {
   test('un documento de otro tramo, o una regla que no es del paquete: para', () => {
     assert.throws(() => resumirCelda('300-599', [{ ...doc('d1', 1, []), tramo: '600+' }], REGLAS, CELDA), /tramo/);
     assert.throws(() => resumirCelda('300-599', [doc('d1', 1, ['no-existe'])], REGLAS, CELDA), /no-existe/);
+  });
+});
+
+/**
+ * Parada 2 del 5.6 (opción b, firmada): la FPR se juzga por GÉNERO, con los tres
+ * tramos juntos. Dos celdas: 10 documentos con 1 de FPR y 3 con al menos una; 30
+ * con 1 y 6. Género: 40 documentos, FPR 2/40 = 0,05, al menos una 9/40 = 0,225.
+ */
+describe('resumirGenero', () => {
+  const c = (n: number, fpr: number, una: number) => ({ n, fpr: { documentos: fpr, proporcion: fpr / n }, alMenosUna: { documentos: una, proporcion: una / n } }) as CeldaDeValidacion;
+
+  test('suma las celdas: n 40, FPR 2/40 = 0,05, al menos una 9/40 = 0,225', () => {
+    assert.deepEqual(resumirGenero({ '100-299': c(10, 1, 3), '600+': c(30, 1, 6) }), {
+      n: 40,
+      fpr: { documentos: 2, proporcion: 0.05 },
+      alMenosUna: { documentos: 9, proporcion: 0.225 },
+    });
+  });
+
+  test('sin celdas: para', () => {
+    assert.throws(() => resumirGenero({}), /ninguna celda/);
   });
 });
 
