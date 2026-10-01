@@ -38,7 +38,2823 @@
         "nombre": "Canal",
         "informativa": true
       }
-    ]
+    ],
+    "calibracion": {
+      "frases-por-100-palabras": {
+        "general": {
+          "100-299": {
+            "p1": 0.790242,
+            "p5": 1.514582,
+            "p50": 3.467713,
+            "p95": 20.302198,
+            "p99": 25.586086,
+            "n": 400,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.964562,
+            "p5": 1.808214,
+            "p50": 3.631623,
+            "p95": 12.695767,
+            "p99": 17.903078,
+            "n": 500,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 1.147686,
+            "p5": 2.004265,
+            "p50": 3.436188,
+            "p95": 7.432851,
+            "p99": 10.718302,
+            "n": 500,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "noticia": {
+          "100-299": {
+            "p1": 2.012899,
+            "p5": 2.33623,
+            "p50": 3.597122,
+            "p95": 5.835498,
+            "p99": 7.571559,
+            "n": 357,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 1.874317,
+            "p5": 2.141093,
+            "p50": 3.183266,
+            "p95": 5.524199,
+            "p99": 6.73634,
+            "n": 354,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 2.041331,
+            "p5": 2.103979,
+            "p50": 2.80112,
+            "p95": 5.099556,
+            "p99": 7.362557,
+            "n": 109,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "administrativo": {
+          "100-299": {
+            "p1": 1.266768,
+            "p5": 1.653184,
+            "p50": 7.086614,
+            "p95": 25.119048,
+            "p99": 27.596,
+            "n": 155,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 1.357337,
+            "p5": 1.792556,
+            "p50": 4.837467,
+            "p95": 17.904137,
+            "p99": 20.64381,
+            "n": 100,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 2.054819,
+            "p5": 2.769486,
+            "p50": 4.11879,
+            "p95": 7.183482,
+            "p99": 12.782957,
+            "n": 110,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "narrativa-clasica": {
+          "300-599": {
+            "p1": 1.547979,
+            "p5": 2.348102,
+            "p50": 5.833738,
+            "p95": 11.439428,
+            "p99": 13.661687,
+            "n": 124,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 2.009836,
+            "p5": 2.70234,
+            "p50": 5.263158,
+            "p95": 8.993816,
+            "p99": 11.4522,
+            "n": 895,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "academico": {
+          "100-299": {
+            "p1": 1.269075,
+            "p5": 2.018614,
+            "p50": 3.330389,
+            "p95": 5.521989,
+            "p99": 8.403886,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 1.857292,
+            "p5": 2.176601,
+            "p50": 3.220339,
+            "p95": 4.889203,
+            "p99": 5.935172,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 1.340906,
+            "p5": 2.21953,
+            "p50": 3.176095,
+            "p95": 4.472124,
+            "p99": 4.962119,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "opinion": {
+          "100-299": {
+            "p1": 0.381895,
+            "p5": 0.71659,
+            "p50": 2.659574,
+            "p95": 5.758087,
+            "p99": 7.173594,
+            "n": 739,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.400794,
+            "p5": 0.987168,
+            "p50": 3.018109,
+            "p95": 5.403787,
+            "p99": 6.573152,
+            "n": 1663,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 1.040712,
+            "p5": 1.50892,
+            "p50": 2.951407,
+            "p95": 5.042925,
+            "p99": 6.491712,
+            "n": 726,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        }
+      },
+      "cv-longitud-frase": {
+        "general": {
+          "100-299": {
+            "p1": 0.12437,
+            "p5": 0.231451,
+            "p50": 0.568598,
+            "p95": 1.227828,
+            "p99": 1.62622,
+            "n": 400,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.137519,
+            "p5": 0.246596,
+            "p50": 0.658395,
+            "p95": 1.322654,
+            "p99": 1.704832,
+            "n": 500,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.181344,
+            "p5": 0.253234,
+            "p50": 0.699787,
+            "p95": 1.180483,
+            "p99": 1.449329,
+            "n": 500,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "noticia": {
+          "100-299": {
+            "p1": 0.07351,
+            "p5": 0.141024,
+            "p50": 0.385053,
+            "p95": 0.730476,
+            "p99": 0.878802,
+            "n": 357,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.130254,
+            "p5": 0.174353,
+            "p50": 0.38716,
+            "p95": 0.623766,
+            "p99": 0.718903,
+            "n": 354,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.154267,
+            "p5": 0.179347,
+            "p50": 0.352524,
+            "p95": 0.675054,
+            "p99": 0.731336,
+            "n": 109,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "administrativo": {
+          "100-299": {
+            "p1": 0.225708,
+            "p5": 0.459805,
+            "p50": 0.817643,
+            "p95": 1.460906,
+            "p99": 1.888718,
+            "n": 155,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.449461,
+            "p5": 0.57711,
+            "p50": 1.069191,
+            "p95": 1.707465,
+            "p99": 1.957432,
+            "n": 100,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.578458,
+            "p5": 0.787101,
+            "p50": 0.999373,
+            "p95": 1.346592,
+            "p99": 1.708885,
+            "n": 110,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "narrativa-clasica": {
+          "300-599": {
+            "p1": 0.398648,
+            "p5": 0.480074,
+            "p50": 0.77405,
+            "p95": 1.148591,
+            "p99": 1.585337,
+            "n": 124,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.512547,
+            "p5": 0.586153,
+            "p50": 0.803155,
+            "p95": 1.148303,
+            "p99": 1.380534,
+            "n": 895,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "academico": {
+          "100-299": {
+            "p1": 0.23391,
+            "p5": 0.25508,
+            "p50": 0.478819,
+            "p95": 0.850817,
+            "p99": 1.301044,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.252985,
+            "p5": 0.351603,
+            "p50": 0.579689,
+            "p95": 0.907375,
+            "p99": 1.12527,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.424091,
+            "p5": 0.463797,
+            "p50": 0.625423,
+            "p95": 0.843113,
+            "p99": 0.941853,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "opinion": {
+          "100-299": {
+            "p1": 0,
+            "p5": 0.012152,
+            "p50": 0.612393,
+            "p95": 1.081172,
+            "p99": 1.362011,
+            "n": 739,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.05248,
+            "p5": 0.352658,
+            "p50": 0.634776,
+            "p95": 1.039295,
+            "p99": 1.268986,
+            "n": 1663,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.389734,
+            "p5": 0.467288,
+            "p50": 0.676722,
+            "p95": 1.034718,
+            "p99": 1.307046,
+            "n": 726,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        }
+      },
+      "ratio-comas-puntos": {
+        "general": {
+          "100-299": {
+            "p1": 0.099909,
+            "p5": 0.249405,
+            "p50": 1.857143,
+            "p95": 7,
+            "p99": 14,
+            "n": 400,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.362013,
+            "p5": 0.666667,
+            "p50": 2.117647,
+            "p95": 5.679167,
+            "p99": 13.676667,
+            "n": 498,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.662006,
+            "p5": 1.029923,
+            "p50": 2.166667,
+            "p95": 4.672826,
+            "p99": 6.73125,
+            "n": 500,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "noticia": {
+          "100-299": {
+            "p1": 0.364,
+            "p5": 0.526667,
+            "p50": 1.777778,
+            "p95": 3.5,
+            "p99": 4.362667,
+            "n": 357,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.721169,
+            "p5": 0.92,
+            "p50": 2,
+            "p95": 3.415556,
+            "p99": 4.137222,
+            "n": 354,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.764855,
+            "p5": 1.032,
+            "p50": 2.137931,
+            "p95": 3.46,
+            "p99": 3.854454,
+            "n": 109,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "administrativo": {
+          "100-299": {
+            "p1": 0.084254,
+            "p5": 0.105263,
+            "p50": 1.857143,
+            "p95": 7.3,
+            "p99": 11.46,
+            "n": 155,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.263801,
+            "p5": 0.433807,
+            "p50": 2.029412,
+            "p95": 5.422857,
+            "p99": 8.600714,
+            "n": 100,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.329638,
+            "p5": 0.846231,
+            "p50": 1.778822,
+            "p95": 3.848958,
+            "p99": 4.531842,
+            "n": 110,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "narrativa-clasica": {
+          "300-599": {
+            "p1": 0.721549,
+            "p5": 0.816253,
+            "p50": 2.074176,
+            "p95": 5.9625,
+            "p99": 12.976667,
+            "n": 124,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.857687,
+            "p5": 1.082852,
+            "p50": 2.147059,
+            "p95": 4.704286,
+            "p99": 6.853984,
+            "n": 895,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "academico": {
+          "100-299": {
+            "p1": 0.427143,
+            "p5": 0.61875,
+            "p50": 1.916667,
+            "p95": 4.338889,
+            "p99": 6.68,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.562667,
+            "p5": 0.996429,
+            "p50": 2.174242,
+            "p95": 4.378472,
+            "p99": 7.250833,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.730076,
+            "p5": 1.093467,
+            "p50": 2.252619,
+            "p95": 3.894211,
+            "p99": 5.3778,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "opinion": {
+          "100-299": {
+            "p1": 0.333333,
+            "p5": 0.5975,
+            "p50": 2.4,
+            "p95": 16,
+            "p99": 26,
+            "n": 738,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.490238,
+            "p5": 0.923077,
+            "p50": 2.272727,
+            "p95": 10.673333,
+            "p99": 31,
+            "n": 1660,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.771429,
+            "p5": 1.159524,
+            "p50": 2.485162,
+            "p95": 5.645833,
+            "p99": 8.535714,
+            "n": 726,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        }
+      },
+      "puntuacion-por-1000": {
+        "general": {
+          "100-299": {
+            "p1": 57.553957,
+            "p5": 80.63076,
+            "p50": 140.72786,
+            "p95": 394.610152,
+            "p99": 495.795652,
+            "n": 400,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 80.956147,
+            "p5": 96.09462,
+            "p50": 147.841624,
+            "p95": 319.817381,
+            "p99": 372.332471,
+            "n": 500,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 87.002148,
+            "p5": 96.492196,
+            "p50": 139.174059,
+            "p95": 241.981797,
+            "p99": 284.154233,
+            "n": 500,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "noticia": {
+          "100-299": {
+            "p1": 61.2,
+            "p5": 75.842188,
+            "p50": 128,
+            "p95": 193.015588,
+            "p99": 225.191084,
+            "n": 357,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 80.492695,
+            "p5": 89.701258,
+            "p50": 129.293457,
+            "p95": 187.250767,
+            "p99": 202.963164,
+            "n": 354,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 84.145825,
+            "p5": 92.313673,
+            "p50": 123.978202,
+            "p95": 183.066443,
+            "p99": 222.725244,
+            "n": 109,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "administrativo": {
+          "100-299": {
+            "p1": 93.54232,
+            "p5": 109.911392,
+            "p50": 212.5,
+            "p95": 493.471772,
+            "p99": 525.10084,
+            "n": 155,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 86.527507,
+            "p5": 100.468368,
+            "p50": 163.66558,
+            "p95": 372.61126,
+            "p99": 477.070313,
+            "n": 100,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 91.638805,
+            "p5": 96.747128,
+            "p50": 122.812199,
+            "p95": 176.918565,
+            "p99": 267.780338,
+            "n": 110,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "narrativa-clasica": {
+          "300-599": {
+            "p1": 115.54723,
+            "p5": 129.871455,
+            "p50": 186.882595,
+            "p95": 319.446459,
+            "p99": 346.393701,
+            "n": 124,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 112.597581,
+            "p5": 125.362601,
+            "p50": 178.441663,
+            "p95": 276.163664,
+            "p99": 319.528234,
+            "n": 895,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "academico": {
+          "100-299": {
+            "p1": 57.537076,
+            "p5": 79.23741,
+            "p50": 135.110952,
+            "p95": 240.315688,
+            "p99": 298.935863,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 74.535431,
+            "p5": 93.591063,
+            "p50": 142.691932,
+            "p95": 217.984218,
+            "p99": 274.242785,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 84.865825,
+            "p5": 101.294049,
+            "p50": 143.20361,
+            "p95": 189.432717,
+            "p99": 211.691997,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "opinion": {
+          "100-299": {
+            "p1": 42.416695,
+            "p5": 65.739736,
+            "p50": 136.363636,
+            "p95": 213.720613,
+            "p99": 246.121277,
+            "n": 739,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 62.389811,
+            "p5": 84.146523,
+            "p50": 135.371179,
+            "p95": 197.35947,
+            "p99": 223.510651,
+            "n": 1663,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 79.685989,
+            "p5": 93.106379,
+            "p50": 135.538546,
+            "p95": 191.686457,
+            "p99": 218.846154,
+            "n": 726,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        }
+      },
+      "puntuacion-secundaria-por-1000": {
+        "general": {
+          "100-299": {
+            "p1": 0,
+            "p5": 0,
+            "p50": 32.670567,
+            "p95": 217.056242,
+            "p99": 291.159538,
+            "n": 400,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0,
+            "p5": 6.124957,
+            "p50": 32.553844,
+            "p95": 145.951108,
+            "p99": 214.308307,
+            "n": 500,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 1.184211,
+            "p5": 7.809846,
+            "p50": 31.09716,
+            "p95": 66.655091,
+            "p99": 92.748668,
+            "n": 500,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "noticia": {
+          "100-299": {
+            "p1": 0,
+            "p5": 0,
+            "p50": 21.505376,
+            "p95": 67.84273,
+            "p99": 87.984963,
+            "n": 357,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0,
+            "p5": 5.77339,
+            "p50": 30.935975,
+            "p95": 76.424339,
+            "p99": 95.500185,
+            "n": 354,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0,
+            "p5": 2.318919,
+            "p50": 32.496307,
+            "p95": 75.263952,
+            "p99": 108.686511,
+            "n": 109,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "administrativo": {
+          "100-299": {
+            "p1": 0,
+            "p5": 7.213884,
+            "p50": 66.225166,
+            "p95": 284.205544,
+            "p99": 311.20155,
+            "n": 155,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 5.321931,
+            "p5": 11.86076,
+            "p50": 42.702889,
+            "p95": 214.398679,
+            "p99": 290.566406,
+            "n": 100,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 4.928749,
+            "p5": 9.581259,
+            "p50": 23.808878,
+            "p95": 58.286954,
+            "p99": 131.267218,
+            "n": 110,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "narrativa-clasica": {
+          "300-599": {
+            "p1": 4.120724,
+            "p5": 6.466644,
+            "p50": 30.062893,
+            "p95": 91.829376,
+            "p99": 116.428329,
+            "n": 124,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 5.515182,
+            "p5": 10.386545,
+            "p50": 30.755712,
+            "p95": 66.501909,
+            "p99": 83.462137,
+            "n": 895,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "academico": {
+          "100-299": {
+            "p1": 0,
+            "p5": 0,
+            "p50": 35.587639,
+            "p95": 99.329837,
+            "p99": 132.606751,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0,
+            "p5": 8.048515,
+            "p50": 37.810879,
+            "p95": 94.837438,
+            "p99": 130.439024,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 7.903138,
+            "p5": 15.55742,
+            "p50": 38.174852,
+            "p95": 74.338266,
+            "p99": 83.650806,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "opinion": {
+          "100-299": {
+            "p1": 0,
+            "p5": 0,
+            "p50": 23.622047,
+            "p95": 82.605178,
+            "p99": 122.61432,
+            "n": 739,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0,
+            "p5": 0,
+            "p50": 22.624434,
+            "p95": 66.009305,
+            "p99": 89.596596,
+            "n": 1663,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.267666,
+            "p5": 6.526413,
+            "p50": 26.643839,
+            "p95": 57.166359,
+            "p99": 75.288245,
+            "n": 726,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        }
+      },
+      "ttr": {
+        "general": {
+          "100-299": {
+            "p1": 0.459727,
+            "p5": 0.498034,
+            "p50": 0.604683,
+            "p95": 0.708808,
+            "p99": 0.754831,
+            "n": 400,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.36795,
+            "p5": 0.433474,
+            "p50": 0.532118,
+            "p95": 0.604177,
+            "p99": 0.648915,
+            "n": 500,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.1628,
+            "p5": 0.207681,
+            "p50": 0.403392,
+            "p95": 0.52611,
+            "p99": 0.556852,
+            "n": 500,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "noticia": {
+          "100-299": {
+            "p1": 0.496683,
+            "p5": 0.530283,
+            "p50": 0.615023,
+            "p95": 0.715754,
+            "p99": 0.75628,
+            "n": 357,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.421779,
+            "p5": 0.443015,
+            "p50": 0.512911,
+            "p95": 0.592963,
+            "p99": 0.614864,
+            "n": 354,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.39201,
+            "p5": 0.409473,
+            "p50": 0.460177,
+            "p95": 0.511428,
+            "p99": 0.556226,
+            "n": 109,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "administrativo": {
+          "100-299": {
+            "p1": 0.412714,
+            "p5": 0.474044,
+            "p50": 0.572993,
+            "p95": 0.6575,
+            "p99": 0.685423,
+            "n": 155,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.328496,
+            "p5": 0.367409,
+            "p50": 0.467501,
+            "p95": 0.544856,
+            "p99": 0.552795,
+            "n": 100,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.13012,
+            "p5": 0.165108,
+            "p50": 0.281908,
+            "p95": 0.412324,
+            "p99": 0.44054,
+            "n": 110,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "narrativa-clasica": {
+          "300-599": {
+            "p1": 0.422233,
+            "p5": 0.464583,
+            "p50": 0.553049,
+            "p95": 0.617275,
+            "p99": 0.660123,
+            "n": 124,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.219235,
+            "p5": 0.283588,
+            "p50": 0.39888,
+            "p95": 0.497457,
+            "p99": 0.534545,
+            "n": 895,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "academico": {
+          "100-299": {
+            "p1": 0.470134,
+            "p5": 0.495759,
+            "p50": 0.620169,
+            "p95": 0.71977,
+            "p99": 0.755283,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.450694,
+            "p5": 0.465203,
+            "p50": 0.53903,
+            "p95": 0.604685,
+            "p99": 0.658104,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.188743,
+            "p5": 0.201406,
+            "p50": 0.275516,
+            "p95": 0.420795,
+            "p99": 0.519507,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "opinion": {
+          "100-299": {
+            "p1": 0.53822,
+            "p5": 0.562922,
+            "p50": 0.624138,
+            "p95": 0.713592,
+            "p99": 0.75124,
+            "n": 739,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.473832,
+            "p5": 0.5,
+            "p50": 0.559896,
+            "p95": 0.618264,
+            "p99": 0.646338,
+            "n": 1663,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.376685,
+            "p5": 0.415759,
+            "p50": 0.495114,
+            "p95": 0.552791,
+            "p99": 0.579771,
+            "n": 726,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        }
+      },
+      "mattr-50": {
+        "general": {
+          "100-299": {
+            "p1": 0.673541,
+            "p5": 0.69441,
+            "p50": 0.795032,
+            "p95": 0.85292,
+            "p99": 0.881983,
+            "n": 400,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.68538,
+            "p5": 0.725054,
+            "p50": 0.799475,
+            "p95": 0.844069,
+            "p99": 0.855929,
+            "n": 500,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.706624,
+            "p5": 0.73144,
+            "p50": 0.802173,
+            "p95": 0.836331,
+            "p99": 0.846753,
+            "n": 500,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "noticia": {
+          "100-299": {
+            "p1": 0.722814,
+            "p5": 0.744252,
+            "p50": 0.80165,
+            "p95": 0.850998,
+            "p99": 0.870499,
+            "n": 357,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.735415,
+            "p5": 0.758285,
+            "p50": 0.79917,
+            "p95": 0.838006,
+            "p99": 0.854123,
+            "n": 354,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.750699,
+            "p5": 0.769708,
+            "p50": 0.799646,
+            "p95": 0.829741,
+            "p99": 0.839462,
+            "n": 109,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "administrativo": {
+          "100-299": {
+            "p1": 0.662885,
+            "p5": 0.677793,
+            "p50": 0.730526,
+            "p95": 0.804173,
+            "p99": 0.815339,
+            "n": 155,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.658469,
+            "p5": 0.685255,
+            "p50": 0.747895,
+            "p95": 0.793419,
+            "p99": 0.811231,
+            "n": 100,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.660567,
+            "p5": 0.705353,
+            "p50": 0.738515,
+            "p95": 0.770171,
+            "p99": 0.782956,
+            "n": 110,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "narrativa-clasica": {
+          "300-599": {
+            "p1": 0.73067,
+            "p5": 0.755616,
+            "p50": 0.813675,
+            "p95": 0.848716,
+            "p99": 0.856451,
+            "n": 124,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.757951,
+            "p5": 0.78245,
+            "p50": 0.820343,
+            "p95": 0.84167,
+            "p99": 0.850286,
+            "n": 895,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "academico": {
+          "100-299": {
+            "p1": 0.669761,
+            "p5": 0.698481,
+            "p50": 0.795906,
+            "p95": 0.856408,
+            "p99": 0.878214,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.728785,
+            "p5": 0.744593,
+            "p50": 0.798314,
+            "p95": 0.837659,
+            "p99": 0.848221,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.744903,
+            "p5": 0.758217,
+            "p50": 0.795468,
+            "p95": 0.822625,
+            "p99": 0.842332,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "opinion": {
+          "100-299": {
+            "p1": 0.750049,
+            "p5": 0.775516,
+            "p50": 0.821106,
+            "p95": 0.864218,
+            "p99": 0.881183,
+            "n": 739,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.762015,
+            "p5": 0.782063,
+            "p50": 0.817891,
+            "p95": 0.848147,
+            "p99": 0.861112,
+            "n": 1663,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.773484,
+            "p5": 0.786551,
+            "p50": 0.815742,
+            "p95": 0.840646,
+            "p99": 0.852705,
+            "n": 726,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        }
+      },
+      "mtld": {
+        "general": {
+          "100-299": {
+            "p1": 33.948725,
+            "p5": 40.670342,
+            "p50": 80.615368,
+            "p95": 136.385861,
+            "p99": 191.662049,
+            "n": 400,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 38.751955,
+            "p5": 46.040899,
+            "p50": 86.512128,
+            "p95": 131.413182,
+            "p99": 165.505165,
+            "n": 500,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 42.28688,
+            "p5": 50.628898,
+            "p50": 88.641153,
+            "p95": 126.712688,
+            "p99": 137.184687,
+            "n": 500,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "noticia": {
+          "100-299": {
+            "p1": 44.704637,
+            "p5": 56.983683,
+            "p50": 82.549697,
+            "p95": 125,
+            "p99": 146.754323,
+            "n": 357,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 51.329826,
+            "p5": 60.21121,
+            "p50": 83.889164,
+            "p95": 117.625308,
+            "p99": 135.166432,
+            "n": 354,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 56.443901,
+            "p5": 66.734028,
+            "p50": 84.653097,
+            "p95": 110.274678,
+            "p99": 127.290408,
+            "n": 109,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "administrativo": {
+          "100-299": {
+            "p1": 32.166443,
+            "p5": 35.605303,
+            "p50": 51.113243,
+            "p95": 92.535192,
+            "p99": 101.617635,
+            "n": 155,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 32.389963,
+            "p5": 38.658582,
+            "p50": 57.500671,
+            "p95": 81.432731,
+            "p99": 97.890935,
+            "n": 100,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 32.689535,
+            "p5": 41.493843,
+            "p50": 53.343316,
+            "p95": 65.451698,
+            "p99": 71.618168,
+            "n": 110,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "narrativa-clasica": {
+          "300-599": {
+            "p1": 47.318368,
+            "p5": 61.185997,
+            "p50": 96.013626,
+            "p95": 137.460663,
+            "p99": 161.269477,
+            "n": 124,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 59.395245,
+            "p5": 73.898899,
+            "p50": 106.00459,
+            "p95": 131.498774,
+            "p99": 140.865307,
+            "n": 895,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "academico": {
+          "100-299": {
+            "p1": 39.144328,
+            "p5": 42.161545,
+            "p50": 80.74328,
+            "p95": 132.047108,
+            "p99": 234.576435,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 49.136534,
+            "p5": 59.45906,
+            "p50": 84.859372,
+            "p95": 135.075976,
+            "p99": 176.578583,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 55.610017,
+            "p5": 62.655615,
+            "p50": 84.608726,
+            "p95": 119.428231,
+            "p99": 130.76957,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "opinion": {
+          "100-299": {
+            "p1": 59.120275,
+            "p5": 70.935964,
+            "p50": 102.747913,
+            "p95": 157.947645,
+            "p99": 182.447108,
+            "n": 739,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 62.257631,
+            "p5": 73.548748,
+            "p50": 102.490235,
+            "p95": 138.376783,
+            "p99": 158.755649,
+            "n": 1663,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 69.581105,
+            "p5": 77.720492,
+            "p50": 101.653798,
+            "p95": 130.846505,
+            "p99": 149.655028,
+            "n": 726,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        }
+      },
+      "hdd-42": {
+        "general": {
+          "100-299": {
+            "p1": 0.702695,
+            "p5": 0.72535,
+            "p50": 0.814359,
+            "p95": 0.865772,
+            "p99": 0.889459,
+            "n": 400,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.731799,
+            "p5": 0.75716,
+            "p50": 0.824249,
+            "p95": 0.865441,
+            "p99": 0.876184,
+            "n": 500,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.74825,
+            "p5": 0.76684,
+            "p50": 0.829262,
+            "p95": 0.863267,
+            "p99": 0.874938,
+            "n": 500,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "noticia": {
+          "100-299": {
+            "p1": 0.728378,
+            "p5": 0.766249,
+            "p50": 0.812927,
+            "p95": 0.855173,
+            "p99": 0.87116,
+            "n": 357,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.757979,
+            "p5": 0.773136,
+            "p50": 0.81325,
+            "p95": 0.850995,
+            "p99": 0.872253,
+            "n": 354,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.789368,
+            "p5": 0.791467,
+            "p50": 0.818519,
+            "p95": 0.850823,
+            "p99": 0.861839,
+            "n": 109,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "administrativo": {
+          "100-299": {
+            "p1": 0.687759,
+            "p5": 0.709408,
+            "p50": 0.767241,
+            "p95": 0.815106,
+            "p99": 0.834284,
+            "n": 155,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.698201,
+            "p5": 0.731772,
+            "p50": 0.777985,
+            "p95": 0.83462,
+            "p99": 0.838208,
+            "n": 100,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.69894,
+            "p5": 0.747003,
+            "p50": 0.78102,
+            "p95": 0.806174,
+            "p99": 0.827574,
+            "n": 110,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "narrativa-clasica": {
+          "300-599": {
+            "p1": 0.785117,
+            "p5": 0.802494,
+            "p50": 0.845012,
+            "p95": 0.871267,
+            "p99": 0.875784,
+            "n": 124,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.816442,
+            "p5": 0.826112,
+            "p50": 0.850971,
+            "p95": 0.868722,
+            "p99": 0.876109,
+            "n": 895,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "academico": {
+          "100-299": {
+            "p1": 0.708637,
+            "p5": 0.726493,
+            "p50": 0.816463,
+            "p95": 0.861576,
+            "p99": 0.909471,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.758457,
+            "p5": 0.774357,
+            "p50": 0.825298,
+            "p95": 0.861709,
+            "p99": 0.880278,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.796355,
+            "p5": 0.803513,
+            "p50": 0.829656,
+            "p95": 0.850969,
+            "p99": 0.876029,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "opinion": {
+          "100-299": {
+            "p1": 0.791942,
+            "p5": 0.80992,
+            "p50": 0.842422,
+            "p95": 0.87737,
+            "p99": 0.887577,
+            "n": 739,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.800544,
+            "p5": 0.812408,
+            "p50": 0.840373,
+            "p95": 0.866025,
+            "p99": 0.876928,
+            "n": 1663,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.805827,
+            "p5": 0.816347,
+            "p50": 0.83968,
+            "p95": 0.861177,
+            "p99": 0.870777,
+            "n": 726,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        }
+      },
+      "seq-rep-4": {
+        "general": {
+          "100-299": {
+            "p1": 0,
+            "p5": 0,
+            "p50": 0,
+            "p95": 0.071484,
+            "p99": 0.118908,
+            "n": 400,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0,
+            "p5": 0,
+            "p50": 0.003843,
+            "p95": 0.104143,
+            "p99": 0.183518,
+            "n": 500,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0,
+            "p5": 0,
+            "p50": 0.009788,
+            "p95": 0.220803,
+            "p99": 0.314699,
+            "n": 500,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "noticia": {
+          "100-299": {
+            "p1": 0,
+            "p5": 0,
+            "p50": 0,
+            "p95": 0.020438,
+            "p99": 0.035979,
+            "n": 357,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0,
+            "p5": 0,
+            "p50": 0.005623,
+            "p95": 0.029732,
+            "p99": 0.041527,
+            "n": 354,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0,
+            "p5": 0.00054,
+            "p50": 0.007772,
+            "p95": 0.02384,
+            "p99": 0.038167,
+            "n": 109,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "administrativo": {
+          "100-299": {
+            "p1": 0,
+            "p5": 0,
+            "p50": 0.039063,
+            "p95": 0.124792,
+            "p99": 0.237868,
+            "n": 155,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0.011786,
+            "p5": 0.017715,
+            "p50": 0.064981,
+            "p95": 0.183738,
+            "p99": 0.252105,
+            "n": 100,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.038953,
+            "p5": 0.046618,
+            "p50": 0.161191,
+            "p95": 0.311621,
+            "p99": 0.39724,
+            "n": 110,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "narrativa-clasica": {
+          "300-599": {
+            "p1": 0,
+            "p5": 0,
+            "p50": 0,
+            "p95": 0.013273,
+            "p99": 0.023739,
+            "n": 124,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0,
+            "p5": 0,
+            "p50": 0.003165,
+            "p95": 0.011,
+            "p99": 0.016216,
+            "n": 895,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "academico": {
+          "100-299": {
+            "p1": 0,
+            "p5": 0,
+            "p50": 0.003431,
+            "p95": 0.040793,
+            "p99": 0.066453,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0,
+            "p5": 0,
+            "p50": 0.004507,
+            "p95": 0.024907,
+            "p99": 0.041894,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0.001562,
+            "p5": 0.00838,
+            "p50": 0.027135,
+            "p95": 0.092247,
+            "p99": 0.102419,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "opinion": {
+          "100-299": {
+            "p1": 0,
+            "p5": 0,
+            "p50": 0,
+            "p95": 0.007764,
+            "p99": 0.012503,
+            "n": 739,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0,
+            "p5": 0,
+            "p50": 0,
+            "p95": 0.011014,
+            "p99": 0.021574,
+            "n": 1663,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 0,
+            "p5": 0,
+            "p50": 0.002199,
+            "p95": 0.010905,
+            "p99": 0.018706,
+            "n": 726,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        }
+      },
+      "ifsz": {
+        "general": {
+          "100-299": {
+            "p1": -40.637699,
+            "p5": 4.201037,
+            "p50": 49.085742,
+            "p95": 70.995625,
+            "p99": 75.440986,
+            "n": 400,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": -16.098727,
+            "p5": 22.245643,
+            "p50": 50.710505,
+            "p95": 75.744201,
+            "p99": 82.42674,
+            "n": 500,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": -6.321491,
+            "p5": 25.515221,
+            "p50": 46.220183,
+            "p95": 72.316491,
+            "p99": 79.530311,
+            "n": 500,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "noticia": {
+          "100-299": {
+            "p1": 27.132741,
+            "p5": 29.95307,
+            "p50": 51.020417,
+            "p95": 67.250878,
+            "p99": 74.518871,
+            "n": 357,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 23.299903,
+            "p5": 26.880062,
+            "p50": 45.24653,
+            "p95": 64.162539,
+            "p99": 70.19474,
+            "n": 354,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 24.553141,
+            "p5": 28.339733,
+            "p50": 42.198265,
+            "p95": 62.497187,
+            "p99": 70.161512,
+            "n": 109,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "administrativo": {
+          "100-299": {
+            "p1": 1.82881,
+            "p5": 20.851308,
+            "p50": 60.369559,
+            "p95": 73.960964,
+            "p99": 76.589888,
+            "n": 155,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 8.002516,
+            "p5": 19.058735,
+            "p50": 55.923569,
+            "p95": 69.392437,
+            "p99": 73.457474,
+            "n": 100,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 26.209267,
+            "p5": 36.501256,
+            "p50": 45.028585,
+            "p95": 59.015706,
+            "p99": 67.126922,
+            "n": 110,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "narrativa-clasica": {
+          "300-599": {
+            "p1": 18.98024,
+            "p5": 42.279474,
+            "p50": 67.474693,
+            "p95": 83.022209,
+            "p99": 89.633923,
+            "n": 124,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 35.640017,
+            "p5": 45.849028,
+            "p50": 64.353807,
+            "p95": 78.014328,
+            "p99": 84.513472,
+            "n": 895,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "academico": {
+          "100-299": {
+            "p1": -11.581759,
+            "p5": 12.793773,
+            "p50": 44.117834,
+            "p95": 64.902418,
+            "p99": 74.284434,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 17.223267,
+            "p5": 23.168902,
+            "p50": 43.552065,
+            "p95": 59.797296,
+            "p99": 69.714431,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": -5.09286,
+            "p5": 22.937882,
+            "p50": 43.132024,
+            "p95": 56.072136,
+            "p99": 60.939382,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "opinion": {
+          "100-299": {
+            "p1": -178.567442,
+            "p5": -58.307038,
+            "p50": 42.778885,
+            "p95": 68.70725,
+            "p99": 74.019946,
+            "n": 739,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": -160.064204,
+            "p5": -19.112423,
+            "p50": 47.692841,
+            "p95": 68.516096,
+            "p99": 73.586852,
+            "n": 1663,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": -17.240884,
+            "p5": 12.48201,
+            "p50": 46.044396,
+            "p95": 65.677629,
+            "p99": 73.01508,
+            "n": 726,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        }
+      },
+      "nominalizaciones-por-1000": {
+        "general": {
+          "100-299": {
+            "p1": 0,
+            "p5": 10.413968,
+            "p50": 41.522989,
+            "p95": 111.406619,
+            "p99": 139.932127,
+            "n": 400,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 3.769578,
+            "p5": 9.003003,
+            "p50": 34.741462,
+            "p95": 93.126093,
+            "p99": 120.162749,
+            "n": 500,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 8.701824,
+            "p5": 11.955637,
+            "p50": 38.173312,
+            "p95": 99.37099,
+            "p99": 109.81738,
+            "n": 500,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "noticia": {
+          "100-299": {
+            "p1": 2.362869,
+            "p5": 10.294118,
+            "p50": 35.971223,
+            "p95": 71.667997,
+            "p99": 99.308642,
+            "n": 357,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 9.412346,
+            "p5": 15.633749,
+            "p50": 38.383317,
+            "p95": 70.97561,
+            "p99": 85.452494,
+            "n": 354,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 12.186747,
+            "p5": 16.140351,
+            "p50": 39.263804,
+            "p95": 69.276448,
+            "p99": 84.827285,
+            "n": 109,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "administrativo": {
+          "100-299": {
+            "p1": 18.198878,
+            "p5": 32.782152,
+            "p50": 91.633466,
+            "p95": 132.672562,
+            "p99": 155.295533,
+            "n": 155,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 26.998441,
+            "p5": 35.182806,
+            "p50": 71.642164,
+            "p95": 120.094253,
+            "p99": 150.689071,
+            "n": 100,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 38.150609,
+            "p5": 48.132945,
+            "p50": 87.445839,
+            "p95": 109.320188,
+            "p99": 118.369195,
+            "n": 110,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "narrativa-clasica": {
+          "300-599": {
+            "p1": 2.134387,
+            "p5": 4.558756,
+            "p50": 18.245342,
+            "p95": 34.748144,
+            "p99": 48.973175,
+            "n": 124,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 5.438227,
+            "p5": 9.083186,
+            "p50": 19.980708,
+            "p95": 33.041578,
+            "p99": 37.486461,
+            "n": 895,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "academico": {
+          "100-299": {
+            "p1": 9.428571,
+            "p5": 17.68371,
+            "p50": 53.300866,
+            "p95": 98.478594,
+            "p99": 129.336686,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 14.012842,
+            "p5": 22.672477,
+            "p50": 48.905492,
+            "p95": 90.829466,
+            "p99": 107.458498,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 17.245444,
+            "p5": 26.656953,
+            "p50": 53.464562,
+            "p95": 81.343201,
+            "p99": 93.342196,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "opinion": {
+          "100-299": {
+            "p1": 1.288136,
+            "p5": 6.287919,
+            "p50": 20.833333,
+            "p95": 42.689701,
+            "p99": 55.703386,
+            "n": 739,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 5.015578,
+            "p5": 9.115787,
+            "p50": 23.861171,
+            "p95": 44.667908,
+            "p99": 57.142857,
+            "n": 1663,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 6.932289,
+            "p5": 13.077402,
+            "p50": 27.777778,
+            "p95": 46.746705,
+            "p99": 53.879969,
+            "n": 726,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        }
+      },
+      "pronombres-anaforicos-por-1000": {
+        "general": {
+          "100-299": {
+            "p1": 7.08417,
+            "p5": 27.370088,
+            "p50": 77.364509,
+            "p95": 120.115108,
+            "p99": 140.013428,
+            "n": 400,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 20.690812,
+            "p5": 47.908555,
+            "p50": 83.333333,
+            "p95": 115.526684,
+            "p99": 134.403252,
+            "n": 500,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 47.681488,
+            "p5": 62.290465,
+            "p50": 86.996965,
+            "p95": 109.832832,
+            "p99": 119.767443,
+            "n": 500,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "noticia": {
+          "100-299": {
+            "p1": 32.894009,
+            "p5": 47.99569,
+            "p50": 82.644628,
+            "p95": 125.740952,
+            "p99": 146.689529,
+            "n": 357,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 48.043933,
+            "p5": 57.50201,
+            "p50": 85.81657,
+            "p95": 118.463046,
+            "p99": 131.693919,
+            "n": 354,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 53.658184,
+            "p5": 55.924695,
+            "p50": 87.552743,
+            "p95": 110.469719,
+            "p99": 120.71839,
+            "n": 109,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "administrativo": {
+          "100-299": {
+            "p1": 0,
+            "p5": 5.880952,
+            "p50": 54.644809,
+            "p95": 103.810976,
+            "p99": 120.763598,
+            "n": 155,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 8.331574,
+            "p5": 22.248985,
+            "p50": 76.638041,
+            "p95": 106.475327,
+            "p99": 117.757717,
+            "n": 100,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 39.986354,
+            "p5": 58.020599,
+            "p50": 90.550003,
+            "p95": 114.645494,
+            "p99": 125.755797,
+            "n": 110,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "narrativa-clasica": {
+          "300-599": {
+            "p1": 42.509937,
+            "p5": 52.21477,
+            "p50": 83.103131,
+            "p95": 120.897844,
+            "p99": 136.094675,
+            "n": 124,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 60.94731,
+            "p5": 67.765091,
+            "p50": 85.371276,
+            "p95": 103.747786,
+            "p99": 112.636813,
+            "n": 895,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "academico": {
+          "100-299": {
+            "p1": 28.743446,
+            "p5": 40.3663,
+            "p50": 88.98463,
+            "p95": 127.917221,
+            "p99": 141.3579,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 24.721659,
+            "p5": 62.38988,
+            "p50": 94.083392,
+            "p95": 122.182203,
+            "p99": 135.97882,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 60.64451,
+            "p5": 71.128428,
+            "p50": 93.074536,
+            "p95": 111.428715,
+            "p99": 117.099188,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "opinion": {
+          "100-299": {
+            "p1": 35.220607,
+            "p5": 46.252395,
+            "p50": 74.418605,
+            "p95": 109.800896,
+            "p99": 121.75828,
+            "n": 739,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 44.729178,
+            "p5": 54.35522,
+            "p50": 76.923077,
+            "p95": 103.036112,
+            "p99": 111.831431,
+            "n": 1663,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": 53.57529,
+            "p5": 59.416899,
+            "p50": 79.138041,
+            "p95": 100.491048,
+            "p99": 107.530663,
+            "n": 726,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        }
+      },
+      "_total-radiografia": {
+        "general": {
+          "100-299": {
+            "p1": -6.538156,
+            "p5": 0,
+            "p50": 0,
+            "p95": 15.079184,
+            "p99": 27.590065,
+            "n": 400,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": -4.619918,
+            "p5": 0,
+            "p50": 0,
+            "p95": 32.167416,
+            "p99": 57.240798,
+            "n": 500,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": -3.19927,
+            "p5": -0.591152,
+            "p50": 3.523442,
+            "p95": 28.468602,
+            "p99": 49.18785,
+            "n": 500,
+            "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
+            "fecha": "2026-10-01",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "noticia": {
+          "100-299": {
+            "p1": 0,
+            "p5": 0,
+            "p50": 0,
+            "p95": 15.268858,
+            "p99": 26.661871,
+            "n": 357,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": 0,
+            "p5": 0,
+            "p50": 0,
+            "p95": 17.557794,
+            "p99": 25.822794,
+            "n": 354,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": -1.210526,
+            "p5": 0,
+            "p50": 2.024291,
+            "p95": 13.407954,
+            "p99": 19.061272,
+            "n": 109,
+            "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "administrativo": {
+          "100-299": {
+            "p1": -7.244094,
+            "p5": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 13.363767,
+            "n": 155,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": -5.47802,
+            "p5": -4.135199,
+            "p50": 0,
+            "p95": 4.719834,
+            "p99": 6.471556,
+            "n": 100,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": -5.222698,
+            "p5": -2.597747,
+            "p50": 0.664146,
+            "p95": 5.515639,
+            "p99": 8.32788,
+            "n": 110,
+            "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "narrativa-clasica": {
+          "300-599": {
+            "p1": -4.799876,
+            "p5": 0,
+            "p50": 10.15235,
+            "p95": 71.88444,
+            "p99": 88.001856,
+            "n": 124,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": -0.050042,
+            "p5": 0.805086,
+            "p50": 15.503876,
+            "p95": 47.601423,
+            "p99": 70.072291,
+            "n": 895,
+            "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "academico": {
+          "100-299": {
+            "p1": -0.112994,
+            "p5": 0,
+            "p50": 0,
+            "p95": 16.038062,
+            "p99": 36.828713,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": -1.639923,
+            "p5": 1,
+            "p50": 3.679193,
+            "p95": 21.019828,
+            "p99": 30.33634,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": -0.004577,
+            "p5": 0.792,
+            "p50": 5.282177,
+            "p95": 12.705684,
+            "p99": 16.292379,
+            "n": 100,
+            "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        },
+        "opinion": {
+          "100-299": {
+            "p1": -5.544004,
+            "p5": 0,
+            "p50": 0,
+            "p95": 19.364989,
+            "p99": 31.024325,
+            "n": 739,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "300-599": {
+            "p1": -2.918691,
+            "p5": 0,
+            "p50": 3,
+            "p95": 15.252176,
+            "p99": 23.336471,
+            "n": 1663,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          },
+          "600+": {
+            "p1": -1.960137,
+            "p5": 0,
+            "p50": 3.652992,
+            "p95": 12.039229,
+            "p99": 17.050621,
+            "n": 726,
+            "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
+            "fecha": "2026-09-30",
+            "metodo": "hyndman-fan-7"
+          }
+        }
+      }
+    }
   },
   "reglas": [
     {

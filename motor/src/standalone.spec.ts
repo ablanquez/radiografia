@@ -19,6 +19,9 @@
  *      `ucs2length.code = 'require(…)'` de Ajv). Decisión de Antonio, 3.2.
  *      [DOC] el tipo `Metafile` de `node_modules/esbuild/lib/main.d.ts`
  *      (0.28.2): `outputs[fichero].imports: { path, kind, external }[]`.
+ *   5. El paquete real (encargo 5.5): paquetes/radiografia.json, con la
+ *      calibración inyectada, mismo veredicto (válido) con el standalone que
+ *      en vivo; y dos copias rotas a propósito, mismos errores.
  *
  * ⚠️ Se genera DENTRO de los tests (memorizado), no en un hook ni en el cuerpo
  *    del describe: si la generación revienta, cada juez cuenta como fallido
@@ -122,6 +125,29 @@ describe('el validador standalone es el mismo que el de Ajv en vivo', () => {
     const [[nombre, salida]] = salidas as [[string, Metafile['outputs'][string]]];
     assert.deepEqual(salida.imports, [], `${nombre} importa desde fuera: ${JSON.stringify(salida.imports)}`);
     assert.ok(!codigo.includes('import '), `lleva «import »: ${codigo.match(/.{0,40}import .{0,60}/)?.[0]}`);
+  });
+
+  /**
+   * 5 · El paquete real (encargo 5.5): paquetes/radiografia.json, con la
+   * calibración inyectada, valida con el standalone igual que en vivo y sin
+   * errores; y una copia con una celda rota (percentiles desordenados, paso 2)
+   * y otra con un método que no es «hyndman-fan-7» (esquema) los dos la
+   * rechazan con los mismos errores.
+   */
+  test('5 · el paquete real, con su calibración: mismo veredicto en vivo y con el standalone', async () => {
+    const validador = await standalone();
+    const real = JSON.parse(readFileSync(new URL('../../paquetes/radiografia.json', import.meta.url), 'utf8'));
+    assert.ok(Object.keys(real.cabecera.calibracion ?? {}).length > 0, 'el paquete real no trae cabecera.calibracion');
+    assert.deepEqual(validarPaquete(real, validador), { valido: true, errores: [] });
+    const desordenado = structuredClone(real);
+    desordenado.cabecera.calibracion.ttr.general['600+'].p5 = 99;
+    const metodo = structuredClone(real);
+    metodo.cabecera.calibracion.ttr.general['600+'].metodo = 'otro';
+    for (const roto of [desordenado, metodo]) {
+      const enVivo = validarPaquete(roto);
+      assert.equal(enVivo.valido, false);
+      assert.deepEqual(validarPaquete(roto, validador), enVivo);
+    }
   });
 
   /**
