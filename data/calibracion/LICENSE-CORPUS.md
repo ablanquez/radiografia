@@ -161,3 +161,26 @@ muestra; sin licencia al menos declarada no hay cifra.**
 - **Qué se cambió:** nada del texto se redistribuye. Se derivan cifras (percentiles de métricas
   de estilo por tramo y disparos de las reglas). En 100-299 y 300-599, casi todo son
   fragmentos de frases completas de artículos más largos, no artículos enteros; se declara.
+
+## `opinion.json` y `opinion.manifiesto.json` — MuchoCine (Spanish Movie Reviews)
+
+- **Obra:** críticas de cine de usuarios de www.muchocine.net, recogidas por el grupo ITALIC-US
+  (Universidad de Sevilla) en <https://github.com/ITALIC-US/Spanish-Movie-Reviews>, commit
+  `4f8efab64a5366ec4fd3a241df1292ab75746464`: `README.md` (blob `ba6e456`, sha256
+  `bcf021e9eb784e57b96542f0e7462d20504cfd916d7df4b982efa4a64d85ae45`), `LICENSE` (blob
+  `b1ececa`) y los 3.878 XML de las críticas.
+- **Qué se usó:** de cada crítica, el cuerpo (no el resumen), medido y descartado. Aquí solo
+  quedan percentiles y, por crítica, su id (`mc-<número>`), su huella sha256, su tramo y su
+  nota.
+- **Licencia: CC BY 2.1 ES, DECLARADA POR TERCEROS.** El README de los curadores dice: «The
+  content of the reviews has been extracted from the website www.muchocine.net and used under
+  the terms of the Creative Commons license (http://creativecommons.org/license/by/2.1/es)».
+  No se ha verificado en muchocine.net. El `LICENSE` del repositorio es MIT («Copyright (c)
+  2022 ITALIC-US») y se refiere al «Software»: no licencia las críticas.
+- **Atribución que pide el README:** Cruz, F. L., Troyano, J. A., Enriquez, F., & Ortega, J.
+  (2008). Clasificación de documentos basada en la opinión: experimentos con un corpus de
+  críticas de cine en español. Procesamiento del lenguaje natural, 41. Y las críticas, de
+  www.muchocine.net.
+- **Qué se cambió:** nada del texto se redistribuye ni se publica ninguna muestra
+  (`corpus.md`: «solo cifras»). Se derivan cifras (percentiles de métricas de estilo por tramo
+  y disparos de las reglas).
