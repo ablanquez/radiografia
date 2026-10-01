@@ -5,7 +5,7 @@
   "licencia": "CC BY 2.1 ES (declarada por terceros: los curadores (ITALIC-US) la declaran en su README; NO verificada en muchocine.net; el LICENSE (MIT) es del repositorio, no de las críticas)",
   "semilla": "radiografia-calibracion-2026",
   "motor": {
-    "commit": "835505be8f94a4c6a24e5ed2baa8658e11bf3795",
+    "commit": "8eea55f18b4b82b84643f7ea36e357ee0e969f1a",
     "limpio": true
   },
   "metodo": "hyndman-fan-7",
