@@ -67,3 +67,10 @@ describe('detectarAusencia', () => {
     assert.equal(ausencia(opinion({ sobreNoProsa: true }), '- Creo que sí.\nEl plan sigue.'), null);
   });
 });
+
+/** Encargo 6.1 (parada 1, punto 5): el recuento de la ausencia usa el texto de trabajo, con el salto como espacio. */
+describe('detectarAusencia sobre la copia de trabajo (encargo 6.1)', () => {
+  test('«creo que» partido por un salto cuenta: no hay ausencia', () => {
+    assert.equal(ausencia(opinion({ regex: '(?<!\\p{L})creo que(?!\\p{L})' }), 'Yo creo\nque el plan sigue.'), null);
+  });
+});

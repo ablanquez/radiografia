@@ -178,3 +178,38 @@ describe('detectarPatron: minimo y minimoPorCoincidencia (encargo 5.3)', () => {
     assert.deepEqual(vistas(texto, conectores(4)), []);
   });
 });
+
+/**
+ * Encargo 6.1 (parada 1, punto 5): la regex de ámbito frase se aplica sobre la
+ * copia de trabajo del texto, con «\r» y «\n» como espacio (texto.ts); la
+ * señal lleva el fragmento y los desplazamientos del ORIGINAL (misma
+ * longitud). Esperados escritos antes de cambiar el detector.
+ */
+describe('detectarPatron sobre la copia de trabajo (encargo 6.1)', () => {
+  const destacar = (extra: Partial<ParametrosPatron> = {}): ParametrosPatron => ({
+    regex: 'es importante destacar',
+    ambito: 'frase',
+    normalizar: { minusculas: true, tildes: false },
+    ...extra,
+  });
+
+  test('una regex con espacio literal casa aunque el salto de un texto cortado caiga en medio; fragmento y desplazamientos, los del original', () => {
+    // «Hoy » [0, 4) · «es importante\ndestacar» [4, 26).
+    const texto = 'Hoy es importante\ndestacar que llueve.';
+    assert.deepEqual(cortes(texto, detectarPatron(regla(destacar()), analizarTexto(texto))), [['es importante\ndestacar', 4, 26, 'es importante\ndestacar']]);
+  });
+
+  test('minimoPorCoincidencia agrupa por la forma del texto de trabajo: con salto y sin él, la misma', () => {
+    // «Es importante destacar» [0, 22) · «es importante\ndestacar» [31, 53).
+    const texto = 'Es importante destacar esto. Y es importante\ndestacar lo otro.';
+    assert.deepEqual(cortes(texto, detectarPatron(regla(destacar({ minimoPorCoincidencia: 2 })), analizarTexto(texto))), [
+      ['Es importante destacar', 0, 22, 'Es importante destacar'],
+      ['es importante\ndestacar', 31, 53, 'es importante\ndestacar'],
+    ]);
+  });
+
+  test('con «\\r\\n», el trabajo lleva dos espacios donde el salto: una regex con UN espacio literal no casa (límite declarado)', () => {
+    const texto = 'Hoy es importante\r\ndestacar que llueve.';
+    assert.deepEqual(detectarPatron(regla(destacar()), analizarTexto(texto)), []);
+  });
+});

@@ -191,3 +191,11 @@ describe('detectarEstructural: minimoPorCoincidencia (encargo 5.3)', () => {
     assert.deepEqual(senales(texto, apertura({ minimoPorCoincidencia: 3, minimo: 4 })), []);
   });
 });
+
+/** Encargo 6.1 (parada 1, punto 5): la regex anclada se aplica sobre la copia de trabajo; la señal, sobre el original. */
+describe('detectarEstructural sobre la copia de trabajo (encargo 6.1)', () => {
+  test('inicio-frase: «En conclusión» partido por un salto casa al principio de la frase; fragmento y desplazamientos, los del original', () => {
+    // «Todo empezó bien.» [0, 17) · salto · «En\nconclusión» [18, 31), párrafo 1 (excepción web), frase 0.
+    assert.deepEqual(senales('Todo empezó bien.\nEn\nconclusión, salió mal.', { posicion: 'inicio-frase', regex: 'En conclusión' }), [['En\nconclusión', 18, 31, 1, 0]]);
+  });
+});

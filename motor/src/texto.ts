@@ -128,6 +128,13 @@ export interface Parrafo {
 
 export interface Texto {
   original: string;
+  /**
+   * La copia de trabajo: el original con «» y «
+» cambiados por un espacio, de
+   * la misma longitud. Aquí se segmenta y aquí aplican sus regex los detectores
+   * (encargo 6.1); todo [inicio, fin) vale igual en el original.
+   */
+  trabajo: string;
   parrafos: Parrafo[];
 }
 
@@ -261,5 +268,5 @@ export function analizarTexto(original: string): Texto {
     desde = salto + 1;
   }
   cerrar(abierto);
-  return { original, parrafos };
+  return { original, trabajo, parrafos };
 }

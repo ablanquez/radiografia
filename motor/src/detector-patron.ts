@@ -36,11 +36,18 @@
  *     lados igual). Una palabra casa si está entre las formas o si la regex la
  *     acepta (probada sobre la palabra normalizada; con minúsculas se le añade
  *     la bandera «i»).
- *   · Ámbito «frase»: la regex corre sobre la frase ORIGINAL tal cual, sin
- *     normalizar; con minúsculas se añade la bandera «i»; las tildes no se
- *     aplican (el autor escribe las variantes en la regex; lo dice el $comment
- *     del esquema). Una señal por coincidencia; las coincidencias vacías no
- *     cuentan.
+ *   · Ámbito «frase»: la regex corre sobre la frase en la copia de trabajo
+ *     (`texto.trabajo`, encargo 6.1: el original con «» y «
+» como
+ *     espacio, misma longitud), sin normalizar; con minúsculas se añade la
+ *     bandera «i»; las tildes no se aplican (el autor escribe las variantes en
+ *     la regex; lo dice el $comment del esquema). Así «es importante destacar»
+ *     casa aunque un salto de un texto cortado caiga en medio; la señal lleva
+ *     el fragmento del ORIGINAL en el mismo [inicio, fin). Con «
+», el
+ *     trabajo lleva dos espacios donde el salto, y una regex con un espacio
+ *     literal no casa ahí (límite declarado; las regex no se tocan). Una señal
+ *     por coincidencia; las coincidencias vacías no cuentan.
  *   · La bandera «g» la pone el detector (el esquema solo admite i, m, s, u).
  *   · Solo párrafos de prosa (texto.ts), salvo con `sobreNoProsa` (encargo
  *     5.1): entonces también viñetas, encabezados y tablas, nunca código
@@ -120,19 +127,20 @@ export function detectarPatron(regla: ReglaDePatron, texto: Texto): Senal[] {
         }
       });
     });
-    return aplicarRecuento(senales, p);
+    return aplicarRecuento(senales, p, texto.trabajo);
   }
 
   const regex = new RegExp(p.regex, banderas(p, 'g'));
   texto.parrafos.forEach((parrafo, indiceParrafo) => {
     if (!seMira(parrafo, sobreNoProsa)) return;
     parrafo.frases.forEach((frase, indiceFrase) => {
-      for (const m of frase.texto.matchAll(regex)) {
+      for (const m of texto.trabajo.slice(frase.inicio, frase.fin).matchAll(regex)) {
         if (m[0].length === 0) continue;
         const inicio = frase.inicio + m.index;
-        senales.push({ reglaId: regla.id, inicio, fin: inicio + m[0].length, fragmento: m[0], indiceFrase, indiceParrafo });
+        const fin = inicio + m[0].length;
+        senales.push({ reglaId: regla.id, inicio, fin, fragmento: texto.original.slice(inicio, fin), indiceFrase, indiceParrafo });
       }
     });
   });
-  return aplicarRecuento(senales, p);
+  return aplicarRecuento(senales, p, texto.trabajo);
 }

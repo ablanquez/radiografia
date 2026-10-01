@@ -8,7 +8,10 @@
  * regla.schema.json. Siempre sobre la frase o el párrafo SIN blancos al final:
  * Intl.Segmenter deja dentro de cada segmento el espacio que lo sigue, y
  * texto.ts ya lo recorta (`Frase.texto` y `Parrafo.texto` van sin blancos en
- * los bordes, con su `inicio` en el original).
+ * los bordes, con su `inicio` en el original). La regex corre sobre ese
+ * [inicio, fin) en la copia de trabajo (`texto.trabajo`, encargo 6.1: «\r» y
+ * «\n» como espacio, misma longitud), y la señal lleva el fragmento del
+ * original: un párrafo cortado a mano casa como si sus saltos fueran espacios.
  *   · inicio-frase   — `^(?:regex)` sobre cada frase.
  *   · fin-frase      — `(?:regex)$` sobre cada frase.
  *   · inicio-parrafo — `^(?:regex)` sobre la primera frase de cada párrafo.
@@ -22,8 +25,8 @@
  * los grupos de la regla.
  * [DOC] https://developer.mozilla.org/docs/Web/JavaScript/Reference/Regular_expressions/Input_boundary_assertion
  *    — sin la bandera «m», «^» casa solo al principio de la cadena y «$» solo
- *    al final; con «m», también junto a un salto de línea. Una frase no lleva
- *    «\n» (un párrafo es una línea), pero sí podría llevar un «\r» suelto o un
+ *    al final; con «m», también junto a un salto de línea. En la copia de
+ *    trabajo no hay «\r» ni «\n» (encargo 6.1), pero sí podría haber un
  *    U+2028: con «m» el ancla casaría también ahí. La bandera es del autor.
  *
  *   · Banderas: las de la regla más «g», para recoger todas las coincidencias
@@ -93,12 +96,13 @@ export function detectarEstructural(regla: ReglaEstructural, texto: Texto): Sena
   const regex = new RegExp(anclar(p.posicion, p.regex), `${p.flags ?? ''}g`);
   const senales: Senal[] = [];
 
-  /** Busca en un trozo (una frase o un párrafo entero, sin blancos en los bordes) y apunta las señales. */
-  const buscar = (trozo: { texto: string; inicio: number }, indiceParrafo: number, indiceFrase: (inicio: number) => number): void => {
-    for (const m of trozo.texto.matchAll(regex)) {
+  /** Busca en el texto de trabajo de un trozo (una frase o un párrafo entero, sin blancos en los bordes) y apunta las señales con el fragmento del original. */
+  const buscar = (trozo: { inicio: number; fin: number }, indiceParrafo: number, indiceFrase: (inicio: number) => number): void => {
+    for (const m of texto.trabajo.slice(trozo.inicio, trozo.fin).matchAll(regex)) {
       if (m[0].length === 0) continue;
       const inicio = trozo.inicio + m.index;
-      senales.push({ reglaId: regla.id, inicio, fin: inicio + m[0].length, fragmento: m[0], indiceFrase: indiceFrase(inicio), indiceParrafo });
+      const fin = inicio + m[0].length;
+      senales.push({ reglaId: regla.id, inicio, fin, fragmento: texto.original.slice(inicio, fin), indiceFrase: indiceFrase(inicio), indiceParrafo });
     }
   };
 
@@ -138,5 +142,5 @@ export function detectarEstructural(regla: ReglaEstructural, texto: Texto): Sena
       break;
   }
 
-  return aplicarRecuento(senales, p);
+  return aplicarRecuento(senales, p, texto.trabajo);
 }
