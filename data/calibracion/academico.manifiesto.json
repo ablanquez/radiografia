@@ -115,7 +115,7 @@
   "notas": [
     "«academico»: artículos de revistas científicas del CSIC (humanidades, ciencias sociales y ciencias), España, publicados antes de octubre de 2022; NO CONSTA la fecha de cada artículo ni si alguno es traducción.",
     "Parte del corpus viene de OCR de números antiguos («informaci6n», «c1usters»): cada unidad lleva en el manifiesto su señal (ocrPorMil); no se filtra (decisión pendiente). La señal es un mínimo: los cambios de letra por letra no se ven.",
-    "El corpus viene preprocesado y sin duplicados (Corpus-Cleaner, según el registro), con una frase por línea y los documentos separados por una línea en blanco: sin párrafos (cada frase es su propio párrafo para el segmentador). Las métricas por párrafo no se calibran con él.",
+    "El corpus viene preprocesado y sin duplicados (Corpus-Cleaner, según el registro), con una frase por línea y los documentos separados por una línea en blanco: no conserva los párrafos de los artículos. Desde el encargo 6.1 (párrafos según CommonMark), el motor une esas líneas salvo donde una acaba en signo de cierre y la siguiente empieza por mayúscula (la excepción web: el 90,6 % de los saltos entre líneas de prosa, medido el 01/10/2026). Unirlas es correcto, porque no son párrafos del original. Las métricas por párrafo no se calibran con él.",
     "Los tramos 100-299 y 300-599 son casi todo FRAGMENTOS de artículos (frases completas seguidas), no documentos: 100-299, 90 de 118; 300-599, 112 de 124.",
     "Sesgo de la lectura por trozos: un documento más largo que el trozo (262144 bytes) no puede salir, y cuanto más larga, menos probable es que quepa entera; los artículos muy largos quedan por debajo de su proporción."
   ],
@@ -4473,7 +4473,7 @@
   ],
   "semilla": "radiografia-calibracion-2026",
   "motor": {
-    "commit": "8eea55f18b4b82b84643f7ea36e357ee0e969f1a",
+    "commit": "eb9d5115d0a44449591103b71847af726cd7904e",
     "limpio": true
   }
 }
