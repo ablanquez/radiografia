@@ -127,3 +127,37 @@ muestra; sin licencia al menos declarada no hay cifra.**
   de estilo por tramo de longitud y los disparos de las reglas). Fuera, con su motivo en el
   manifiesto: traducciones sin traductor declarado, crítica literaria, obras en diálogo y los
   capítulos que no son narración. Sesgo de época declarado en el propio fichero.
+
+## `academico.json` y `academico.manifiesto.json` — CSIC Spanish Corpus
+
+- **Obra:** CSIC Spanish Corpus, versión 1.0.0 (<https://doi.org/10.5281/zenodo.7313126>), del
+  Barcelona Supercomputing Center dentro del Plan de Tecnologías del Lenguaje: artículos de las
+  revistas científicas del CSIC (<https://revistas.csic.es>), preprocesados y sin duplicados.
+  El fichero `csic_es.txt` (929.127.061 bytes) se lee por rangos de bytes, sin bajarlo entero:
+  no se comprueba su huella. Página del registro (sha256
+  `64d64ed7f48557f9958c05d334557cf6d0aa6d93e4cdc0ae47e3debbc4296d35`) y `README.md` del
+  registro (sha256 `6c6fc5cfb1ae75edd3c82dc92049a97f0a390f876e2332f498dd99cbef6f5858`).
+- **Qué se usó:** de cada documento o fragmento, su texto, medido y descartado. Aquí solo quedan
+  percentiles y, por unidad, su id (`csic-<byte donde empieza el documento>`), su huella
+  sha256, su tramo, si es fragmento y su señal de OCR.
+- **Licencia: Creative Commons Atribución 4.0 Internacional (CC BY 4.0)**, en los dos niveles,
+  leída en cada ejecución:
+  - Empaquetado, en el registro de Zenodo: «We license the actual packaging of these data under
+    a Attribution 4.0 International License.» «Copyright by Secretaría de Estado de
+    Digitalización e Inteligencia Artificial (SEDIA) (2022)».
+  - Contenidos, en origen (<https://revistas.csic.es/mas.html>, sha256
+    `37c824c0cc219b03463fdfb3fa7bb5484aa0991c732ff0bf8ffc2d43effcb799`): «Los originales
+    publicados en las ediciones impresa y electrónica de esta Revista son propiedad del Consejo
+    Superior de Investigaciones Científicas, siendo necesario citar la procedencia en cualquier
+    reproducción parcial o total. Salvo indicación contraria, todos los contenidos de la edición
+    electrónica se distribuyen bajo una licencia de uso y distribución "Creative Commons
+    Reconocimiento 4.0 Internacional" (CC BY 4.0).»
+  - La misma página, sobre la plataforma: «Salvo autorización, no está permitida la descarga
+    generalizada o sistemática de archivos para la construcción de otras bases de datos
+    externas al CSIC». De la plataforma no se descarga nada: solo se leen esas dos páginas; el
+    texto viene del paquete CC BY de Zenodo.
+- **Atribución:** CSIC Spanish Corpus, BSC / Plan de Tecnologías del Lenguaje, SEDIA (2022),
+  <https://doi.org/10.5281/zenodo.7313126>; textos de las revistas del CSIC (revistas.csic.es).
+- **Qué se cambió:** nada del texto se redistribuye. Se derivan cifras (percentiles de métricas
+  de estilo por tramo y disparos de las reglas). En 100-299 y 300-599, casi todo son
+  fragmentos de frases completas de artículos más largos, no artículos enteros; se declara.
