@@ -22,14 +22,14 @@ describe('capitulosDeEpub', () => {
       {
         orden: 6,
         etiqueta: 'CAPÍTULO PRIMERO',
-        texto: 'Era una noche de julio y llovía.\n—¿Quién va? —preguntó la vieja.\nNadie contestó.\nNi una voz.\nY amaneció al fin sobre el pueblo.',
+        texto: 'Era una noche de julio y llovía.\n\n—¿Quién va? —preguntó la vieja.\n\nNadie contestó.\nNi una voz.\n\nY amaneció al fin sobre el pueblo.',
         problemas: [],
         recorte: null,
       },
       {
         orden: 7,
         etiqueta: 'CAPÍTULO II',
-        texto: 'El segundo capítulo empieza aquí.\nSEÑOR mío, dijo el ama.\nAunque llovía, salió.\nLLEGÓ el otoño.',
+        texto: 'El segundo capítulo empieza aquí.\n\nSEÑOR mío, dijo el ama.\n\nAunque llovía, salió.\n\nLLEGÓ el otoño.',
         problemas: [],
         recorte: { desde: 'FIN', palabras: 14 },
       },
@@ -80,6 +80,9 @@ describe('capitulosDeEpub', () => {
 });
 
 describe('recortarFinal', () => {
+  test('con los párrafos separados por línea en blanco (encargo 6.1): el texto que queda no acaba en salto', () => {
+    assert.deepEqual(recortarFinal('Y se fueron.\n\nFIN\n\nMadrid, 1878.'), { texto: 'Y se fueron.', recorte: { desde: 'FIN', palabras: 3 } });
+  });
   test('desde una marca de fin sola en su línea, todo fuera', () => {
     for (const marca of ['FIN', 'FIN.', 'F I N', 'FIN DEL TOMO SEXTO', 'FIN DE «BAILÉN»', 'FIN DE LA PRIMERA PARTE']) {
       assert.deepEqual(

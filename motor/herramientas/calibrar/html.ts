@@ -48,7 +48,10 @@ export function decodificar(s: string): { texto: string; desconocidas: string[] 
   return { texto, desconocidas };
 }
 
-const BLOQUE = /<\/?(?:p|div|h[1-6]|dl|dt|dd|ul|ol|li|table|thead|tbody|tfoot|tr|blockquote|pre|center)\b[^>]*>|<br\s*\/?>/gi;
+/** Las etiquetas de bloque: cada una separa párrafos (línea en blanco). */
+const BLOQUE = /<\/?(?:p|div|h[1-6]|dl|dt|dd|ul|ol|li|table|thead|tbody|tfoot|tr|blockquote|pre|center)\b[^>]*>/gi;
+/** El salto <br>: parte la línea DENTRO del párrafo (un salto simple). */
+const SALTO = /<br\s*\/?>/gi;
 
 /** Sin comentarios, scripts ni estilos, y con el espacio en blanco colapsado (como lo pinta la página). */
 export function limpiarHtml(html: string): string {
@@ -58,22 +61,33 @@ export function limpiarHtml(html: string): string {
     .replace(/\s+/g, ' ');
 }
 
-/** Las líneas de texto de un fragmento ya limpio (limpiarHtml), y los problemas si los hay. */
+/**
+ * El texto de un fragmento ya limpio (limpiarHtml), y los problemas si los hay. Cada bloque (<p>, <div>,
+ * <dd>, una fila de tabla…) es un párrafo, separado del siguiente por una LÍNEA EN BLANCO, que es lo que el
+ * motor lee como párrafo (texto.ts, CommonMark; encargo 6.1, parada 1); un <br> parte la línea dentro del
+ * párrafo, con un salto simple. Hasta el 6.1, una línea por bloque y un salto simple entre ellos.
+ */
 export function lineasDeHtml(limpio: string): { texto: string; problemas: string[] } {
   let h = limpio.replace(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi, (_: string, fila: string) => {
     const celdas = [...fila.matchAll(/<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/gi)].map((m) => m[1]!.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim());
-    return `\n| ${celdas.join(' | ')} |\n`;
+    return `\n\n| ${celdas.join(' | ')} |\n\n`;
   });
-  h = h.replace(BLOQUE, '\n').replace(/<[^>]*>/g, '');
+  h = h.replace(BLOQUE, '\n\n').replace(SALTO, '\n').replace(/<[^>]*>/g, '');
   const problemas: string[] = [];
   if (h.includes('<')) problemas.push('restos de etiquetas');
   const { texto, desconocidas } = decodificar(h);
   for (const e of new Set(desconocidas)) problemas.push(`entidad sin decodificar: ${e}`);
   const salida = texto
-    .split('\n')
-    .map((l) => l.replace(/\s+/g, ' ').trim())
-    .filter((l) => l !== '')
-    .join('\n');
+    .split(/\n[ \t]*\n/)
+    .map((p) =>
+      p
+        .split('\n')
+        .map((l) => l.replace(/\s+/g, ' ').trim())
+        .filter((l) => l !== '')
+        .join('\n'),
+    )
+    .filter((p) => p !== '')
+    .join('\n\n');
   if (!conservaElTexto(limpio, salida)) problemas.push('texto perdido en la extracción');
   return { texto: salida, problemas };
 }

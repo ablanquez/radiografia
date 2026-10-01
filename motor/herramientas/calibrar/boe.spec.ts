@@ -97,11 +97,11 @@ describe('textoDelDocumento', () => {
   const pagina = (cuerpo: string) =>
     `<html><body><div id="barraSep"><h3 class="documento-tit">Título que no es texto</h3></div>\n<div id="DOdocText">\n  <h4>TEXTO ORIGINAL</h4>\n  <div id="textoxslt">\n${cuerpo}\n  </div>\n  <!-- #textoxslt -->\n</div>\n<div id="pie">Aviso legal</div></body></html>`;
 
-  test('un párrafo por <p> y por <h5>, en orden, sin título ni pie de página', () => {
+  test('un párrafo por <p> y por <h5>, en orden, separados por línea en blanco (encargo 6.1), sin título ni pie de página', () => {
     const r = textoDelDocumento(
       pagina('<p class="parrafo">Primer párrafo del preámbulo.</p>\n<p class="centro_redonda">DISPONGO:</p>\n<h5 class="articulo">Artículo único. Objeto.</h5>\n<p class="parrafo_2">Madrid, 1 de marzo de 2010.–El Ministro.</p>'),
     );
-    assert.equal(r.texto, 'Primer párrafo del preámbulo.\nDISPONGO:\nArtículo único. Objeto.\nMadrid, 1 de marzo de 2010.–El Ministro.');
+    assert.equal(r.texto, 'Primer párrafo del preámbulo.\n\nDISPONGO:\n\nArtículo único. Objeto.\n\nMadrid, 1 de marzo de 2010.–El Ministro.');
     assert.deepEqual(r.problemas, []);
   });
 
@@ -109,7 +109,7 @@ describe('textoDelDocumento', () => {
     const r = textoDelDocumento(
       pagina('<dl>\n<dt>1. Entidad adjudicadora:</dt>\n<dd>\n<dl>\n<dt>a) Organismo: </dt>\n<dd>Sección Económica.</dd>\n</dl>\n</dd>\n</dl>\n<p class="parrafo_2">Madrid, 3 de marzo de 2010.</p>'),
     );
-    assert.equal(r.texto, '1. Entidad adjudicadora:\na) Organismo:\nSección Económica.\nMadrid, 3 de marzo de 2010.');
+    assert.equal(r.texto, '1. Entidad adjudicadora:\n\na) Organismo:\n\nSección Económica.\n\nMadrid, 3 de marzo de 2010.');
   });
 
   test('el aviso del BOE de imágenes omitidas no es texto del documento: fuera, y se cuenta', () => {
@@ -122,7 +122,7 @@ describe('textoDelDocumento', () => {
 
   test('una tabla: una fila por línea, con barras (el segmentador la marca como tabla, no prosa)', () => {
     const r = textoDelDocumento(pagina('<table><tr><th>Puesto</th><th>Nivel</th></tr><tr><td>Jefe de <em>sección</em></td><td>26</td></tr></table>'));
-    assert.equal(r.texto, '| Puesto | Nivel |\n| Jefe de sección | 26 |');
+    assert.equal(r.texto, '| Puesto | Nivel |\n\n| Jefe de sección | 26 |');
   });
 
   test('entidades: numéricas y con nombre; &#13; es un salto de carro y se vuelve espacio', () => {
@@ -131,7 +131,7 @@ describe('textoDelDocumento', () => {
     assert.deepEqual(r.problemas, []);
   });
 
-  test('<br> parte la línea; <sup> y los enlaces dejan su texto', () => {
+  test('<br> parte la línea DENTRO del párrafo (un salto simple; entre párrafos, línea en blanco: encargo 6.1); <sup> y los enlaces dejan su texto', () => {
     const r = textoDelDocumento(pagina('<p>Superficie: 20 m<sup>2</sup><br/>Véase <a href="/x">el anexo</a>.</p>'));
     assert.equal(r.texto, 'Superficie: 20 m2\nVéase el anexo.');
   });

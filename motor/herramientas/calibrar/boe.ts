@@ -143,18 +143,25 @@ export interface TextoExtraido {
   avisosDeImagen: number;
 }
 
-export function textoDelDocumento(html: string): TextoExtraido {
+/** El bloque #textoxslt de la página, ya limpio (limpiarHtml) y sin los avisos de imagen, que se cuentan; o el problema. */
+export function bloqueDelDocumento(html: string): { bloque: string; avisosDeImagen: number } | { problema: string } {
   const a = html.indexOf(INICIO);
-  if (a < 0) return { texto: '', problemas: ['sin bloque #textoxslt'], avisosDeImagen: 0 };
+  if (a < 0) return { problema: 'sin bloque #textoxslt' };
   const b = html.indexOf(FIN, a);
-  if (b < 0) return { texto: '', problemas: ['sin cierre de #textoxslt'], avisosDeImagen: 0 };
+  if (b < 0) return { problema: 'sin cierre de #textoxslt' };
   let avisosDeImagen = 0;
-  const sinAvisos = limpiarHtml(html.slice(a + INICIO.length, b)).replace(/<p\b[^>]*\bclass="[^"]*\bcaja\b[^"]*"[^>]*>[\s\S]*?<\/p>/gi, () => {
+  const bloque = limpiarHtml(html.slice(a + INICIO.length, b)).replace(/<p\b[^>]*\bclass="[^"]*\bcaja\b[^"]*"[^>]*>[\s\S]*?<\/p>/gi, () => {
     avisosDeImagen++;
-    return '\n';
+    return '\n\n';
   });
-  const { texto, problemas } = lineasDeHtml(sinAvisos);
-  return { texto, problemas, avisosDeImagen };
+  return { bloque, avisosDeImagen };
+}
+
+export function textoDelDocumento(html: string): TextoExtraido {
+  const r = bloqueDelDocumento(html);
+  if ('problema' in r) return { texto: '', problemas: [r.problema], avisosDeImagen: 0 };
+  const { texto, problemas } = lineasDeHtml(r.bloque);
+  return { texto, problemas, avisosDeImagen: r.avisosDeImagen };
 }
 
 /** Los días de `desde` a `hasta` (AAAA-MM-DD, ambos incluidos), como AAAAMMDD. */

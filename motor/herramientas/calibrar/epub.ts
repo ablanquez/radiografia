@@ -36,6 +36,8 @@ export interface Capitulo {
   problemas: string[];
   /** Lo quitado al final (recortarFinal): la línea desde la que se cortó y sus palabras. */
   recorte: { desde: string; palabras: number } | null;
+  /** Solo con `{ conFragmento: true }`: el HTML del capítulo, ya limpio, que pasa por html.ts (para el juez de párrafos de origen, encargo 6.1). */
+  fragmento?: string;
 }
 
 export interface CapitulosDeEpub {
@@ -152,7 +154,7 @@ export function recortarFinal(texto: string): { texto: string; recorte: Capitulo
   const i = lineas.findIndex((l) => MARCA_DE_FIN.test(l) || (FINAL.test(l) && l.split(/\s+/).length <= 8));
   if (i < 0) return { texto, recorte: null };
   const palabras = lineas.slice(i).join(' ').split(/\s+/).filter((p) => p !== '').length;
-  return { texto: lineas.slice(0, i).join('\n'), recorte: { desde: lineas[i]!, palabras } };
+  return { texto: lineas.slice(0, i).join('\n').trimEnd(), recorte: { desde: lineas[i]!, palabras } };
 }
 
 const atributo = (etiqueta: string, nombre: string): string | undefined => new RegExp(`\\b${nombre}="([^"]*)"`).exec(etiqueta)?.[1];
@@ -166,7 +168,7 @@ function leer(zip: ReadonlyMap<string, Buffer>, ruta: string): string {
 /** Resuelve `href` relativo a la carpeta de `base` (sin «..», que Ebookmaker no usa). */
 const junto = (base: string, href: string) => `${base.includes('/') ? base.slice(0, base.lastIndexOf('/') + 1) : ''}${decodeURIComponent(href)}`;
 
-export function capitulosDeEpub(zip: ReadonlyMap<string, Buffer>): CapitulosDeEpub {
+export function capitulosDeEpub(zip: ReadonlyMap<string, Buffer>, { conFragmento = false }: { conFragmento?: boolean } = {}): CapitulosDeEpub {
   const container = leer(zip, 'META-INF/container.xml');
   const rutaOpf = /<rootfile\b[^>]*\bfull-path="([^"]+)"/.exec(container)?.[1];
   if (rutaOpf === undefined) throw new Error('epub: container.xml sin rootfile');
@@ -271,11 +273,11 @@ export function capitulosDeEpub(zip: ReadonlyMap<string, Buffer>): CapitulosDeEp
     }
     const hasta = Math.min(ordenadas[i + 1]?.posicion ?? fin, fin);
     const fragmento = sinImagenes(limpiarHtml(conjunto.slice(e.posicion, hasta)))
-      .replace(/<(h[1-6])\b[^>]*>[\s\S]*?<\/\1>/gi, '\n')
+      .replace(/<(h[1-6])\b[^>]*>[\s\S]*?<\/\1>/gi, '\n\n')
       .replace(/<a\b[^>]*\bclass="[^"]*\bfnanchor\b[^"]*"[^>]*>[\s\S]*?<\/a>/gi, '')
       .replace(/<span\b[^>]*\bclass="[^"]*\bpagenum\b[^"]*"[^>]*>[\s\S]*?<\/span>/gi, '');
     const { texto, problemas } = lineasDeHtml(fragmento);
-    salida.capitulos.push({ orden: e.orden, etiqueta: e.etiqueta, ...recortarFinal(texto), problemas });
+    salida.capitulos.push({ orden: e.orden, etiqueta: e.etiqueta, ...recortarFinal(texto), problemas, ...(conFragmento ? { fragmento } : {}) });
   });
   salida.fuera.sort((a, b) => a.orden - b.orden);
   return salida;
