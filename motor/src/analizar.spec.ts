@@ -184,8 +184,9 @@ describe('analizar: sobreNoProsa (encargo 5.1)', () => {
         ['encabezado-markdown', '# ', 0, 2, 0, '# '],
       ],
     );
-    // d6: 2 señales × 1.000 / 105 palabras de prosa × peso −1; encabezado-markdown es informativa (0).
-    assert.equal(r.paquetes[0]!.puntuacion.total, -((2 * 1000) / 105));
+    // d6: 2 señales × 1.000 / 105 palabras de prosa × peso −1 = −19,0476190… → −19,047619 (6 decimales,
+    // encargo 5.6); encabezado-markdown es informativa (0).
+    assert.equal(r.paquetes[0]!.puntuacion.total, -19.047619);
   });
 });
 
@@ -283,8 +284,9 @@ describe('analizar: ausencias, repetición y generos (encargo 5.3)', () => {
     ]);
     assert.deepEqual(noAplicadas(x), ['solo-noticia']);
     assert.ok(x.noAplicadas[0]!.motivo.includes('«noticia»') && x.noAplicadas[0]!.motivo.includes('«opinion»'), x.noAplicadas[0]!.motivo);
-    // conector: 3 × 1.000 / 306 × 1; sin-opinion, presencia × 2; sin-cifras, presencia × 1.
-    assert.equal(x.paquetes[0]!.puntuacion.total, (3 * 1000) / 306 + 2 + 1);
+    // conector: 3 × 1.000 / 306 × 1 = 9,8039215…; sin-opinion, presencia × 2; sin-cifras, presencia × 1:
+    // 12,8039215… → 12,803922 (6 decimales, encargo 5.6).
+    assert.equal(x.paquetes[0]!.puntuacion.total, 12.803922);
   });
 
   test('«general»: las dos reglas con generos no se aplican (ni señales ni señales de texto); la ausencia sin generos, sí', () => {

@@ -41,6 +41,8 @@
  *     (n × 1.000 primero y luego la división: es la misma fórmula, y así 3
  *     señales en 500 palabras dan 6 exacto.) Peso negativo resta. Sin −0: un
  *     atenuante sin señales aporta 0.
+ *   · Contribuciones y totales, a 6 decimales (encargo 5.6; `redondear`).
+ *     La densidad no se redondea.
  *   · Regla informativa, o de familia informativa: contribución 0, y sus
  *     señales van aparte, en `informativas`.
  *   · Familia: suma de las contribuciones de sus reglas. Paquete: suma de
@@ -114,6 +116,17 @@ const UNIDAD = 'puntos por 1.000 palabras de prosa';
 /** Sin −0: en JavaScript, −1 × 0 es −0, y un atenuante sin señales aporta 0. */
 const sinMenosCero = (x: number): number => (x === 0 ? 0 : x);
 
+/**
+ * [PROPIO, encargo 5.6] Contribuciones y totales a 6 decimales, con el mismo
+ * redondeo que los percentiles de la calibración (herramientas/calibrar/
+ * celdas.ts). Sin él, BOE-A-2000-1013 daba un total de −1,1·10⁻¹⁶ donde la
+ * cuenta exacta da 0 (puntuar.spec.ts). Los totales se redondean desde la
+ * suma SIN redondear: sumar contribuciones ya redondeadas acumula el error
+ * (en ese documento, −0,000001). Puede salir −0 (Math.round(−0,0001) es −0):
+ * sinMenosCero lo quita.
+ */
+const redondear = (x: number): number => sinMenosCero(Math.round(x * 1e6) / 1e6);
+
 function modoDe(regla: ReglaParaPuntuar): Modo {
   if (regla.detector === 'estadístico') return 'presencia';
   if (regla.parametros.ausencia === true) return 'presencia';
@@ -146,18 +159,22 @@ export function puntuar(senales: readonly (Senal | SenalTexto | SenalAusencia)[]
   const informativaDe = new Map(paquete.cabecera.familias.map((f) => [f.id, f.informativa]));
   const noPuntua = (r: ReglaParaPuntuar): boolean => r.informativa || informativaDe.get(r.familia) === true;
 
+  // Las sumas, sin redondear: de ellas salen los totales (ver `redondear`).
+  const brutoDeFamilia = new Map<string, number>();
   const familias = paquete.cabecera.familias.map((familia): PuntosDeFamilia => {
+    let bruto = 0;
     const reglas = paquete.reglas
       .filter((r) => r.familia === familia.id)
       .map((r): PuntosDeRegla => {
         const n = cuenta.get(r.id) ?? 0;
         const modo = modoDe(r);
         const densidad = modo === 'densidad' ? (n * 1000) / palabrasProsa : null;
-        const bruta = densidad === null ? r.peso * (n > 0 ? 1 : 0) : r.peso * densidad;
-        return { id: r.id, informativa: noPuntua(r), n, modo, densidad, contribucion: noPuntua(r) ? 0 : sinMenosCero(bruta) };
+        const bruta = noPuntua(r) ? 0 : densidad === null ? r.peso * (n > 0 ? 1 : 0) : r.peso * densidad;
+        bruto += bruta;
+        return { id: r.id, informativa: noPuntua(r), n, modo, densidad, contribucion: redondear(bruta) };
       });
-    const total = sinMenosCero(reglas.reduce((suma, r) => suma + r.contribucion, 0));
-    return { id: familia.id, nombre: familia.nombre, informativa: familia.informativa, total, reglas };
+    brutoDeFamilia.set(familia.id, bruto);
+    return { id: familia.id, nombre: familia.nombre, informativa: familia.informativa, total: redondear(bruto), reglas };
   });
 
   const informativas = senales.filter((s) => {
@@ -169,7 +186,7 @@ export function puntuar(senales: readonly (Senal | SenalTexto | SenalAusencia)[]
     unidad: UNIDAD,
     palabrasProsa,
     tramo,
-    total: sinMenosCero(familias.filter((f) => !f.informativa).reduce((suma, f) => suma + f.total, 0)),
+    total: redondear(familias.filter((f) => !f.informativa).reduce((suma, f) => suma + brutoDeFamilia.get(f.id)!, 0)),
     motivo: null,
     aviso: tramo === 'poco-fiable' ? `poco fiable: ${palabrasProsa} palabras de prosa; el análisis es completo desde ${COMPLETO}` : null,
     familias,

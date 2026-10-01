@@ -149,6 +149,65 @@ describe('puntuar: signo, tramos y guardas', () => {
 });
 
 /**
+ * Encargo 5.6: contribuciones y totales redondeados a 6 decimales. El caso es
+ * el de BOE-A-2000-1013 (calibración del 5.5, género administrativo), que dio
+ * un total de −1,1102230246251565·10⁻¹⁶ donde la cuenta exacta da 0:
+ * 5.470 palabras de prosa; léxico, peso 3 × 1 señal + peso 1 × 1 señal;
+ * discurso, peso 2 × 3 señales + peso −2 × 5 señales. A mano, con
+ * 1.000 / 5.470 = 0,18281535…:
+ *   léxico   3 × 0,18281535 = 0,54844606 → 0,548446 · 1 × 0,18281535 → 0,182815
+ *            familia (3 + 1) × 0,18281535 = 0,73126142 → 0,731261
+ *   discurso 2 × 3 × 0,18281535 = 1,09689213 → 1,096892 · −2 × 5 × 0,18281535 = −1,82815356 → −1,828154
+ *            familia (6 − 10) × 0,18281535 = −0,73126142 → −0,731261
+ *   total    (3 + 1 + 6 − 10) × 1.000 / 5.470 = 0, y 0 sin signo (no −0).
+ * Sumar las contribuciones ya redondeadas daría −0,000001 (0,731261 −
+ * 0,731262): el total se redondea desde la suma sin redondear.
+ */
+describe('puntuar: contribuciones y totales a 6 decimales (encargo 5.6)', () => {
+  const BOE: PaqueteParaPuntuar = {
+    cabecera: {
+      familias: [
+        { id: 'lexico', nombre: 'Léxico', informativa: false },
+        { id: 'discurso', nombre: 'Discurso', informativa: false },
+      ],
+    },
+    reglas: [
+      { id: 'enfasis', familia: 'lexico', detector: 'patrón', parametros: {}, peso: 3, informativa: false },
+      { id: 'conector', familia: 'lexico', detector: 'patrón', parametros: {}, peso: 1, informativa: false },
+      { id: 'marcador', familia: 'discurso', detector: 'patrón', parametros: {}, peso: 2, informativa: false },
+      { id: 'referencia', familia: 'discurso', detector: 'patrón', parametros: {}, peso: -2, informativa: false },
+    ],
+  };
+  const p = puntuar([...senales('enfasis', 1), ...senales('conector', 1), ...senales('marcador', 3), ...senales('referencia', 5)], BOE, prosa(5470));
+
+  test('cada contribución, a 6 decimales: 0,548446 · 0,182815 · 1,096892 · −1,828154', () => {
+    assert.deepEqual(
+      p.familias.flatMap((f) => f.reglas.map((r) => [r.id, r.contribucion])),
+      [
+        ['enfasis', 0.548446],
+        ['conector', 0.182815],
+        ['marcador', 1.096892],
+        ['referencia', -1.828154],
+      ],
+    );
+  });
+
+  test('cada familia, a 6 decimales desde su suma sin redondear: 0,731261 y −0,731261', () => {
+    assert.deepEqual(
+      p.familias.map((f) => [f.id, f.total]),
+      [
+        ['lexico', 0.731261],
+        ['discurso', -0.731261],
+      ],
+    );
+  });
+
+  test('el total es 0, sin residuo de coma flotante y sin signo', () => {
+    assert.ok(Object.is(p.total, 0), `salió ${Object.is(p.total, -0) ? '−0' : String(p.total)}`);
+  });
+});
+
+/**
  * Encargo 5.3: una regla de ausencia (patrón o estructural) da una señal del
  * texto entero y puntúa por PRESENCIA, como las estadísticas: peso × 1.
  */
