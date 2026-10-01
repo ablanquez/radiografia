@@ -17,8 +17,16 @@ import { medirConDisparos, medirDocumento } from './medir.ts';
 
 const RADIOGRAFIA = JSON.parse(readFileSync(new URL('../../../paquetes/radiografia.json', import.meta.url), 'utf8')) as Paquete;
 
-/** 120 palabras de prosa, humanas, sin nada especial. */
+/** 120 palabras de prosa: la misma frase doce veces (sintético; desde el 5.6 dispara reglas estadísticas). */
 const TEXTO = Array.from({ length: 12 }, (_, i) => `El tren número ${i + 1} salió con retraso de la estación de Atocha y llegó tarde.`).join(' ');
+
+/**
+ * 123 palabras de prosa con forma de noticia, escritas para el 5.6, en las que
+ * ninguna regla de RadiografIA que puntúa da señal con «noticia» (comprobado
+ * con analizar(): total 0). TEXTO ya no sirve para eso: repetir la misma frase
+ * es justo lo que miden las reglas estadísticas.
+ */
+const NOTICIA = 'El tren de las ocho salió ayer de Atocha con cuarenta minutos de retraso, y los viajeros que esperaban en el andén 5 tuvieron que buscar otra forma de llegar a Valladolid. Según Adif, la avería afectó a una catenaria cerca de Chamartín; los técnicos la repararon a media mañana. Renfe ofreció autobuses a quienes no podían esperar, aunque muchos prefirieron quedarse en la cafetería de la estación. «Llevo tres semanas así», contaba una enfermera que trabaja en el Clínico. El ministerio ha prometido revisar el contrato de mantenimiento, firmado en 2019, y publicar en marzo un informe con las incidencias de toda la línea. Mientras tanto, la asociación de usuarios pide que se devuelva el importe del billete en todos los casos.';
 
 describe('medirDocumento', () => {
   test('un valor por clave de calibración: las trece métricas y el total', () => {
@@ -53,6 +61,11 @@ describe('medirDocumento', () => {
   });
 
   test('sin señales, sin disparos', () => {
-    assert.deepEqual(medirConDisparos(TEXTO, 'noticia', RADIOGRAFIA).disparos, {});
+    assert.deepEqual(medirConDisparos(NOTICIA, 'noticia', RADIOGRAFIA).disparos, {});
+  });
+
+  test('las reglas estadísticas también son disparos (encargo 5.6): la misma frase doce veces', () => {
+    const { disparos } = medirConDisparos(TEXTO, 'noticia', RADIOGRAFIA);
+    assert.ok(Object.keys(disparos).some((id) => id.startsWith('est-')), JSON.stringify(disparos));
   });
 });

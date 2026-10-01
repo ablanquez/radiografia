@@ -11,7 +11,10 @@
  *     informativa, en contexto;
  *   · negativo → no dispara (una informativa sigue saliendo en contexto, con
  *     lado null: eso no es disparar).
- * El punto 5 lo reutilizará con las reglas reales: basta con añadir su paquete.
+ * Desde el encargo 5.6 juzga también el paquete real, paquetes/radiografia.json,
+ * con sus trece reglas «est-» y la calibración humana inyectada en el 5.5: sus
+ * ejemplos son textos de 300 palabras de prosa o más, y el positivo tiene que
+ * disparar con «general» (el género por defecto).
  *
  * ⚠️ Los paquetes se leen al cargar el fichero, fuera de los tests, porque de
  *    ellos salen los tests. Si uno no se puede leer, falla el fichero entero y
@@ -28,7 +31,11 @@ import { analizarTexto } from './texto.ts';
 import { evaluarLongitud, MINIMO } from './umbral.ts';
 import type { Paquete } from './paquete.ts';
 
-const PAQUETES = ['paquete-prueba-interno.json', 'paquete-prueba-secundario.json'];
+const PAQUETES = [
+  new URL('../fixtures/paquete-prueba-interno.json', import.meta.url),
+  new URL('../fixtures/paquete-prueba-secundario.json', import.meta.url),
+  new URL('../../paquetes/radiografia.json', import.meta.url),
+];
 
 function disparo(paquete: Paquete, reglaId: string, ejemplo: string) {
   const { palabrasProsa } = evaluarLongitud(analizarTexto(ejemplo));
@@ -43,8 +50,9 @@ function disparo(paquete: Paquete, reglaId: string, ejemplo: string) {
   return { dispara: senal !== undefined && senal.lado !== null, senal };
 }
 
-for (const fichero of PAQUETES) {
-  const paquete = JSON.parse(readFileSync(new URL(`../fixtures/${fichero}`, import.meta.url), 'utf8')) as Paquete;
+for (const url of PAQUETES) {
+  const fichero = url.pathname.split('/').at(-1)!;
+  const paquete = JSON.parse(readFileSync(url, 'utf8')) as Paquete;
 
   describe(`los ejemplos estadísticos de ${fichero}`, () => {
     const estadisticas = paquete.reglas.filter((r) => r.detector === 'estadístico');
