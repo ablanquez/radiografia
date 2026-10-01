@@ -43,20 +43,20 @@
       "frases-por-100-palabras": {
         "general": {
           "100-299": {
-            "p1": 0.790242,
-            "p5": 1.514582,
-            "p50": 3.467713,
-            "p95": 20.302198,
-            "p99": 25.586086,
-            "n": 400,
+            "p1": 0.760248,
+            "p5": 1.440934,
+            "p50": 3.626943,
+            "p95": 22.956273,
+            "p99": 26.075254,
+            "n": 465,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
           },
           "300-599": {
             "p1": 0.964562,
-            "p5": 1.808214,
-            "p50": 3.631623,
+            "p5": 1.714286,
+            "p50": 3.590092,
             "p95": 12.695767,
             "p99": 17.903078,
             "n": 500,
@@ -65,12 +65,12 @@
             "metodo": "hyndman-fan-7"
           },
           "600+": {
-            "p1": 1.147686,
-            "p5": 2.004265,
-            "p50": 3.436188,
-            "p95": 7.432851,
-            "p99": 10.718302,
-            "n": 500,
+            "p1": 1.066743,
+            "p5": 1.937633,
+            "p50": 3.36,
+            "p95": 7.423332,
+            "p99": 10.708484,
+            "n": 505,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
@@ -233,12 +233,12 @@
       "cv-longitud-frase": {
         "general": {
           "100-299": {
-            "p1": 0.12437,
-            "p5": 0.231451,
-            "p50": 0.568598,
-            "p95": 1.227828,
-            "p99": 1.62622,
-            "n": 400,
+            "p1": 0.110196,
+            "p5": 0.197465,
+            "p50": 0.619577,
+            "p95": 1.255532,
+            "p99": 1.656919,
+            "n": 465,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
@@ -246,8 +246,8 @@
           "300-599": {
             "p1": 0.137519,
             "p5": 0.246596,
-            "p50": 0.658395,
-            "p95": 1.322654,
+            "p50": 0.649998,
+            "p95": 1.3176,
             "p99": 1.704832,
             "n": 500,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
@@ -255,12 +255,12 @@
             "metodo": "hyndman-fan-7"
           },
           "600+": {
-            "p1": 0.181344,
-            "p5": 0.253234,
-            "p50": 0.699787,
-            "p95": 1.180483,
-            "p99": 1.449329,
-            "n": 500,
+            "p1": 0.181384,
+            "p5": 0.253477,
+            "p50": 0.698068,
+            "p95": 1.183042,
+            "p99": 1.487542,
+            "n": 505,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
@@ -423,12 +423,12 @@
       "ratio-comas-puntos": {
         "general": {
           "100-299": {
-            "p1": 0.099909,
-            "p5": 0.249405,
-            "p50": 1.857143,
-            "p95": 7,
-            "p99": 14,
-            "n": 400,
+            "p1": 0.096727,
+            "p5": 0.184868,
+            "p50": 1.888889,
+            "p95": 8,
+            "p99": 15.18,
+            "n": 465,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
@@ -436,8 +436,8 @@
           "300-599": {
             "p1": 0.362013,
             "p5": 0.666667,
-            "p50": 2.117647,
-            "p95": 5.679167,
+            "p50": 2.1225,
+            "p95": 5.766071,
             "p99": 13.676667,
             "n": 498,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
@@ -445,12 +445,12 @@
             "metodo": "hyndman-fan-7"
           },
           "600+": {
-            "p1": 0.662006,
-            "p5": 1.029923,
-            "p50": 2.166667,
-            "p95": 4.672826,
-            "p99": 6.73125,
-            "n": 500,
+            "p1": 0.664141,
+            "p5": 1.031796,
+            "p50": 2.173913,
+            "p95": 4.807971,
+            "p99": 6.727005,
+            "n": 505,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
@@ -613,12 +613,12 @@
       "puntuacion-por-1000": {
         "general": {
           "100-299": {
-            "p1": 57.553957,
-            "p5": 80.63076,
-            "p50": 140.72786,
-            "p95": 394.610152,
-            "p99": 495.795652,
-            "n": 400,
+            "p1": 61.272727,
+            "p5": 81.320561,
+            "p50": 143.646409,
+            "p95": 423.023529,
+            "p99": 508.171429,
+            "n": 465,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
@@ -626,7 +626,7 @@
           "300-599": {
             "p1": 80.956147,
             "p5": 96.09462,
-            "p50": 147.841624,
+            "p50": 147.919481,
             "p95": 319.817381,
             "p99": 372.332471,
             "n": 500,
@@ -635,12 +635,12 @@
             "metodo": "hyndman-fan-7"
           },
           "600+": {
-            "p1": 87.002148,
-            "p5": 96.492196,
-            "p50": 139.174059,
-            "p95": 241.981797,
-            "p99": 284.154233,
-            "n": 500,
+            "p1": 87.043468,
+            "p5": 96.614244,
+            "p50": 139.251276,
+            "p95": 240.427445,
+            "p99": 283.185389,
+            "n": 505,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
@@ -805,10 +805,10 @@
           "100-299": {
             "p1": 0,
             "p5": 0,
-            "p50": 32.670567,
-            "p95": 217.056242,
-            "p99": 291.159538,
-            "n": 400,
+            "p50": 32.374101,
+            "p95": 244.392765,
+            "p99": 296.031923,
+            "n": 465,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
@@ -825,12 +825,12 @@
             "metodo": "hyndman-fan-7"
           },
           "600+": {
-            "p1": 1.184211,
-            "p5": 7.809846,
-            "p50": 31.09716,
-            "p95": 66.655091,
-            "p99": 92.748668,
-            "n": 500,
+            "p1": 1.226071,
+            "p5": 7.832772,
+            "p50": 31.161473,
+            "p95": 66.557333,
+            "p99": 92.648495,
+            "n": 505,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
@@ -993,12 +993,12 @@
       "ttr": {
         "general": {
           "100-299": {
-            "p1": 0.459727,
-            "p5": 0.498034,
-            "p50": 0.604683,
-            "p95": 0.708808,
-            "p99": 0.754831,
-            "n": 400,
+            "p1": 0.456265,
+            "p5": 0.501832,
+            "p50": 0.605505,
+            "p95": 0.702668,
+            "p99": 0.746981,
+            "n": 465,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
@@ -1006,7 +1006,7 @@
           "300-599": {
             "p1": 0.36795,
             "p5": 0.433474,
-            "p50": 0.532118,
+            "p50": 0.532756,
             "p95": 0.604177,
             "p99": 0.648915,
             "n": 500,
@@ -1015,12 +1015,12 @@
             "metodo": "hyndman-fan-7"
           },
           "600+": {
-            "p1": 0.1628,
-            "p5": 0.207681,
-            "p50": 0.403392,
-            "p95": 0.52611,
-            "p99": 0.556852,
-            "n": 500,
+            "p1": 0.163095,
+            "p5": 0.207872,
+            "p50": 0.404472,
+            "p95": 0.526074,
+            "p99": 0.556798,
+            "n": 505,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
@@ -1183,12 +1183,12 @@
       "mattr-50": {
         "general": {
           "100-299": {
-            "p1": 0.673541,
-            "p5": 0.69441,
-            "p50": 0.795032,
-            "p95": 0.85292,
-            "p99": 0.881983,
-            "n": 400,
+            "p1": 0.67593,
+            "p5": 0.696016,
+            "p50": 0.7955,
+            "p95": 0.851267,
+            "p99": 0.878797,
+            "n": 465,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
@@ -1205,12 +1205,12 @@
             "metodo": "hyndman-fan-7"
           },
           "600+": {
-            "p1": 0.706624,
-            "p5": 0.73144,
-            "p50": 0.802173,
-            "p95": 0.836331,
-            "p99": 0.846753,
-            "n": 500,
+            "p1": 0.705704,
+            "p5": 0.73053,
+            "p50": 0.802118,
+            "p95": 0.836214,
+            "p99": 0.846598,
+            "n": 505,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
@@ -1373,12 +1373,12 @@
       "mtld": {
         "general": {
           "100-299": {
-            "p1": 33.948725,
-            "p5": 40.670342,
-            "p50": 80.615368,
-            "p95": 136.385861,
-            "p99": 191.662049,
-            "n": 400,
+            "p1": 33.873706,
+            "p5": 42.056246,
+            "p50": 80.648977,
+            "p95": 136.66121,
+            "p99": 174.691236,
+            "n": 465,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
@@ -1395,12 +1395,12 @@
             "metodo": "hyndman-fan-7"
           },
           "600+": {
-            "p1": 42.28688,
-            "p5": 50.628898,
-            "p50": 88.641153,
-            "p95": 126.712688,
-            "p99": 137.184687,
-            "n": 500,
+            "p1": 40.891721,
+            "p5": 50.617396,
+            "p50": 88.585976,
+            "p95": 126.554736,
+            "p99": 137.12374,
+            "n": 505,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
@@ -1563,12 +1563,12 @@
       "hdd-42": {
         "general": {
           "100-299": {
-            "p1": 0.702695,
-            "p5": 0.72535,
-            "p50": 0.814359,
-            "p95": 0.865772,
-            "p99": 0.889459,
-            "n": 400,
+            "p1": 0.703831,
+            "p5": 0.726755,
+            "p50": 0.812694,
+            "p95": 0.867042,
+            "p99": 0.883826,
+            "n": 465,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
@@ -1576,7 +1576,7 @@
           "300-599": {
             "p1": 0.731799,
             "p5": 0.75716,
-            "p50": 0.824249,
+            "p50": 0.824444,
             "p95": 0.865441,
             "p99": 0.876184,
             "n": 500,
@@ -1585,12 +1585,12 @@
             "metodo": "hyndman-fan-7"
           },
           "600+": {
-            "p1": 0.74825,
-            "p5": 0.76684,
-            "p50": 0.829262,
-            "p95": 0.863267,
-            "p99": 0.874938,
-            "n": 500,
+            "p1": 0.748278,
+            "p5": 0.767097,
+            "p50": 0.828998,
+            "p95": 0.863237,
+            "p99": 0.874877,
+            "n": 505,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
@@ -1756,9 +1756,9 @@
             "p1": 0,
             "p5": 0,
             "p50": 0,
-            "p95": 0.071484,
-            "p99": 0.118908,
-            "n": 400,
+            "p95": 0.076584,
+            "p99": 0.162199,
+            "n": 465,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
@@ -1766,7 +1766,7 @@
           "300-599": {
             "p1": 0,
             "p5": 0,
-            "p50": 0.003843,
+            "p50": 0.003872,
             "p95": 0.104143,
             "p99": 0.183518,
             "n": 500,
@@ -1777,10 +1777,10 @@
           "600+": {
             "p1": 0,
             "p5": 0,
-            "p50": 0.009788,
-            "p95": 0.220803,
-            "p99": 0.314699,
-            "n": 500,
+            "p50": 0.009747,
+            "p95": 0.220518,
+            "p99": 0.314269,
+            "n": 505,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
@@ -1943,20 +1943,20 @@
       "ifsz": {
         "general": {
           "100-299": {
-            "p1": -40.637699,
-            "p5": 4.201037,
-            "p50": 49.085742,
-            "p95": 70.995625,
-            "p99": 75.440986,
-            "n": 400,
+            "p1": -47.512206,
+            "p5": 6.795944,
+            "p50": 50.789505,
+            "p95": 71.266993,
+            "p99": 75.611265,
+            "n": 465,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
           },
           "300-599": {
             "p1": -16.098727,
-            "p5": 22.245643,
-            "p50": 50.710505,
+            "p5": 21.194874,
+            "p50": 50.477413,
             "p95": 75.744201,
             "p99": 82.42674,
             "n": 500,
@@ -1965,12 +1965,12 @@
             "metodo": "hyndman-fan-7"
           },
           "600+": {
-            "p1": -6.321491,
-            "p5": 25.515221,
-            "p50": 46.220183,
-            "p95": 72.316491,
-            "p99": 79.530311,
-            "n": 500,
+            "p1": -18.659026,
+            "p5": 24.462507,
+            "p50": 46.004366,
+            "p95": 72.303179,
+            "p99": 79.486705,
+            "n": 505,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
@@ -2133,12 +2133,12 @@
       "nominalizaciones-por-1000": {
         "general": {
           "100-299": {
-            "p1": 0,
-            "p5": 10.413968,
-            "p50": 41.522989,
-            "p95": 111.406619,
-            "p99": 139.932127,
-            "n": 400,
+            "p1": 2.222222,
+            "p5": 10.373489,
+            "p50": 38.461538,
+            "p95": 119.30406,
+            "p99": 137.38965,
+            "n": 465,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
@@ -2146,7 +2146,7 @@
           "300-599": {
             "p1": 3.769578,
             "p5": 9.003003,
-            "p50": 34.741462,
+            "p50": 34.691198,
             "p95": 93.126093,
             "p99": 120.162749,
             "n": 500,
@@ -2155,12 +2155,12 @@
             "metodo": "hyndman-fan-7"
           },
           "600+": {
-            "p1": 8.701824,
-            "p5": 11.955637,
-            "p50": 38.173312,
-            "p95": 99.37099,
-            "p99": 109.81738,
-            "n": 500,
+            "p1": 8.740285,
+            "p5": 11.995137,
+            "p50": 38.140644,
+            "p95": 98.913815,
+            "p99": 109.746269,
+            "n": 505,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
@@ -2323,12 +2323,12 @@
       "pronombres-anaforicos-por-1000": {
         "general": {
           "100-299": {
-            "p1": 7.08417,
-            "p5": 27.370088,
-            "p50": 77.364509,
-            "p95": 120.115108,
-            "p99": 140.013428,
-            "n": 400,
+            "p1": 3.2,
+            "p5": 17.46226,
+            "p50": 73.863636,
+            "p95": 112.454895,
+            "p99": 135.105091,
+            "n": 465,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
@@ -2337,7 +2337,7 @@
             "p1": 20.690812,
             "p5": 47.908555,
             "p50": 83.333333,
-            "p95": 115.526684,
+            "p95": 115.38858,
             "p99": 134.403252,
             "n": 500,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
@@ -2345,12 +2345,12 @@
             "metodo": "hyndman-fan-7"
           },
           "600+": {
-            "p1": 47.681488,
-            "p5": 62.290465,
-            "p50": 86.996965,
-            "p95": 109.832832,
-            "p99": 119.767443,
-            "n": 500,
+            "p1": 47.896927,
+            "p5": 61.395644,
+            "p50": 86.984127,
+            "p95": 109.891481,
+            "p99": 120.429048,
+            "n": 505,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
@@ -2513,12 +2513,12 @@
       "_total-radiografia": {
         "general": {
           "100-299": {
-            "p1": -6.538156,
+            "p1": -5.172324,
             "p5": 0,
             "p50": 0,
-            "p95": 15.157298,
-            "p99": 27.590065,
-            "n": 400,
+            "p95": 14.084507,
+            "p99": 22.151785,
+            "n": 465,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
@@ -2526,7 +2526,7 @@
           "300-599": {
             "p1": -4.525828,
             "p5": 0,
-            "p50": 1.83322,
+            "p50": 1.86066,
             "p95": 32.167416,
             "p99": 57.240798,
             "n": 500,
@@ -2535,12 +2535,12 @@
             "metodo": "hyndman-fan-7"
           },
           "600+": {
-            "p1": -3.034816,
-            "p5": -0.012315,
-            "p50": 3.953972,
-            "p95": 31.138415,
-            "p99": 52.182313,
-            "n": 500,
+            "p1": -3.011249,
+            "p5": 0,
+            "p50": 3.895109,
+            "p95": 30.374827,
+            "p99": 52.035849,
+            "n": 505,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
             "metodo": "hyndman-fan-7"
