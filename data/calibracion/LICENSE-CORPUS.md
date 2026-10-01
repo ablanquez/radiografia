@@ -3,7 +3,7 @@
 Los ficheros de esta carpeta **no llevan texto de ningún corpus**. Son cifras derivadas de
 textos humanos: los percentiles de cada métrica por género y tramo (`<genero>.json`), y el
 manifiesto de cada corpus (`<genero>.manifiesto.json`), con el id y la huella sha256 de cada
-documento. Las cifras las calcula `motor/herramientas/calibrar/` (Apache 2.0, como el resto
+documento, y la validación sobre los documentos apartados (`validacion.json`). Las cifras las calcula `motor/herramientas/calibrar/` (Apache 2.0, como el resto
 del código), pero cada una sale de una obra ajena. Aquí va, corpus por corpus, su licencia
 citada literalmente, la atribución que pide y qué se hizo con ella.
 
@@ -201,3 +201,19 @@ muestra; sin licencia al menos declarada no hay cifra.**
   declarada por terceros: solo cifras). Cada una, citada literalmente en su apartado de arriba.
 - **Atribución:** la de cada corpus, en su apartado.
 - **Qué se cambió:** nada del texto se redistribuye. Se derivan cifras (percentiles y disparos).
+
+## `validacion.json` — la validación del 5.6 sobre los seis corpus
+
+- **Obra:** ninguna nueva. Es el resultado de analizar con RadiografIA los documentos de
+  **validación** (el 20 % apartado por huella antes de medir) de los seis corpus de arriba,
+  cada uno con su género, hecho por `motor/herramientas/calibrar/validar.ts`.
+- **Qué se usó:** los mismos textos que en cada género, analizados y descartados. Aquí solo
+  quedan, por género y tramo, los ids de los documentos (los de sus manifiestos), recuentos,
+  proporciones y percentiles.
+- **Licencia: la de cada corpus de origen**, sin cambios, como `general.json`: noticia (CC BY
+  4.0), administrativo (art. 13 LPI y licencia tipo del BOE; cita «Basado en datos de la Agencia
+  Estatal Boletín Oficial del Estado»), narrativa-clasica (dominio público; texto y marca de
+  Project Gutenberg retirados), academico (CC BY 4.0, con cita de procedencia) y opinion (CC BY
+  2.1 ES declarada por terceros: solo cifras).
+- **Atribución:** la de cada corpus, en su apartado.
+- **Qué se cambió:** nada del texto se redistribuye. Se derivan cifras.

@@ -193,23 +193,35 @@ describe('los datos de terceros de data/ tienen ficha y licencia al lado', () =>
 describe('cada calibración de data/calibracion/ tiene su fila en § 2.3', () => {
   const CALIBRACION = new URL('calibracion/', DATOS);
 
-  /** Los géneros calibrados: los `<genero>.json` de data/calibracion/ que no son manifiestos. */
+  /**
+   * Los ficheros de data/calibracion/ que NO son de un género (encargo 5.6):
+   * no llevan fila en la tabla de § 2.3 ni manifiesto, pero sí su párrafo en
+   * § 2.3 y su apartado en LICENSE-CORPUS.md (juez 11). Cualquier otro .json
+   * que aparezca cuenta como género y pide su fila (juez 9).
+   */
+  const NO_SON_GENEROS = ['validacion.json'];
+
+  /** Los géneros calibrados: los `<genero>.json` de data/calibracion/ que no son manifiestos ni de NO_SON_GENEROS. */
   function generos(): string[] {
     if (!existsSync(CALIBRACION)) return [];
     return readdirSync(CALIBRACION)
-      .filter((f) => /^[a-z0-9]+(-[a-z0-9]+)*\.json$/.test(f) && !f.endsWith('.manifiesto.json'))
+      .filter((f) => /^[a-z0-9]+(-[a-z0-9]+)*\.json$/.test(f) && !f.endsWith('.manifiesto.json') && !NO_SON_GENEROS.includes(f))
       .sort();
   }
 
-  /** Las filas de la tabla de § 2.3: fichero y licencia (sin negrita). */
-  function filas(): { fichero: string; licencia: string }[] {
+  /** El texto de § 2.3, hasta el siguiente encabezado. */
+  function seccion23(): string {
     const { texto } = leer();
     const inicio = texto.indexOf('### 2.3 · ');
     assert.ok(inicio >= 0, 'falta la sección § 2.3');
     const resto = texto.slice(inicio + 4);
     const fin = resto.search(/^#{2,3} /m);
-    const seccion = fin >= 0 ? resto.slice(0, fin) : resto;
-    return [...seccion.matchAll(/^\| `([^`]+\.json)` \|[^|]+\|[^|]+\| ([^|]+?) \|/gm)].map((m) => ({
+    return fin >= 0 ? resto.slice(0, fin) : resto;
+  }
+
+  /** Las filas de la tabla de § 2.3: fichero y licencia (sin negrita). */
+  function filas(): { fichero: string; licencia: string }[] {
+    return [...seccion23().matchAll(/^\| `([^`]+\.json)` \|[^|]+\|[^|]+\| ([^|]+?) \|/gm)].map((m) => ({
       fichero: m[1]!,
       licencia: m[2]!.replaceAll('**', '').trim(),
     }));
@@ -225,6 +237,16 @@ describe('cada calibración de data/calibracion/ tiene su fila en § 2.3', () =>
       assert.ok(existsSync(new URL(`${genero}.manifiesto.json`, CALIBRACION)), `falta data/calibracion/${genero}.manifiesto.json`);
       const { licencia } = JSON.parse(readFileSync(new URL(fila.fichero, CALIBRACION), 'utf8')) as { licencia: string };
       assert.equal(fila.licencia, licencia.replace(/ \(.*$/, ''), `licencia de ${fila.fichero} en § 2.3 frente a la del fichero`);
+    }
+  });
+
+  test('11 · cada fichero que no es de un género (validacion.json) está declarado en § 2.3 y en LICENSE-CORPUS.md si existe, y solo si existe', () => {
+    const licencias = readFileSync(new URL('LICENSE-CORPUS.md', CALIBRACION), 'utf8');
+    for (const fichero of NO_SON_GENEROS) {
+      const existe = existsSync(new URL(fichero, CALIBRACION));
+      const enNotices = new RegExp(`^- \`${fichero.replace('.', '\\.')}\``, 'm').test(seccion23());
+      const enLicencias = new RegExp(`^## \`${fichero.replace('.', '\\.')}\``, 'm').test(licencias);
+      assert.deepEqual({ enNotices, enLicencias }, { enNotices: existe, enLicencias: existe }, `data/calibracion/${fichero} ${existe ? 'existe' : 'no existe'}`);
     }
   });
 });

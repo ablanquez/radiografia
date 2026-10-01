@@ -207,6 +207,12 @@ escribir (`motor/herramientas/calibrar/manifiesto.ts`). Los textos se descargan 
 | `opinion.json` | MuchoCine: 3.870 críticas de cine de usuarios (hacia 2005-2008), repositorio ITALIC-US/Spanish-Movie-Reviews en el commit `4f8efab`; solo el cuerpo de cada crítica | Usuarios de www.muchocine.net; recogidas por Cruz, Troyano, Enríquez y Ortega (2008) | **CC BY 2.1 ES** | **Declarada por terceros**: la declaran los curadores en su README; no verificada en muchocine.net. El LICENSE del repositorio (MIT) es del software, no de las críticas. Solo cifras, sin muestras |
 | `general.json` | Mezcla estratificada de los cinco anteriores: por tramo, los géneros con ese tramo calibrado y el mismo número de documentos de cada uno (100-299: 4 × 100; 300-599 y 600+: 5 × 100), elegidos por huella | Los de cada corpus de origen | **La de cada corpus de origen** | Heredada: cada documento conserva la licencia de su corpus, citada en su fila; los de opinión, CC BY 2.1 ES declarada por terceros (solo cifras) |
 
+- `validacion.json` no es de un género ni lleva manifiesto: es la validación de RadiografIA
+  (encargo 5.6) sobre los documentos **apartados** (reparto «validacion») de los seis ficheros de
+  la tabla, cada uno analizado con su género. Lleva los ids de esos documentos, ya publicados en
+  sus manifiestos, y cifras: en cuántos disparan dos o más reglas estadísticas, la tasa de
+  disparo de cada regla y los percentiles del total. Ni una frase de los textos. Licencia: la de
+  cada corpus de origen, como `general.json`; atribución en `LICENSE-CORPUS.md`.
 - Una fila por fichero de calibración y un fichero por fila, con la licencia que dice el propio
   fichero: lo vigila `motor/src/notices.spec.ts`.
 - **Viajará al navegador**: los percentiles entran en la cabecera del paquete
