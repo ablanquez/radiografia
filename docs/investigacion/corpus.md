@@ -27,12 +27,12 @@ género en español: se calibra desde cero.
 | Género (clave) | Corpus | Licencia | Estado | Entra en v1 |
 |---|---|---|---|---|
 | `noticia` | UD Spanish-AnCora (ya en `data/referencia/`) | CC BY 4.0, verificada | Cubierto | **Sí** |
-| `academico` | CSIC Spanish Corpus (30.929 docs, 146,8 M tokens, ~4.750 tokens/doc → casi todo 600+); resúmenes de SciELO filtrados por licencia CC BY por artículo para 100-299 | CC BY 4.0 verificada en Zenodo y en revistas.csic.es; SciELO por artículo | Cubierto (tramos cortos por fragmentos o resúmenes, documentado) | **Sí** |
+| `academico` | CSIC Spanish Corpus (30.929 docs, 146,8 M tokens, ~4.750 tokens/doc → casi todo 600+). ⚠️ Formato real (01/10): una FRASE por línea y documentos separados por línea en blanco, no «un documento por línea» como decía el informe; resúmenes de SciELO filtrados por licencia CC BY por artículo para 100-299 (al final no hizo falta: fragmentos de CSIC declarados) | CC BY 4.0 verificada en Zenodo y en revistas.csic.es | Calibrado 01/10 por rangos de bytes (RFC 9110); OCR declarado | **Sí** |
 | `administrativo` | BOE (disposiciones, resoluciones, anuncios; excluir tratados y traducciones oficiales); separar subgéneros | Art. 13 LPI (verificado) + licencia tipo BOE 2024 (comercial, con cita «Basado en datos de la Agencia Estatal Boletín Oficial del Estado») | Cubierto | **Sí** |
 | `narrativa-clasica` | Project Gutenberg ES filtrado por autor hispanohablante en dominio público en la UE (LPI: 80 años si murió antes del 7/12/1987; 70 después); Wikisource ES | Dominio público; Gutenberg exige quitar su cabecera y su marca | Cubierto con **sesgo de época** (pre-1930): frases largas, léxico arcaizante; se etiqueta «clásica» | **Sí**, con la advertencia en la ficha de calibración |
-| `opinion` | MuchoCine (3.872 críticas de cine de usuarios, España, ~2005-08, ~230 palabras) | CC BY 2.1 ES declarada por ITALIC-US; ficha de HF «unknown»; no verificada en muchocine.net | Débil | **Sí, solo cifras**, sin muestras, con la licencia marcada «declarada por terceros» |
+| `opinion` | MuchoCine (3.878 críticas de cine de usuarios —no 3.872 como decía el informe—, España, ~2005-08, ~230 palabras; 3.870 ≥ 100 palabras) | CC BY 2.1 ES declarada por ITALIC-US; ficha de HF «unknown»; no verificada en muchocine.net; MIT solo del software | Calibrado 01/10, solo cifras | **Sí, solo cifras**, con la licencia marcada «declarada por terceros» |
 | `corporativo` | — | — | **Hueco** | No: la interfaz muestra «sin calibración» |
-| `general` | **Mezcla estratificada y declarada** de los anteriores + Wikipedia ES (CC BY-SA 4.0, volcado anterior a 2022), mismo número de documentos por género y por tramo, receta publicada | Herencia de cada parte | Construible | **Sí** (obligatorio por defecto) |
+| `general` | Mezcla estratificada por tramo de los géneros que lo tienen (mínimo común, declarados). ⚠️ Wikipedia ES **fuera de la v1** (decisión 30/09: volcado pre-2022 de gigas; nevera) | Herencia de cada parte | Calibrado 01/10 | **Sí** (obligatorio por defecto) |
 
 ## Descartes (con motivo)
 

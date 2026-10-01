@@ -369,12 +369,13 @@ Fuente citada en cada ficha (sale del punto 2 y de `CANDIDATAS.md`).
       (la coletilla típica), así que la evidencia queda en la medida
       inglesa; exclusión de falsos gerundios (cuando, mando, Fernando…)
       [PROPIO]; el DPD «gerundio» no tiene captura legible. El resto de la
-      familia: S1, S2, S3, S5, S16 son métricas (5.5); S6, S9, S10, S11 sin
+      familia: S1, S2, S3, S16 son métricas y S5 lo es desde 5.5
+      (`nominalizaciones-por-1000`); S6, S9, S10, S11 sin
       POS; S7, S14 fuera; S8 = lex-no-solo-sino; S12, S13, S15 norma
 - [x] Puntuación y formato (5.1, 30/09): en RadiografIA v1 solo P11
       (densidad de rayas U+2014, peso 1 justificado, medido en inglés) y
       P12 (raya o semirraya espaciada, peso 1, anecdótico); P14-P16 son
-      estadísticas (5.5); P10 y P18-P22 a «español correcto»; P7 fuera
+      estadísticas (reglas en 5.6; métricas hechas en 5.5); P10 y P18-P22 a «español correcto»; P7 fuera
       (exige métrica). P13 (exclusión de diálogos) NO en el motor: en las
       excepciones de las fichas; la calibración dirá. Doble puntuación
       P11+P12 en una raya espaciada: para la calibración
@@ -391,8 +392,9 @@ Fuente citada en cada ficha (sale del punto 2 y de `CANDIDATAS.md`).
       vaga (D9), retos y futuro (D11). **Atenuantes**: referencia interna
       concreta (D6, −2, solo con objetivo numerado o en 1.ª persona) y
       anécdota en primera persona (D14, −1); listas leídas por Antonio.
-      Fuera con motivo: D10, D12, D13, D17 (histórico), D18 (= D3). A 5.5:
-      D15, D16. Fuentes primarias leídas: código de replicación de Herbold
+      Fuera con motivo: D10, D12, D13, D17 (histórico), D18 (= D3). D16 es
+      métrica de contexto desde 5.5 (`pronombres-anaforicos-por-1000`);
+      D15 NO se implementa (exige lematizador). Fuentes primarias leídas: código de replicación de Herbold
       (Zenodo), Pham, Wikipedia Signs entera. Texto de opinión de asistente:
       7 reglas, 38,68; reescrito con yo/epistémicos/anécdota: 19,78;
       AnCora «noticia»: 0 de discurso
@@ -420,20 +422,33 @@ Fuente citada en cada ficha (sale del punto 2 y de `CANDIDATAS.md`).
       Juez propio y juez de combinación con los dos paquetes reales:
       orígenes separados. AnCora: 0 disparos (muestra sin material; la
       comprobación del 5 % queda para la calibración)
-- [ ] **Calibración** (FIRMADA 29/09; géneros firmados 30/09): percentiles
-      1/5/50/95/99 (Hyndman & Fan tipo 7) de cada métrica en textos
-      humanos por género y tramo. Géneros de la v1 y sus corpus
-      (`docs/investigacion/corpus.md`): `general` (mezcla estratificada y
-      declarada + Wikipedia ES), `noticia` (AnCora UD, CC BY 4.0),
-      `academico` (CSIC Spanish Corpus CC BY 4.0 + resúmenes SciELO CC BY
-      por artículo), `administrativo` (BOE: art. 13 LPI + licencia tipo
-      2024), `narrativa-clasica` (Gutenberg/Wikisource, dominio público,
-      sesgo de época declarado), `opinion` (MuchoCine, solo cifras,
-      licencia declarada por terceros). `corporativo`: sin corpus, «sin
-      calibración» en la interfaz. Muestras en `data/` solo con licencia
-      verificada; de lo demás, solo cifras. Se marca solo con ≥ 2 métricas
-      fuera del p1–p99 (vía pesos); **validación con textos humanos
-      apartados: FPR ≤ 5 %** o no se cierra el punto
+- [x] **Calibración — percentiles** (5.5, 30/09-01/10): herramienta
+      reproducible `motor/herramientas/calibrar/` (semilla fija, reparto
+      80/20 por huella sha256, cliente de red que respeta robots.txt según
+      RFC 9309, manifiestos sin texto con hash por documento); corpus en
+      `motor/corpus/` fuera del repo; percentiles tipo 7 en
+      `data/calibracion/<genero>.json` solo en celdas con n ≥ 100, e
+      inyectados en `paquetes/radiografia.json`: **14 claves × 6 géneros =
+      238 celdas**. Géneros y corpus: noticia (AnCora, 1.025 docs, 3LB-CAST
+      fuera), administrativo (BOE, 463, turnos con tope 60 % por
+      subgénero), narrativa-clasica (Gutenberg, 1.377 capítulos de 237
+      libros, dominio público comprobado en el TRLPI; **100-299 omitida**,
+      65 < 100), academico (CSIC por rangos de bytes, 361; OCR declarado),
+      opinion (MuchoCine, 3.870, solo cifras), general (mezcla
+      estratificada por tramo de los géneros que lo tienen; Wikipedia
+      FUERA de la v1). Verificación del segmentador: 896/1.025 documentos
+      de AnCora con el mismo número de frases que la anotación manual.
+      Bloque `disparos` por fichero (aceptado 01/10). Tres bitácoras
+      (EPUB). La expectativa «4-6 frases por 100» del encargo no tenía
+      fuente: la investigación da ~3,7 y AnCora 3,5
+- [ ] **Calibración — validación** (5.6): `_total-radiografia` se
+      recalcula tras añadir las reglas estadísticas; se marca solo con
+      ≥ 2 métricas fuera del p1–p99 (vía pesos); **validación con los
+      textos humanos apartados (20 %): FPR ≤ 5 %** o no se cierra el punto.
+      Datos ya conocidos que la validación debe corregir: en MuchoCine
+      (300-599) las ausencias disparan en 852/1.663 (epistémicos) y
+      617/1.663 (automenciones); en narrativa 600+ `pf-raya-densidad`
+      dispara en 814/895 y el gerundio final en 586/895
 - [ ] El paquete pasa el validador y todos sus ejemplos pasan los jueces
 - [ ] El eslogan y los textos de la propia web pasan por el motor: si los
       marca, se cambian (dicho en el brainstorming). **PUNTO 5 CERRADO**

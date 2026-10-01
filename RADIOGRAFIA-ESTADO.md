@@ -5,16 +5,18 @@ El ejecutor reporta descubrimientos; no toca este fichero.
 
 ---
 
-## ESTADO ACTUAL — 30 de septiembre de 2026
+## ESTADO ACTUAL — 1 de octubre de 2026
 
-**⭐ PUNTOS 1-4 CERRADOS (29-30/09). PUNTO 5 EN MARCHA (30/09):** los dos
+**⭐ PUNTOS 1-4 CERRADOS (29-30/09). PUNTO 5 EN MARCHA (01/10):** los dos
 paquetes reales existen. **RadiografIA 0.1.0** tiene cinco familias
-rellenas: canal (6 informativas), puntuación y formato (2), léxico (11),
-discurso (10, con dos ausencias y dos atenuantes) y sintaxis (1). **Español
-correcto 0.1.0** tiene sus siete avisos de norma con sección RAE leída. El
-motor combina los dos con origen en cada señal. **566 jueces: 559 en verde,
-2 saltados con motivo, 5 `todo`**, `tsc` limpio. Falta la familia
-estadística con su calibración por género (5.5), y con ella el punto 5. No
+rellenas (canal 6, puntuación 2, léxico 11, discurso 10, sintaxis 1) y ya
+lleva **calibración humana real**: 238 celdas de percentiles (14 claves ×
+6 géneros) medidas con el motor sobre AnCora, BOE, Gutenberg, CSIC y
+MuchoCine, con manifiestos reproducibles y sin texto en el repo. **Español
+correcto 0.1.0** con sus siete avisos. **737 jueces: 730 en verde, 2
+saltados con motivo, 5 `todo`**, `tsc` limpio. Cinco bitácoras, todas
+cerradas. Falta el 5.6: reglas estadísticas en el paquete, validación FPR
+≤ 5 % sobre el 20 % apartado, escala del medidor y cierre del punto 5. No
 hay pantalla.
 
 ## 1 · Identidad
@@ -44,7 +46,9 @@ hay pantalla.
   No hay librería JS/TS madura de estadística del español: el motor
   implementa las fórmulas con su fuente (`estadistica.md` §1).
 - Datos con licencia CC BY-SA (listas de frecuencia) van en `/data/`
-  aparte del código Apache, con atribución y ficha en NOTICES.
+  aparte del código Apache, con atribución y ficha en NOTICES. Los corpus
+  de calibración NO entran en el repo (`motor/corpus/`, ignorado): solo
+  herramienta, manifiestos sin texto y percentiles (`data/calibracion/`).
 - Despliegue en Hostinger compartido; el cómo, NO CONSTA hasta el
   parlamento con la doc del panel (punto 11).
 
@@ -59,8 +63,8 @@ antes del verde, push = despliegue, bitácora por la skill
 
 `PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1, 2 y 3 (29/09), 4 (30/09).
 Abierto: el 5 (5.1 canal y puntuación, 5.2 léxico, 5.3 discurso, 5.4
-sintaxis + «Español correcto» hechos; queda 5.5 estadística y
-calibración).
+sintaxis + «Español correcto», 5.5 calibración hechos; queda 5.6 reglas
+estadísticas, validación FPR y escala).
 
 ## 5 · Decisiones
 
@@ -222,9 +226,39 @@ calibración).
   la coma de millares (§2.2.1.1). Cada regla cita su sección de la RAE,
   leída vía web.archive.org. S13 mantiene «lavó/frotó» como [PROPIO] aunque
   la NGLE §14.7g no lo respalde. La tanda 5.6 pasa a llamarse 5.5.
+- 30/09-01/10 — **Decisiones del 5.5 (calibración)**: corpus fuera del
+  repo (`motor/corpus/`), al repo solo herramienta, manifiestos sin texto
+  y percentiles; reparto 80/20 por huella sha256 con semilla fija antes de
+  medir; celda solo con n ≥ 100 [PROPIO: el esquema exige p1 y p99];
+  Wikipedia FUERA de `general` en la v1 (desviación de corpus.md, nevera);
+  `general` = mezcla estratificada por tramo de los géneros que lo
+  tienen, mínimo común, declarados; `_total-radiografia` calibrado como
+  clave `_total-*` (se recalcula en 5.6) para que el medidor sea
+  «percentil respecto a humanos del género» [PROPIO]; BOE por turnos con
+  tope 60 % por subgénero y presupuesto de 30 min (no 3 h); 3LB-CAST
+  fuera de noticia (Taulé 2008: Lexesp equilibrado); narrativa: filtros
+  contra traducciones sin traductor [PROPIO], exclusiones manuales por
+  autor e id declaradas, 100-299 omitida sin subir el tope de 5 capítulos
+  por libro; académico: separador real (\n\n), OCR medido y declarado sin
+  filtrar, descarga por rangos HTTP (RFC 9110 §14); bloque `disparos`
+  aceptado como salida de la herramienta. **Versión del paquete sigue en
+  0.1.0.** Corrección de la estrategia: la expectativa «4-6 frases por
+  100» no tenía fuente (~3,7 según sintaxis.md; AnCora anota 28,56
+  palabras por frase).
 
 ## 6 · Cabos abiertos
 
+- Del 5.5 (01/10), para 5.6 y después: residuo de coma flotante en
+  `puntuar.ts` (−1,1·10⁻¹⁶ donde debe salir 0; `sinMenosCero` solo quita
+  el −0) → arreglar en 5.6; `general.json` registra el motor 430075b
+  (src idéntico al de su constructor); el manifiesto de noticia solo
+  cuenta su última ejecución (desde caché); los registros de descarga
+  sobrestiman el tiempo de red (incluyen medir); dos peticiones a la API
+  de Zenodo en el encargo 5.3 (código de Herbold) hechas sin leer su
+  robots.txt → incidencia declarada aquí; totales negativos en humanos
+  por diseño (atenuantes). `corpus.md` corregido el 01/10: CSIC no es «un
+  documento por línea» (una frase por línea, documentos por línea en
+  blanco); MuchoCine son 3.878 críticas, no 3.872.
 - Del 5.4 (30/09): `puntuacion-formato.md` P20 decía que el punto decimal
   era calco; la Ortografía lo recomienda → corregido el 30/09. P22
   subraya solo el símbolo y la primera cifra («$1»): ampliar la regex a la
@@ -232,14 +266,14 @@ calibración).
   -ando («Nando») en S4; «Conocí a Mayo»; «Ministerio de Asuntos
   Exteriores y Cooperación». La comprobación del 5 % de FP en AnCora es
   débil (100 frases sin material): se hace en la calibración con corpus.
-- **Para la calibración (5.5), el primero**: la escala pesa las ausencias
-  mucho menos que las densidades (una ausencia = su peso una vez, 2
-  puntos; «Además» ×3 en 346 palabras = 17,34), y `discurso.md` §12 pide
-  «más peso a las ausencias que a las presencias». Decidir escala o
-  factor de presencia con datos. También: una regla estadística con
-  `generos` no tendría juez (`ejemplos-estadisticos.spec.ts` analiza con
-  «general»); D6 resta en cualquier género aunque Pham es académico
-  (declarado).
+- **Para la validación y la escala (5.6), el primero**: la escala pesa las
+  ausencias mucho menos que las densidades (una ausencia = su peso una
+  vez, 2 puntos; «Además» ×3 en 346 palabras = 17,34), y `discurso.md`
+  §12 pide «más peso a las ausencias que a las presencias». Decidir escala
+  o factor de presencia con los datos de `_total-radiografia`. También:
+  una regla estadística con `generos` no tendría juez
+  (`ejemplos-estadisticos.spec.ts` analiza con «general»); D6 resta en
+  cualquier género aunque Pham es académico (declarado).
 - `discurso.md` corregido el 30/09 con las fuentes primarias: «In
   conclusion» en 166/180 (92 %), no 100 %; 53/90 estudiantes también
   cierran con fórmula; los epistémicos de Herbold son 14 regex de su código
@@ -257,17 +291,18 @@ calibración).
   JS trata U+202F y U+FEFF como `\s`: si caen en el
   borde de frase o párrafo el motor los recorta (BOM inicial no cuenta).
   P11+P12 puntuan dos veces una raya espaciada y P11 desde la primera raya
-  → calibración 5.5. P3 no cubre listas numeradas con negrita. Sin cita
+  → validación 5.6 (en narrativa 600+ dispara en 814/895). P3 no cubre
+  listas numeradas con negrita. Sin cita
   de Microsoft para la autocorrección de «--» (no estaba en la
   investigación; no se afirmó). `ejemplos-estadisticos.spec.ts` aún no
-  incluye el paquete real (5.5). P5 ajustado en 5.2 (no cuenta entre
+  incluye el paquete real (5.6). P5 ajustado en 5.2 (no cuenta entre
   cifras).
-- Para la tanda 5.5 (del 4.3): «…» (U+2026) no parte la frase y «...» sí
-  (ICU; afecta a métricas de frase e IFSZ); comillas curvas “ ” **entran**
-  en los conjuntos de signos (decidido 30/09, pendiente de implementar);
-  P15 pasa a `puntuacion-secundaria-por-1000` con dos puntos y barras
-  (decidido 30/09, pendiente); silabea cuenta una cifra como una sílaba
-  (IFSZ); Zenker & Kyle 2021 cerrado, el «≥ 50» viene de la doc de TAALED.
+- Del 4.3, lo que sigue abierto tras el 5.5: «…» (U+2026) no parte la
+  frase y «...» sí (ICU; afecta a métricas de frase e IFSZ); silabea
+  cuenta una cifra como una sílaba (IFSZ); Zenker & Kyle 2021 cerrado, el
+  «≥ 50» viene de la doc de TAALED. Hechos en 5.5: comillas curvas en los
+  conjuntos de signos; P15 renombrada `puntuacion-secundaria-por-1000` con
+  dos puntos y barras.
 - Para las tandas de reglas: `tildes:true` junta «pasó/paso» y
   «está/esta»; en 5.2 se usó `tildes:false`; mantenerlo salvo
   justificación.
@@ -299,6 +334,10 @@ calibración).
 
 ## Nevera
 
+- **Wikipedia ES en `general`** y **narrativa-clasica 100-299**: fuera de
+  la v1 (volcado pre-2022 de gigas; 65 capítulos < 100). Calibración por
+  **subgénero del BOE** y filtro de OCR en académico: el manifiesto ya
+  guarda el dato.
 - **Géneros v1.1**: opinión contemporánea (columnas, blogs), narrativa
   contemporánea, corporativo/marketing y variedad americana: sin corpus
   abierto con licencia (30/09).
