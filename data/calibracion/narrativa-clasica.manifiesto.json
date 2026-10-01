@@ -14236,7 +14236,7 @@
   ],
   "semilla": "radiografia-calibracion-2026",
   "motor": {
-    "commit": "8eea55f18b4b82b84643f7ea36e357ee0e969f1a",
+    "commit": "eb9d5115d0a44449591103b71847af726cd7904e",
     "limpio": true
   }
 }

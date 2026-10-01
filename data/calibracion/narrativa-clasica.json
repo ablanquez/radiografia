@@ -5,7 +5,7 @@
   "licencia": "Dominio público en España (verificada por libro: todas las personas del registro del catálogo murieron en 1945 o antes (vida + 80 años desde el 1 de enero siguiente))",
   "semilla": "radiografia-calibracion-2026",
   "motor": {
-    "commit": "8eea55f18b4b82b84643f7ea36e357ee0e969f1a",
+    "commit": "eb9d5115d0a44449591103b71847af726cd7904e",
     "limpio": true
   },
   "metodo": "hyndman-fan-7",
@@ -592,13 +592,13 @@
           "documentos": 89,
           "senales": 424
         },
-        "est-poca-puntuacion-secundaria": {
+        "est-frases-cortas": {
           "documentos": 45,
           "senales": 45
         },
-        "est-frases-cortas": {
-          "documentos": 44,
-          "senales": 44
+        "est-poca-puntuacion-secundaria": {
+          "documentos": 45,
+          "senales": 45
         },
         "pf-raya-espaciada": {
           "documentos": 19,
