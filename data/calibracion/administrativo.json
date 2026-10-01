@@ -5,7 +5,7 @@
   "licencia": "Art. 13 LPI y licencia tipo del BOE de 27/06/2024 (verificada en origen: aviso legal y art. 13 del TRLPI consolidado, leídos en cada ejecución)",
   "semilla": "radiografia-calibracion-2026",
   "motor": {
-    "commit": "835505be8f94a4c6a24e5ed2baa8658e11bf3795",
+    "commit": "4159d6b6b14b4674cc1665fba73e7495936fdef6",
     "limpio": true
   },
   "metodo": "hyndman-fan-7",
@@ -721,6 +721,7 @@
     "Margen sobre el mínimo de 100 documentos de calibración por tramo: 100-299 +55 · 300-599 +0 · 600+ +10.",
     "_total-radiografia: puntuacion.total de analizar() con paquetes/radiografia.json y el género «administrativo»; desde el 5.6 incluye las reglas estadísticas (trece «est-», siete que puntúan), comparadas con las celdas de calibración inyectadas en el paquete.",
     "disparos: por tramo, en los documentos de calibración, en cuántos da alguna señal cada regla de RadiografIA que puntúa y cuántas señales suman (las informativas no cuentan); desde el 5.6, también las reglas estadísticas.",
+    "Validación (data/calibracion/validacion.json): la FPR de la familia estadística es 5 de 98 (5,1 %), por encima del 5 %. Aceptado con declaración (Antonio Blánquez, 01/10/2026); modifica el criterio firmado del plan (punto 5): «validación con los textos humanos apartados (20 %): FPR ≤ 5 % o no se cierra el punto». Motivos: El 01/10/2026, el criterio se cumplía en los otros cinco géneros y en el conjunto de la validación (37 de 1.667 documentos, 2,2 %). Con n = 98, el intervalo de Wilson al 95 % (2,2 % a 11,4 %) incluye el 5 %: la muestra no distingue 5,1 % de 5 %. Cuatro de los cinco documentos son el falso positivo de formato ya declarado en las fichas de est-frases-cortas, est-pocas-comas, est-poca-puntuacion-secundaria y est-poca-puntuacion: tablas del BOE pasadas a texto (BOE-A-2012-3750, BOE-B-2010-33306 y BOE-B-2012-3733) y un formulario de párrafos numerados (BOE-B-2010-33269). El quinto (BOE-A-2012-7964) es la repetición de fórmula legal declarada en est-repeticion-de-secuencias. No se excluye ningún documento ni se cambia nada después de ver la validación. Pendiente: v1.1: que el motor trate las tablas pasadas a texto como no-prosa, con estos cinco documentos como casos de prueba.",
     "«administrativo» es una MEZCLA de tres subgéneros (disposición general, resolución y anuncio) con percentiles conjuntos, descargados por turnos. El subgénero de cada documento queda en el manifiesto para poder recalibrar por subgénero en la v1.1.",
     "La mezcla no es la proporción natural del BOE (192/2651/3800 en 47 sumarios: disposición general/resolución/anuncio).",
     "Por tramo: 100-299 — con tope: ningún subgénero pasa de 3/5. Calibración 155 (disposición general 27, 17,4 %; resolución 44, 28,4 %; anuncio 84, 54,2 %). Validación 42 (disposición general 8, 19,0 %; resolución 11, 26,2 %; anuncio 23, 54,8 %). Descargados antes del tope (calibración + validación): disposición general 27 + 8; resolución 44 + 11; anuncio 84 + 23.",
