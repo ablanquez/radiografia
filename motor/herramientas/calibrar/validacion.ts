@@ -94,6 +94,8 @@ export interface FicheroDeValidacion {
       conjunto?: ConjuntoDeGenero;
       /** El intervalo de Wilson al 95 % de la FPR del conjunto. */
       intervaloFpr?: IntervaloDeWilson;
+      /** Solo si la FPR del conjunto pasa del 5 %: la decisión firmada (decisiones.ts). */
+      decision?: DecisionDeValidacion;
     }
   >;
 }
@@ -106,23 +108,29 @@ export interface ConjuntoDeGenero {
 
 const redondear = (x: number): number => Math.round(x * 1e6) / 1e6;
 const proporcion = (k: number, n: number): Proporcion => ({ documentos: k, proporcion: redondear(k / n) });
+const porId = (a: string, b: string): number => (a < b ? -1 : a > b ? 1 : 0);
+
+/** Cuántas reglas estadísticas que PUNTÚAN dispararon en un documento. */
+function contadorDeEstadisticas(reglas: readonly ReglaResumida[]): (d: DocumentoValidado) => number {
+  const estadisticasQuePuntuan = new Set(reglas.filter((r) => r.estadistica && r.puntua).map((r) => r.id));
+  return (d) => new Set(d.disparadas.filter((id) => estadisticasQuePuntuan.has(id))).size;
+}
 
 export function resumirCelda(tramo: TramoDeCalibracion, documentos: readonly DocumentoValidado[], reglas: readonly ReglaResumida[], celda: Celda): CeldaDeValidacion {
   if (documentos.length === 0) throw new Error(`celda ${tramo}: ningún documento`);
   const conocidas = new Set(reglas.map((r) => r.id));
-  const estadisticasQuePuntuan = new Set(reglas.filter((r) => r.estadistica && r.puntua).map((r) => r.id));
   for (const d of documentos) {
     if (d.tramo !== tramo) throw new Error(`${d.id}: es del tramo ${d.tramo} y la celda es de ${tramo}`);
     const ajena = d.disparadas.find((id) => !conocidas.has(id));
     if (ajena !== undefined) throw new Error(`${d.id}: la regla «${ajena}» no es del paquete`);
   }
   const n = documentos.length;
-  const estadisticas = documentos.map((d) => new Set(d.disparadas.filter((id) => estadisticasQuePuntuan.has(id))).size);
+  const estadisticas = documentos.map(contadorDeEstadisticas(reglas));
   const totales = documentos.map((d) => d.total);
   const p = (q: number) => redondear(percentil(totales, q));
   return {
     n,
-    documentos: documentos.map((d) => d.id).sort((a, b) => (a < b ? -1 : a > b ? 1 : 0)),
+    documentos: documentos.map((d) => d.id).sort(porId),
     fpr: proporcion(estadisticas.filter((k) => k >= 2).length, n),
     alMenosUna: proporcion(estadisticas.filter((k) => k >= 1).length, n),
     reglas: Object.fromEntries(reglas.map((r) => [r.id, proporcion(documentos.filter((d) => d.disparadas.includes(r.id)).length, n)])),
@@ -160,6 +168,52 @@ export function intervaloDeWilson(k: number, n: number): IntervaloDeWilson {
   const centro = p + z2 / (2 * n);
   const semiancho = Z_95 * Math.sqrt((p * (1 - p)) / n + z2 / (4 * n * n));
   return { metodo: 'Wilson (1927)', confianza: 0.95, inferior: redondear((centro - semiancho) / denominador), superior: redondear((centro + semiancho) / denominador) };
+}
+
+/** Una decisión firmada sobre un género por encima del 5 % (decisiones.ts). */
+export interface DecisionDeValidacion {
+  fecha: string;
+  firma: string;
+  decision: 'aceptado con declaración';
+  /** El criterio que la decisión modifica para ese género. */
+  modifica: string;
+  /** El resultado que se aceptó: si el de hoy es otro, la decisión no vale. */
+  aceptado: { documentos: number; n: number; ids: string[] };
+  motivos: string[];
+  pendiente: string;
+}
+
+/** Los ids de los documentos que cuentan en la FPR (2 o más estadísticas que puntúan), ordenados. */
+export function documentosConFpr(documentos: readonly DocumentoValidado[], reglas: readonly ReglaResumida[]): string[] {
+  const cuenta = contadorDeEstadisticas(reglas);
+  return documentos
+    .filter((d) => cuenta(d) >= 2)
+    .map((d) => d.id)
+    .sort(porId);
+}
+
+/**
+ * Un género por encima del 5 % necesita su decisión firmada, y la decisión
+ * tiene que ser de ESE resultado (k, n y los ids): si cambia, para. Una
+ * decisión para un género que ya no pasa del 5 % sobra.
+ */
+export function comprobarDecision(genero: string, conjunto: ConjuntoDeGenero, idsConFpr: readonly string[], decision: DecisionDeValidacion | undefined): string[] {
+  const { documentos: k } = conjunto.fpr;
+  const { n } = conjunto;
+  const porEncima = conjunto.fpr.proporcion > 0.05;
+  if (decision === undefined) return porEncima ? [`${genero}: FPR ${k} de ${n}, por encima del 5 %, sin decisión firmada (decisiones.ts)`] : [];
+  if (!porEncima) return [`${genero}: FPR ${k} de ${n}, no pasa del 5 %: la decisión del ${decision.fecha} sobra`];
+  const problemas: string[] = [];
+  const { aceptado } = decision;
+  if (aceptado.documentos !== k || aceptado.n !== n) problemas.push(`${genero}: la decisión del ${decision.fecha} aceptó ${aceptado.documentos} de ${aceptado.n} y hoy salen ${k} de ${n}`);
+  const hoy = [...idsConFpr].sort(porId);
+  const firmados = [...aceptado.ids].sort(porId);
+  const nuevos = hoy.filter((id) => !firmados.includes(id));
+  const idos = firmados.filter((id) => !hoy.includes(id));
+  if (nuevos.length > 0 || idos.length > 0) {
+    problemas.push(`${genero}: los documentos no son los aceptados el ${decision.fecha}${nuevos.length > 0 ? `; nuevos: ${nuevos.join(', ')}` : ''}${idos.length > 0 ? `; ya no cuentan: ${idos.join(', ')}` : ''}`);
+  }
+  return problemas;
 }
 
 export function comprobarReparto(fichero: FicheroDeValidacion, manifiestos: Readonly<Record<string, Manifiesto>>): string[] {

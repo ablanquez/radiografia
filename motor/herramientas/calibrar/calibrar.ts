@@ -16,6 +16,8 @@
  *    cambian texto.ts o silabas, se vuelve a ejecutar (es reproducible).
  * [PROPIO] En la celda, «corpus» es el nombre y la versión de la fuente y el
  *    manifiesto de donde salen; «fecha», la de esta calibración.
+ * Si el género tiene una decisión firmada sobre su validación (decisiones.ts,
+ * 5.6), la ficha la anota en sus notas.
  */
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -23,6 +25,7 @@ import { fileURLToPath } from 'node:url';
 import type { Paquete } from '../../src/paquete.ts';
 import { CLAVES_DE_CALIBRACION } from '../../src/metricas/nombres.ts';
 import { calcularCeldas, disparosPorTramo, MINIMO_POR_CELDA, type Medida } from './celdas.ts';
+import { DECISIONES, notaDeDecision } from './decisiones.ts';
 import { SEMILLA, TRAMOS, huella, medirLongitud, reparto } from './comun.ts';
 import { medirConDisparos } from './medir.ts';
 import { nombreDeFichero, prepararManifiesto, type Manifiesto } from './manifiesto.ts';
@@ -86,6 +89,7 @@ const calibracion = {
     `Margen sobre el mínimo de ${MINIMO_POR_CELDA} documentos de calibración por tramo: ${TRAMOS.map((t) => `${t} ${n[t] - MINIMO_POR_CELDA >= 0 ? '+' : ''}${n[t] - MINIMO_POR_CELDA}`).join(' · ')}.`,
     `_total-radiografia: puntuacion.total de analizar() con paquetes/radiografia.json y el género «${genero}»; desde el 5.6 incluye las reglas estadísticas (trece «est-», siete que puntúan), comparadas con las celdas de calibración inyectadas en el paquete.`,
     'disparos: por tramo, en los documentos de calibración, en cuántos da alguna señal cada regla de RadiografIA que puntúa y cuántas señales suman (las informativas no cuentan); desde el 5.6, también las reglas estadísticas.',
+    ...(DECISIONES[genero] !== undefined ? [notaDeDecision(DECISIONES[genero])] : []),
     ...(corpus.notas ?? []),
     ...corpus.filtros.map((f) => `filtro del corpus: ${f}`),
   ],

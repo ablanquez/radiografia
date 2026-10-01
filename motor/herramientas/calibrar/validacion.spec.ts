@@ -11,7 +11,20 @@ import { readFileSync } from 'node:fs';
 import type { Celda } from '../../src/paquete.ts';
 import type { Manifiesto } from './manifiesto.ts';
 import { GENEROS_CALIBRADOS } from './inyeccion.ts';
-import { Z_95, comprobarReparto, intervaloDeWilson, resumirCelda, resumirGenero, type CeldaDeValidacion, type DocumentoValidado, type FicheroDeValidacion, type ReglaResumida } from './validacion.ts';
+import {
+  Z_95,
+  comprobarDecision,
+  comprobarReparto,
+  documentosConFpr,
+  intervaloDeWilson,
+  resumirCelda,
+  resumirGenero,
+  type CeldaDeValidacion,
+  type DecisionDeValidacion,
+  type DocumentoValidado,
+  type FicheroDeValidacion,
+  type ReglaResumida,
+} from './validacion.ts';
 
 const REGLAS: ReglaResumida[] = [
   { id: 'est-a', estadistica: true, puntua: true },
@@ -122,6 +135,55 @@ describe('intervaloDeWilson', () => {
     assert.throws(() => intervaloDeWilson(6, 5), /k/);
     assert.throws(() => intervaloDeWilson(-1, 5), /k/);
     assert.throws(() => intervaloDeWilson(1.5, 5), /k/);
+  });
+});
+
+describe('documentosConFpr', () => {
+  test('los ids con dos o más estadísticas que puntúan, ordenados: d1 y d5 (la informativa no cuenta)', () => {
+    const docs = [doc('d5', 7, ['est-b', 'est-c', 'est-a']), doc('d1', 5, ['est-a', 'est-b']), doc('d2', 4, ['est-a', 'lex-x']), doc('d3', 0, ['est-c', 'est-a']), doc('d4', 0, [])];
+    assert.deepEqual(documentosConFpr(docs, REGLAS), ['d1', 'd5']);
+  });
+});
+
+/**
+ * Respuesta a la parada tras e) del 5.6: un género por encima del 5 % solo pasa
+ * con una decisión firmada que diga qué se aceptó (k de n y los ids). Género de
+ * prueba: 5 de 98 (0,05102), con los ids a1…a5.
+ */
+describe('comprobarDecision', () => {
+  const IDS = ['a1', 'a2', 'a3', 'a4', 'a5'];
+  const conjunto = (k: number, n: number) => ({ n, fpr: { documentos: k, proporcion: k / n }, alMenosUna: { documentos: k, proporcion: k / n } });
+  const DECISION: DecisionDeValidacion = {
+    fecha: '2026-10-01',
+    firma: 'quien firma',
+    decision: 'aceptado con declaración',
+    modifica: 'el criterio',
+    aceptado: { documentos: 5, n: 98, ids: IDS },
+    motivos: ['un motivo'],
+    pendiente: 'lo pendiente',
+  };
+
+  test('por encima del 5 %, con la decisión de ese mismo resultado: sin problemas', () => {
+    assert.deepEqual(comprobarDecision('x', conjunto(5, 98), IDS, DECISION), []);
+  });
+
+  test('por debajo o justo en el 5 %, sin decisión: sin problemas', () => {
+    assert.deepEqual(comprobarDecision('x', conjunto(4, 98), IDS.slice(0, 4), undefined), []);
+    assert.deepEqual(comprobarDecision('x', conjunto(2, 40), ['a1', 'a2'], undefined), []);
+  });
+
+  test('por encima del 5 % sin decisión: lo caza', () => {
+    assert.match(comprobarDecision('x', conjunto(5, 98), IDS, undefined).join('\n'), /x: .*5 de 98.*sin decisión/);
+  });
+
+  test('una decisión para un resultado que ya no está por encima del 5 %: lo caza', () => {
+    assert.match(comprobarDecision('x', conjunto(4, 98), IDS.slice(0, 4), DECISION).join('\n'), /x: .*4 de 98.*sobra/);
+  });
+
+  test('otro k, otro n u otros documentos que los aceptados: lo caza', () => {
+    assert.match(comprobarDecision('x', conjunto(6, 98), [...IDS, 'a6'], DECISION).join('\n'), /aceptó 5 de 98.*6 de 98/);
+    assert.match(comprobarDecision('x', conjunto(5, 97), IDS, DECISION).join('\n'), /aceptó 5 de 98.*5 de 97/);
+    assert.match(comprobarDecision('x', conjunto(5, 98), ['a1', 'a2', 'a3', 'a4', 'b9'], DECISION).join('\n'), /b9/);
   });
 });
 

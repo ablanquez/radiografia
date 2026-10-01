@@ -7,7 +7,9 @@
  * la FPR de la familia estadística (≥ 2 reglas «est-» que puntúan), la
  * proporción con al menos una, la tasa de disparo de todas las reglas y el
  * total en validación frente a la celda de calibración; por género, con los
- * tramos juntos, la FPR que se juzga y su intervalo de Wilson al 95 %.
+ * tramos juntos, la FPR que se juzga y su intervalo de Wilson al 95 %, y la
+ * decisión firmada del género que pase del 5 % (decisiones.ts): si falta,
+ * sobra o es de otro resultado, para.
  * Se ejecuta a mano:
  *
  *   node herramientas/calibrar/validar.ts        (desde motor/)
@@ -30,7 +32,18 @@ import { CLAVE_TOTAL_RADIOGRAFIA } from '../../src/metricas/nombres.ts';
 import { SEMILLA, TRAMOS, huella, medirLongitud, reparto } from './comun.ts';
 import { GENEROS_CALIBRADOS, unirCalibraciones } from './inyeccion.ts';
 import { nombreDeFichero, type Manifiesto } from './manifiesto.ts';
-import { comprobarReparto, intervaloDeWilson, resumirCelda, resumirGenero, type DocumentoValidado, type FicheroDeValidacion, type ReglaResumida } from './validacion.ts';
+import { DECISIONES } from './decisiones.ts';
+import {
+  comprobarDecision,
+  comprobarReparto,
+  documentosConFpr,
+  intervaloDeWilson,
+  resumirCelda,
+  resumirGenero,
+  type DocumentoValidado,
+  type FicheroDeValidacion,
+  type ReglaResumida,
+} from './validacion.ts';
 
 const MOTOR = fileURLToPath(new URL('../../', import.meta.url));
 const DATOS = new URL('../../../data/calibracion/', import.meta.url);
@@ -69,10 +82,11 @@ const fichero: FicheroDeValidacion & Record<string, unknown> = {
   semilla: SEMILLA,
   motor,
   criterio:
-    'FPR de la familia estadística: proporción de documentos humanos de VALIDACIÓN (reparto «validacion»: sha256("semilla|id") ≥ 0,8) en los que disparan 2 o más reglas estadísticas que puntúan; objetivo ≤ 5 % por GÉNERO, con sus tramos juntos (conjunto), y cada celda género × tramo se enseña aparte. [PROPIO, parada 2 del 5.6, opción (b) firmada por Antonio] Con 18 a 39 documentos por celda, un solo documento ya supera el 5 %. Cada documento se analiza con el género de su corpus.',
+    'FPR de la familia estadística: proporción de documentos humanos de VALIDACIÓN (reparto «validacion»: sha256("semilla|id") ≥ 0,8) en los que disparan 2 o más reglas estadísticas que puntúan; objetivo ≤ 5 % por GÉNERO, con sus tramos juntos (conjunto), y cada celda género × tramo se enseña aparte. [PROPIO, parada 2 del 5.6, opción (b) firmada por Antonio] Con 18 a 39 documentos por celda, un solo documento ya supera el 5 %. Cada documento se analiza con el género de su corpus. Con la FPR de cada género, su intervalo de Wilson al 95 % (intervaloFpr). Un género por encima del 5 % lleva la decisión firmada (decision) del resultado que se aceptó.',
   generos: {},
 };
 const manifiestos: Record<string, Manifiesto> = {};
+const decisiones: string[] = [];
 
 for (const { genero, celdas } of calibraciones) {
   const manifiesto = leer<Manifiesto>(`${genero}.manifiesto.json`);
@@ -89,6 +103,7 @@ for (const { genero, celdas } of calibraciones) {
     porTramo.get(tramo)!.push({ id: d.id, tramo, ...disparadas(texto, genero) });
   }
   const resultado: FicheroDeValidacion['generos'][string] = { celdas: {}, omitidas: [] };
+  const conFpr: string[] = [];
   for (const [tramo, documentos] of porTramo) {
     const celda = celdas[CLAVE_TOTAL_RADIOGRAFIA]?.[tramo];
     if (celda === undefined) {
@@ -96,12 +111,18 @@ for (const { genero, celdas } of calibraciones) {
       continue;
     }
     resultado.celdas[tramo] = resumirCelda(tramo, documentos, reglas, celda);
+    conFpr.push(...documentosConFpr(documentos, reglas));
   }
   resultado.conjunto = resumirGenero(resultado.celdas);
   resultado.intervaloFpr = intervaloDeWilson(resultado.conjunto.fpr.documentos, resultado.conjunto.n);
+  decisiones.push(...comprobarDecision(genero, resultado.conjunto, conFpr, DECISIONES[genero]));
+  if (DECISIONES[genero] !== undefined) resultado.decision = DECISIONES[genero];
   fichero.generos[genero] = resultado;
 }
 
+const sinGenero = Object.keys(DECISIONES).filter((g) => !(g in fichero.generos));
+if (sinGenero.length > 0) decisiones.push(`decisiones de géneros que no se validan: ${sinGenero.join(', ')}`);
+if (decisiones.length > 0) throw new Error(`PARA: las decisiones firmadas no cuadran con el resultado:\n${decisiones.map((p) => `  ${p}`).join('\n')}`);
 const problemas = comprobarReparto(fichero, manifiestos);
 if (problemas.length > 0) throw new Error(`PARA: el reparto no cuadra:\n${problemas.map((p) => `  ${p}`).join('\n')}`);
 writeFileSync(new URL('validacion.json', DATOS), JSON.stringify(fichero, null, 2) + '\n', 'utf8');
@@ -117,5 +138,5 @@ for (const [genero, { celdas, omitidas }] of Object.entries(fichero.generos)) {
 console.log('por género, con sus tramos juntos (lo que se juzga contra el 5 %):');
 for (const [genero, { conjunto, intervaloFpr }] of Object.entries(fichero.generos)) {
   const c = conjunto!;
-  console.log(`  ${genero.padEnd(18)} n ${String(c.n).padStart(4)} · FPR ${pct(c.fpr.proporcion).padStart(7)} (${c.fpr.documentos}; Wilson 95 %: ${pct(intervaloFpr!.inferior)} a ${pct(intervaloFpr!.superior)}) · ≥ 1 ${pct(c.alMenosUna.proporcion).padStart(7)} (${c.alMenosUna.documentos})${c.fpr.proporcion > 0.05 ? '   ← por encima del 5 %' : ''}`);
+  console.log(`  ${genero.padEnd(18)} n ${String(c.n).padStart(4)} · FPR ${pct(c.fpr.proporcion).padStart(7)} (${c.fpr.documentos}; Wilson 95 %: ${pct(intervaloFpr!.inferior)} a ${pct(intervaloFpr!.superior)}) · ≥ 1 ${pct(c.alMenosUna.proporcion).padStart(7)} (${c.alMenosUna.documentos})${c.fpr.proporcion > 0.05 ? `   ← por encima del 5 %: ${DECISIONES[genero]!.decision} (${DECISIONES[genero]!.fecha})` : ''}`);
 }
