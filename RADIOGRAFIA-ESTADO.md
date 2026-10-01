@@ -7,8 +7,8 @@ El ejecutor reporta descubrimientos; no toca este fichero.
 
 ## ESTADO ACTUAL — 1 de octubre de 2026
 
-**⭐ PUNTOS 1-4 CERRADOS (29-30/09). PUNTO 5 CERRADO (01/10) salvo la
-casilla de los textos de la web, que se pasan en el punto 6.** Los dos
+**⭐ PUNTOS 1-5 CERRADOS (29/09-01/10).** La casilla de los textos de la
+web está trasladada al punto 6, donde nacerán esos textos. Los dos
 paquetes reales están completos: **RadiografIA 0.1.0** con las seis
 familias (canal 6 informativas, puntuación 2, léxico 11, discurso 10,
 sintaxis 1, estadística 13), calibración humana de seis géneros (238
@@ -63,7 +63,8 @@ antes del verde, push = despliegue, bitácora por la skill
 ## 4 · El plan
 
 `PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1, 2 y 3 (29/09), 4 (30/09),
-5 (01/10, salvo los textos de la web). Abierto: el 6.
+5 (01/10). Abierto: el 6, con la casilla nueva de segmentación CommonMark
+firmada el 01/10.
 
 ## 5 · Decisiones
 
@@ -265,17 +266,15 @@ antes del verde, push = despliegue, bitácora por la skill
 
 ## 6 · Cabos abiertos
 
-- **Del 5.6 (01/10), PROPUESTA PENDIENTE DE FIRMA para el punto 6**: el
+- **Del 5.6 (01/10), FIRMADA el 01/10 como casilla del punto 6**: el
   motor trata cada línea como párrafo (decisión [PROPIO] del 4.1). Un texto
   cortado a mano (PDF o correo pegado, Markdown a 76 columnas) cuenta una
   frase por línea: en los 287 textos de validación de «general» cortados a
   76 columnas, `est-frases-cortas` pasa del 4,2 % al 43,2 % y la FPR del
-  3,1 % al 8,0 %; también infla el recuento de prosa (las líneas de
-  continuación de viñetas cuentan). Los corpus de calibración no están
-  afectados (0-2 documentos por género). Propuesta: casilla nueva en el
-  punto 6 «unir líneas cortadas a mano antes de segmentar» (heurística
-  con jueces + recalibración reproducible). Se escribe en el plan solo si
-  Antonio la firma.
+  3,1 % al 8,0 %; también infla el recuento de prosa. Doctrina: CommonMark
+  (soft line break = espacio; línea en blanco = párrafo) y RFC 3676
+  («embarrassing line wrap»). La casilla está escrita en el plan, punto 6,
+  antes de tocar código.
 - Para el punto 6: en las seis celdas con mediana del total en 0, un texto
   sin señales cae en «entre la mediana y el p95»; la interfaz debe decir
   «sin señales» cuando el total sea 0 antes de pintar la banda. P22

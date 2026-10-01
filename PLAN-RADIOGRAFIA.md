@@ -2,7 +2,7 @@
 
 Estado a 01/10/2026: **FIRMADO por Antonio el 29/09/2026**, publicado en
 `73ef265`. **PUNTOS 1, 2 y 3 CERRADOS el 29/09; 4 el 30/09; 5 el 01/10
-(salvo los textos de la web, que pasan al punto 6).** Se tacha lo hecho y
+(la casilla de los textos de la web, trasladada al punto 6).** Se tacha lo hecho y
 lo nuevo se añade en su punto, y solo por decisión de Antonio.
 
 Origen: BRAINSTORMING (1), 28-29/09/2026, y las decisiones de Antonio
@@ -475,12 +475,13 @@ Fuente citada en cada ficha (sale del punto 2 y de `CANDIDATAS.md`).
       del género y tramo (mediana, p95, p99); sin tope ni veredicto
 - [x] El paquete pasa el validador y todos sus ejemplos pasan los jueces
       (839 jueces, 832 en verde, 2 saltados con motivo, 5 `todo`; 01/10)
-- [ ] El eslogan y los textos de la propia web pasan por el motor: si los
-      marca, se cambian (dicho en el brainstorming). **Decisión 01/10**: los
-      textos del README ya pasaron (solo `est-frases-cortas` por el corte
-      de línea a 76 columnas, declarado; una frase cambiada); el eslogan
-      tiene 5 palabras (bajo el umbral) y los textos de la web se pasan en
-      el punto 6 cuando existan. **PUNTO 5 CERRADO salvo esta casilla**
+- [x] El eslogan y los textos de la propia web pasan por el motor: si los
+      marca, se cambian (dicho en el brainstorming). **Decisión 01/10:
+      TRASLADADA al punto 6** (casilla propia allí): los textos del README
+      ya pasaron (solo `est-frases-cortas` por el corte de línea a 76
+      columnas, declarado; una frase cambiada); el eslogan tiene 5 palabras
+      (bajo el umbral) y los textos de la web no existen hasta el punto 6.
+      **PUNTO 5 CERRADO (01/10)**
 
 ## 6 — La pantalla mínima (aquí ya existe la demo)
 
@@ -494,6 +495,19 @@ Astro, sin diseño todavía: funciona, no luce.
       `calibracion`; sobre todo los esquemas con sus `$comment`: valorar
       quitarlos en build). El aviso MIT de `ucs2length`
       (Ajv) viaja con ese fichero
+- [ ] **Segmentación de párrafos según CommonMark** (firmado 01/10;
+      sustituye la decisión [PROPIO] del 4.1 «párrafo = cada línea»):
+      salto de línea simple = *soft line break* = espacio; línea en blanco
+      = párrafo; continuación perezosa de viñetas [DOC CommonMark §6.8,
+      §5.2; RFC 3676 «embarrassing line wrap»: las líneas se unen en el
+      párrafo lógico]. Excepción [PROPIO] para texto copiado de la web (un
+      solo salto entre párrafos): salto tras signo de cierre de frase
+      seguido de línea que empieza en mayúscula = párrafo. Jueces con los
+      287 textos de validación de «general» cortados a 76 columnas (hoy
+      `est-frases-cortas` pasa del 4,2 % al 43,2 % y la FPR del 3,1 % al
+      8,0 %); desplazamientos exactos sobre el original; recalibración
+      reproducible después (0-2 documentos afectados por género) y
+      validación repetida
 - [ ] Área de texto + selector de género (listado desde
       `cabecera.calibracion`, «general» por defecto; decisión 30/09) +
       botón «Pon tu texto a contraluz»
