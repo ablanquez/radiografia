@@ -6,96 +6,150 @@
   },
   "semilla": "radiografia-calibracion-2026",
   "motor": {
-    "commit": "62eafe0b899e2030ec41158f0ddb5dc1d7d1a82a",
-    "limpio": true
+    "commit": "25aee6668edcb5792e457b0b99ec2c1a60e83594",
+    "limpio": false
   },
   "criterio": "FPR de la familia estadística: proporción de documentos humanos de VALIDACIÓN (reparto «validacion»: sha256(\"semilla|id\") ≥ 0,8) en los que disparan 2 o más reglas estadísticas que puntúan; objetivo ≤ 5 % por GÉNERO, con sus tramos juntos (conjunto), y cada celda género × tramo se enseña aparte. [PROPIO, parada 2 del 5.6, opción (b) firmada por Antonio] En las celdas más pequeñas (de 18 a 32 documentos), uno o dos documentos ya pasan del 5 % (1 de 19 es el 5,3 %; 2 de 32, el 6,3 %). Cada documento se analiza con el género de su corpus. Con la FPR de cada género, su intervalo de Wilson al 95 % (intervaloFpr). Un género por encima del 5 % lleva la decisión firmada (decision) del resultado que se aceptó.",
   "generos": {
     "general": {
       "celdas": {
         "100-299": {
-          "n": 72,
+          "n": 126,
           "documentos": [
             "BOE-A-2000-17754",
             "BOE-A-2011-16289",
             "BOE-A-2011-18400",
             "BOE-A-2012-1718",
+            "BOE-A-2012-1726",
+            "BOE-A-2012-7916",
             "BOE-A-2012-7917",
+            "BOE-A-2012-7964",
             "BOE-A-2012-7972",
             "BOE-A-2012-7991",
             "BOE-A-2012-8007",
+            "BOE-A-2012-8011",
+            "BOE-A-2012-8020",
+            "BOE-A-2012-8023",
+            "BOE-A-2014-13184",
+            "BOE-A-2017-6732",
+            "BOE-A-2017-6733",
             "BOE-A-2018-14807",
+            "BOE-A-2021-18979",
+            "BOE-B-2010-33241",
+            "BOE-B-2010-33246",
+            "BOE-B-2010-33247",
+            "BOE-B-2010-33269",
+            "BOE-B-2010-33272",
             "BOE-B-2010-33293",
+            "BOE-B-2010-33301",
             "BOE-B-2010-33304",
+            "BOE-B-2012-3656",
             "BOE-B-2012-3671",
+            "BOE-B-2012-3686",
             "BOE-B-2012-3687",
+            "BOE-B-2012-3692",
             "BOE-B-2012-3693",
+            "BOE-B-2012-3695",
             "BOE-B-2012-3700",
             "BOE-B-2012-3706",
             "BOE-B-2012-3709",
+            "BOE-B-2012-3711",
+            "BOE-B-2012-3712",
+            "BOE-B-2012-3724",
+            "BOE-B-2012-3738",
             "BOE-B-2012-3739",
             "CESS-CAST-A-20000121-14819",
             "CESS-CAST-A-20000323-18886",
             "CESS-CAST-A-20000425-18451",
+            "CESS-CAST-A-20000520-16210",
+            "CESS-CAST-A-20000621-16986",
+            "CESS-CAST-A-20001114-10209",
             "CESS-CAST-A-20001220-15311",
+            "CESS-CAST-AA-20000225-21729",
             "CESS-CAST-AA-20000312-9698",
+            "CESS-CAST-AA-20000706-4018",
+            "CESS-CAST-AA-20000911-7351",
+            "CESS-CAST-AA-20000927-23199",
+            "CESS-CAST-AA-20000928-24092",
             "CESS-CAST-AA-20000929-25091",
             "CESS-CAST-AA-20001010-7600",
             "CESS-CAST-AA-20001011-8439",
+            "CESS-CAST-AA-20001104-2790",
+            "CESS-CAST-AA-20001205-3800",
+            "CESS-CAST-P-19990102-30",
+            "CESS-CAST-P-19990102-64",
             "CESS-CAST-P-19990301-6",
+            "CESS-CAST-P-19990601-13",
             "CESS-CAST-P-19990601-23",
+            "CESS-CAST-P-19990601-49_a",
+            "CESS-CAST-P-19990701-88",
+            "CESS-CAST-P-19990702-125",
             "CESS-CAST-P-19990902-68",
+            "CESS-CAST-P-19991101-3",
+            "CESS-CAST-P-19991102-2",
+            "CESS-CAST-P-20000103-30",
             "CESS-CAST-P-20000202-87",
+            "CESS-CAST-P-20000301-108_b",
             "CESS-CAST-P-20000601-41",
             "CESS-CAST-P-20010201-124",
+            "CESS-CAST-P-20010202-167",
             "CESS-CAST-P-20010202-39",
             "CESS-CAST-P-20010302-80",
+            "CESS-CAST-P-20010701-4",
             "CESS-CAST-P-20010801-117",
             "CESS-CAST-P-20020401-84",
-            "csic-206385912",
-            "csic-206491075",
-            "csic-222945279",
-            "csic-299453323",
-            "csic-317909474",
-            "csic-335516773",
-            "csic-390294832",
-            "csic-390497480",
-            "csic-459080384",
-            "csic-566223175",
-            "csic-59289059",
-            "csic-59290349",
-            "csic-616814274",
-            "csic-637524838",
-            "csic-664998224",
-            "csic-665067761",
-            "csic-692434342",
-            "csic-840725283",
+            "CESS-CAST-P-20020402-11",
+            "CESS-CAST-P-20020502-25",
+            "mc-1086",
             "mc-1191",
             "mc-1865",
+            "mc-1991",
             "mc-2267",
             "mc-2343",
             "mc-2407",
             "mc-2409",
             "mc-2499",
+            "mc-2517",
+            "mc-2608",
+            "mc-2677",
+            "mc-2761",
+            "mc-2793",
+            "mc-29",
             "mc-2914",
+            "mc-2966",
+            "mc-2973",
             "mc-3069",
             "mc-3104",
+            "mc-3201",
             "mc-3280",
+            "mc-3284",
             "mc-3354",
+            "mc-3493",
             "mc-3499",
+            "mc-3568",
+            "mc-3573",
+            "mc-3810",
+            "mc-3836",
             "mc-3954",
+            "mc-4086",
+            "mc-4203",
+            "mc-427",
             "mc-4288",
+            "mc-435",
             "mc-54",
             "mc-577",
+            "mc-733",
+            "mc-767",
+            "mc-796",
             "mc-953"
           ],
           "fpr": {
-            "documentos": 0,
-            "proporcion": 0
+            "documentos": 1,
+            "proporcion": 0.007937
           },
           "alMenosUna": {
-            "documentos": 6,
-            "proporcion": 0.083333
+            "documentos": 10,
+            "proporcion": 0.079365
           },
           "reglas": {
             "canal-negrita-markdown": {
@@ -111,8 +165,8 @@
               "proporcion": 0
             },
             "canal-separador-o-tabla": {
-              "documentos": 2,
-              "proporcion": 0.027778
+              "documentos": 6,
+              "proporcion": 0.047619
             },
             "canal-espacio-estrecho-u202f": {
               "documentos": 0,
@@ -135,24 +189,24 @@
               "proporcion": 0
             },
             "lex-verbos-de-enfasis": {
-              "documentos": 6,
-              "proporcion": 0.083333
+              "documentos": 11,
+              "proporcion": 0.087302
             },
             "lex-importancia": {
               "documentos": 1,
-              "proporcion": 0.013889
+              "proporcion": 0.007937
             },
             "lex-es-importante-mas-verbo": {
               "documentos": 0,
               "proporcion": 0
             },
             "lex-innovador": {
-              "documentos": 0,
-              "proporcion": 0
+              "documentos": 1,
+              "proporcion": 0.007937
             },
             "lex-imborrable-multidisciplinario-impecable": {
               "documentos": 1,
-              "proporcion": 0.013889
+              "proporcion": 0.007937
             },
             "lex-conector-de-apertura": {
               "documentos": 0,
@@ -164,15 +218,15 @@
             },
             "lex-traslados-del-ingles": {
               "documentos": 1,
-              "proporcion": 0.013889
+              "proporcion": 0.007937
             },
             "lex-no-solo-sino": {
-              "documentos": 0,
-              "proporcion": 0
+              "documentos": 2,
+              "proporcion": 0.015873
             },
             "lex-verbos-corporativos": {
-              "documentos": 3,
-              "proporcion": 0.041667
+              "documentos": 5,
+              "proporcion": 0.039683
             },
             "disc-cierre-de-plantilla": {
               "documentos": 0,
@@ -196,7 +250,7 @@
             },
             "disc-referencia-interna-concreta": {
               "documentos": 1,
-              "proporcion": 0.013889
+              "proporcion": 0.007937
             },
             "disc-puffery-de-significancia": {
               "documentos": 0,
@@ -211,79 +265,79 @@
               "proporcion": 0
             },
             "disc-anecdota-en-primera-persona": {
-              "documentos": 1,
-              "proporcion": 0.013889
+              "documentos": 4,
+              "proporcion": 0.031746
             },
             "sint-gerundio-adjunto-final": {
               "documentos": 4,
-              "proporcion": 0.055556
+              "proporcion": 0.031746
             },
             "est-frases-cortas": {
-              "documentos": 2,
-              "proporcion": 0.027778
+              "documentos": 4,
+              "proporcion": 0.031746
             },
             "est-ritmo-uniforme": {
-              "documentos": 2,
-              "proporcion": 0.027778
+              "documentos": 1,
+              "proporcion": 0.007937
             },
             "est-pocas-comas": {
-              "documentos": 0,
-              "proporcion": 0
+              "documentos": 1,
+              "proporcion": 0.007937
             },
             "est-poca-puntuacion-secundaria": {
               "documentos": 0,
               "proporcion": 0
             },
             "est-poca-puntuacion": {
-              "documentos": 0,
-              "proporcion": 0
+              "documentos": 2,
+              "proporcion": 0.015873
             },
             "est-nominalizacion": {
-              "documentos": 0,
-              "proporcion": 0
+              "documentos": 1,
+              "proporcion": 0.007937
             },
             "est-repeticion-de-secuencias": {
-              "documentos": 2,
-              "proporcion": 0.027778
+              "documentos": 3,
+              "proporcion": 0.02381
             },
             "est-diversidad-mattr": {
-              "documentos": 4,
-              "proporcion": 0.055556
+              "documentos": 14,
+              "proporcion": 0.111111
             },
             "est-diversidad-mtld": {
-              "documentos": 6,
-              "proporcion": 0.083333
+              "documentos": 12,
+              "proporcion": 0.095238
             },
             "est-diversidad-hdd": {
-              "documentos": 7,
-              "proporcion": 0.097222
+              "documentos": 15,
+              "proporcion": 0.119048
             },
             "est-legibilidad-ifsz": {
-              "documentos": 7,
-              "proporcion": 0.097222
+              "documentos": 13,
+              "proporcion": 0.103175
             },
             "est-ttr": {
-              "documentos": 9,
-              "proporcion": 0.125
+              "documentos": 15,
+              "proporcion": 0.119048
             },
             "est-pronombres-anaforicos": {
-              "documentos": 13,
-              "proporcion": 0.180556
+              "documentos": 12,
+              "proporcion": 0.095238
             }
           },
           "total": {
             "validacion": {
               "p5": 0,
               "p50": 0,
-              "p95": 12.767526,
-              "p99": 29.483636
+              "p95": 12.993421,
+              "p99": 32.945876
             },
             "calibracion": {
               "p5": 0,
               "p50": 0,
-              "p95": 15.157298,
-              "p99": 27.590065,
-              "n": 400
+              "p95": 14.084507,
+              "p99": 22.151785,
+              "n": 465
             }
           }
         },
@@ -581,8 +635,8 @@
               "proporcion": 0.116667
             },
             "est-legibilidad-ifsz": {
-              "documentos": 10,
-              "proporcion": 0.083333
+              "documentos": 8,
+              "proporcion": 0.066667
             },
             "est-ttr": {
               "documentos": 15,
@@ -602,7 +656,7 @@
             },
             "calibracion": {
               "p5": 0,
-              "p50": 1.83322,
+              "p50": 1.86066,
               "p95": 32.167416,
               "p99": 57.240798,
               "n": 500
@@ -713,8 +767,8 @@
             "proporcion": 0.042105
           },
           "alMenosUna": {
-            "documentos": 18,
-            "proporcion": 0.189474
+            "documentos": 19,
+            "proporcion": 0.2
           },
           "reglas": {
             "canal-negrita-markdown": {
@@ -850,8 +904,8 @@
               "proporcion": 0.031579
             },
             "est-poca-puntuacion-secundaria": {
-              "documentos": 10,
-              "proporcion": 0.105263
+              "documentos": 11,
+              "proporcion": 0.115789
             },
             "est-poca-puntuacion": {
               "documentos": 1,
@@ -874,8 +928,8 @@
               "proporcion": 0.094737
             },
             "est-diversidad-hdd": {
-              "documentos": 9,
-              "proporcion": 0.094737
+              "documentos": 10,
+              "proporcion": 0.105263
             },
             "est-legibilidad-ifsz": {
               "documentos": 11,
@@ -898,32 +952,32 @@
               "p99": 55.240997
             },
             "calibracion": {
-              "p5": -0.012315,
-              "p50": 3.953972,
-              "p95": 31.138415,
-              "p99": 52.182313,
-              "n": 500
+              "p5": 0,
+              "p50": 3.937008,
+              "p95": 30.374827,
+              "p99": 52.155849,
+              "n": 505
             }
           }
         }
       },
       "omitidas": [],
       "conjunto": {
-        "n": 287,
+        "n": 341,
         "fpr": {
-          "documentos": 9,
-          "proporcion": 0.031359
+          "documentos": 10,
+          "proporcion": 0.029326
         },
         "alMenosUna": {
-          "documentos": 44,
-          "proporcion": 0.15331
+          "documentos": 49,
+          "proporcion": 0.143695
         }
       },
       "intervaloFpr": {
         "metodo": "Wilson (1927)",
         "confianza": 0.95,
-        "inferior": 0.016584,
-        "superior": 0.058513
+        "inferior": 0.016006,
+        "superior": 0.053132
       }
     },
     "noticia": {
@@ -2550,8 +2604,8 @@
             "proporcion": 0.066667
           },
           "alMenosUna": {
-            "documentos": 5,
-            "proporcion": 0.166667
+            "documentos": 6,
+            "proporcion": 0.2
           },
           "reglas": {
             "canal-negrita-markdown": {
@@ -2679,8 +2733,8 @@
               "proporcion": 0.1
             },
             "est-ritmo-uniforme": {
-              "documentos": 2,
-              "proporcion": 0.066667
+              "documentos": 3,
+              "proporcion": 0.1
             },
             "est-pocas-comas": {
               "documentos": 1,
@@ -2992,8 +3046,8 @@
             "pg79346-031"
           ],
           "fpr": {
-            "documentos": 6,
-            "proporcion": 0.02459
+            "documentos": 4,
+            "proporcion": 0.016393
           },
           "alMenosUna": {
             "documentos": 30,
@@ -3081,8 +3135,8 @@
               "proporcion": 0
             },
             "disc-marcador-repetido": {
-              "documentos": 25,
-              "proporcion": 0.102459
+              "documentos": 24,
+              "proporcion": 0.098361
             },
             "disc-sin-marcadores-epistemicos": {
               "documentos": 0,
@@ -3121,12 +3175,12 @@
               "proporcion": 0.688525
             },
             "est-frases-cortas": {
-              "documentos": 8,
-              "proporcion": 0.032787
+              "documentos": 7,
+              "proporcion": 0.028689
             },
             "est-ritmo-uniforme": {
-              "documentos": 4,
-              "proporcion": 0.016393
+              "documentos": 3,
+              "proporcion": 0.012295
             },
             "est-pocas-comas": {
               "documentos": 3,
@@ -3161,8 +3215,8 @@
               "proporcion": 0.110656
             },
             "est-legibilidad-ifsz": {
-              "documentos": 18,
-              "proporcion": 0.07377
+              "documentos": 16,
+              "proporcion": 0.065574
             },
             "est-ttr": {
               "documentos": 27,
@@ -3176,12 +3230,12 @@
           "total": {
             "validacion": {
               "p5": 2.88159,
-              "p50": 14.628096,
-              "p95": 51.83002,
+              "p50": 14.536348,
+              "p95": 51.151347,
               "p99": 62.363069
             },
             "calibracion": {
-              "p5": 1.702655,
+              "p5": 1.676377,
               "p50": 15.899123,
               "p95": 48.503204,
               "p99": 71.247571,
@@ -3200,243 +3254,23 @@
       "conjunto": {
         "n": 274,
         "fpr": {
-          "documentos": 8,
-          "proporcion": 0.029197
+          "documentos": 6,
+          "proporcion": 0.021898
         },
         "alMenosUna": {
-          "documentos": 35,
-          "proporcion": 0.127737
+          "documentos": 36,
+          "proporcion": 0.131387
         }
       },
       "intervaloFpr": {
         "metodo": "Wilson (1927)",
         "confianza": 0.95,
-        "inferior": 0.014867,
-        "superior": 0.056546
+        "inferior": 0.010074,
+        "superior": 0.046942
       }
     },
     "academico": {
       "celdas": {
-        "100-299": {
-          "n": 18,
-          "documentos": [
-            "csic-206385912",
-            "csic-206491075",
-            "csic-222945279",
-            "csic-299453323",
-            "csic-317909474",
-            "csic-335516773",
-            "csic-390294832",
-            "csic-390497480",
-            "csic-459080384",
-            "csic-566223175",
-            "csic-59289059",
-            "csic-59290349",
-            "csic-616814274",
-            "csic-637524838",
-            "csic-664998224",
-            "csic-665067761",
-            "csic-692434342",
-            "csic-840725283"
-          ],
-          "fpr": {
-            "documentos": 0,
-            "proporcion": 0
-          },
-          "alMenosUna": {
-            "documentos": 3,
-            "proporcion": 0.166667
-          },
-          "reglas": {
-            "canal-negrita-markdown": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "canal-encabezado-markdown": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "canal-vineta-con-negrita-inicial": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "canal-separador-o-tabla": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "canal-espacio-estrecho-u202f": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "canal-invisibles-unicode": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "pf-raya-densidad": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "pf-raya-espaciada": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "lex-frases-de-chatbot": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "lex-verbos-de-enfasis": {
-              "documentos": 1,
-              "proporcion": 0.055556
-            },
-            "lex-importancia": {
-              "documentos": 1,
-              "proporcion": 0.055556
-            },
-            "lex-es-importante-mas-verbo": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "lex-innovador": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "lex-imborrable-multidisciplinario-impecable": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "lex-conector-de-apertura": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "lex-trigramas-sobreusados": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "lex-traslados-del-ingles": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "lex-no-solo-sino": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "lex-verbos-corporativos": {
-              "documentos": 1,
-              "proporcion": 0.055556
-            },
-            "disc-cierre-de-plantilla": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "disc-marcador-repetido": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "disc-sin-marcadores-epistemicos": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "disc-sin-automenciones": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "disc-encuadre-ordinal": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "disc-referencia-interna-concreta": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "disc-puffery-de-significancia": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "disc-atribucion-vaga": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "disc-retos-y-futuro": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "disc-anecdota-en-primera-persona": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "sint-gerundio-adjunto-final": {
-              "documentos": 2,
-              "proporcion": 0.111111
-            },
-            "est-frases-cortas": {
-              "documentos": 3,
-              "proporcion": 0.166667
-            },
-            "est-ritmo-uniforme": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "est-pocas-comas": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "est-poca-puntuacion-secundaria": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "est-poca-puntuacion": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "est-nominalizacion": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "est-repeticion-de-secuencias": {
-              "documentos": 0,
-              "proporcion": 0
-            },
-            "est-diversidad-mattr": {
-              "documentos": 2,
-              "proporcion": 0.111111
-            },
-            "est-diversidad-mtld": {
-              "documentos": 1,
-              "proporcion": 0.055556
-            },
-            "est-diversidad-hdd": {
-              "documentos": 1,
-              "proporcion": 0.055556
-            },
-            "est-legibilidad-ifsz": {
-              "documentos": 3,
-              "proporcion": 0.166667
-            },
-            "est-ttr": {
-              "documentos": 3,
-              "proporcion": 0.166667
-            },
-            "est-pronombres-anaforicos": {
-              "documentos": 5,
-              "proporcion": 0.277778
-            }
-          },
-          "total": {
-            "validacion": {
-              "p5": 0,
-              "p50": 0,
-              "p95": 12.848101,
-              "p99": 17.759494
-            },
-            "calibracion": {
-              "p5": 0,
-              "p50": 0,
-              "p95": 16.038063,
-              "p99": 36.828714,
-              "n": 100
-            }
-          }
-        },
         "300-599": {
           "n": 24,
           "documentos": [
@@ -3466,12 +3300,12 @@
             "csic-921271109"
           ],
           "fpr": {
-            "documentos": 2,
-            "proporcion": 0.083333
+            "documentos": 1,
+            "proporcion": 0.041667
           },
           "alMenosUna": {
-            "documentos": 11,
-            "proporcion": 0.458333
+            "documentos": 10,
+            "proporcion": 0.416667
           },
           "reglas": {
             "canal-negrita-markdown": {
@@ -3595,8 +3429,8 @@
               "proporcion": 0.166667
             },
             "est-frases-cortas": {
-              "documentos": 5,
-              "proporcion": 0.208333
+              "documentos": 3,
+              "proporcion": 0.125
             },
             "est-ritmo-uniforme": {
               "documentos": 1,
@@ -3635,8 +3469,8 @@
               "proporcion": 0.125
             },
             "est-legibilidad-ifsz": {
-              "documentos": 5,
-              "proporcion": 0.208333
+              "documentos": 3,
+              "proporcion": 0.125
             },
             "est-ttr": {
               "documentos": 1,
@@ -3650,13 +3484,13 @@
           "total": {
             "validacion": {
               "p5": 0.254669,
-              "p50": 7.743833,
+              "p50": 7.719446,
               "p95": 14.22922,
               "p99": 23.432519
             },
             "calibracion": {
               "p5": 1,
-              "p50": 4.934979,
+              "p50": 5.059322,
               "p95": 21.019827,
               "p99": 30.33634,
               "n": 100
@@ -3860,8 +3694,8 @@
               "proporcion": 0.105263
             },
             "est-ttr": {
-              "documentos": 3,
-              "proporcion": 0.157895
+              "documentos": 4,
+              "proporcion": 0.210526
             },
             "est-pronombres-anaforicos": {
               "documentos": 2,
@@ -3872,36 +3706,42 @@
             "validacion": {
               "p5": -3.116104,
               "p50": 6.173792,
-              "p95": 12.783526,
-              "p99": 15.675246
+              "p95": 12.57073,
+              "p99": 14.032687
             },
             "calibracion": {
-              "p5": 1.158452,
-              "p50": 5.544885,
-              "p95": 13.606024,
-              "p99": 16.29238,
-              "n": 100
+              "p5": 1.361285,
+              "p50": 5.462297,
+              "p95": 13.591149,
+              "p99": 16.281865,
+              "n": 101
             }
           }
         }
       },
-      "omitidas": [],
+      "omitidas": [
+        {
+          "tramo": "100-299",
+          "motivo": "sin celda de calibración del total: el tramo no tiene 100 documentos de calibración",
+          "n": 18
+        }
+      ],
       "conjunto": {
-        "n": 61,
+        "n": 43,
         "fpr": {
-          "documentos": 2,
-          "proporcion": 0.032787
+          "documentos": 1,
+          "proporcion": 0.023256
         },
         "alMenosUna": {
-          "documentos": 18,
-          "proporcion": 0.295082
+          "documentos": 14,
+          "proporcion": 0.325581
         }
       },
       "intervaloFpr": {
         "metodo": "Wilson (1927)",
         "confianza": 0.95,
-        "inferior": 0.009038,
-        "superior": 0.111895
+        "inferior": 0.004117,
+        "superior": 0.12059
       }
     },
     "opinion": {
