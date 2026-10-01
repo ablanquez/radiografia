@@ -8,12 +8,12 @@
  *    METRICAS). El total es `puntuacion.total` de analizar() con el paquete
  *    RadiografIA y el GÉNERO del corpus (las reglas con `generos` se activan
  *    como se activarían para un texto de ese género); para la mezcla
- *    «general», con «general». Hoy el paquete no tiene reglas estadísticas:
- *    el total se recalcula en el 5.6.
+ *    «general», con «general». Desde el 5.6 el total incluye las reglas
+ *    estadísticas, comparadas con las celdas inyectadas en el paquete.
  * [PROPIO, parada de narrativa] Los disparos: cuántas señales da cada regla
  *    que puntúa (las de patrón, las estructurales y las del texto entero; no
- *    las informativas, que son contexto), del mismo analizar(). Son el primer
- *    dato para pesos y `generos` en el 5.6.
+ *    las informativas, que son contexto), del mismo analizar(); desde el 5.6,
+ *    también las estadísticas.
  */
 import { analizar } from '../../src/analizar.ts';
 import { analizarTexto } from '../../src/texto.ts';
