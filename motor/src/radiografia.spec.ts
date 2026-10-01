@@ -48,7 +48,13 @@
  *      negativos si la regla puntúa, al menos 1 y 1 si es informativa. Que
  *      cada positivo dispare y cada negativo no, con «general», lo juzga
  *      ejemplos-estadisticos.spec.ts. Dirección y percentil fuera de su lista
- *      los rechaza el esquema (condición 1).
+ *      los rechaza el esquema (condición 1). Desde la parada 2 del 5.6, el
+ *      texto de la ficha dice el corte de su parámetro: la explicación nombra
+ *      el percentil del borde que mira («percentil 95» o «5» en p95, «99» o
+ *      «1» en p99; los dos en «ambas») y la proporción de humanos que queda
+ *      más allá por construcción («1 de cada 20» o «100» si mira un lado, «10»
+ *      o «50» si mira los dos); y una regla en p99 lleva una excepción que
+ *      empieza por «Corte en el percentil» y dice por qué (lo firmado).
  *
  * Cada condición tiene al menos un caso que la rompe sobre una copia del
  * paquete real, y el juez tiene que nombrar esa condición y ninguna otra
@@ -139,6 +145,19 @@ function comprobar(paquete: Paquete): Problema[] {
       if (!esMetrica(metrica)) mal('estadistica', `regla "${r.id}": «${metrica}» no es una métrica del registro`);
       if (r.generos !== undefined) mal('estadistica', `regla "${r.id}": lleva generos, y ninguna regla estadística los lleva en la v1`);
       if (r.informativa && direccion !== 'ambas') mal('estadistica', `regla "${r.id}": es informativa y mira solo «${direccion}»; las informativas, «ambas»`);
+      const { percentil } = r.parametros;
+      // Un percentil fuera de p95 y p99 lo rechaza el esquema (condición 1): aquí no se mira su texto.
+      const conocido = percentil === 'p95' || percentil === 'p99';
+      const [abajo, arriba] = percentil === 'p95' ? ['5', '95'] : ['1', '99'];
+      const bordes = direccion === 'mayor' ? [arriba] : direccion === 'menor' ? [abajo] : [abajo, arriba];
+      for (const b of conocido ? bordes : []) {
+        if (!new RegExp(`percentil ${b}(?!\\d)`).test(r.explicacion)) mal('estadistica', `regla "${r.id}": en ${percentil} su explicación no dice «percentil ${b}»`);
+      }
+      const cola = (percentil === 'p95' ? 20 : 100) / (direccion === 'ambas' ? 2 : 1);
+      if (conocido && !r.explicacion.includes(`1 de cada ${cola} `)) mal('estadistica', `regla "${r.id}": en ${percentil} y «${direccion}» su explicación no dice «1 de cada ${cola}»`);
+      if (percentil === 'p99' && !r.excepciones.some((e) => e.startsWith('Corte en el percentil'))) {
+        mal('estadistica', `regla "${r.id}": está en p99 y ninguna excepción dice por qué («Corte en el percentil…»)`);
+      }
       const minimo = r.informativa ? 1 : 2;
       for (const clase of ['positivos', 'negativos'] as const) {
         const ejemplos = r.ejemplos[clase];
@@ -307,6 +326,24 @@ describe('el juez de RadiografIA caza cada condición rota', () => {
     ['una regla estadística con generos', ['estadistica'], (p) => (regla(p, 'est-frases-cortas').generos = ['opinion'])],
     ['una informativa estadística que solo mira «mayor»', ['estadistica'], (p) => (estadistica(regla(p, 'est-ttr')).direccion = 'mayor')],
     ['una regla estadística que puntúa con un solo negativo', ['estadistica'], (p) => regla(p, 'est-frases-cortas').ejemplos.negativos.splice(1)],
+    // Encargo 5.6, parada 2: el texto de la ficha dice el corte de su parámetro, y un p99 dice por qué.
+    [
+      'est-pocas-comas en p99 sin la excepción que dice por qué',
+      ['estadistica'],
+      (p) => {
+        const r = regla(p, 'est-pocas-comas');
+        r.excepciones = r.excepciones.filter((e) => !e.startsWith('Corte en el percentil'));
+      },
+    ],
+    ['est-frases-cortas pasada a p99 con su texto de p95', ['estadistica'], (p) => (estadistica(regla(p, 'est-frases-cortas')).percentil = 'p99')],
+    [
+      'una informativa que no dice «1 de cada 10»',
+      ['estadistica'],
+      (p) => {
+        const r = regla(p, 'est-ttr');
+        r.explicacion = cambiar(r.explicacion, '1 de cada 10 ', 'uno de cada diez ');
+      },
+    ],
     [
       'un positivo estadístico de menos de 300 palabras de prosa',
       ['estadistica'],

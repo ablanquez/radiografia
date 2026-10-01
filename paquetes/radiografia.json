@@ -3147,7 +3147,8 @@
       "excepciones": [
         "Diálogos: la raya que abre cada intervención y la de los incisos del narrador son norma en español (RAE). La regla todavía no separa los párrafos de diálogo; la calibración dirá si hace falta.",
         "Incisos: la RAE los encierra entre rayas, que aíslan más que las comas y menos que los paréntesis (DPD).",
-        "Solo se cuenta la raya (U+2014), no la semirraya (–) ni el guion doble (--): un estudio de 44 años de actas de CHI mostró que contar solo ese carácter mide cómo se codificó el texto, no cómo se escribió; contando juntas todas las formas de raya, la serie era estable."
+        "Solo se cuenta la raya (U+2014), no la semirraya (–) ni el guion doble (--): un estudio de 44 años de actas de CHI mostró que contar solo ese carácter mide cómo se codificó el texto, no cómo se escribió; contando juntas todas las formas de raya, la serie era estable.",
+        "En la validación del 5.6 (textos humanos apartados) dispara en el 92,3 % de los capítulos de narrativa clásica: la raya del diálogo. No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
       ],
       "fuente": [
         {
@@ -3310,7 +3311,8 @@
         "Prensa y crónica: «destacar» y «subrayar» son verbos corrientes para citar declaraciones («El ministro destacó que…»). El motor no distingue ese uso: la señal cuenta por acumulación.",
         "Frecuencia en wordfreq: «destaca», Zipf 4,44, y «destacar», 4,37: aparecen mucho en textos humanos.",
         "La raíz coge también «destacado», «destacada» o «destacable» como adjetivos («un destacado escritor»); «destacamento» no cuenta.",
-        "Juzek avisa de que las señales léxicas cambian de un modelo a otro (GPT frente a Gemini, ρ = 0,46) y de que su trabajo no está pensado para detectar IA."
+        "Juzek avisa de que las señales léxicas cambian de un modelo a otro (GPT frente a Gemini, ρ = 0,46) y de que su trabajo no está pensado para detectar IA.",
+        "En la validación del 5.6 (textos humanos apartados) dispara en el 34,4 % de los textos académicos (78,9 % en los de 600 palabras o más). No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
       ],
       "fuente": [
         {
@@ -3715,7 +3717,8 @@
       "sugerencia": "Si aparece más de una vez, cambia alguna por una suma sencilla: «X y, además, Y».",
       "excepciones": [
         "Es una construcción normativa y frecuente en cualquier registro: una o dos en un texto largo no dicen nada.",
-        "Solo busca «no solo» y «sino» en la misma frase, con menos de 80 caracteres entre los dos."
+        "Solo busca «no solo» y «sino» en la misma frase, con menos de 80 caracteres entre los dos.",
+        "En la validación del 5.6 (textos humanos apartados) dispara en el 57,9 % de los textos académicos de 600 palabras o más. No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
       ],
       "fuente": [
         {
@@ -3760,7 +3763,8 @@
       "sugerencia": "Di qué se hace en concreto: «dar becas» en vez de «fomentar el talento», «usar» en vez de «aprovechar».",
       "excepciones": [
         "Prosa corporativa, de ONG y administrativa, donde son verbos de oficio.",
-        "Falsos positivos que la raíz no evita: «potencia» y «potencias» como nombre («la potencia del motor»), «potencialmente», «impulsor» e «impulsivo»."
+        "Falsos positivos que la raíz no evita: «potencia» y «potencias» como nombre («la potencia del motor»), «potencialmente», «impulsor» e «impulsivo».",
+        "En la validación del 5.6 (textos humanos apartados) dispara en el 32,1 % de los capítulos de narrativa clásica. No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
       ],
       "fuente": [
         {
@@ -3919,7 +3923,8 @@
       "excepciones": [
         "En los datos de replicación de Herbold, con sus propias regex, 30 de 90 ensayos de estudiantes (de segunda lengua) no tienen ningún marcador epistémico: la ausencia sola también dispara en un tercio de esos humanos. Por eso el peso se queda en 2 y la calibración decide.",
         "Textos impersonales por norma: informes técnicos, dictámenes o revistas que piden no opinar en primera persona.",
-        "«creo» también es el verbo crear («creo un archivo») y «pienso», un nombre: si aparecen así, la regla no dispara aunque falten epistémicos."
+        "«creo» también es el verbo crear («creo un archivo») y «pienso», un nombre: si aparecen así, la regla no dispara aunque falten epistémicos.",
+        "En la validación del 5.6 (textos humanos apartados) dispara en el 47,5 % de los textos académicos (83,3 % en los de 300 a 599 palabras) y en el 36,9 % de las críticas de opinión (52,7 % en las de 300 a 599). No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
       ],
       "fuente": [
         {
@@ -3972,7 +3977,8 @@
         "Un «nuestra» inclusivo la desactiva aunque el texto no hable de quien lo escribe: «Nuestra sociedad debe afrontar el cambio climático» ya cuenta como automención.",
         "«me» y «nos» no cuentan: también son reflexivos y recíprocos («se me olvidó», «nos vemos»).",
         "Textos académicos impersonales por norma de la revista, y cualquier texto escrito en tercera persona por convención.",
-        "Pham avisa de que su resultado «should be interpreted with caution»: la ausencia depende de lo que se le pida al modelo."
+        "Pham avisa de que su resultado «should be interpreted with caution»: la ausencia depende de lo que se le pida al modelo.",
+        "En la validación del 5.6 (textos humanos apartados) dispara en el 37,7 % de los textos académicos. No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
       ],
       "fuente": [
         {
@@ -4238,7 +4244,8 @@
       "excepciones": [
         "«Le recuerdo que…» es una fórmula de aviso, no un recuerdo: no cuenta detrás de «le», «te», «les» u «os».",
         "«Hace unos años» no cuenta: abre también textos impersonales («Hace unos años, la inteligencia artificial parecía ciencia ficción»).",
-        "Un texto generado al que se le pide una anécdota la inventa: la regla no puede saber si es verdad."
+        "Un texto generado al que se le pide una anécdota la inventa: la regla no puede saber si es verdad.",
+        "En la validación del 5.6 (textos humanos apartados) aparece, y resta, en el 42,7 % de los capítulos de narrativa clásica. No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
       ],
       "fuente": [
         {
@@ -4283,7 +4290,8 @@
         "Diálogos y acotaciones: «—Ya voy —dijo sonriendo» no dispara porque no hay coma delante del gerundio; con coma, sí.",
         "La regla no distingue la posterioridad de la simultaneidad, ni la mera sucesión que la norma censura de la consecuencia que admite: cuenta la construcción, como Reinhart.",
         "Palabras en -ando o -iendo que no son gerundios: se excluyen «cuando», «bando», «mando», «comando», «blando», «nefando», «infando» y los nombres «Fernando», «Orlando», «Armando» y «Rolando»; las que no están en la lista («Nando», «remiendo») pueden disparar.",
-        "Solo ve coletillas cortas, de hasta nueve palabras, sin cifras ni comas dentro: «…, alcanzando los 300 empleados» no dispara."
+        "Solo ve coletillas cortas, de hasta nueve palabras, sin cifras ni comas dentro: «…, alcanzando los 300 empleados» no dispara.",
+        "En la validación del 5.6 (textos humanos apartados) dispara en el 63,5 % de los capítulos de narrativa clásica (68,9 % en los de 600 palabras o más). No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
       ],
       "fuente": [
         {
@@ -4337,6 +4345,7 @@
         "Narrativa: el diálogo hace frases cortas. En la narrativa clásica la mediana es 5,8 frases por 100 palabras en 300-599, frente a 3,2 en la prensa; con el género «narrativa-clasica», el corte es el suyo (11,4).",
         "Textos administrativos con títulos, artículos y apartados: en el BOE de 100 a 299 palabras la mediana es 7,1 y el percentil 95, 25,1. «general» los incluye, y por eso su corte en ese tramo es alto (20,3): con «general», una noticia corta casi nunca dispara.",
         "Las frases son las de Intl.Segmenter: parte tras «Sr.» y otras abreviaturas, y en «...», pero no en «…». Un texto con muchas abreviaturas cuenta frases de más.",
+        "Falso positivo conocido, sin arreglo en la v1 (parada 2 del 5.6): las tablas pasadas a texto (cada fila cuenta como una frase sin signos), los párrafos numerados («1. …»), que CommonMark trata como lista y no como prosa, y los títulos sin punto entre párrafos. En la validación del 5.6 aparecieron en anuncios del BOE con tablas, en un capítulo de «Fray Gerundio» y en reseñas del CSIC.",
         "Sin calibración: si tu género no tiene celda para la longitud del texto (la narrativa clásica de 100 a 299 palabras: 65 capítulos, menos de los 100 que exige una celda), la regla no se evalúa y el análisis lo dice.",
         "De 100 a 299 palabras de prosa el resultado es poco fiable (umbral firmado el 29/09): las métricas de frase y de vocabulario se mueven mucho en textos cortos."
       ],
@@ -4370,18 +4379,19 @@
       "parametros": {
         "metrica": "cv-longitud-frase",
         "direccion": "menor",
-        "percentil": "p95"
+        "percentil": "p99"
       },
       "peso": 2,
       "severidad": "baja",
       "informativa": false,
-      "explicacion": "Frases de longitud pareja: mide el coeficiente de variación de la longitud de las frases (la desviación típica de sus palabras dividida por la media) y dispara si tu texto queda por debajo del percentil 5. Se compara con los textos humanos de tu género y longitud: los percentiles de la calibración (AnCora, BOE, Gutenberg, CSIC y MuchoCine, por tramos de 100-299, 300-599 y 600 o más palabras de prosa); con «general», el género por defecto, la mezcla de los cinco. Medido en inglés: «Human texts exhibit more scattered sentence length distributions» (Muñoz-Ortiz et al. 2024, noticias, modelos base), y The Economist (2026) describe la prosa generada con frases largas «with little variety in length»; Gargova et al. (2026) dan menos «burstiness» a los modelos con español, inglés y búlgaro agregados (su fórmula no consta en lo leído). Es el sustituto sin modelo de la «burstiness» de GPTZero, que se medía sobre la perplejidad: una adaptación, no la métrica original. No demuestra quién escribió el texto: por construcción, 1 de cada 20 textos humanos de tu género y longitud queda más allá de ese corte.",
+      "explicacion": "Frases de longitud pareja: mide el coeficiente de variación de la longitud de las frases (la desviación típica de sus palabras dividida por la media) y dispara si tu texto queda por debajo del percentil 1. Se compara con los textos humanos de tu género y longitud: los percentiles de la calibración (AnCora, BOE, Gutenberg, CSIC y MuchoCine, por tramos de 100-299, 300-599 y 600 o más palabras de prosa); con «general», el género por defecto, la mezcla de los cinco. Medido en inglés: «Human texts exhibit more scattered sentence length distributions» (Muñoz-Ortiz et al. 2024, noticias, modelos base), y The Economist (2026) describe la prosa generada con frases largas «with little variety in length»; Gargova et al. (2026) dan menos «burstiness» a los modelos con español, inglés y búlgaro agregados (su fórmula no consta en lo leído). Es el sustituto sin modelo de la «burstiness» de GPTZero, que se medía sobre la perplejidad: una adaptación, no la métrica original. No demuestra quién escribió el texto: por construcción, 1 de cada 100 textos humanos de tu género y longitud queda más allá de ese corte.",
       "sugerencia": "Alterna: una frase corta después de una larga, una enumeración, una pregunta. El ritmo lo dan los cambios.",
       "excepciones": [
-        "Prensa: las noticias tienen frases de longitud pareja (mediana del coeficiente 0,39 en 300-599, frente a 0,66 de «general»); con el género «noticia», el corte baja a 0,17.",
-        "Un texto de una sola frase tiene coeficiente 0 y dispara siempre que haya celda: en las críticas de opinión de 100 a 299 palabras, el percentil 1 es 0.",
+        "Prensa: las noticias tienen frases de longitud pareja (mediana del coeficiente 0,39 en 300-599, frente a 0,66 de «general»); con el género «noticia», el corte baja a 0,13 (su percentil 1).",
+        "Un texto de una sola frase tiene coeficiente 0: dispara donde el percentil 1 de su celda es mayor que 0. En las críticas de opinión de 100 a 299 palabras el percentil 1 es 0, y ahí no puede disparar.",
         "Instrucciones paso a paso y listas convertidas en frases: tienen frases parecidas por oficio.",
         "Las frases son las de Intl.Segmenter: parte tras «Sr.» y otras abreviaturas, y en «...», pero no en «…».",
+        "Corte en el percentil 1, y no en el 5 (parada 2 del 5.6, firmado por Antonio): está medida en inglés y es una adaptación. Las dos medidas en español que no dependen de otra (est-frases-cortas y est-poca-puntuacion-secundaria) se quedan en el corte del 95 %.",
         "Sin calibración: si tu género no tiene celda para la longitud del texto (la narrativa clásica de 100 a 299 palabras: 65 capítulos, menos de los 100 que exige una celda), la regla no se evalúa y el análisis lo dice.",
         "De 100 a 299 palabras de prosa el resultado es poco fiable (umbral firmado el 29/09): las métricas de frase y de vocabulario se mueven mucho en textos cortos."
       ],
@@ -4423,17 +4433,19 @@
       "parametros": {
         "metrica": "ratio-comas-puntos",
         "direccion": "menor",
-        "percentil": "p95"
+        "percentil": "p99"
       },
       "peso": 3,
       "severidad": "baja",
       "informativa": false,
-      "explicacion": "Pocas comas para tantos puntos: divide las comas entre los puntos que cierran frase y dispara si tu texto queda por debajo del percentil 5. Se compara con los textos humanos de tu género y longitud: los percentiles de la calibración (AnCora, BOE, Gutenberg, CSIC y MuchoCine, por tramos de 100-299, 300-599 y 600 o más palabras de prosa); con «general», el género por defecto, la mezcla de los cinco. Medido en español: los modelos usan menos comas (nivel de significación 3 con GPT-3.5 y 2 con GPT-4) y más puntos (−3 con los dos) que los humanos (ROBOT-TALK, Alonso Simón et al. 2025, Tabla 7), y la UCM lo vio también en AuTexTification: «humans use more commas and comparatively fewer periods». No demuestra quién escribió el texto: por construcción, 1 de cada 20 textos humanos de tu género y longitud queda más allá de ese corte.",
+      "explicacion": "Pocas comas para tantos puntos: divide las comas entre los puntos que cierran frase y dispara si tu texto queda por debajo del percentil 1. Se compara con los textos humanos de tu género y longitud: los percentiles de la calibración (AnCora, BOE, Gutenberg, CSIC y MuchoCine, por tramos de 100-299, 300-599 y 600 o más palabras de prosa); con «general», el género por defecto, la mezcla de los cinco. Medido en español: los modelos usan menos comas (nivel de significación 3 con GPT-3.5 y 2 con GPT-4) y más puntos (−3 con los dos) que los humanos (ROBOT-TALK, Alonso Simón et al. 2025, Tabla 7), y la UCM lo vio también en AuTexTification: «humans use more commas and comparatively fewer periods». No demuestra quién escribió el texto: por construcción, 1 de cada 100 textos humanos de tu género y longitud queda más allá de ese corte.",
       "sugerencia": "Revisa si hay frases que piden coma: incisos, enumeraciones, complementos que van delante del verbo. No pongas comas por poner.",
       "excepciones": [
-        "Textos administrativos con títulos y apartados sin comas: en el BOE de 100 a 299 palabras el percentil 5 es 0,11; con el género «administrativo», el corte es el suyo.",
+        "Textos administrativos con títulos y apartados sin comas: en el BOE de 100 a 299 palabras el percentil 1 es 0,08; con el género «administrativo», el corte es el suyo.",
         "En las noticias el contraste es menor: ROBOT-TALK encontró diferencias «sensiblemente menores» en ese dominio.",
         "Una coma entre cifras («3,5») no cuenta. Si ninguna frase acaba en punto (todo preguntas, exclamaciones o puntos suspensivos), la métrica no se puede calcular y el análisis lo dice.",
+        "Corte en el percentil 1, y no en el 5 (parada 2 del 5.6, firmado por Antonio): depende de est-frases-cortas, porque las dos cuentan los puntos (más frases, menos comas por punto). En los textos humanos de calibración, las dos disparaban juntas en 123 de los 418 que sumaban dos o más reglas estadísticas; con el corte más estricto, la misma señal no cuenta dos veces.",
+        "Falso positivo conocido, sin arreglo en la v1 (parada 2 del 5.6): las tablas pasadas a texto (cada fila cuenta como una frase sin signos), los párrafos numerados («1. …»), que CommonMark trata como lista y no como prosa, y los títulos sin punto entre párrafos. En la validación del 5.6 aparecieron en anuncios del BOE con tablas, en un capítulo de «Fray Gerundio» y en reseñas del CSIC.",
         "Sin calibración: si tu género no tiene celda para la longitud del texto (la narrativa clásica de 100 a 299 palabras: 65 capítulos, menos de los 100 que exige una celda), la regla no se evalúa y el análisis lo dice.",
         "De 100 a 299 palabras de prosa el resultado es poco fiable (umbral firmado el 29/09): las métricas de frase y de vocabulario se mueven mucho en textos cortos."
       ],
@@ -4478,6 +4490,7 @@
         "En las críticas de opinión de 100 a 599 palabras el percentil 5 es 0: más de una de cada veinte críticas humanas no usa ninguno de estos signos, y con el género «opinion» la regla no puede disparar en esos tramos. Lo mismo pasa en 100-299 con «general», «noticia» y «academico».",
         "Una URL escrita en la prosa suma sus barras; un signo entre cifras («10:30», «1/2») no cuenta.",
         "El guion corto no cuenta: une las partes de los compuestos («coche-cama»).",
+        "Falso positivo conocido, sin arreglo en la v1 (parada 2 del 5.6): las tablas pasadas a texto (cada fila cuenta como una frase sin signos), los párrafos numerados («1. …»), que CommonMark trata como lista y no como prosa, y los títulos sin punto entre párrafos. En la validación del 5.6 aparecieron en anuncios del BOE con tablas, en un capítulo de «Fray Gerundio» y en reseñas del CSIC.",
         "Sin calibración: si tu género no tiene celda para la longitud del texto (la narrativa clásica de 100 a 299 palabras: 65 capítulos, menos de los 100 que exige una celda), la regla no se evalúa y el análisis lo dice.",
         "De 100 a 299 palabras de prosa el resultado es poco fiable (umbral firmado el 29/09): las métricas de frase y de vocabulario se mueven mucho en textos cortos."
       ],
@@ -4511,16 +4524,18 @@
       "parametros": {
         "metrica": "puntuacion-por-1000",
         "direccion": "menor",
-        "percentil": "p95"
+        "percentil": "p99"
       },
       "peso": 3,
       "severidad": "baja",
       "informativa": false,
-      "explicacion": "Poca puntuación en total: cuenta todos los signos (. , ; : ¿ ? ¡ ! ( ) « » \" “ ” — …) por cada 1.000 palabras de prosa y dispara si tu texto queda por debajo del percentil 5. Se compara con los textos humanos de tu género y longitud: los percentiles de la calibración (AnCora, BOE, Gutenberg, CSIC y MuchoCine, por tramos de 100-299, 300-599 y 600 o más palabras de prosa); con «general», el género por defecto, la mezcla de los cinco. Medido en español: «los humanos utilizan, en total, más signos de puntuación que GPT-3.5 y GPT-4» (ROBOT-TALK, Alonso Simón et al. 2025, niveles de significación 3 y 2). En inglés, la misma dirección con una diferencia pequeña en modelos base (Muñoz-Ortiz et al. 2024: 11,88 % de los tokens en los humanos, de 10,77 a 12,14 en los modelos), y la recomendación de The Economist (2026): «look for texts without much punctuation at all». No demuestra quién escribió el texto: por construcción, 1 de cada 20 textos humanos de tu género y longitud queda más allá de ese corte.",
+      "explicacion": "Poca puntuación en total: cuenta todos los signos (. , ; : ¿ ? ¡ ! ( ) « » \" “ ” — …) por cada 1.000 palabras de prosa y dispara si tu texto queda por debajo del percentil 1. Se compara con los textos humanos de tu género y longitud: los percentiles de la calibración (AnCora, BOE, Gutenberg, CSIC y MuchoCine, por tramos de 100-299, 300-599 y 600 o más palabras de prosa); con «general», el género por defecto, la mezcla de los cinco. Medido en español: «los humanos utilizan, en total, más signos de puntuación que GPT-3.5 y GPT-4» (ROBOT-TALK, Alonso Simón et al. 2025, niveles de significación 3 y 2). En inglés, la misma dirección con una diferencia pequeña en modelos base (Muñoz-Ortiz et al. 2024: 11,88 % de los tokens en los humanos, de 10,77 a 12,14 en los modelos), y la recomendación de The Economist (2026): «look for texts without much punctuation at all». No demuestra quién escribió el texto: por construcción, 1 de cada 100 textos humanos de tu género y longitud queda más allá de ese corte.",
       "sugerencia": "Lee el texto en voz alta: donde haces una pausa y no hay signo, probablemente falta una coma o un punto.",
       "excepciones": [
-        "Opinión: las críticas de aficionados puntúan poco (percentil 5 de 84 signos por 1.000 en 300-599, frente a 130 en la narrativa, con su diálogo). Elige el género del texto: el corte cambia.",
+        "Opinión: las críticas de aficionados puntúan poco (percentil 1 de 62 signos por 1.000 en 300-599, frente a 116 en la narrativa, con su diálogo). Elige el género del texto: el corte cambia.",
         "«...» cuenta como un signo, igual que «…»; un signo entre cifras («3,5», «1.000») no cuenta; el guion, la barra y las comillas simples no entran.",
+        "Corte en el percentil 1, y no en el 5 (parada 2 del 5.6, firmado por Antonio): sus signos incluyen los de est-poca-puntuacion-secundaria (paréntesis, comillas, punto y coma, dos puntos, barras y raya). En los textos humanos de calibración, las dos disparaban juntas en 62 de los 418 que sumaban dos o más reglas estadísticas; con el corte más estricto, la misma señal no cuenta dos veces.",
+        "Falso positivo conocido, sin arreglo en la v1 (parada 2 del 5.6): las tablas pasadas a texto (cada fila cuenta como una frase sin signos), los párrafos numerados («1. …»), que CommonMark trata como lista y no como prosa, y los títulos sin punto entre párrafos. En la validación del 5.6 aparecieron en anuncios del BOE con tablas, en un capítulo de «Fray Gerundio» y en reseñas del CSIC.",
         "Sin calibración: si tu género no tiene celda para la longitud del texto (la narrativa clásica de 100 a 299 palabras: 65 capítulos, menos de los 100 que exige una celda), la regla no se evalúa y el análisis lo dice.",
         "De 100 a 299 palabras de prosa el resultado es poco fiable (umbral firmado el 29/09): las métricas de frase y de vocabulario se mueven mucho en textos cortos."
       ],
@@ -4558,17 +4573,18 @@
       "parametros": {
         "metrica": "nominalizaciones-por-1000",
         "direccion": "mayor",
-        "percentil": "p95"
+        "percentil": "p99"
       },
       "peso": 2,
       "severidad": "baja",
       "informativa": false,
-      "explicacion": "Muchos sustantivos abstractos: cuenta las palabras de más de cinco letras terminadas en -ción, -sión, -miento, -dad, -tad, -ncia o -anza (y sus plurales) por cada 1.000 palabras de prosa y dispara si tu texto queda por encima del percentil 95. Se compara con los textos humanos de tu género y longitud: los percentiles de la calibración (AnCora, BOE, Gutenberg, CSIC y MuchoCine, por tramos de 100-299, 300-599 y 600 o más palabras de prosa); con «general», el género por defecto, la mezcla de los cinco. Medido en inglés: los modelos ajustados para seguir instrucciones usan nominalizaciones entre 1,5 y 2 veces más que los humanos (GPT-4o, 2,1 veces, d = 1,23; Reinhart et al. 2025), y Herbold et al. (2023) lo ven en ensayos: «the GPT models use more nominalizations». En español no hay medición. No demuestra quién escribió el texto: por construcción, 1 de cada 20 textos humanos de tu género y longitud queda más allá de ese corte.",
+      "explicacion": "Muchos sustantivos abstractos: cuenta las palabras de más de cinco letras terminadas en -ción, -sión, -miento, -dad, -tad, -ncia o -anza (y sus plurales) por cada 1.000 palabras de prosa y dispara si tu texto queda por encima del percentil 99. Se compara con los textos humanos de tu género y longitud: los percentiles de la calibración (AnCora, BOE, Gutenberg, CSIC y MuchoCine, por tramos de 100-299, 300-599 y 600 o más palabras de prosa); con «general», el género por defecto, la mezcla de los cinco. Medido en inglés: los modelos ajustados para seguir instrucciones usan nominalizaciones entre 1,5 y 2 veces más que los humanos (GPT-4o, 2,1 veces, d = 1,23; Reinhart et al. 2025), y Herbold et al. (2023) lo ven en ensayos: «the GPT models use more nominalizations». En español no hay medición. No demuestra quién escribió el texto: por construcción, 1 de cada 100 textos humanos de tu género y longitud queda más allá de ese corte.",
       "sugerencia": "Cambia sustantivos por verbos: «la implementación de la medida requiere la coordinación de los equipos» dice lo mismo que «para aplicar la medida, los equipos tienen que coordinarse».",
       "excepciones": [
-        "Textos administrativos y jurídicos: el BOE tiene una mediana de 91,6 por 1.000 en 100-299 y de 71,6 en 300-599; con el género «administrativo», los cortes suben a 132,7 y 120,1.",
-        "Prosa académica: mediana de 48,9 en 300-599 y percentil 95 de 90,8.",
+        "Textos administrativos y jurídicos: el BOE tiene una mediana de 91,6 por 1.000 en 100-299 y de 71,6 en 300-599; con el género «administrativo», los cortes (percentil 99) suben a 155,3 y 150,7.",
+        "Prosa académica: mediana de 48,9 en 300-599 y percentil 99 de 107,5.",
         "Sin etiquetado gramatical, cuenta también las palabras con esas terminaciones que no vienen de un verbo ni de un adjetivo («ciudad», «verdad», «ciencia»), y no cuenta las que van sin tilde («cancion»). Los percentiles humanos se midieron con la misma definición.",
+        "Corte en el percentil 99, y no en el 95 (parada 2 del 5.6, firmado por Antonio): está medida en inglés. Las dos medidas en español que no dependen de otra (est-frases-cortas y est-poca-puntuacion-secundaria) se quedan en el corte del 95 %.",
         "Sin calibración: si tu género no tiene celda para la longitud del texto (la narrativa clásica de 100 a 299 palabras: 65 capítulos, menos de los 100 que exige una celda), la regla no se evalúa y el análisis lo dice.",
         "De 100 a 299 palabras de prosa el resultado es poco fiable (umbral firmado el 29/09): las métricas de frase y de vocabulario se mueven mucho en textos cortos."
       ],
@@ -4606,17 +4622,18 @@
       "parametros": {
         "metrica": "seq-rep-4",
         "direccion": "mayor",
-        "percentil": "p95"
+        "percentil": "p99"
       },
       "peso": 1,
       "severidad": "baja",
       "informativa": false,
-      "explicacion": "Secuencias de cuatro palabras que se repiten: mide la proporción de grupos de cuatro palabras seguidas que ya habían salido en el texto (seq-rep-4, Welleck et al. 2019) y dispara si tu texto queda por encima del percentil 95. Se compara con los textos humanos de tu género y longitud: los percentiles de la calibración (AnCora, BOE, Gutenberg, CSIC y MuchoCine, por tramos de 100-299, 300-599 y 600 o más palabras de prosa); con «general», el género por defecto, la mezcla de los cinco. Medido en inglés: 0,005-0,006 en texto humano (Wikitext-103) frente a 0,46-0,51 en la generación voraz de GPT-2. Peso 1, y no 2, el máximo de lo medido en inglés: Welleck mide la degeneración de la decodificación voraz (greedy) de modelos antiguos, y con muestreo, que es lo que usan los chatbots actuales, las continuaciones llevan incluso más palabras distintas que las humanas («At higher levels of p and k… continuations contain more unique tokens than that of humans»). La regla caza bucles y plantillas, no la prosa fluida de un asistente de hoy. No demuestra quién escribió el texto: por construcción, 1 de cada 20 textos humanos de tu género y longitud queda más allá de ese corte.",
+      "explicacion": "Secuencias de cuatro palabras que se repiten: mide la proporción de grupos de cuatro palabras seguidas que ya habían salido en el texto (seq-rep-4, Welleck et al. 2019) y dispara si tu texto queda por encima del percentil 99. Se compara con los textos humanos de tu género y longitud: los percentiles de la calibración (AnCora, BOE, Gutenberg, CSIC y MuchoCine, por tramos de 100-299, 300-599 y 600 o más palabras de prosa); con «general», el género por defecto, la mezcla de los cinco. Medido en inglés: 0,005-0,006 en texto humano (Wikitext-103) frente a 0,46-0,51 en la generación voraz de GPT-2. Peso 1, y no 2, el máximo de lo medido en inglés: Welleck mide la degeneración de la decodificación voraz (greedy) de modelos antiguos, y con muestreo, que es lo que usan los chatbots actuales, las continuaciones llevan incluso más palabras distintas que las humanas («At higher levels of p and k… continuations contain more unique tokens than that of humans»). La regla caza bucles y plantillas, no la prosa fluida de un asistente de hoy. No demuestra quién escribió el texto: por construcción, 1 de cada 100 textos humanos de tu género y longitud queda más allá de ese corte.",
       "sugerencia": "Busca la frase o la fórmula que se repite y dila una sola vez; si es un estribillo a propósito, déjalo.",
       "excepciones": [
-        "Textos administrativos: las fórmulas legales se repiten por oficio («de conformidad con lo dispuesto en el artículo»); en el BOE la mediana es 0,065 en 300-599 y el percentil 95, 0,184, frente a 0,03 en la prensa. Con el género «administrativo», el corte es el suyo.",
+        "Textos administrativos: las fórmulas legales se repiten por oficio («de conformidad con lo dispuesto en el artículo»); en el BOE la mediana es 0,065 en 300-599 y el percentil 99, 0,252, frente a 0,042 en la prensa. Con el género «administrativo», el corte es el suyo.",
         "Estribillos, letanías, poesía, instrucciones con el mismo arranque y términos técnicos de varias palabras que no admiten sinónimo.",
         "Los grupos de cuatro palabras cruzan frases y párrafos, y no distinguen mayúsculas de minúsculas.",
+        "Corte en el percentil 99, y no en el 95 (parada 2 del 5.6, firmado por Antonio): está medida en inglés y solo para la degeneración voraz. Las dos medidas en español que no dependen de otra (est-frases-cortas y est-poca-puntuacion-secundaria) se quedan en el corte del 95 %.",
         "Sin calibración: si tu género no tiene celda para la longitud del texto (la narrativa clásica de 100 a 299 palabras: 65 capítulos, menos de los 100 que exige una celda), la regla no se evalúa y el análisis lo dice.",
         "De 100 a 299 palabras de prosa el resultado es poco fiable (umbral firmado el 29/09): las métricas de frase y de vocabulario se mueven mucho en textos cortos."
       ],
@@ -4655,7 +4672,7 @@
       "peso": 0,
       "severidad": "baja",
       "informativa": true,
-      "explicacion": "Diversidad del vocabulario con ventana móvil (MATTR de 50 palabras): la media de la proporción de palabras distintas en cada tramo de 50 palabras seguidas. Sale de la banda si queda por debajo del percentil 5 o por encima del 95. Se compara con los textos humanos de tu género y longitud: los percentiles de la calibración (AnCora, BOE, Gutenberg, CSIC y MuchoCine, por tramos de 100-299, 300-599 y 600 o más palabras de prosa); con «general», el género por defecto, la mezcla de los cinco. Es contexto: se enseña con su percentil y no puntúa, porque la dirección no es estable. En inglés, Kendro et al. (2026) miden más diversidad en cuatro versiones de ChatGPT que en 240 ensayos humanos (MATTR, η²p = 0,571), y otros estudios, menos (Reviriego et al. 2024, con GPT-3.5): depende del modelo, de con qué humanos se compare y de la métrica. MATTR es de las pocas medidas estables con la longitud (Zenker y Kyle 2021: «MATTR performs particularly well»). No demuestra quién escribió el texto: por construcción, 1 de cada 10 textos humanos de tu género y longitud queda fuera de esa banda.",
+      "explicacion": "Diversidad del vocabulario con ventana móvil (MATTR de 50 palabras): la media de la proporción de palabras distintas en cada tramo de 50 palabras seguidas. Sale de la banda si queda por debajo del percentil 5 o por encima del percentil 95. Se compara con los textos humanos de tu género y longitud: los percentiles de la calibración (AnCora, BOE, Gutenberg, CSIC y MuchoCine, por tramos de 100-299, 300-599 y 600 o más palabras de prosa); con «general», el género por defecto, la mezcla de los cinco. Es contexto: se enseña con su percentil y no puntúa, porque la dirección no es estable. En inglés, Kendro et al. (2026) miden más diversidad en cuatro versiones de ChatGPT que en 240 ensayos humanos (MATTR, η²p = 0,571), y otros estudios, menos (Reviriego et al. 2024, con GPT-3.5): depende del modelo, de con qué humanos se compare y de la métrica. MATTR es de las pocas medidas estables con la longitud (Zenker y Kyle 2021: «MATTR performs particularly well»). No demuestra quién escribió el texto: por construcción, 1 de cada 10 textos humanos de tu género y longitud queda fuera de esa banda.",
       "sugerencia": "Es contexto: si queda baja, mira si repites las mismas palabras por costumbre; si queda alta, no hay nada que corregir.",
       "excepciones": [
         "Textos administrativos: vocabulario más repetido por oficio (mediana de 0,748 en 300-599, frente a 0,818 en las críticas de opinión).",
@@ -4705,7 +4722,7 @@
       "peso": 0,
       "severidad": "baja",
       "informativa": true,
-      "explicacion": "Diversidad del vocabulario con MTLD: la longitud media de los tramos de texto que mantienen la proporción de palabras distintas por encima de 0,72, leída hacia delante y hacia atrás. Sale de la banda si queda por debajo del percentil 5 o por encima del 95. Se compara con los textos humanos de tu género y longitud: los percentiles de la calibración (AnCora, BOE, Gutenberg, CSIC y MuchoCine, por tramos de 100-299, 300-599 y 600 o más palabras de prosa); con «general», el género por defecto, la mezcla de los cinco. Es contexto: no puntúa, porque los estudios no coinciden en la dirección. En noticias en inglés, los humanos muestran la mayor diversidad frente a modelos base («human texts exhibit the highest lexical diversity», Muñoz-Ortiz et al. 2024); Gargova et al. (2026), con español, inglés y búlgaro agregados, dan más MTLD a los modelos actuales (81,95 frente a 60,08). No demuestra quién escribió el texto: por construcción, 1 de cada 10 textos humanos de tu género y longitud queda fuera de esa banda.",
+      "explicacion": "Diversidad del vocabulario con MTLD: la longitud media de los tramos de texto que mantienen la proporción de palabras distintas por encima de 0,72, leída hacia delante y hacia atrás. Sale de la banda si queda por debajo del percentil 5 o por encima del percentil 95. Se compara con los textos humanos de tu género y longitud: los percentiles de la calibración (AnCora, BOE, Gutenberg, CSIC y MuchoCine, por tramos de 100-299, 300-599 y 600 o más palabras de prosa); con «general», el género por defecto, la mezcla de los cinco. Es contexto: no puntúa, porque los estudios no coinciden en la dirección. En noticias en inglés, los humanos muestran la mayor diversidad frente a modelos base («human texts exhibit the highest lexical diversity», Muñoz-Ortiz et al. 2024); Gargova et al. (2026), con español, inglés y búlgaro agregados, dan más MTLD a los modelos actuales (81,95 frente a 60,08). No demuestra quién escribió el texto: por construcción, 1 de cada 10 textos humanos de tu género y longitud queda fuera de esa banda.",
       "sugerencia": "Es contexto: si queda baja, mira si repites las mismas palabras por costumbre; si queda alta, no hay nada que corregir.",
       "excepciones": [
         "Textos administrativos: mediana de 57,5 en 300-599, frente a 102,5 en las críticas de opinión.",
@@ -4759,7 +4776,7 @@
       "peso": 0,
       "severidad": "baja",
       "informativa": true,
-      "explicacion": "Diversidad del vocabulario con HD-D: la suma, para cada palabra distinta, de la probabilidad de encontrarla en una muestra al azar de 42 palabras del texto. Sale de la banda si queda por debajo del percentil 5 o por encima del 95. Se compara con los textos humanos de tu género y longitud: los percentiles de la calibración (AnCora, BOE, Gutenberg, CSIC y MuchoCine, por tramos de 100-299, 300-599 y 600 o más palabras de prosa); con «general», el género por defecto, la mezcla de los cinco. Es contexto: no puntúa. HD-D no sale por su nombre en los estudios que comparan humanos y modelos que leyó la investigación: entra como tercera medida de la diversidad léxica por su estabilidad con la longitud (Zenker y Kyle 2021: correlación de 0,064 con la longitud; Bestgen 2023), y su dirección es la de toda la diversidad léxica medida en inglés: inestable (Kendro et al. 2026 frente a Reviriego et al. 2024). No demuestra quién escribió el texto: por construcción, 1 de cada 10 textos humanos de tu género y longitud queda fuera de esa banda.",
+      "explicacion": "Diversidad del vocabulario con HD-D: la suma, para cada palabra distinta, de la probabilidad de encontrarla en una muestra al azar de 42 palabras del texto. Sale de la banda si queda por debajo del percentil 5 o por encima del percentil 95. Se compara con los textos humanos de tu género y longitud: los percentiles de la calibración (AnCora, BOE, Gutenberg, CSIC y MuchoCine, por tramos de 100-299, 300-599 y 600 o más palabras de prosa); con «general», el género por defecto, la mezcla de los cinco. Es contexto: no puntúa. HD-D no sale por su nombre en los estudios que comparan humanos y modelos que leyó la investigación: entra como tercera medida de la diversidad léxica por su estabilidad con la longitud (Zenker y Kyle 2021: correlación de 0,064 con la longitud; Bestgen 2023), y su dirección es la de toda la diversidad léxica medida en inglés: inestable (Kendro et al. 2026 frente a Reviriego et al. 2024). No demuestra quién escribió el texto: por construcción, 1 de cada 10 textos humanos de tu género y longitud queda fuera de esa banda.",
       "sugerencia": "Es contexto: si queda baja, mira si repites las mismas palabras por costumbre; si queda alta, no hay nada que corregir.",
       "excepciones": [
         "Narrativa frente a administrativo: mediana de 0,845 en la narrativa clásica y de 0,778 en el BOE (300-599).",
@@ -4813,7 +4830,7 @@
       "peso": 0,
       "severidad": "baja",
       "informativa": true,
-      "explicacion": "Legibilidad con el índice de Flesch-Szigriszt (INFLESZ): 206,835 − 62,3 × sílabas por palabra − palabras por frase; cuanto más alto, más fácil de leer. Sale de la banda si queda por debajo del percentil 5 o por encima del 95. Se compara con los textos humanos de tu género y longitud: los percentiles de la calibración (AnCora, BOE, Gutenberg, CSIC y MuchoCine, por tramos de 100-299, 300-599 y 600 o más palabras de prosa); con «general», el género por defecto, la mezcla de los cinco. Es contexto, no señal: mide la longitud de las palabras y de las frases. En español, la legibilidad es el rasgo que más pesa al separar noticias humanas de generadas en Gargova et al. (2026, peso 0,282), pero en lo leído no constan ni la fórmula ni la dirección: por eso no puntúa. La fórmula, de Barrio-Cantalejo et al. (2008); Szigriszt (1993) da 207 en vez de 206,835, una diferencia constante que no cambia ninguna comparación. No demuestra quién escribió el texto: por construcción, 1 de cada 10 textos humanos de tu género y longitud queda fuera de esa banda.",
+      "explicacion": "Legibilidad con el índice de Flesch-Szigriszt (INFLESZ): 206,835 − 62,3 × sílabas por palabra − palabras por frase; cuanto más alto, más fácil de leer. Sale de la banda si queda por debajo del percentil 5 o por encima del percentil 95. Se compara con los textos humanos de tu género y longitud: los percentiles de la calibración (AnCora, BOE, Gutenberg, CSIC y MuchoCine, por tramos de 100-299, 300-599 y 600 o más palabras de prosa); con «general», el género por defecto, la mezcla de los cinco. Es contexto, no señal: mide la longitud de las palabras y de las frases. En español, la legibilidad es el rasgo que más pesa al separar noticias humanas de generadas en Gargova et al. (2026, peso 0,282), pero en lo leído no constan ni la fórmula ni la dirección: por eso no puntúa. La fórmula, de Barrio-Cantalejo et al. (2008); Szigriszt (1993) da 207 en vez de 206,835, una diferencia constante que no cambia ninguna comparación. No demuestra quién escribió el texto: por construcción, 1 de cada 10 textos humanos de tu género y longitud queda fuera de esa banda.",
       "sugerencia": "Es contexto: si queda baja, prueba con frases y palabras más cortas; si queda alta, no hay nada que corregir.",
       "excepciones": [
         "La narrativa se lee más fácil que la prosa académica: mediana de 67,5 frente a 43,6 en 300-599.",
@@ -4859,7 +4876,7 @@
       "peso": 0,
       "severidad": "baja",
       "informativa": true,
-      "explicacion": "Proporción de palabras distintas sobre el total (TTR). Depende mucho de la longitud («the TTR of a text sample is affected by its length», Covington y McFall 2010), y por eso solo se compara dentro del mismo tramo. Sale de la banda si queda por debajo del percentil 5 o por encima del 95. Se compara con los textos humanos de tu género y longitud: los percentiles de la calibración (AnCora, BOE, Gutenberg, CSIC y MuchoCine, por tramos de 100-299, 300-599 y 600 o más palabras de prosa); con «general», el género por defecto, la mezcla de los cinco. Es contexto: no puntúa. Medido en español, con un efecto pequeño: los humanos tienen un TTR entre un 2,3 % y un 2,8 % mayor que GPT-3.5 y GPT-4 (ROBOT-TALK, Alonso Simón et al. 2025); en inglés la dirección cambia con el modelo (Kendro et al. 2026). No demuestra quién escribió el texto: por construcción, 1 de cada 10 textos humanos de tu género y longitud queda fuera de esa banda.",
+      "explicacion": "Proporción de palabras distintas sobre el total (TTR). Depende mucho de la longitud («the TTR of a text sample is affected by its length», Covington y McFall 2010), y por eso solo se compara dentro del mismo tramo. Sale de la banda si queda por debajo del percentil 5 o por encima del percentil 95. Se compara con los textos humanos de tu género y longitud: los percentiles de la calibración (AnCora, BOE, Gutenberg, CSIC y MuchoCine, por tramos de 100-299, 300-599 y 600 o más palabras de prosa); con «general», el género por defecto, la mezcla de los cinco. Es contexto: no puntúa. Medido en español, con un efecto pequeño: los humanos tienen un TTR entre un 2,3 % y un 2,8 % mayor que GPT-3.5 y GPT-4 (ROBOT-TALK, Alonso Simón et al. 2025); en inglés la dirección cambia con el modelo (Kendro et al. 2026). No demuestra quién escribió el texto: por construcción, 1 de cada 10 textos humanos de tu género y longitud queda fuera de esa banda.",
       "sugerencia": "Es contexto: si queda baja, mira si repites las mismas palabras por costumbre; si queda alta, no hay nada que corregir.",
       "excepciones": [
         "Dentro de un tramo, un texto de 590 palabras tiene por fuerza un TTR más bajo que uno de 310: en «general» de 300-599, la banda va de 0,433 a 0,604.",
@@ -4905,7 +4922,7 @@
       "peso": 0,
       "severidad": "baja",
       "informativa": true,
-      "explicacion": "Pronombres y demostrativos que remiten a algo ya dicho (él, ella, lo, la, le, este, ese, aquel, cuyo…) por cada 1.000 palabras de prosa. Sale de la banda si queda por debajo del percentil 5 o por encima del 95. Se compara con los textos humanos de tu género y longitud: los percentiles de la calibración (AnCora, BOE, Gutenberg, CSIC y MuchoCine, por tramos de 100-299, 300-599 y 600 o más palabras de prosa); con «general», el género por defecto, la mezcla de los cinco. Es contexto: no puntúa. En español solo hay una observación cualitativa: los textos generados repiten más las palabras, y los humanos sustituyen con sinónimos y pronombres («pronominal substitution»; UCM, IberLEF 2023). Y la métrica es tosca: sin etiquetado gramatical, cuenta también los artículos («la casa») y los determinantes («este libro»). No demuestra quién escribió el texto: por construcción, 1 de cada 10 textos humanos de tu género y longitud queda fuera de esa banda.",
+      "explicacion": "Pronombres y demostrativos que remiten a algo ya dicho (él, ella, lo, la, le, este, ese, aquel, cuyo…) por cada 1.000 palabras de prosa. Sale de la banda si queda por debajo del percentil 5 o por encima del percentil 95. Se compara con los textos humanos de tu género y longitud: los percentiles de la calibración (AnCora, BOE, Gutenberg, CSIC y MuchoCine, por tramos de 100-299, 300-599 y 600 o más palabras de prosa); con «general», el género por defecto, la mezcla de los cinco. Es contexto: no puntúa. En español solo hay una observación cualitativa: los textos generados repiten más las palabras, y los humanos sustituyen con sinónimos y pronombres («pronominal substitution»; UCM, IberLEF 2023). Y la métrica es tosca: sin etiquetado gramatical, cuenta también los artículos («la casa») y los determinantes («este libro»). No demuestra quién escribió el texto: por construcción, 1 de cada 10 textos humanos de tu género y longitud queda fuera de esa banda.",
       "sugerencia": "Es contexto: si queda baja, mira si repites un nombre donde bastaría un pronombre.",
       "excepciones": [
         "Textos administrativos: mediana de 54,6 en el BOE de 100 a 299 palabras, frente a 89,0 en la prosa académica.",
