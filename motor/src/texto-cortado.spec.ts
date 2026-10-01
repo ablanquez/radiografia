@@ -1,6 +1,6 @@
 /**
- * Juez (6) del encargo 6.1: los 287 textos humanos de validación de
- * «general» (los ids de data/calibracion/general.manifiesto.json), cortados a
+ * Juez (6) del encargo 6.1: los textos humanos de validación de «general»
+ * (los ids de data/calibracion/general.manifiesto.json), cortados a
  * 76 columnas con el cortador de abajo, tienen las MISMAS frases de prosa y la
  * misma frases-por-100-palabras que sin cortar. El número de párrafos se
  * cuenta y no se juzga (la excepción web lo cambia por diseño).
@@ -10,6 +10,12 @@
  * abajo, cada una con su causa, y el juez exige «≥ 93 % y la lista de causas
  * no crece»: un documento distinto que no esté en la lista lo para. La
  * excepción web no se amplía ni se recorta.
+ * Recalibración del 6.1 (b): la muestra de validación de «general» pasa de
+ * 287 a 341 documentos (100-299 sin académico, que perdió su celda).
+ * Coinciden 320 de 341 (93,8 %). Dos de las 18 ya coinciden y salen de la
+ * lista; entran cinco, cada una con una de las mismas cuatro causas (la de
+ * «¡» se escribe ahora «¡» o comilla: el mismo mecanismo). A firmar en la
+ * parada 2.
  *
  * Los textos están en la caché de los corpus (motor/corpus/general/textos/),
  * que no se versiona: sin ella, el juez se salta y lo dice. Cada texto se
@@ -31,28 +37,31 @@ const MANIFIESTO = new URL('../../data/calibracion/general.manifiesto.json', imp
 const ITEMS = 'ítem numerado cortado: dentro, una línea acaba en punto y la siguiente empieza en mayúscula; la excepción web pasa a prosa el resto del ítem';
 const TABLA = 'fila de tabla cortada: los trozos con menos de dos «|» dejan de ser tabla y pasan a prosa';
 const RAYA = '«- -» como raya (AnCora): al cortar, una línea empieza por «- », que es viñeta (CommonMark § 5.2)';
-const EXCLAMACION = 'excepción web: un salto tras signo de cierre seguido de «¡» parte donde Intl.Segmenter no partía';
+const A_MEDIA_FRASE = 'excepción web a media frase: un salto tras signo de cierre seguido de «¡» o de comilla parte donde Intl.Segmenter no partía';
 
-/** Las 18 diferencias aceptadas en la parada 1 del 6.1, con su causa. */
+/** Las diferencias aceptadas (parada 1 del 6.1, y la muestra de la recalibración), con su causa. */
 const DIFERENCIAS: Readonly<Record<string, string>> = {
   'BOE-A-2006-7899': ITEMS,
   'BOE-A-2012-1684': ITEMS,
   'BOE-A-2012-3753': ITEMS,
   'BOE-A-2012-3754': ITEMS,
   'BOE-A-2016-4444': ITEMS,
-  'BOE-B-2012-3687': ITEMS,
-  'BOE-B-2010-33291': ITEMS,
+  'pg62926-009': ITEMS,
+  'pg62926-013': ITEMS,
   'BOE-A-2000-15061': TABLA,
   'BOE-A-2001-18185': TABLA,
   'BOE-A-2011-16289': TABLA,
   'BOE-A-2012-1732': TABLA,
   'BOE-A-2012-7952': TABLA,
   'BOE-B-2010-33307': TABLA,
+  'BOE-A-2012-8011': TABLA,
+  'BOE-A-2012-8023': TABLA,
   'CESS-CAST-P-20000202-21_b': RAYA,
   'CESS-CAST-P-20000903-55': RAYA,
   'CESS-CAST-P-20010202-39': RAYA,
   'CESS-CAST-P-20020103-122': RAYA,
-  'pg55058-009': EXCLAMACION,
+  'pg55058-009': A_MEDIA_FRASE,
+  'mc-3810': A_MEDIA_FRASE,
 };
 
 /** Corta cada línea del texto en líneas de 76 columnas como mucho, por los espacios (un correo, un PDF copiado). */
@@ -84,7 +93,7 @@ describe('el cortador del juez', () => {
   });
 });
 
-describe('(6) los 287 textos de validación de «general», cortados a 76 columnas', () => {
+describe('(6) los textos de validación de «general», cortados a 76 columnas', () => {
   const hayCache = existsSync(CACHE);
   test(
     'las mismas frases de prosa y la misma frases-por-100-palabras que sin cortar en el 93 % o más, y ninguna diferencia fuera de la lista',
@@ -92,7 +101,7 @@ describe('(6) los 287 textos de validación de «general», cortados a 76 column
     (t) => {
       const manifiesto = JSON.parse(readFileSync(MANIFIESTO, 'utf8')) as { documentos: { id: string; sha256: string; tramo: string | null; reparto?: string }[] };
       const documentos = manifiesto.documentos.filter((d) => d.reparto === 'validacion' && d.tramo !== null);
-      assert.equal(documentos.length, 287);
+      assert.equal(documentos.length, 341, 'la muestra de validación de «general» desde la recalibración del 6.1 (antes, 287)');
       const distintos: { id: string; detalle: string }[] = [];
       let parrafosSin = 0;
       let parrafosCon = 0;
