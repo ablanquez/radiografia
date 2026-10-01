@@ -84,8 +84,8 @@ const calibracion = {
   notas: [
     'Percentiles de los documentos de CALIBRACIÓN (sha256("semilla|id") < 0,8); los de validación quedan para el FPR del 5.6.',
     `Margen sobre el mínimo de ${MINIMO_POR_CELDA} documentos de calibración por tramo: ${TRAMOS.map((t) => `${t} ${n[t] - MINIMO_POR_CELDA >= 0 ? '+' : ''}${n[t] - MINIMO_POR_CELDA}`).join(' · ')}.`,
-    `_total-radiografia: puntuacion.total de analizar() con paquetes/radiografia.json y el género «${genero}»; sin reglas estadísticas todavía: se recalcula en el 5.6.`,
-    'disparos: por tramo, en los documentos de calibración, en cuántos da alguna señal cada regla de RadiografIA que puntúa y cuántas señales suman (las informativas no cuentan); primer dato para pesos y `generos` en el 5.6.',
+    `_total-radiografia: puntuacion.total de analizar() con paquetes/radiografia.json y el género «${genero}»; desde el 5.6 incluye las reglas estadísticas (trece «est-», siete que puntúan), comparadas con las celdas de calibración inyectadas en el paquete.`,
+    'disparos: por tramo, en los documentos de calibración, en cuántos da alguna señal cada regla de RadiografIA que puntúa y cuántas señales suman (las informativas no cuentan); desde el 5.6, también las reglas estadísticas.',
     ...(corpus.notas ?? []),
     ...corpus.filtros.map((f) => `filtro del corpus: ${f}`),
   ],
