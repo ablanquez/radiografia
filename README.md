@@ -35,7 +35,7 @@ el texto ni las reglas.
 
 ## Estado
 
-**En construcción.** Hoy (30/09/2026) existe el plan firmado, la
+**En construcción.** Hoy (01/10/2026) existe el plan firmado, la
 investigación de las familias en [`docs/investigacion/`](docs/investigacion/)
 y, en la carpeta [`motor/`](motor/), el **motor completo**, probado con
 paquetes de prueba:
@@ -66,8 +66,10 @@ paquetes de prueba:
   género lo elige quien analiza (por defecto, «general»);
 - la **puntuación**: puntos por 1.000 palabras de prosa, con su desglose por
   familia y por regla; las reglas informativas se enseñan pero no suman y
-  los atenuantes restan. Cómo se muestra el medidor (escala, tope) se decide
-  al calibrar con las reglas reales;
+  los atenuantes restan;
+- la **escala del medidor**: dónde cae el total respecto a los textos
+  humanos del mismo género y tramo (abajo, [«Escala»](#escala)), sin tope
+  ni veredicto;
 - la **combinación de paquetes**: se analizan varios a la vez, cada señal
   dice de qué paquete viene y cada paquete lleva su propio desglose. Está
   probada también con los dos paquetes reales juntos.
@@ -81,7 +83,8 @@ fuente en [`motor/src/metricas/`](motor/src/metricas/):
 - de vocabulario: variedad léxica (TTR, MATTR con ventana de 50, MTLD y
   HD-D) y repetición de secuencias de cuatro palabras;
 - de puntuación: comas por punto, signos por cada 1.000 palabras y
-  paréntesis, comillas y punto y coma por cada 1.000 palabras;
+  paréntesis, comillas, punto y coma, dos puntos, barras y raya por cada
+  1.000 palabras;
 - de estilo: nominalizaciones (palabras en -ción, -miento, -dad…) y
   pronombres anafóricos, por cada 1.000 palabras; la segunda es solo de
   contexto, porque sin etiquetado gramatical cuenta también artículos y
@@ -91,7 +94,12 @@ Todo está probado con dos paquetes de prueba internos y con los dos paquetes
 reales (abajo, [«Paquetes»](#paquetes)): cada ejemplo positivo dispara su
 regla y ningún negativo. Los percentiles de los paquetes de prueba son
 inventados; los de RadiografIA están medidos con textos humanos (abajo,
-[«Calibración»](#calibración)).
+[«Calibración»](#calibración)) y comprobados con otros textos humanos que
+se apartaron antes de medir (abajo, [«Validación»](#validación)).
+
+Con eso, el punto 5 del plan (el paquete RadiografIA con sus seis
+familias, calibrado y validado) está hecho salvo los textos de la web, que
+pasarán por los dos paquetes en el punto 6.
 
 Las piezas de apoyo que las reglas necesitarán están **medidas contra
 referencias ajenas**, no dadas por buenas:
@@ -116,7 +124,7 @@ ruta](#hoja-de-ruta).
 En [`paquetes/`](paquetes/):
 
 - **RadiografIA 0.1.0** ([`radiografia.json`](paquetes/radiografia.json)):
-  declara las seis familias y trae cinco:
+  trae las seis familias:
   - **léxico**: once reglas. Las cuatro de más peso están medidas en
     español (Juzek, 2026): los verbos de énfasis (destacar, subrayar…),
     «importancia», «innovador» e «imborrable», «multidisciplinario» e
@@ -143,14 +151,22 @@ En [`paquetes/`](paquetes/):
   - **sintaxis**: una regla, la coletilla de gerundio al final de la frase
     («…, logrando un récord»), medida en inglés: los modelos la usan entre
     dos y cinco veces más. Solo una, porque las demás candidatas de la
-    familia son métricas del texto entero, que llegan con la calibración, o
-    necesitaban el etiquetado gramatical, que quedó fuera de la v1.
+    familia son métricas del texto entero, que van en estadística, o
+    necesitaban el etiquetado gramatical, que quedó fuera de la v1;
+  - **estadística**: trece reglas que miden el texto entero y lo comparan
+    con los textos humanos de su género y su longitud (abajo,
+    [«Estadística»](#estadística)). Siete suman: frases cortas, pocas comas,
+    poca puntuación y poca puntuación secundaria, medidas en español; ritmo
+    uniforme, nominalización y repetición de secuencias, medidas en inglés.
+    Seis son de contexto: cuatro de variedad léxica, la legibilidad y los
+    pronombres anafóricos.
 
-  Estadística está declarada y vacía. Un juez comprueba que ninguna regla va
-  sin fuente, que el peso, para sumar o para restar, no pasa del que permite
-  su nivel de evidencia, que un atenuante solo resta 1 o 2, que la familia
-  canal no suma y que ninguna expresión regular usa `\b` ni `\w`, que en
-  JavaScript no reconocen las letras con tilde ni la eñe.
+  Un juez comprueba que ninguna regla va sin fuente, que el peso, para sumar
+  o para restar, no pasa del que permite su nivel de evidencia, que un
+  atenuante solo resta 1 o 2, que la familia canal no suma, que cada regla
+  estadística usa una métrica del motor, dice en su ficha dónde corta y no
+  se limita a unos géneros, y que ninguna expresión regular usa `\b` ni
+  `\w`, que en JavaScript no reconocen las letras con tilde ni la eñe.
 - **Español correcto 0.1.0**
   ([`espanol-correcto.json`](paquetes/espanol-correcto.json)): siete avisos
   de norma de la RAE que suelen delatar un calco del inglés o una
@@ -169,6 +185,51 @@ En [`paquetes/`](paquetes/):
   Un juez comprueba que son siete, todas de norma, con peso 1 y con su
   sección de rae.es, y que ninguna es informativa.
 
+## Estadística
+
+Trece reglas de RadiografIA no buscan palabras: miden el texto entero con
+una métrica y comparan la cifra con **los textos humanos de su mismo género
+y su mismo tramo de longitud**, nunca con un umbral fijo. Los percentiles
+vienen en el propio paquete (abajo, [«Calibración»](#calibración)), y el
+género lo elige quien analiza; si no elige, «general».
+
+- **Siete puntúan**, y cada una mira un solo lado de la banda humana:
+
+  | regla | métrica | señala si queda | peso | evidencia |
+  |---|---|---|---|---|
+  | `est-frases-cortas` | frases por 100 palabras | por encima del p95 | 3 | medido en español |
+  | `est-poca-puntuacion-secundaria` | paréntesis, comillas, punto y coma, dos puntos, barras y raya por 1.000 palabras | por debajo del p5 | 3 | medido en español |
+  | `est-pocas-comas` | comas por punto | por debajo del p1 | 3 | medido en español |
+  | `est-poca-puntuacion` | signos por 1.000 palabras | por debajo del p1 | 3 | medido en español |
+  | `est-ritmo-uniforme` | dispersión de la longitud de frase | por debajo del p1 | 2 | medido en inglés |
+  | `est-nominalizacion` | nominalizaciones por 1.000 palabras | por encima del p99 | 2 | medido en inglés |
+  | `est-repeticion-de-secuencias` | secuencias de cuatro palabras repetidas | por encima del p99 | 1 | medido en inglés |
+
+  Con el corte en el p95 (o el p5), 1 de cada 20 textos humanos de su celda
+  queda fuera; con el p99 (o el p1), 1 de cada 100. Una regla que se sale
+  suma su peso entero, una vez por texto. Por qué cinco cortan en el p99 o
+  el p1, abajo, en [«Validación»](#validación).
+- **Seis son de contexto**: informativas, se enseñan y no suman. Miran los
+  dos lados (por debajo del p5 o por encima del p95), así que 1 de cada 10
+  textos humanos queda fuera. Son la variedad léxica (MATTR, MTLD, HD-D y
+  TTR), la legibilidad de Flesch-Szigriszt y los pronombres anafóricos.
+- **«Sin calibración» existe.** Si el género elegido no tiene celda para la
+  longitud del texto (la narrativa clásica de 100 a 299 palabras), las
+  reglas estadísticas no se evalúan y el análisis lo dice, regla por regla.
+  Con menos de 100 palabras de prosa no se analiza nada.
+- **No demuestran autoría.** La dirección de cada regla sale de los
+  estudios que cita su ficha, y salirse de lo habitual en su género no dice
+  quién escribió el texto.
+- ⚠️ **Texto cortado a mano.** El motor toma cada línea como un párrafo, que
+  es lo que pega un cuadro de texto. Un texto con saltos de línea dentro de
+  los párrafos (un PDF copiado, un correo, un Markdown cortado a 76
+  columnas como este README) cuenta una frase por línea. Los 287 textos
+  humanos de validación de «general», cortados a 76 columnas, hacen saltar
+  `est-frases-cortas` en el 43,2 % (el 4,2 % tal cual), y la tasa de falsos
+  positivos sube del 3,1 % al 8,0 %. Este README da esa señal en
+  «Calibración» y en «Validación» por eso: con las líneas de cada párrafo
+  unidas, no la da. Sin arreglo todavía.
+
 ## Calibración
 
 El detector estadístico nunca compara un texto con un umbral fijo: lo
@@ -178,8 +239,8 @@ trae, en `cabecera.calibracion`, sus percentiles (p1, p5, p50, p95 y p99)
 para cada una de las trece métricas y para el total del propio paquete,
 en seis géneros y tres tramos (100-299, 300-599 y 600 palabras o más).
 
-Hoy RadiografIA no tiene reglas estadísticas: las celdas esperan a las que
-llegarán con el punto 5.6, y el total también se recalcula entonces.
+El total se recalculó en el 5.6 con las trece reglas estadísticas dentro,
+cada una comparada con las celdas de su métrica que trae el paquete.
 
 ### Cómo se reproduce
 
@@ -202,12 +263,15 @@ ejecutan a mano desde `motor/`:
 3. **`construir-general.ts`** y después `calibrar.ts general`, para la mezcla.
 4. **`inyectar-calibracion.ts`**: vuelca las celdas de los seis ficheros en
    el paquete. Solo las celdas: las notas se quedan en `data/calibracion/`.
+5. **`validar.ts`**: analiza con el paquete los textos de validación y
+   escribe [`validacion.json`](data/calibracion/validacion.json) (abajo,
+   [«Validación»](#validación)).
 
 Las reglas son siempre las mismas:
 
 - **Semilla** `radiografia-calibracion-2026`. Con ella, la huella sha256 de
   cada id decide la muestra y el reparto: el 80 % va a calibración, y el
-  20 % a validación, que queda para medir los falsos positivos en el 5.6.
+  20 % a validación, con la que se midieron los falsos positivos en el 5.6.
   Sin generador aleatorio: se reproduce igual.
 - **Percentiles de tipo 7** de Hyndman y Fan (el de R por defecto), los
   mismos que calcula el motor.
@@ -225,23 +289,23 @@ Mediana (p50) de cuatro de las catorce claves, sacada de los ficheros de
 | género | tramo | n (calibración) | frases por 100 palabras | MATTR-50 | nominalizaciones por 1.000 | total RadiografIA |
 |---|---|---|---|---|---|---|
 | `noticia` | 100-299 | 357 | 3,60 | 0,802 | 36,0 | 0,0 |
-|  | 300-599 | 354 | 3,18 | 0,799 | 38,4 | 0,0 |
-|  | 600+ | 109 | 2,80 | 0,800 | 39,3 | 2,0 |
+|  | 300-599 | 354 | 3,18 | 0,799 | 38,4 | 2,4 |
+|  | 600+ | 109 | 2,80 | 0,800 | 39,3 | 3,0 |
 | `administrativo` | 100-299 | 155 | 7,09 | 0,731 | 91,6 | 0,0 |
 |  | 300-599 | 100 | 4,84 | 0,748 | 71,6 | 0,0 |
-|  | 600+ | 110 | 4,12 | 0,739 | 87,4 | 0,7 |
+|  | 600+ | 110 | 4,12 | 0,739 | 87,4 | 1,0 |
 | `narrativa-clasica` | 100-299 | 65 (sin celda) | — | — | — | — |
 |  | 300-599 | 124 | 5,83 | 0,814 | 18,2 | 10,2 |
-|  | 600+ | 895 | 5,26 | 0,820 | 20,0 | 15,5 |
+|  | 600+ | 895 | 5,26 | 0,820 | 20,0 | 15,9 |
 | `academico` | 100-299 | 100 | 3,33 | 0,796 | 53,3 | 0,0 |
-|  | 300-599 | 100 | 3,22 | 0,798 | 48,9 | 3,7 |
-|  | 600+ | 100 | 3,18 | 0,795 | 53,5 | 5,3 |
+|  | 300-599 | 100 | 3,22 | 0,798 | 48,9 | 4,9 |
+|  | 600+ | 100 | 3,18 | 0,795 | 53,5 | 5,5 |
 | `opinion` | 100-299 | 739 | 2,66 | 0,821 | 20,8 | 0,0 |
 |  | 300-599 | 1663 | 3,02 | 0,818 | 23,9 | 3,0 |
-|  | 600+ | 726 | 2,95 | 0,816 | 27,8 | 3,7 |
+|  | 600+ | 726 | 2,95 | 0,816 | 27,8 | 4,0 |
 | `general` | 100-299 | 400 | 3,47 | 0,795 | 41,5 | 0,0 |
-|  | 300-599 | 500 | 3,63 | 0,799 | 34,7 | 0,0 |
-|  | 600+ | 500 | 3,44 | 0,802 | 38,2 | 3,5 |
+|  | 300-599 | 500 | 3,63 | 0,799 | 34,7 | 1,8 |
+|  | 600+ | 500 | 3,44 | 0,802 | 38,2 | 4,0 |
 
 Celdas publicadas: 42 por género (14 claves × 3 tramos) en noticia,
 administrativo, académico, opinión y general; en narrativa clásica, 28, con
@@ -292,10 +356,10 @@ las 14 de 100-299 omitidas. En total van al paquete 238 celdas.
 - **Opinión, solo cifras**: la licencia CC BY 2.1 ES la declaran los
   curadores del corpus y no está verificada en origen. No se publica ninguna
   muestra.
-- **El total RadiografIA se recalcula en el 5.6.** Hoy no hay reglas
-  estadísticas, y aun así la narrativa clásica de 600+ da una mediana de
-  15,5 frente a 2,0 en noticia: es el primer dato para los pesos, junto con
-  el bloque `disparos` de cada fichero.
+- **El total RadiografIA depende del género.** En 600+, su mediana va de
+  1,0 en administrativo a 15,9 en narrativa clásica. Por eso el medidor
+  compara cada texto con los de su género y su longitud (abajo,
+  [«Escala»](#escala)), y no con una cifra fija.
 - **Frases en prensa**: AnCora da 28,56 palabras por frase en su anotación
   manual, entre 2,8 y 3,6 frases por 100 palabras. Coincide con la
   investigación (Schaaff et al., 2023: unas 27 palabras por frase).
@@ -306,6 +370,157 @@ las 14 de 100-299 omitidas. En total van al paquete 238 celdas.
 
 Las licencias de cada corpus, citadas literalmente, están en
 [`data/calibracion/LICENSE-CORPUS.md`](data/calibracion/LICENSE-CORPUS.md).
+
+## Validación
+
+Las reglas estadísticas se comprueban con los textos humanos que **no** se
+usaron para calibrar: el 20 % de cada corpus, apartado por huella antes de
+medir nada. La cifra es la **tasa de falsos positivos (FPR)**: la
+proporción de esos textos en los que saltan dos o más reglas estadísticas
+que puntúan. El plan pide que no pase del 5 %. La mide
+[`validar.ts`](motor/herramientas/calibrar/validar.ts), que deja el
+resultado, sin texto, en
+[`data/calibracion/validacion.json`](data/calibracion/validacion.json).
+
+**Se juzga por género**, con sus tres tramos juntos. En las celdas más
+pequeñas, de 18 a 32 textos de validación, uno o dos textos ya pasan del
+5 % (1 de 19 es el 5,3 %, y 2 de 32, el 6,3 %): celda a celda, el criterio
+sería «ninguno» o «uno». Es una decisión propia, firmada por Antonio en la
+parada 2 del 5.6. Las celdas se enseñan igual, una a una.
+
+| género | textos | FPR | intervalo de Wilson al 95 % | al menos una regla |
+|---|---|---|---|---|
+| `general` | 287 | 3,1 % (9) | 1,7 % a 5,9 % | 15,3 % |
+| `noticia` | 205 | 2,4 % (5) | 1,0 % a 5,6 % | 15,1 % |
+| `administrativo` | 98 | **5,1 % (5)** | 2,2 % a 11,4 % | 19,4 % |
+| `narrativa-clasica` | 274 | 2,9 % (8) | 1,5 % a 5,7 % | 12,8 % |
+| `academico` | 61 | 3,3 % (2) | 0,9 % a 11,2 % | 29,5 % |
+| `opinion` | 742 | 1,1 % (8) | 0,5 % a 2,1 % | 12,9 % |
+
+En conjunto, 37 de 1.667 textos: el 2,2 %. El intervalo es el de Wilson
+(1927), con la fórmula del manual de estadística de NIST/SEMATECH
+([§ 7.2.4.1](https://www.itl.nist.gov/div898/handbook/prc/section2/prc241.htm)):
+el rango de proporciones que la muestra no permite descartar. El de
+general, noticia, narrativa clásica y académico también incluye el 5 %:
+la muestra tampoco demuestra que estén por debajo. Solo el de opinión
+queda entero por debajo.
+
+**Administrativo queda en 5,1 % (5 de 98) y se acepta con declaración.**
+Lo decidió Antonio el 01/10/2026, y para este género modifica el criterio
+del plan. Los motivos:
+
+- el criterio se cumple en los otros cinco géneros y en el conjunto;
+- con 98 textos, el intervalo de Wilson va del 2,2 % al 11,4 % e incluye el
+  5 %: la muestra no distingue 5,1 % de 5 %;
+- cuatro de los cinco textos son el falso positivo de formato ya declarado
+  en las fichas: tablas del BOE pasadas a texto y un formulario de párrafos
+  numerados. El quinto repite una fórmula legal, como declara la ficha de
+  `est-repeticion-de-secuencias`;
+- no se excluyó ningún texto ni se cambió nada después de ver la
+  validación.
+
+Que el motor trate las tablas pasadas a texto como no-prosa queda para la
+v1.1, con esos cinco textos como casos de prueba (sus ids, en
+`validacion.json` y en la nota de
+[`administrativo.json`](data/calibracion/administrativo.json)).
+
+Por celda (el total, en puntos: su mediana y su p95 en validación frente a
+la celda de calibración):
+
+| género | tramo | textos | FPR | al menos una regla | total p50: validación / calibración | total p95: validación / calibración |
+|---|---|---|---|---|---|---|
+| `general` | 100-299 | 72 | 0,0 % (0) | 8,3 % | 0,0 / 0,0 | 12,8 / 15,2 |
+|  | 300-599 | 120 | 4,2 % (5) | 16,7 % | 3,0 / 1,8 | 27,9 / 32,2 |
+|  | 600+ | 95 | 4,2 % (4) | 18,9 % | 4,0 / 4,0 | 24,0 / 31,1 |
+| `noticia` | 100-299 | 86 | 1,2 % (1) | 5,8 % | 0,0 / 0,0 | 27,2 / 16,4 |
+|  | 300-599 | 98 | 3,1 % (3) | 21,4 % | 3,0 / 2,4 | 20,1 / 17,6 |
+|  | 600+ | 21 | 4,8 % (1) | 23,8 % | 2,3 / 3,0 | 13,3 / 13,7 |
+| `administrativo` | 100-299 | 42 | 4,8 % (2) | 19,0 % | 0,0 / 0,0 | 5,9 / 3,0 |
+|  | 300-599 | 24 | 0,0 % (0) | 16,7 % | 0,0 / 0,0 | 3,0 / 4,7 |
+|  | 600+ | 32 | 9,4 % (3) | 21,9 % | 2,5 / 1,0 | 6,4 / 6,9 |
+| `narrativa-clasica` | 100-299 | 19 (sin celda) | — | — | — | — |
+|  | 300-599 | 30 | 6,7 % (2) | 16,7 % | 7,8 / 10,2 | 53,3 / 74,6 |
+|  | 600+ | 244 | 2,5 % (6) | 12,3 % | 14,6 / 15,9 | 51,8 / 48,5 |
+| `academico` | 100-299 | 18 | 0,0 % (0) | 16,7 % | 0,0 / 0,0 | 12,8 / 16,0 |
+|  | 300-599 | 24 | 8,3 % (2) | 45,8 % | 7,7 / 4,9 | 14,2 / 21,0 |
+|  | 600+ | 19 | 0,0 % (0) | 21,1 % | 6,2 / 5,5 | 12,8 / 13,6 |
+| `opinion` | 100-299 | 178 | 0,6 % (1) | 12,4 % | 0,0 / 0,0 | 21,6 / 19,4 |
+|  | 300-599 | 383 | 0,8 % (3) | 9,9 % | 3,0 / 3,0 | 16,3 / 15,6 |
+|  | 600+ | 181 | 2,2 % (4) | 19,9 % | 4,6 / 4,0 | 11,6 / 12,2 |
+
+### Qué se ajustó y por qué
+
+La primera validación, con las siete reglas cortando en el p95 (o el p5),
+dio un **7,7 %** en conjunto (128 de 1.667), y 13 de las 17 celdas pasaban
+del 5 %. Por género: general 8,4 %, noticia 7,3 %, administrativo 13,3 %,
+narrativa clásica 10,2 %, académico 13,1 % y opinión 5,4 %. Con siete
+reglas independientes, cada una en el 5 %, lo esperable era un 4,4 %. El
+exceso venía, sobre todo, de reglas que miden casi lo mismo:
+`est-frases-cortas` y `est-pocas-comas` cuentan los mismos puntos, y los
+signos de la puntuación secundaria son parte de los de la puntuación.
+
+Lo que se cambió, firmado por Antonio en la parada 2 y escrito en la ficha
+de cada regla:
+
+- **Al p99 o el p1** (1 de cada 100): `est-pocas-comas` y
+  `est-poca-puntuacion`, porque dependen de otra regla;
+  `est-ritmo-uniforme`, `est-nominalizacion` y
+  `est-repeticion-de-secuencias`, porque están medidas en inglés.
+- **Se quedan en el p95 o el p5** las dos medidas en español que no
+  dependen de otra: `est-frases-cortas` y `est-poca-puntuacion-secundaria`.
+- **Nada más**: ni pesos ni direcciones, y ninguna regla estadística se
+  limita a unos géneros.
+
+Las tablas pasadas a texto, los párrafos numerados y los títulos sin punto
+quedan declarados como falso positivo conocido en las fichas de frases
+cortas, pocas comas, poca puntuación y poca puntuación secundaria. Siete
+reglas de otras familias saltan en más del 25 % de los textos humanos de
+algún género, por ejemplo la raya en la narrativa (92,3 %) o la falta de
+marcadores de opinión en lo académico (47,5 %). Su ficha lo dice, igual
+que la de `lex-no-solo-sino`, que llega al 57,9 % en lo académico de 600
+palabras o más. En la v1 no se ajustan. El detalle, regla a regla y celda
+a celda, está en `validacion.json`.
+
+**Límites del método.** Hay una sola validación, con la misma muestra
+medida dos veces: antes de los ajustes y después. Los ajustes se
+propusieron con lo que se veía en los textos de calibración, pero su
+efecto en la validación se enseñó, simulado, antes de firmarlos. La
+decisión sobre administrativo se tomó viendo la validación. Con eso, el
+20 % apartado ya no es una muestra que nadie haya mirado: para una
+comprobación limpia hace falta otra muestra.
+
+## Escala
+
+El medidor no da veredicto ni tiene tope. Dice **dónde cae el total del
+texto respecto a los textos humanos de su mismo género y tramo**, con las
+celdas de `_total-radiografia` (arriba, [«Calibración»](#calibración)).
+Hay cuatro bandas:
+
+| banda | el total del texto |
+|---|---|
+| por debajo de la mediana | es menor que el de la mitad de los textos humanos de su celda |
+| entre la mediana y el p95 | está entre la mediana y el p95, los dos incluidos: lo habitual |
+| por encima del p95 | supera el p95 y llega como mucho al p99 |
+| por encima del p99 | supera el p99 |
+
+La calcula `bandaHumana()`
+([`motor/src/banda.ts`](motor/src/banda.ts)), y `analizar()` la devuelve
+en el resultado de cada paquete, con los percentiles de referencia (p5,
+p50, p95 y p99) y el número de textos de la celda. La pinta la interfaz
+en el punto 6.
+
+- **Sin banda.** Un paquete sin clave `_total-*` en su calibración, como
+  «Español correcto», no tiene banda. Si el género no tiene celda para esa
+  longitud, o el texto es insuficiente, la banda es «sin calibración», con
+  el motivo.
+- **Los bordes** son decisión propia: «por encima» es estrictamente por
+  encima, como en las reglas estadísticas, y la mediana y el p95 caen
+  «entre la mediana y el p95».
+- ⚠️ **Mediana 0.** En seis celdas, la mitad de los textos humanos no da
+  ninguna señal y la mediana del total es 0: los cinco géneros con celda de
+  100 a 299 palabras y administrativo de 300 a 599. Ahí, un texto sin
+  ninguna señal cae «entre la mediana y el p95», porque está justo en la
+  mediana. Cómo se dice en pantalla se decide en el punto 6.
 
 ## Cómo está pensado
 
