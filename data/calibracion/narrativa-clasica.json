@@ -1,11 +1,11 @@
 {
   "genero": "narrativa-clasica",
-  "fecha": "2026-09-30",
+  "fecha": "2026-10-01",
   "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
   "licencia": "Dominio público en España (verificada por libro: todas las personas del registro del catálogo murieron en 1945 o antes (vida + 80 años desde el 1 de enero siguiente))",
   "semilla": "radiografia-calibracion-2026",
   "motor": {
-    "commit": "c82520198e6a05d3177427a5b0475445f2b131de",
+    "commit": "c06418a59e13000d85a716471f1baf95361e93de",
     "limpio": true
   },
   "metodo": "hyndman-fan-7",
@@ -32,7 +32,7 @@
         "p99": 13.661687,
         "n": 124,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -43,7 +43,7 @@
         "p99": 11.4522,
         "n": 895,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -56,7 +56,7 @@
         "p99": 1.585337,
         "n": 124,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -67,7 +67,7 @@
         "p99": 1.380534,
         "n": 895,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -80,7 +80,7 @@
         "p99": 12.976667,
         "n": 124,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -91,7 +91,7 @@
         "p99": 6.853984,
         "n": 895,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -104,7 +104,7 @@
         "p99": 346.393701,
         "n": 124,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -115,7 +115,7 @@
         "p99": 319.528234,
         "n": 895,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -128,7 +128,7 @@
         "p99": 116.428329,
         "n": 124,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -139,7 +139,7 @@
         "p99": 83.462137,
         "n": 895,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -152,7 +152,7 @@
         "p99": 0.660123,
         "n": 124,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -163,7 +163,7 @@
         "p99": 0.534545,
         "n": 895,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -176,7 +176,7 @@
         "p99": 0.856451,
         "n": 124,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -187,7 +187,7 @@
         "p99": 0.850286,
         "n": 895,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -200,7 +200,7 @@
         "p99": 161.269477,
         "n": 124,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -211,7 +211,7 @@
         "p99": 140.865307,
         "n": 895,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -224,7 +224,7 @@
         "p99": 0.875784,
         "n": 124,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -235,7 +235,7 @@
         "p99": 0.876109,
         "n": 895,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -248,7 +248,7 @@
         "p99": 0.023739,
         "n": 124,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -259,7 +259,7 @@
         "p99": 0.016216,
         "n": 895,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -272,7 +272,7 @@
         "p99": 89.633923,
         "n": 124,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -283,7 +283,7 @@
         "p99": 84.513472,
         "n": 895,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -296,7 +296,7 @@
         "p99": 48.973175,
         "n": 124,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -307,7 +307,7 @@
         "p99": 37.486461,
         "n": 895,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -320,7 +320,7 @@
         "p99": 136.094675,
         "n": 124,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -331,31 +331,31 @@
         "p99": 112.636813,
         "n": 895,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
     "_total-radiografia": {
       "300-599": {
-        "p1": -4.799876,
+        "p1": -4.339876,
         "p5": 0,
-        "p50": 10.15235,
-        "p95": 71.88444,
-        "p99": 88.001856,
+        "p50": 11.024145,
+        "p95": 74.58444,
+        "p99": 88.001857,
         "n": 124,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
-        "p1": -0.050042,
-        "p5": 0.805086,
-        "p50": 15.503876,
-        "p95": 47.601423,
-        "p99": 70.072291,
+        "p1": 0,
+        "p5": 2.533396,
+        "p50": 16.148567,
+        "p95": 48.882723,
+        "p99": 71.319602,
         "n": 895,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     }
@@ -503,6 +503,34 @@
           "documentos": 7,
           "senales": 8
         },
+        "est-frases-cortas": {
+          "documentos": 7,
+          "senales": 7
+        },
+        "est-nominalizacion": {
+          "documentos": 7,
+          "senales": 7
+        },
+        "est-poca-puntuacion": {
+          "documentos": 7,
+          "senales": 7
+        },
+        "est-poca-puntuacion-secundaria": {
+          "documentos": 7,
+          "senales": 7
+        },
+        "est-pocas-comas": {
+          "documentos": 7,
+          "senales": 7
+        },
+        "est-repeticion-de-secuencias": {
+          "documentos": 7,
+          "senales": 7
+        },
+        "est-ritmo-uniforme": {
+          "documentos": 7,
+          "senales": 7
+        },
         "lex-traslados-del-ingles": {
           "documentos": 7,
           "senales": 7
@@ -564,6 +592,34 @@
           "documentos": 89,
           "senales": 424
         },
+        "est-frases-cortas": {
+          "documentos": 45,
+          "senales": 45
+        },
+        "est-nominalizacion": {
+          "documentos": 45,
+          "senales": 45
+        },
+        "est-poca-puntuacion": {
+          "documentos": 45,
+          "senales": 45
+        },
+        "est-poca-puntuacion-secundaria": {
+          "documentos": 45,
+          "senales": 45
+        },
+        "est-pocas-comas": {
+          "documentos": 45,
+          "senales": 45
+        },
+        "est-repeticion-de-secuencias": {
+          "documentos": 45,
+          "senales": 45
+        },
+        "est-ritmo-uniforme": {
+          "documentos": 45,
+          "senales": 45
+        },
         "pf-raya-espaciada": {
           "documentos": 20,
           "senales": 81
@@ -602,8 +658,8 @@
   "notas": [
     "Percentiles de los documentos de CALIBRACIÓN (sha256(\"semilla|id\") < 0,8); los de validación quedan para el FPR del 5.6.",
     "Margen sobre el mínimo de 100 documentos de calibración por tramo: 100-299 -35 · 300-599 +24 · 600+ +795.",
-    "_total-radiografia: puntuacion.total de analizar() con paquetes/radiografia.json y el género «narrativa-clasica»; sin reglas estadísticas todavía: se recalcula en el 5.6.",
-    "disparos: por tramo, en los documentos de calibración, en cuántos da alguna señal cada regla de RadiografIA que puntúa y cuántas señales suman (las informativas no cuentan); primer dato para pesos y `generos` en el 5.6.",
+    "_total-radiografia: puntuacion.total de analizar() con paquetes/radiografia.json y el género «narrativa-clasica»; desde el 5.6 incluye las reglas estadísticas (trece «est-», siete que puntúan), comparadas con las celdas de calibración inyectadas en el paquete.",
+    "disparos: por tramo, en los documentos de calibración, en cuántos da alguna señal cada regla de RadiografIA que puntúa y cuántas señales suman (las informativas no cuentan); desde el 5.6, también las reglas estadísticas.",
     "«narrativa-clasica»: capítulos de novelas y cuentos en español de autores muertos en 1945 o antes (dominio público en España): SESGO DE ÉPOCA (siglos XVI a XX, sobre todo XIX); no es narrativa contemporánea.",
     "Las traducciones sin traductor declarado se filtran por heurísticas del catálogo (Subjects y lengua propia del autor) y por una lista a mano (Sudermann, Dourliac); puede colarse alguna: los autores de la muestra están en el manifiesto.",
     "Documento = capítulo; como mucho 5 por libro en cada tramo (fijado antes de ver resultados; no se sube para llenar un tramo).",

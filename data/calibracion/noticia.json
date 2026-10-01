@@ -1,11 +1,11 @@
 {
   "genero": "noticia",
-  "fecha": "2026-09-30",
+  "fecha": "2026-10-01",
   "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
   "licencia": "CC BY 4.0 (verificada en el repositorio: LICENSE.txt y metadatos del README)",
   "semilla": "radiografia-calibracion-2026",
   "motor": {
-    "commit": "766066f6e667a9f6ada4e0bb506003c6827e9640",
+    "commit": "c06418a59e13000d85a716471f1baf95361e93de",
     "limpio": true
   },
   "metodo": "hyndman-fan-7",
@@ -32,7 +32,7 @@
         "p99": 7.571559,
         "n": 357,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -43,7 +43,7 @@
         "p99": 6.73634,
         "n": 354,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -54,7 +54,7 @@
         "p99": 7.362557,
         "n": 109,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -67,7 +67,7 @@
         "p99": 0.878802,
         "n": 357,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -78,7 +78,7 @@
         "p99": 0.718903,
         "n": 354,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -89,7 +89,7 @@
         "p99": 0.731336,
         "n": 109,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -102,7 +102,7 @@
         "p99": 4.362667,
         "n": 357,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -113,7 +113,7 @@
         "p99": 4.137222,
         "n": 354,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -124,7 +124,7 @@
         "p99": 3.854454,
         "n": 109,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -137,7 +137,7 @@
         "p99": 225.191084,
         "n": 357,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -148,7 +148,7 @@
         "p99": 202.963164,
         "n": 354,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -159,7 +159,7 @@
         "p99": 222.725244,
         "n": 109,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -172,7 +172,7 @@
         "p99": 87.984963,
         "n": 357,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -183,7 +183,7 @@
         "p99": 95.500185,
         "n": 354,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -194,7 +194,7 @@
         "p99": 108.686511,
         "n": 109,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -207,7 +207,7 @@
         "p99": 0.75628,
         "n": 357,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -218,7 +218,7 @@
         "p99": 0.614864,
         "n": 354,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -229,7 +229,7 @@
         "p99": 0.556226,
         "n": 109,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -242,7 +242,7 @@
         "p99": 0.870499,
         "n": 357,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -253,7 +253,7 @@
         "p99": 0.854123,
         "n": 354,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -264,7 +264,7 @@
         "p99": 0.839462,
         "n": 109,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -277,7 +277,7 @@
         "p99": 146.754323,
         "n": 357,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -288,7 +288,7 @@
         "p99": 135.166432,
         "n": 354,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -299,7 +299,7 @@
         "p99": 127.290408,
         "n": 109,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -312,7 +312,7 @@
         "p99": 0.87116,
         "n": 357,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -323,7 +323,7 @@
         "p99": 0.872253,
         "n": 354,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -334,7 +334,7 @@
         "p99": 0.861839,
         "n": 109,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -347,7 +347,7 @@
         "p99": 0.035979,
         "n": 357,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -358,7 +358,7 @@
         "p99": 0.041527,
         "n": 354,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -369,7 +369,7 @@
         "p99": 0.038167,
         "n": 109,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -382,7 +382,7 @@
         "p99": 74.518871,
         "n": 357,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -393,7 +393,7 @@
         "p99": 70.19474,
         "n": 354,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -404,7 +404,7 @@
         "p99": 70.161512,
         "n": 109,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -417,7 +417,7 @@
         "p99": 99.308642,
         "n": 357,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -428,7 +428,7 @@
         "p99": 85.452494,
         "n": 354,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -439,7 +439,7 @@
         "p99": 84.827285,
         "n": 109,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -452,7 +452,7 @@
         "p99": 146.689529,
         "n": 357,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -463,7 +463,7 @@
         "p99": 131.693919,
         "n": 354,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -474,7 +474,7 @@
         "p99": 120.71839,
         "n": 109,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -483,42 +483,260 @@
         "p1": 0,
         "p5": 0,
         "p50": 0,
-        "p95": 15.268858,
-        "p99": 26.661871,
+        "p95": 16.42054,
+        "p99": 26.66187,
         "n": 357,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
         "p1": 0,
         "p5": 0,
-        "p50": 0,
+        "p50": 3,
         "p95": 17.557794,
-        "p99": 25.822794,
+        "p99": 26.564039,
         "n": 354,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
         "p1": -1.210526,
         "p5": 0,
-        "p50": 2.024291,
-        "p95": 13.407954,
-        "p99": 19.061272,
+        "p50": 3,
+        "p95": 14.388026,
+        "p99": 19.203906,
         "n": 109,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     }
   },
   "omitidas": [],
+  "disparos": {
+    "100-299": {
+      "documentos": 357,
+      "reglas": {
+        "lex-verbos-corporativos": {
+          "documentos": 21,
+          "senales": 27
+        },
+        "lex-verbos-de-enfasis": {
+          "documentos": 21,
+          "senales": 22
+        },
+        "est-frases-cortas": {
+          "documentos": 18,
+          "senales": 18
+        },
+        "est-nominalizacion": {
+          "documentos": 18,
+          "senales": 18
+        },
+        "est-poca-puntuacion": {
+          "documentos": 18,
+          "senales": 18
+        },
+        "est-pocas-comas": {
+          "documentos": 18,
+          "senales": 18
+        },
+        "est-repeticion-de-secuencias": {
+          "documentos": 18,
+          "senales": 18
+        },
+        "est-ritmo-uniforme": {
+          "documentos": 18,
+          "senales": 18
+        },
+        "lex-no-solo-sino": {
+          "documentos": 7,
+          "senales": 8
+        },
+        "lex-importancia": {
+          "documentos": 3,
+          "senales": 3
+        },
+        "sint-gerundio-adjunto-final": {
+          "documentos": 3,
+          "senales": 3
+        },
+        "disc-anecdota-en-primera-persona": {
+          "documentos": 2,
+          "senales": 2
+        },
+        "disc-puffery-de-significancia": {
+          "documentos": 1,
+          "senales": 1
+        },
+        "disc-retos-y-futuro": {
+          "documentos": 1,
+          "senales": 1
+        },
+        "lex-innovador": {
+          "documentos": 1,
+          "senales": 1
+        }
+      }
+    },
+    "300-599": {
+      "documentos": 354,
+      "reglas": {
+        "lex-verbos-de-enfasis": {
+          "documentos": 98,
+          "senales": 135
+        },
+        "lex-verbos-corporativos": {
+          "documentos": 47,
+          "senales": 60
+        },
+        "lex-no-solo-sino": {
+          "documentos": 23,
+          "senales": 24
+        },
+        "est-frases-cortas": {
+          "documentos": 18,
+          "senales": 18
+        },
+        "est-nominalizacion": {
+          "documentos": 18,
+          "senales": 18
+        },
+        "est-poca-puntuacion": {
+          "documentos": 18,
+          "senales": 18
+        },
+        "est-poca-puntuacion-secundaria": {
+          "documentos": 18,
+          "senales": 18
+        },
+        "est-repeticion-de-secuencias": {
+          "documentos": 18,
+          "senales": 18
+        },
+        "est-ritmo-uniforme": {
+          "documentos": 18,
+          "senales": 18
+        },
+        "est-pocas-comas": {
+          "documentos": 17,
+          "senales": 17
+        },
+        "lex-importancia": {
+          "documentos": 14,
+          "senales": 14
+        },
+        "sint-gerundio-adjunto-final": {
+          "documentos": 10,
+          "senales": 10
+        },
+        "lex-traslados-del-ingles": {
+          "documentos": 8,
+          "senales": 9
+        },
+        "disc-anecdota-en-primera-persona": {
+          "documentos": 4,
+          "senales": 6
+        },
+        "disc-encuadre-ordinal": {
+          "documentos": 2,
+          "senales": 4
+        },
+        "disc-puffery-de-significancia": {
+          "documentos": 2,
+          "senales": 2
+        },
+        "disc-retos-y-futuro": {
+          "documentos": 2,
+          "senales": 2
+        },
+        "lex-imborrable-multidisciplinario-impecable": {
+          "documentos": 2,
+          "senales": 2
+        }
+      }
+    },
+    "600+": {
+      "documentos": 109,
+      "reglas": {
+        "lex-verbos-de-enfasis": {
+          "documentos": 29,
+          "senales": 45
+        },
+        "lex-verbos-corporativos": {
+          "documentos": 24,
+          "senales": 38
+        },
+        "lex-no-solo-sino": {
+          "documentos": 10,
+          "senales": 13
+        },
+        "lex-traslados-del-ingles": {
+          "documentos": 9,
+          "senales": 9
+        },
+        "est-frases-cortas": {
+          "documentos": 6,
+          "senales": 6
+        },
+        "est-nominalizacion": {
+          "documentos": 6,
+          "senales": 6
+        },
+        "est-poca-puntuacion": {
+          "documentos": 6,
+          "senales": 6
+        },
+        "est-poca-puntuacion-secundaria": {
+          "documentos": 6,
+          "senales": 6
+        },
+        "est-pocas-comas": {
+          "documentos": 6,
+          "senales": 6
+        },
+        "est-repeticion-de-secuencias": {
+          "documentos": 6,
+          "senales": 6
+        },
+        "est-ritmo-uniforme": {
+          "documentos": 6,
+          "senales": 6
+        },
+        "lex-importancia": {
+          "documentos": 6,
+          "senales": 6
+        },
+        "sint-gerundio-adjunto-final": {
+          "documentos": 6,
+          "senales": 6
+        },
+        "disc-anecdota-en-primera-persona": {
+          "documentos": 4,
+          "senales": 8
+        },
+        "disc-marcador-repetido": {
+          "documentos": 2,
+          "senales": 6
+        },
+        "disc-puffery-de-significancia": {
+          "documentos": 1,
+          "senales": 1
+        },
+        "lex-innovador": {
+          "documentos": 1,
+          "senales": 1
+        }
+      }
+    }
+  },
   "notas": [
     "Percentiles de los documentos de CALIBRACIÓN (sha256(\"semilla|id\") < 0,8); los de validación quedan para el FPR del 5.6.",
     "Margen sobre el mínimo de 100 documentos de calibración por tramo: 100-299 +257 · 300-599 +254 · 600+ +9.",
-    "_total-radiografia: puntuacion.total de analizar() con paquetes/radiografia.json y el género «noticia»; sin reglas estadísticas todavía: se recalcula en el 5.6.",
+    "_total-radiografia: puntuacion.total de analizar() con paquetes/radiografia.json y el género «noticia»; desde el 5.6 incluye las reglas estadísticas (trece «est-», siete que puntúan), comparadas con las celdas de calibración inyectadas en el paquete.",
+    "disparos: por tramo, en los documentos de calibración, en cuántos da alguna señal cada regla de RadiografIA que puntúa y cuántas señales suman (las informativas no cuentan); desde el 5.6, también las reglas estadísticas.",
     "Frases por 100 palabras: AnCora da 28,56 palabras por frase en su anotación manual. La expectativa «4-6» del encargo 5.5 no tenía fuente; la de la investigación (docs/investigacion/sintaxis.md, Schaaff et al. 2023: ~27 palabras por frase, ~3,7 por 100) coincide con el corpus. Se acepta tal cual (decisión de Antonio, parada 2 del 5.5).",
     "filtro del corpus: documento = # newdoc id; su texto, los # text de sus frases unidos por un espacio (r2.18 no trae # newpar: un párrafo por documento)",
     "filtro del corpus: fuera el subcorpus 3LB-CAST (Cast3LB/Lexesp, corpus equilibrado: no consta que sea prensa; Taulé et al. 2008, § 2)",

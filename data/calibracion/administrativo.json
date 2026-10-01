@@ -1,11 +1,11 @@
 {
   "genero": "administrativo",
-  "fecha": "2026-09-30",
+  "fecha": "2026-10-01",
   "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
   "licencia": "Art. 13 LPI y licencia tipo del BOE de 27/06/2024 (verificada en origen: aviso legal y art. 13 del TRLPI consolidado, leídos en cada ejecución)",
   "semilla": "radiografia-calibracion-2026",
   "motor": {
-    "commit": "bf7735a500967aa5c16c8f326119cb0ddb443b44",
+    "commit": "c06418a59e13000d85a716471f1baf95361e93de",
     "limpio": true
   },
   "metodo": "hyndman-fan-7",
@@ -32,7 +32,7 @@
         "p99": 27.596,
         "n": 155,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -43,7 +43,7 @@
         "p99": 20.64381,
         "n": 100,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -54,7 +54,7 @@
         "p99": 12.782957,
         "n": 110,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -67,7 +67,7 @@
         "p99": 1.888718,
         "n": 155,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -78,7 +78,7 @@
         "p99": 1.957432,
         "n": 100,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -89,7 +89,7 @@
         "p99": 1.708885,
         "n": 110,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -102,7 +102,7 @@
         "p99": 11.46,
         "n": 155,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -113,7 +113,7 @@
         "p99": 8.600714,
         "n": 100,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -124,7 +124,7 @@
         "p99": 4.531842,
         "n": 110,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -137,7 +137,7 @@
         "p99": 525.10084,
         "n": 155,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -148,7 +148,7 @@
         "p99": 477.070313,
         "n": 100,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -159,7 +159,7 @@
         "p99": 267.780338,
         "n": 110,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -172,7 +172,7 @@
         "p99": 311.20155,
         "n": 155,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -183,7 +183,7 @@
         "p99": 290.566406,
         "n": 100,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -194,7 +194,7 @@
         "p99": 131.267218,
         "n": 110,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -207,7 +207,7 @@
         "p99": 0.685423,
         "n": 155,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -218,7 +218,7 @@
         "p99": 0.552795,
         "n": 100,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -229,7 +229,7 @@
         "p99": 0.44054,
         "n": 110,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -242,7 +242,7 @@
         "p99": 0.815339,
         "n": 155,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -253,7 +253,7 @@
         "p99": 0.811231,
         "n": 100,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -264,7 +264,7 @@
         "p99": 0.782956,
         "n": 110,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -277,7 +277,7 @@
         "p99": 101.617635,
         "n": 155,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -288,7 +288,7 @@
         "p99": 97.890935,
         "n": 100,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -299,7 +299,7 @@
         "p99": 71.618168,
         "n": 110,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -312,7 +312,7 @@
         "p99": 0.834284,
         "n": 155,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -323,7 +323,7 @@
         "p99": 0.838208,
         "n": 100,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -334,7 +334,7 @@
         "p99": 0.827574,
         "n": 110,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -347,7 +347,7 @@
         "p99": 0.237868,
         "n": 155,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -358,7 +358,7 @@
         "p99": 0.252105,
         "n": 100,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -369,7 +369,7 @@
         "p99": 0.39724,
         "n": 110,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -382,7 +382,7 @@
         "p99": 76.589888,
         "n": 155,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -393,7 +393,7 @@
         "p99": 73.457474,
         "n": 100,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -404,7 +404,7 @@
         "p99": 67.126922,
         "n": 110,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -417,7 +417,7 @@
         "p99": 155.295533,
         "n": 155,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -428,7 +428,7 @@
         "p99": 150.689071,
         "n": 100,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -439,7 +439,7 @@
         "p99": 118.369195,
         "n": 110,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -452,7 +452,7 @@
         "p99": 120.763598,
         "n": 155,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -463,7 +463,7 @@
         "p99": 117.757717,
         "n": 100,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -474,7 +474,7 @@
         "p99": 125.755797,
         "n": 110,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -483,42 +483,244 @@
         "p1": -7.244094,
         "p5": 0,
         "p50": 0,
-        "p95": 0,
+        "p95": 5,
         "p99": 13.363767,
         "n": 155,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
-        "p1": -5.47802,
-        "p5": -4.135199,
+        "p1": -4.867831,
+        "p5": -1.565309,
         "p50": 0,
-        "p95": 4.719834,
-        "p99": 6.471556,
+        "p95": 6.022581,
+        "p99": 11.330282,
         "n": 100,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
-        "p1": -5.222698,
-        "p5": -2.597747,
-        "p50": 0.664146,
-        "p95": 5.515639,
-        "p99": 8.32788,
+        "p1": -5.222699,
+        "p5": -2.476281,
+        "p50": 1.700923,
+        "p95": 7.726642,
+        "p99": 10.260666,
         "n": 110,
         "corpus": "BOE (Agencia Estatal Boletín Oficial del Estado): API de sumarios y texto HTML de cada documento — data/calibracion/administrativo.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     }
   },
   "omitidas": [],
+  "disparos": {
+    "100-299": {
+      "documentos": 155,
+      "reglas": {
+        "canal-separador-o-tabla": {
+          "documentos": 22,
+          "senales": 755
+        },
+        "est-frases-cortas": {
+          "documentos": 8,
+          "senales": 8
+        },
+        "est-nominalizacion": {
+          "documentos": 8,
+          "senales": 8
+        },
+        "est-poca-puntuacion": {
+          "documentos": 8,
+          "senales": 8
+        },
+        "est-poca-puntuacion-secundaria": {
+          "documentos": 8,
+          "senales": 8
+        },
+        "est-repeticion-de-secuencias": {
+          "documentos": 8,
+          "senales": 8
+        },
+        "est-ritmo-uniforme": {
+          "documentos": 8,
+          "senales": 8
+        },
+        "est-pocas-comas": {
+          "documentos": 7,
+          "senales": 7
+        },
+        "lex-verbos-corporativos": {
+          "documentos": 3,
+          "senales": 3
+        },
+        "disc-referencia-interna-concreta": {
+          "documentos": 2,
+          "senales": 2
+        },
+        "sint-gerundio-adjunto-final": {
+          "documentos": 2,
+          "senales": 2
+        }
+      }
+    },
+    "300-599": {
+      "documentos": 100,
+      "reglas": {
+        "canal-separador-o-tabla": {
+          "documentos": 20,
+          "senales": 479
+        },
+        "disc-referencia-interna-concreta": {
+          "documentos": 8,
+          "senales": 10
+        },
+        "est-frases-cortas": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-nominalizacion": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-poca-puntuacion": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-poca-puntuacion-secundaria": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-pocas-comas": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-repeticion-de-secuencias": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-ritmo-uniforme": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "sint-gerundio-adjunto-final": {
+          "documentos": 4,
+          "senales": 4
+        },
+        "lex-importancia": {
+          "documentos": 2,
+          "senales": 2
+        },
+        "pf-raya-densidad": {
+          "documentos": 1,
+          "senales": 2
+        },
+        "lex-traslados-del-ingles": {
+          "documentos": 1,
+          "senales": 1
+        },
+        "pf-raya-espaciada": {
+          "documentos": 1,
+          "senales": 1
+        }
+      }
+    },
+    "600+": {
+      "documentos": 110,
+      "reglas": {
+        "disc-referencia-interna-concreta": {
+          "documentos": 43,
+          "senales": 82
+        },
+        "sint-gerundio-adjunto-final": {
+          "documentos": 29,
+          "senales": 121
+        },
+        "lex-verbos-corporativos": {
+          "documentos": 28,
+          "senales": 104
+        },
+        "canal-separador-o-tabla": {
+          "documentos": 23,
+          "senales": 1570
+        },
+        "disc-marcador-repetido": {
+          "documentos": 20,
+          "senales": 127
+        },
+        "lex-verbos-de-enfasis": {
+          "documentos": 19,
+          "senales": 31
+        },
+        "lex-importancia": {
+          "documentos": 17,
+          "senales": 46
+        },
+        "disc-encuadre-ordinal": {
+          "documentos": 10,
+          "senales": 32
+        },
+        "lex-conector-de-apertura": {
+          "documentos": 10,
+          "senales": 13
+        },
+        "est-frases-cortas": {
+          "documentos": 6,
+          "senales": 6
+        },
+        "est-nominalizacion": {
+          "documentos": 6,
+          "senales": 6
+        },
+        "est-poca-puntuacion": {
+          "documentos": 6,
+          "senales": 6
+        },
+        "est-poca-puntuacion-secundaria": {
+          "documentos": 6,
+          "senales": 6
+        },
+        "est-pocas-comas": {
+          "documentos": 6,
+          "senales": 6
+        },
+        "est-repeticion-de-secuencias": {
+          "documentos": 6,
+          "senales": 6
+        },
+        "est-ritmo-uniforme": {
+          "documentos": 6,
+          "senales": 6
+        },
+        "lex-no-solo-sino": {
+          "documentos": 4,
+          "senales": 8
+        },
+        "lex-traslados-del-ingles": {
+          "documentos": 4,
+          "senales": 6
+        },
+        "lex-innovador": {
+          "documentos": 3,
+          "senales": 7
+        },
+        "pf-raya-densidad": {
+          "documentos": 2,
+          "senales": 3
+        },
+        "pf-raya-espaciada": {
+          "documentos": 1,
+          "senales": 6
+        }
+      }
+    }
+  },
   "notas": [
     "Percentiles de los documentos de CALIBRACIÓN (sha256(\"semilla|id\") < 0,8); los de validación quedan para el FPR del 5.6.",
     "Margen sobre el mínimo de 100 documentos de calibración por tramo: 100-299 +55 · 300-599 +0 · 600+ +10.",
-    "_total-radiografia: puntuacion.total de analizar() con paquetes/radiografia.json y el género «administrativo»; sin reglas estadísticas todavía: se recalcula en el 5.6.",
+    "_total-radiografia: puntuacion.total de analizar() con paquetes/radiografia.json y el género «administrativo»; desde el 5.6 incluye las reglas estadísticas (trece «est-», siete que puntúan), comparadas con las celdas de calibración inyectadas en el paquete.",
+    "disparos: por tramo, en los documentos de calibración, en cuántos da alguna señal cada regla de RadiografIA que puntúa y cuántas señales suman (las informativas no cuentan); desde el 5.6, también las reglas estadísticas.",
     "«administrativo» es una MEZCLA de tres subgéneros (disposición general, resolución y anuncio) con percentiles conjuntos, descargados por turnos. El subgénero de cada documento queda en el manifiesto para poder recalibrar por subgénero en la v1.1.",
     "La mezcla no es la proporción natural del BOE (192/2651/3800 en 47 sumarios: disposición general/resolución/anuncio).",
     "Por tramo: 100-299 — con tope: ningún subgénero pasa de 3/5. Calibración 155 (disposición general 27, 17,4 %; resolución 44, 28,4 %; anuncio 84, 54,2 %). Validación 42 (disposición general 8, 19,0 %; resolución 11, 26,2 %; anuncio 23, 54,8 %). Descargados antes del tope (calibración + validación): disposición general 27 + 8; resolución 44 + 11; anuncio 84 + 23.",

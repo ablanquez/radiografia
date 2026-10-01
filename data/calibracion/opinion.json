@@ -1,11 +1,11 @@
 {
   "genero": "opinion",
-  "fecha": "2026-09-30",
+  "fecha": "2026-10-01",
   "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
   "licencia": "CC BY 2.1 ES (declarada por terceros: los curadores (ITALIC-US) la declaran en su README; NO verificada en muchocine.net; el LICENSE (MIT) es del repositorio, no de las críticas)",
   "semilla": "radiografia-calibracion-2026",
   "motor": {
-    "commit": "ea4d3d488dc3eadbfff30e4362257c39e0a8d09f",
+    "commit": "c06418a59e13000d85a716471f1baf95361e93de",
     "limpio": true
   },
   "metodo": "hyndman-fan-7",
@@ -32,7 +32,7 @@
         "p99": 7.173594,
         "n": 739,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -43,7 +43,7 @@
         "p99": 6.573152,
         "n": 1663,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -54,7 +54,7 @@
         "p99": 6.491712,
         "n": 726,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -67,7 +67,7 @@
         "p99": 1.362011,
         "n": 739,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -78,7 +78,7 @@
         "p99": 1.268986,
         "n": 1663,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -89,7 +89,7 @@
         "p99": 1.307046,
         "n": 726,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -102,7 +102,7 @@
         "p99": 26,
         "n": 738,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -113,7 +113,7 @@
         "p99": 31,
         "n": 1660,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -124,7 +124,7 @@
         "p99": 8.535714,
         "n": 726,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -137,7 +137,7 @@
         "p99": 246.121277,
         "n": 739,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -148,7 +148,7 @@
         "p99": 223.510651,
         "n": 1663,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -159,7 +159,7 @@
         "p99": 218.846154,
         "n": 726,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -172,7 +172,7 @@
         "p99": 122.61432,
         "n": 739,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -183,7 +183,7 @@
         "p99": 89.596596,
         "n": 1663,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -194,7 +194,7 @@
         "p99": 75.288245,
         "n": 726,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -207,7 +207,7 @@
         "p99": 0.75124,
         "n": 739,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -218,7 +218,7 @@
         "p99": 0.646338,
         "n": 1663,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -229,7 +229,7 @@
         "p99": 0.579771,
         "n": 726,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -242,7 +242,7 @@
         "p99": 0.881183,
         "n": 739,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -253,7 +253,7 @@
         "p99": 0.861112,
         "n": 1663,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -264,7 +264,7 @@
         "p99": 0.852705,
         "n": 726,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -277,7 +277,7 @@
         "p99": 182.447108,
         "n": 739,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -288,7 +288,7 @@
         "p99": 158.755649,
         "n": 1663,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -299,7 +299,7 @@
         "p99": 149.655028,
         "n": 726,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -312,7 +312,7 @@
         "p99": 0.887577,
         "n": 739,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -323,7 +323,7 @@
         "p99": 0.876928,
         "n": 1663,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -334,7 +334,7 @@
         "p99": 0.870777,
         "n": 726,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -347,7 +347,7 @@
         "p99": 0.012503,
         "n": 739,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -358,7 +358,7 @@
         "p99": 0.021574,
         "n": 1663,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -369,7 +369,7 @@
         "p99": 0.018706,
         "n": 726,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -382,7 +382,7 @@
         "p99": 74.019946,
         "n": 739,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -393,7 +393,7 @@
         "p99": 73.586852,
         "n": 1663,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -404,7 +404,7 @@
         "p99": 73.01508,
         "n": 726,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -417,7 +417,7 @@
         "p99": 55.703386,
         "n": 739,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -428,7 +428,7 @@
         "p99": 57.142857,
         "n": 1663,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -439,7 +439,7 @@
         "p99": 53.879969,
         "n": 726,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -452,7 +452,7 @@
         "p99": 121.75828,
         "n": 739,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -463,7 +463,7 @@
         "p99": 111.831431,
         "n": 1663,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -474,42 +474,42 @@
         "p99": 107.530663,
         "n": 726,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
     "_total-radiografia": {
       "100-299": {
-        "p1": -5.544004,
+        "p1": -5.319149,
         "p5": 0,
         "p50": 0,
-        "p95": 19.364989,
-        "p99": 31.024325,
+        "p95": 19.446098,
+        "p99": 32.369362,
         "n": 739,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
-        "p1": -2.918691,
+        "p1": -2.76733,
         "p5": 0,
         "p50": 3,
-        "p95": 15.252176,
-        "p99": 23.336471,
+        "p95": 16.134701,
+        "p99": 24.855846,
         "n": 1663,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
-        "p1": -1.960137,
+        "p1": -1.801531,
         "p5": 0,
-        "p50": 3.652992,
-        "p95": 12.039229,
-        "p99": 17.050621,
+        "p50": 4.505565,
+        "p95": 13.176434,
+        "p99": 19.716461,
         "n": 726,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     }
@@ -526,6 +526,30 @@
         "lex-verbos-corporativos": {
           "documentos": 37,
           "senales": 38
+        },
+        "est-frases-cortas": {
+          "documentos": 37,
+          "senales": 37
+        },
+        "est-nominalizacion": {
+          "documentos": 37,
+          "senales": 37
+        },
+        "est-poca-puntuacion": {
+          "documentos": 37,
+          "senales": 37
+        },
+        "est-pocas-comas": {
+          "documentos": 37,
+          "senales": 37
+        },
+        "est-repeticion-de-secuencias": {
+          "documentos": 37,
+          "senales": 37
+        },
+        "est-ritmo-uniforme": {
+          "documentos": 37,
+          "senales": 37
         },
         "disc-anecdota-en-primera-persona": {
           "documentos": 29,
@@ -607,6 +631,30 @@
         "lex-traslados-del-ingles": {
           "documentos": 91,
           "senales": 101
+        },
+        "est-pocas-comas": {
+          "documentos": 85,
+          "senales": 85
+        },
+        "est-frases-cortas": {
+          "documentos": 84,
+          "senales": 84
+        },
+        "est-nominalizacion": {
+          "documentos": 84,
+          "senales": 84
+        },
+        "est-poca-puntuacion": {
+          "documentos": 84,
+          "senales": 84
+        },
+        "est-repeticion-de-secuencias": {
+          "documentos": 84,
+          "senales": 84
+        },
+        "est-ritmo-uniforme": {
+          "documentos": 84,
+          "senales": 84
         },
         "lex-imborrable-multidisciplinario-impecable": {
           "documentos": 65,
@@ -701,6 +749,34 @@
           "documentos": 51,
           "senales": 61
         },
+        "est-frases-cortas": {
+          "documentos": 37,
+          "senales": 37
+        },
+        "est-nominalizacion": {
+          "documentos": 37,
+          "senales": 37
+        },
+        "est-poca-puntuacion": {
+          "documentos": 37,
+          "senales": 37
+        },
+        "est-poca-puntuacion-secundaria": {
+          "documentos": 37,
+          "senales": 37
+        },
+        "est-pocas-comas": {
+          "documentos": 37,
+          "senales": 37
+        },
+        "est-repeticion-de-secuencias": {
+          "documentos": 37,
+          "senales": 37
+        },
+        "est-ritmo-uniforme": {
+          "documentos": 37,
+          "senales": 37
+        },
         "lex-innovador": {
           "documentos": 20,
           "senales": 22
@@ -747,8 +823,8 @@
   "notas": [
     "Percentiles de los documentos de CALIBRACIÓN (sha256(\"semilla|id\") < 0,8); los de validación quedan para el FPR del 5.6.",
     "Margen sobre el mínimo de 100 documentos de calibración por tramo: 100-299 +639 · 300-599 +1563 · 600+ +626.",
-    "_total-radiografia: puntuacion.total de analizar() con paquetes/radiografia.json y el género «opinion»; sin reglas estadísticas todavía: se recalcula en el 5.6.",
-    "disparos: por tramo, en los documentos de calibración, en cuántos da alguna señal cada regla de RadiografIA que puntúa y cuántas señales suman (las informativas no cuentan); primer dato para pesos y `generos` en el 5.6.",
+    "_total-radiografia: puntuacion.total de analizar() con paquetes/radiografia.json y el género «opinion»; desde el 5.6 incluye las reglas estadísticas (trece «est-», siete que puntúan), comparadas con las celdas de calibración inyectadas en el paquete.",
+    "disparos: por tramo, en los documentos de calibración, en cuántos da alguna señal cada regla de RadiografIA que puntúa y cuántas señales suman (las informativas no cuentan); desde el 5.6, también las reglas estadísticas.",
     "«opinion»: críticas de cine de aficionados, España, hacia 2005-2008 (el corpus se publicó en 2008), registro semiformal; no es columna de opinión de prensa.",
     "Licencia DECLARADA POR TERCEROS (los curadores), no verificada en origen: solo se publican cifras, sin muestras de texto (corpus.md).",
     "El repositorio tiene 3.878 críticas; la investigación (corpus.md) hablaba de 3.872.",

@@ -1,11 +1,11 @@
 {
   "genero": "academico",
-  "fecha": "2026-09-30",
+  "fecha": "2026-10-01",
   "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
   "licencia": "CC BY 4.0 (verificada en el empaquetado (Zenodo) y en origen (revistas.csic.es), leídas en cada ejecución)",
   "semilla": "radiografia-calibracion-2026",
   "motor": {
-    "commit": "d4510439b6d4901a5f800ae3c593424402b85884",
+    "commit": "c06418a59e13000d85a716471f1baf95361e93de",
     "limpio": true
   },
   "metodo": "hyndman-fan-7",
@@ -32,7 +32,7 @@
         "p99": 8.403886,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -43,7 +43,7 @@
         "p99": 5.935172,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -54,7 +54,7 @@
         "p99": 4.962119,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -67,7 +67,7 @@
         "p99": 1.301044,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -78,7 +78,7 @@
         "p99": 1.12527,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -89,7 +89,7 @@
         "p99": 0.941853,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -102,7 +102,7 @@
         "p99": 6.68,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -113,7 +113,7 @@
         "p99": 7.250833,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -124,7 +124,7 @@
         "p99": 5.3778,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -137,7 +137,7 @@
         "p99": 298.935863,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -148,7 +148,7 @@
         "p99": 274.242785,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -159,7 +159,7 @@
         "p99": 211.691997,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -172,7 +172,7 @@
         "p99": 132.606751,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -183,7 +183,7 @@
         "p99": 130.439024,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -194,7 +194,7 @@
         "p99": 83.650806,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -207,7 +207,7 @@
         "p99": 0.755283,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -218,7 +218,7 @@
         "p99": 0.658104,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -229,7 +229,7 @@
         "p99": 0.519507,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -242,7 +242,7 @@
         "p99": 0.878214,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -253,7 +253,7 @@
         "p99": 0.848221,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -264,7 +264,7 @@
         "p99": 0.842332,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -277,7 +277,7 @@
         "p99": 234.576435,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -288,7 +288,7 @@
         "p99": 176.578583,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -299,7 +299,7 @@
         "p99": 130.76957,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -312,7 +312,7 @@
         "p99": 0.909471,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -323,7 +323,7 @@
         "p99": 0.880278,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -334,7 +334,7 @@
         "p99": 0.876029,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -347,7 +347,7 @@
         "p99": 0.066453,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -358,7 +358,7 @@
         "p99": 0.041894,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -369,7 +369,7 @@
         "p99": 0.102419,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -382,7 +382,7 @@
         "p99": 74.284434,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -393,7 +393,7 @@
         "p99": 69.714431,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -404,7 +404,7 @@
         "p99": 60.939382,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -417,7 +417,7 @@
         "p99": 129.336686,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -428,7 +428,7 @@
         "p99": 107.458498,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -439,7 +439,7 @@
         "p99": 93.342196,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
@@ -452,7 +452,7 @@
         "p99": 141.3579,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
@@ -463,7 +463,7 @@
         "p99": 135.97882,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
@@ -474,42 +474,42 @@
         "p99": 117.099188,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     },
     "_total-radiografia": {
       "100-299": {
-        "p1": -0.112994,
+        "p1": -0.092994,
         "p5": 0,
         "p50": 0,
-        "p95": 16.038062,
-        "p99": 36.828713,
+        "p95": 16.038063,
+        "p99": 36.858714,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
-        "p1": -1.639923,
+        "p1": -0.726487,
         "p5": 1,
-        "p50": 3.679193,
-        "p95": 21.019828,
+        "p50": 6,
+        "p95": 21.019827,
         "p99": 30.33634,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
         "p1": -0.004577,
-        "p5": 0.792,
-        "p50": 5.282177,
-        "p95": 12.705684,
-        "p99": 16.292379,
+        "p5": 1.160014,
+        "p50": 5.87747,
+        "p95": 13.913772,
+        "p99": 17.352818,
         "n": 100,
         "corpus": "CSIC Spanish Corpus (BSC / Plan TL), Zenodo 1.0.0 (DOI 10.5281/zenodo.7313126) — data/calibracion/academico.manifiesto.json",
-        "fecha": "2026-09-30",
+        "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       }
     }
@@ -526,6 +526,30 @@
         "sint-gerundio-adjunto-final": {
           "documentos": 6,
           "senales": 7
+        },
+        "est-frases-cortas": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-nominalizacion": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-poca-puntuacion": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-pocas-comas": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-repeticion-de-secuencias": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-ritmo-uniforme": {
+          "documentos": 5,
+          "senales": 5
         },
         "lex-verbos-corporativos": {
           "documentos": 5,
@@ -591,6 +615,34 @@
         "lex-traslados-del-ingles": {
           "documentos": 7,
           "senales": 9
+        },
+        "est-frases-cortas": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-nominalizacion": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-poca-puntuacion": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-poca-puntuacion-secundaria": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-pocas-comas": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-repeticion-de-secuencias": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-ritmo-uniforme": {
+          "documentos": 5,
+          "senales": 5
         },
         "disc-referencia-interna-concreta": {
           "documentos": 4,
@@ -677,6 +729,34 @@
           "documentos": 7,
           "senales": 11
         },
+        "est-frases-cortas": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-nominalizacion": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-poca-puntuacion": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-poca-puntuacion-secundaria": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-pocas-comas": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-repeticion-de-secuencias": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-ritmo-uniforme": {
+          "documentos": 5,
+          "senales": 5
+        },
         "canal-separador-o-tabla": {
           "documentos": 3,
           "senales": 6
@@ -711,8 +791,8 @@
   "notas": [
     "Percentiles de los documentos de CALIBRACIÓN (sha256(\"semilla|id\") < 0,8); los de validación quedan para el FPR del 5.6.",
     "Margen sobre el mínimo de 100 documentos de calibración por tramo: 100-299 +0 · 300-599 +0 · 600+ +0.",
-    "_total-radiografia: puntuacion.total de analizar() con paquetes/radiografia.json y el género «academico»; sin reglas estadísticas todavía: se recalcula en el 5.6.",
-    "disparos: por tramo, en los documentos de calibración, en cuántos da alguna señal cada regla de RadiografIA que puntúa y cuántas señales suman (las informativas no cuentan); primer dato para pesos y `generos` en el 5.6.",
+    "_total-radiografia: puntuacion.total de analizar() con paquetes/radiografia.json y el género «academico»; desde el 5.6 incluye las reglas estadísticas (trece «est-», siete que puntúan), comparadas con las celdas de calibración inyectadas en el paquete.",
+    "disparos: por tramo, en los documentos de calibración, en cuántos da alguna señal cada regla de RadiografIA que puntúa y cuántas señales suman (las informativas no cuentan); desde el 5.6, también las reglas estadísticas.",
     "«academico»: artículos de revistas científicas del CSIC (humanidades, ciencias sociales y ciencias), España, publicados antes de octubre de 2022; NO CONSTA la fecha de cada artículo ni si alguno es traducción.",
     "Parte del corpus viene de OCR de números antiguos («informaci6n», «c1usters»): cada unidad lleva en el manifiesto su señal (ocrPorMil); no se filtra (decisión pendiente). La señal es un mínimo: los cambios de letra por letra no se ven.",
     "El corpus viene preprocesado y sin duplicados (Corpus-Cleaner, según el registro), con una frase por línea y los documentos separados por una línea en blanco: sin párrafos (cada frase es su propio párrafo para el segmentador). Las métricas por párrafo no se calibran con él.",
