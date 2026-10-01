@@ -5,7 +5,7 @@
   "licencia": "La de cada corpus de origen (heredada: cada documento conserva la licencia de su corpus (opinion: CC BY 2.1 ES declarada por terceros, solo cifras))",
   "semilla": "radiografia-calibracion-2026",
   "motor": {
-    "commit": "c06418a59e13000d85a716471f1baf95361e93de",
+    "commit": "835505be8f94a4c6a24e5ed2baa8658e11bf3795",
     "limpio": true
   },
   "metodo": "hyndman-fan-7",
@@ -483,7 +483,7 @@
         "p1": -6.538156,
         "p5": 0,
         "p50": 0,
-        "p95": 15.267176,
+        "p95": 15.157298,
         "p99": 27.590065,
         "n": 400,
         "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
@@ -491,9 +491,9 @@
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
-        "p1": -3.526808,
+        "p1": -4.525828,
         "p5": 0,
-        "p50": 2.645373,
+        "p50": 1.83322,
         "p95": 32.167416,
         "p99": 57.240798,
         "n": 500,
@@ -502,9 +502,9 @@
         "metodo": "hyndman-fan-7"
       },
       "600+": {
-        "p1": -3.031914,
-        "p5": 0,
-        "p50": 4.611545,
+        "p1": -3.034816,
+        "p5": -0.012315,
+        "p50": 3.953972,
         "p95": 31.138415,
         "p99": 52.182313,
         "n": 500,
@@ -524,26 +524,6 @@
           "senales": 39
         },
         "est-frases-cortas": {
-          "documentos": 20,
-          "senales": 20
-        },
-        "est-nominalizacion": {
-          "documentos": 20,
-          "senales": 20
-        },
-        "est-poca-puntuacion": {
-          "documentos": 20,
-          "senales": 20
-        },
-        "est-pocas-comas": {
-          "documentos": 20,
-          "senales": 20
-        },
-        "est-repeticion-de-secuencias": {
-          "documentos": 20,
-          "senales": 20
-        },
-        "est-ritmo-uniforme": {
           "documentos": 20,
           "senales": 20
         },
@@ -567,6 +547,10 @@
           "documentos": 6,
           "senales": 6
         },
+        "est-poca-puntuacion": {
+          "documentos": 5,
+          "senales": 5
+        },
         "lex-no-solo-sino": {
           "documentos": 5,
           "senales": 5
@@ -574,6 +558,22 @@
         "lex-importancia": {
           "documentos": 4,
           "senales": 5
+        },
+        "est-nominalizacion": {
+          "documentos": 4,
+          "senales": 4
+        },
+        "est-pocas-comas": {
+          "documentos": 4,
+          "senales": 4
+        },
+        "est-repeticion-de-secuencias": {
+          "documentos": 4,
+          "senales": 4
+        },
+        "est-ritmo-uniforme": {
+          "documentos": 4,
+          "senales": 4
         },
         "disc-referencia-interna-concreta": {
           "documentos": 3,
@@ -612,31 +612,11 @@
           "documentos": 26,
           "senales": 27
         },
-        "est-pocas-comas": {
-          "documentos": 26,
-          "senales": 26
-        },
         "est-frases-cortas": {
           "documentos": 25,
           "senales": 25
         },
-        "est-nominalizacion": {
-          "documentos": 25,
-          "senales": 25
-        },
-        "est-poca-puntuacion": {
-          "documentos": 25,
-          "senales": 25
-        },
         "est-poca-puntuacion-secundaria": {
-          "documentos": 25,
-          "senales": 25
-        },
-        "est-repeticion-de-secuencias": {
-          "documentos": 25,
-          "senales": 25
-        },
-        "est-ritmo-uniforme": {
           "documentos": 25,
           "senales": 25
         },
@@ -663,6 +643,26 @@
         "pf-raya-espaciada": {
           "documentos": 7,
           "senales": 8
+        },
+        "est-nominalizacion": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-poca-puntuacion": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-pocas-comas": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-repeticion-de-secuencias": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-ritmo-uniforme": {
+          "documentos": 5,
+          "senales": 5
         },
         "lex-innovador": {
           "documentos": 3,
@@ -745,27 +745,7 @@
           "documentos": 25,
           "senales": 25
         },
-        "est-nominalizacion": {
-          "documentos": 25,
-          "senales": 25
-        },
-        "est-poca-puntuacion": {
-          "documentos": 25,
-          "senales": 25
-        },
         "est-poca-puntuacion-secundaria": {
-          "documentos": 25,
-          "senales": 25
-        },
-        "est-pocas-comas": {
-          "documentos": 25,
-          "senales": 25
-        },
-        "est-repeticion-de-secuencias": {
-          "documentos": 25,
-          "senales": 25
-        },
-        "est-ritmo-uniforme": {
           "documentos": 25,
           "senales": 25
         },
@@ -788,6 +768,26 @@
         "pf-raya-espaciada": {
           "documentos": 9,
           "senales": 43
+        },
+        "est-nominalizacion": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-poca-puntuacion": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-pocas-comas": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-repeticion-de-secuencias": {
+          "documentos": 5,
+          "senales": 5
+        },
+        "est-ritmo-uniforme": {
+          "documentos": 5,
+          "senales": 5
         },
         "disc-atribucion-vaga": {
           "documentos": 3,

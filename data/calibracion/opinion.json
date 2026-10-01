@@ -5,7 +5,7 @@
   "licencia": "CC BY 2.1 ES (declarada por terceros: los curadores (ITALIC-US) la declaran en su README; NO verificada en muchocine.net; el LICENSE (MIT) es del repositorio, no de las críticas)",
   "semilla": "radiografia-calibracion-2026",
   "motor": {
-    "commit": "c06418a59e13000d85a716471f1baf95361e93de",
+    "commit": "835505be8f94a4c6a24e5ed2baa8658e11bf3795",
     "limpio": true
   },
   "metodo": "hyndman-fan-7",
@@ -483,30 +483,30 @@
         "p1": -5.319149,
         "p5": 0,
         "p50": 0,
-        "p95": 19.446098,
-        "p99": 32.369362,
+        "p95": 19.418331,
+        "p99": 31.024325,
         "n": 739,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
         "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "300-599": {
-        "p1": -2.76733,
+        "p1": -2.874254,
         "p5": 0,
         "p50": 3,
-        "p95": 16.134701,
-        "p99": 24.855846,
+        "p95": 15.618781,
+        "p99": 23.599488,
         "n": 1663,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
         "fecha": "2026-10-01",
         "metodo": "hyndman-fan-7"
       },
       "600+": {
-        "p1": -1.801531,
+        "p1": -1.960137,
         "p5": 0,
-        "p50": 4.505565,
-        "p95": 13.176434,
-        "p99": 19.716461,
+        "p50": 4,
+        "p95": 12.203605,
+        "p99": 18.916014,
         "n": 726,
         "corpus": "MuchoCine: críticas de cine de usuarios (ITALIC-US, Spanish-Movie-Reviews) commit 4f8efab64a5366ec4fd3a241df1292ab75746464 — data/calibracion/opinion.manifiesto.json",
         "fecha": "2026-10-01",
@@ -528,26 +528,6 @@
           "senales": 38
         },
         "est-frases-cortas": {
-          "documentos": 37,
-          "senales": 37
-        },
-        "est-nominalizacion": {
-          "documentos": 37,
-          "senales": 37
-        },
-        "est-poca-puntuacion": {
-          "documentos": 37,
-          "senales": 37
-        },
-        "est-pocas-comas": {
-          "documentos": 37,
-          "senales": 37
-        },
-        "est-repeticion-de-secuencias": {
-          "documentos": 37,
-          "senales": 37
-        },
-        "est-ritmo-uniforme": {
           "documentos": 37,
           "senales": 37
         },
@@ -574,6 +554,22 @@
         "lex-importancia": {
           "documentos": 12,
           "senales": 12
+        },
+        "est-nominalizacion": {
+          "documentos": 8,
+          "senales": 8
+        },
+        "est-poca-puntuacion": {
+          "documentos": 8,
+          "senales": 8
+        },
+        "est-repeticion-de-secuencias": {
+          "documentos": 8,
+          "senales": 8
+        },
+        "est-pocas-comas": {
+          "documentos": 6,
+          "senales": 6
         },
         "lex-innovador": {
           "documentos": 3,
@@ -632,27 +628,7 @@
           "documentos": 91,
           "senales": 101
         },
-        "est-pocas-comas": {
-          "documentos": 85,
-          "senales": 85
-        },
         "est-frases-cortas": {
-          "documentos": 84,
-          "senales": 84
-        },
-        "est-nominalizacion": {
-          "documentos": 84,
-          "senales": 84
-        },
-        "est-poca-puntuacion": {
-          "documentos": 84,
-          "senales": 84
-        },
-        "est-repeticion-de-secuencias": {
-          "documentos": 84,
-          "senales": 84
-        },
-        "est-ritmo-uniforme": {
           "documentos": 84,
           "senales": 84
         },
@@ -663,6 +639,26 @@
         "lex-importancia": {
           "documentos": 48,
           "senales": 51
+        },
+        "est-nominalizacion": {
+          "documentos": 18,
+          "senales": 18
+        },
+        "est-poca-puntuacion": {
+          "documentos": 17,
+          "senales": 17
+        },
+        "est-pocas-comas": {
+          "documentos": 17,
+          "senales": 17
+        },
+        "est-repeticion-de-secuencias": {
+          "documentos": 17,
+          "senales": 17
+        },
+        "est-ritmo-uniforme": {
+          "documentos": 17,
+          "senales": 17
         },
         "lex-innovador": {
           "documentos": 14,
@@ -753,33 +749,33 @@
           "documentos": 37,
           "senales": 37
         },
-        "est-nominalizacion": {
-          "documentos": 37,
-          "senales": 37
-        },
-        "est-poca-puntuacion": {
-          "documentos": 37,
-          "senales": 37
-        },
         "est-poca-puntuacion-secundaria": {
-          "documentos": 37,
-          "senales": 37
-        },
-        "est-pocas-comas": {
-          "documentos": 37,
-          "senales": 37
-        },
-        "est-repeticion-de-secuencias": {
-          "documentos": 37,
-          "senales": 37
-        },
-        "est-ritmo-uniforme": {
           "documentos": 37,
           "senales": 37
         },
         "lex-innovador": {
           "documentos": 20,
           "senales": 22
+        },
+        "est-nominalizacion": {
+          "documentos": 8,
+          "senales": 8
+        },
+        "est-poca-puntuacion": {
+          "documentos": 8,
+          "senales": 8
+        },
+        "est-pocas-comas": {
+          "documentos": 8,
+          "senales": 8
+        },
+        "est-repeticion-de-secuencias": {
+          "documentos": 8,
+          "senales": 8
+        },
+        "est-ritmo-uniforme": {
+          "documentos": 8,
+          "senales": 8
         },
         "disc-puffery-de-significancia": {
           "documentos": 7,

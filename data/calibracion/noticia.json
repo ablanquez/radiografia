@@ -5,7 +5,7 @@
   "licencia": "CC BY 4.0 (verificada en el repositorio: LICENSE.txt y metadatos del README)",
   "semilla": "radiografia-calibracion-2026",
   "motor": {
-    "commit": "c06418a59e13000d85a716471f1baf95361e93de",
+    "commit": "835505be8f94a4c6a24e5ed2baa8658e11bf3795",
     "limpio": true
   },
   "metodo": "hyndman-fan-7",
@@ -493,7 +493,7 @@
       "300-599": {
         "p1": 0,
         "p5": 0,
-        "p50": 3,
+        "p50": 2.432918,
         "p95": 17.557794,
         "p99": 26.564039,
         "n": 354,
@@ -504,9 +504,9 @@
       "600+": {
         "p1": -1.210526,
         "p5": 0,
-        "p50": 3,
-        "p95": 14.388026,
-        "p99": 19.203906,
+        "p50": 2.994012,
+        "p95": 13.719968,
+        "p99": 19.061272,
         "n": 109,
         "corpus": "UD Spanish-AnCora r2.18 — data/calibracion/noticia.manifiesto.json",
         "fecha": "2026-10-01",
@@ -531,29 +531,29 @@
           "documentos": 18,
           "senales": 18
         },
-        "est-nominalizacion": {
-          "documentos": 18,
-          "senales": 18
-        },
-        "est-poca-puntuacion": {
-          "documentos": 18,
-          "senales": 18
-        },
-        "est-pocas-comas": {
-          "documentos": 18,
-          "senales": 18
-        },
-        "est-repeticion-de-secuencias": {
-          "documentos": 18,
-          "senales": 18
-        },
-        "est-ritmo-uniforme": {
-          "documentos": 18,
-          "senales": 18
-        },
         "lex-no-solo-sino": {
           "documentos": 7,
           "senales": 8
+        },
+        "est-nominalizacion": {
+          "documentos": 4,
+          "senales": 4
+        },
+        "est-poca-puntuacion": {
+          "documentos": 4,
+          "senales": 4
+        },
+        "est-pocas-comas": {
+          "documentos": 4,
+          "senales": 4
+        },
+        "est-repeticion-de-secuencias": {
+          "documentos": 4,
+          "senales": 4
+        },
+        "est-ritmo-uniforme": {
+          "documentos": 4,
+          "senales": 4
         },
         "lex-importancia": {
           "documentos": 3,
@@ -600,29 +600,9 @@
           "documentos": 18,
           "senales": 18
         },
-        "est-nominalizacion": {
-          "documentos": 18,
-          "senales": 18
-        },
-        "est-poca-puntuacion": {
-          "documentos": 18,
-          "senales": 18
-        },
         "est-poca-puntuacion-secundaria": {
           "documentos": 18,
           "senales": 18
-        },
-        "est-repeticion-de-secuencias": {
-          "documentos": 18,
-          "senales": 18
-        },
-        "est-ritmo-uniforme": {
-          "documentos": 18,
-          "senales": 18
-        },
-        "est-pocas-comas": {
-          "documentos": 17,
-          "senales": 17
         },
         "lex-importancia": {
           "documentos": 14,
@@ -639,6 +619,26 @@
         "disc-anecdota-en-primera-persona": {
           "documentos": 4,
           "senales": 6
+        },
+        "est-nominalizacion": {
+          "documentos": 4,
+          "senales": 4
+        },
+        "est-poca-puntuacion": {
+          "documentos": 4,
+          "senales": 4
+        },
+        "est-pocas-comas": {
+          "documentos": 4,
+          "senales": 4
+        },
+        "est-repeticion-de-secuencias": {
+          "documentos": 4,
+          "senales": 4
+        },
+        "est-ritmo-uniforme": {
+          "documentos": 4,
+          "senales": 4
         },
         "disc-encuadre-ordinal": {
           "documentos": 2,
@@ -681,27 +681,7 @@
           "documentos": 6,
           "senales": 6
         },
-        "est-nominalizacion": {
-          "documentos": 6,
-          "senales": 6
-        },
-        "est-poca-puntuacion": {
-          "documentos": 6,
-          "senales": 6
-        },
         "est-poca-puntuacion-secundaria": {
-          "documentos": 6,
-          "senales": 6
-        },
-        "est-pocas-comas": {
-          "documentos": 6,
-          "senales": 6
-        },
-        "est-repeticion-de-secuencias": {
-          "documentos": 6,
-          "senales": 6
-        },
-        "est-ritmo-uniforme": {
           "documentos": 6,
           "senales": 6
         },
@@ -720,6 +700,26 @@
         "disc-marcador-repetido": {
           "documentos": 2,
           "senales": 6
+        },
+        "est-nominalizacion": {
+          "documentos": 2,
+          "senales": 2
+        },
+        "est-poca-puntuacion": {
+          "documentos": 2,
+          "senales": 2
+        },
+        "est-pocas-comas": {
+          "documentos": 2,
+          "senales": 2
+        },
+        "est-repeticion-de-secuencias": {
+          "documentos": 2,
+          "senales": 2
+        },
+        "est-ritmo-uniforme": {
+          "documentos": 2,
+          "senales": 2
         },
         "disc-puffery-de-significancia": {
           "documentos": 1,

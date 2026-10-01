@@ -5,7 +5,7 @@
   "licencia": "Dominio público en España (verificada por libro: todas las personas del registro del catálogo murieron en 1945 o antes (vida + 80 años desde el 1 de enero siguiente))",
   "semilla": "radiografia-calibracion-2026",
   "motor": {
-    "commit": "c06418a59e13000d85a716471f1baf95361e93de",
+    "commit": "835505be8f94a4c6a24e5ed2baa8658e11bf3795",
     "limpio": true
   },
   "metodo": "hyndman-fan-7",
@@ -339,7 +339,7 @@
       "300-599": {
         "p1": -4.339876,
         "p5": 0,
-        "p50": 11.024145,
+        "p50": 10.199791,
         "p95": 74.58444,
         "p99": 88.001857,
         "n": 124,
@@ -349,10 +349,10 @@
       },
       "600+": {
         "p1": 0,
-        "p5": 2.533396,
-        "p50": 16.148567,
-        "p95": 48.882723,
-        "p99": 71.319602,
+        "p5": 1.702655,
+        "p50": 15.899123,
+        "p95": 48.503204,
+        "p99": 71.247571,
         "n": 895,
         "corpus": "Project Gutenberg: catálogo CSV y EPUB (epub.noimages) del harvest en español — data/calibracion/narrativa-clasica.manifiesto.json",
         "fecha": "2026-10-01",
@@ -507,27 +507,7 @@
           "documentos": 7,
           "senales": 7
         },
-        "est-nominalizacion": {
-          "documentos": 7,
-          "senales": 7
-        },
-        "est-poca-puntuacion": {
-          "documentos": 7,
-          "senales": 7
-        },
         "est-poca-puntuacion-secundaria": {
-          "documentos": 7,
-          "senales": 7
-        },
-        "est-pocas-comas": {
-          "documentos": 7,
-          "senales": 7
-        },
-        "est-repeticion-de-secuencias": {
-          "documentos": 7,
-          "senales": 7
-        },
-        "est-ritmo-uniforme": {
           "documentos": 7,
           "senales": 7
         },
@@ -550,6 +530,26 @@
         "canal-separador-o-tabla": {
           "documentos": 2,
           "senales": 61
+        },
+        "est-nominalizacion": {
+          "documentos": 2,
+          "senales": 2
+        },
+        "est-poca-puntuacion": {
+          "documentos": 2,
+          "senales": 2
+        },
+        "est-pocas-comas": {
+          "documentos": 2,
+          "senales": 2
+        },
+        "est-repeticion-de-secuencias": {
+          "documentos": 2,
+          "senales": 2
+        },
+        "est-ritmo-uniforme": {
+          "documentos": 2,
+          "senales": 2
         }
       }
     },
@@ -596,27 +596,7 @@
           "documentos": 45,
           "senales": 45
         },
-        "est-nominalizacion": {
-          "documentos": 45,
-          "senales": 45
-        },
-        "est-poca-puntuacion": {
-          "documentos": 45,
-          "senales": 45
-        },
         "est-poca-puntuacion-secundaria": {
-          "documentos": 45,
-          "senales": 45
-        },
-        "est-pocas-comas": {
-          "documentos": 45,
-          "senales": 45
-        },
-        "est-repeticion-de-secuencias": {
-          "documentos": 45,
-          "senales": 45
-        },
-        "est-ritmo-uniforme": {
           "documentos": 45,
           "senales": 45
         },
@@ -631,6 +611,26 @@
         "canal-separador-o-tabla": {
           "documentos": 13,
           "senales": 38
+        },
+        "est-nominalizacion": {
+          "documentos": 9,
+          "senales": 9
+        },
+        "est-poca-puntuacion": {
+          "documentos": 9,
+          "senales": 9
+        },
+        "est-pocas-comas": {
+          "documentos": 9,
+          "senales": 9
+        },
+        "est-repeticion-de-secuencias": {
+          "documentos": 9,
+          "senales": 9
+        },
+        "est-ritmo-uniforme": {
+          "documentos": 9,
+          "senales": 9
         },
         "canal-negrita-markdown": {
           "documentos": 4,
