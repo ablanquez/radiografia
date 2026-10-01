@@ -7,8 +7,10 @@
  */
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import type { Celda } from '../../src/paquete.ts';
 import type { Manifiesto } from './manifiesto.ts';
+import { GENEROS_CALIBRADOS } from './inyeccion.ts';
 import { comprobarReparto, resumirCelda, type DocumentoValidado, type FicheroDeValidacion, type ReglaResumida } from './validacion.ts';
 
 const REGLAS: ReglaResumida[] = [
@@ -109,5 +111,29 @@ describe('comprobarReparto', () => {
 
   test('un género sin manifiesto: lo caza', () => {
     assert.match(comprobarReparto(fichero({ '300-599': ['v1', 'v2'] }), {}).join('\n'), /manifiesto/);
+  });
+});
+
+describe('el fichero real, data/calibracion/validacion.json', () => {
+  const leer = () => JSON.parse(readFileSync(new URL('../../../data/calibracion/validacion.json', import.meta.url), 'utf8')) as FicheroDeValidacion;
+  const manifiestos = (): Record<string, Manifiesto> =>
+    Object.fromEntries(
+      GENEROS_CALIBRADOS.map((g) => [g, JSON.parse(readFileSync(new URL(`../../../data/calibracion/${g}.manifiesto.json`, import.meta.url), 'utf8')) as Manifiesto]),
+    );
+
+  test('los seis géneros, y solo documentos de reparto «validacion»: todos los de cada celda', () => {
+    const v = leer();
+    assert.deepEqual(Object.keys(v.generos), [...GENEROS_CALIBRADOS]);
+    assert.deepEqual(comprobarReparto(v, manifiestos()), []);
+  });
+
+  test('una copia con un documento de calibración colado: el juez lo caza', () => {
+    const v = leer();
+    const m = manifiestos();
+    const deCalibracion = m['noticia']!.documentos.find((d) => d.reparto === 'calibracion' && d.tramo === '300-599');
+    assert.ok(deCalibracion, 'noticia no tiene documentos de calibración en 300-599');
+    v.generos['noticia']!.celdas['300-599']!.documentos.push(deCalibracion.id);
+    v.generos['noticia']!.celdas['300-599']!.n += 1;
+    assert.match(comprobarReparto(v, m).join('\n'), new RegExp(`${deCalibracion.id}.*calibracion`));
   });
 });
