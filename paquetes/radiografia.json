@@ -2926,7 +2926,8 @@
       "excepciones": [
         "Documentación técnica, notas o ficheros escritos en Markdown a propósito.",
         "Las almohadillas de un bloque de código (los comentarios de un script) no cuentan: el motor no mira el código.",
-        "Una etiqueta pegada a la palabra (#radiografia) no es un encabezado y no cuenta."
+        "Una etiqueta pegada a la palabra (#radiografia) no es un encabezado y no cuenta.",
+        "Texto cortado a mano (encargo 6.1: párrafos según CommonMark): un encabezado es siempre su propio bloque, así que la excepción web (párrafo nuevo tras un punto y una mayúscula) no cambia lo que mira esta regla. Si el corte deja «# » al principio de una línea, eso sí cuenta como encabezado."
       ],
       "fuente": [
         {
@@ -2967,7 +2968,8 @@
       "sugerencia": "Quita el formato Markdown: borra los asteriscos del rótulo, o convierte la lista en párrafos.",
       "excepciones": [
         "Presentaciones, apuntes y notas escritos en Markdown a propósito.",
-        "Solo mira viñetas de guion, asterisco, más o topo (-, *, +, •): una lista numerada con el rótulo en negrita («1. **Paso:**») no cuenta."
+        "Solo mira viñetas de guion, asterisco, más o topo (-, *, +, •): una lista numerada con el rótulo en negrita («1. **Paso:**») no cuenta.",
+        "Texto cortado a mano (encargo 6.1: párrafos según CommonMark): la línea con la marca de viñeta empieza siempre su ítem, y las siguientes siguen dentro, así que la excepción web no cambia lo que mira esta regla."
       ],
       "fuente": [
         {
@@ -3007,7 +3009,8 @@
       "sugerencia": "Quita el formato Markdown: borra la línea de guiones, y rehaz la tabla con la herramienta de tablas de tu editor.",
       "excepciones": [
         "Documentación técnica y ficheros escritos en Markdown a propósito.",
-        "Texto pegado de un programa que separa las columnas con barras verticales."
+        "Texto pegado de un programa que separa las columnas con barras verticales.",
+        "Texto cortado a mano (encargo 6.1: párrafos según CommonMark): un separador y una fila de tabla son siempre su propio bloque, así que la excepción web no cambia lo que mira esta regla."
       ],
       "fuente": [
         {
@@ -3811,7 +3814,8 @@
       "sugerencia": "Cierra con una idea nueva o con una consecuencia concreta, sin anunciar que es el final.",
       "excepciones": [
         "Redacción escolar y de quien aprende español: «En conclusión» es la plantilla que se enseña (Herbold: «corresponds to the general structure that is sought after for argumentative essays»; discurso.md § 9).",
-        "Solo mira el último párrafo de prosa: la misma fórmula a mitad del texto no cuenta aquí."
+        "Solo mira el último párrafo de prosa: la misma fórmula a mitad del texto no cuenta aquí.",
+        "Texto cortado a mano (encargo 6.1: párrafos según CommonMark): si una línea del último párrafo acaba justo en punto y la siguiente empieza por mayúscula, el motor parte ahí el párrafo (excepción web), y el «último párrafo» es solo el trozo final. Un «En conclusión» al principio del párrafo real no se ve."
       ],
       "fuente": [
         {

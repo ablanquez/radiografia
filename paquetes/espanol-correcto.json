@@ -179,7 +179,8 @@
       "excepciones": [
         "Nombres propios largos, instituciones y organismos, que llevan mayúscula en cada palabra significativa: «Ministerio de Asuntos Exteriores y Cooperación» dispara aunque esté bien escrito, también al principio de una frase.",
         "Con tres palabras no dispara: «Real Academia Española» queda fuera, pero también un título a la inglesa de tres palabras.",
-        "Títulos en inglés citados tal cual."
+        "Títulos en inglés citados tal cual.",
+        "Texto cortado a mano (encargo 6.1: párrafos según CommonMark): si una línea acaba en punto y la siguiente empieza por mayúscula, el motor abre ahí un párrafo (excepción web), y la regla puede dispararse en ese principio de línea con un nombre largo de institución. Y un título sin punto seguido de su texto en la línea siguiente queda en el mismo párrafo, al principio: se sigue viendo."
       ],
       "fuente": [
         {
