@@ -10,6 +10,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import type { Celda } from '../../src/paquete.ts';
 import type { Manifiesto } from './manifiesto.ts';
+import { DECISIONES, notaDeDecision } from './decisiones.ts';
 import { GENEROS_CALIBRADOS } from './inyeccion.ts';
 import {
   Z_95,
@@ -246,6 +247,32 @@ describe('el fichero real, data/calibracion/validacion.json', () => {
 
   test('cada género lleva su conjunto: la suma de sus celdas (parada 2 del 5.6)', () => {
     for (const [genero, g] of Object.entries(leer().generos)) assert.deepEqual(g.conjunto, resumirGenero(g.celdas), genero);
+  });
+
+  test('cada género lleva el intervalo de Wilson al 95 % de la FPR de su conjunto', () => {
+    for (const [genero, g] of Object.entries(leer().generos)) assert.deepEqual(g.intervaloFpr, intervaloDeWilson(g.conjunto!.fpr.documentos, g.conjunto!.n), genero);
+  });
+
+  test('la decisión, solo en el género que pasa del 5 %: la firmada (decisiones.ts), de su resultado y con ids de sus celdas', () => {
+    for (const [genero, g] of Object.entries(leer().generos)) {
+      const porEncima = g.conjunto!.fpr.proporcion > 0.05;
+      assert.equal(g.decision !== undefined, porEncima, `${genero}: decisión ${g.decision !== undefined ? 'sí' : 'no'}, FPR ${g.conjunto!.fpr.proporcion}`);
+      if (g.decision === undefined) continue;
+      assert.deepEqual(g.decision, DECISIONES[genero], genero);
+      assert.deepEqual({ documentos: g.decision.aceptado.documentos, n: g.decision.aceptado.n }, { documentos: g.conjunto!.fpr.documentos, n: g.conjunto!.n }, genero);
+      const deSusCeldas = new Set(Object.values(g.celdas).flatMap((c) => c.documentos));
+      for (const id of g.decision.aceptado.ids) assert.ok(deSusCeldas.has(id), `${genero}: ${id} no es de sus celdas de validación`);
+    }
+    assert.deepEqual(Object.keys(DECISIONES).filter((genero) => leer().generos[genero]?.decision === undefined), []);
+  });
+
+  test('la ficha de calibración de cada género con decisión la anota (y ninguna otra lleva esa nota)', () => {
+    for (const genero of GENEROS_CALIBRADOS) {
+      const { notas } = JSON.parse(readFileSync(new URL(`../../../data/calibracion/${genero}.json`, import.meta.url), 'utf8')) as { notas: string[] };
+      const deValidacion = notas.filter((n) => n.startsWith('Validación (data/calibracion/validacion.json)'));
+      const decision = DECISIONES[genero];
+      assert.deepEqual(deValidacion, decision === undefined ? [] : [notaDeDecision(decision)], genero);
+    }
   });
 
   test('una copia con un documento de calibración colado: el juez lo caza', () => {
