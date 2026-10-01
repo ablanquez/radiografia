@@ -184,3 +184,20 @@ muestra; sin licencia al menos declarada no hay cifra.**
 - **Qué se cambió:** nada del texto se redistribuye ni se publica ninguna muestra
   (`corpus.md`: «solo cifras»). Se derivan cifras (percentiles de métricas de estilo por tramo
   y disparos de las reglas).
+
+## `general.json` y `general.manifiesto.json` — mezcla de los cinco corpus
+
+- **Obra:** ninguna nueva. Es una selección de documentos de los cinco corpus anteriores,
+  hecha por `motor/herramientas/calibrar/construir-general.ts` con la regla de
+  `general.ts`: por tramo, los géneros que tienen ese tramo calibrado y, de cada uno, el
+  mínimo común entre ellos, elegidos por huella (narrativa no entra en 100-299).
+- **Qué se usó:** los mismos textos que en cada género, medidos otra vez (el total, con el
+  género «general») y descartados. Aquí solo quedan percentiles y, por documento, su id, su
+  huella, su tramo y su género.
+- **Licencia: la de cada corpus de origen**, sin cambios: noticia (CC BY 4.0), administrativo
+  (art. 13 LPI y licencia tipo del BOE; cita «Basado en datos de la Agencia Estatal Boletín
+  Oficial del Estado»), narrativa-clasica (dominio público; texto y marca de Project Gutenberg
+  retirados), academico (CC BY 4.0, con cita de procedencia) y opinion (CC BY 2.1 ES
+  declarada por terceros: solo cifras). Cada una, citada literalmente en su apartado de arriba.
+- **Atribución:** la de cada corpus, en su apartado.
+- **Qué se cambió:** nada del texto se redistribuye. Se derivan cifras (percentiles y disparos).
