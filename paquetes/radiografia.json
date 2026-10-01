@@ -2537,9 +2537,9 @@
           "600+": {
             "p1": -3.011249,
             "p5": 0,
-            "p50": 3.895109,
+            "p50": 3.937008,
             "p95": 30.374827,
-            "p99": 52.035849,
+            "p99": 52.155849,
             "n": 505,
             "corpus": "Mezcla estratificada de los cinco géneros calibrados (noticia, administrativo, narrativa-clasica, academico, opinion) — data/calibracion/general.manifiesto.json",
             "fecha": "2026-10-01",
