@@ -11,8 +11,9 @@ escribe lo que sale.
 
 Las cifras son de `analizar()` con los dos paquetes incluidos (RadiografIA
 0.1.0 y Español correcto 0.1.0) y el género «opinion», el que la pantalla
-selecciona al cargar un ejemplo, a 02/10/2026. RadiografIA analiza estilo; no
-demuestra autoría.
+selecciona al cargar un ejemplo, a 02/10/2026, después de la ampliación 6.4
+de las listas de D3 y D4 (abajo, [«Historia»](#historia), con las cifras de
+antes). RadiografIA analiza estilo; no demuestra autoría.
 
 ## Resumen
 
@@ -30,7 +31,7 @@ calibración o un texto, el juez falla.
 | Español correcto: banda | sin escala | sin escala |
 
 La banda de RadiografIA compara el total con los textos humanos de opinión de
-300 a 599 palabras de su calibración (n = 1.663): mediana 3 · p95 15,62 · p99
+300 a 599 palabras de su calibración (n = 1.663): mediana 2 · p95 15,14 · p99
 23,6. Español correcto no trae escala, y la pantalla enseña su total sin banda.
 
 ## El texto humano: `antonio.txt`
@@ -43,16 +44,17 @@ comillas rectas del original ("Spiderman").
 
 **Longitud.** 314 palabras de prosa: tramo 300-599, análisis completo.
 
-**RadiografIA: total 5, entre la mediana y el p95.**
+**RadiografIA: total 3, entre la mediana y el p95.**
 
 | Regla | Familia | Peso | n | Contribución | Por qué dispara |
 |---|---|---|---|---|---|
 | `est-pocas-comas` | Estadística | 3 | 1 (presencia) | 3 | 0,38 comas por punto de cierre, por debajo del p1 de los humanos de opinión (p1 0,49 · mediana 2,27) |
-| `disc-sin-marcadores-epistemicos` | Discurso | 2 | 1 (ausencia) | 2 | ninguna aparición de su lista (mínimo 1). La lista lleva «me parece»; el texto dice «me pareció» y «me ha parecido», que no están en ella |
 
+- **Ya no dispara `disc-sin-marcadores-epistemicos`:** desde la ampliación 6.4
+  su lista lleva «me pareció» y «me ha parecido», y el texto dice las dos.
 - **Atenuantes:** ninguno. Los dos del paquete, `disc-referencia-interna-concreta`
   (−2) y `disc-anecdota-en-primera-persona` (−1), no disparan.
-- **Subrayados que puntúan:** ninguno. Las dos señales son del texto entero.
+- **Subrayados que puntúan:** ninguno. La única señal es del texto entero.
 - **Informativas** (se enseñan, no suman): las seis estadísticas de contexto.
   Quedan por debajo de la banda humana el MTLD, 67,07 (p5 73,55), y los
   pronombres anafóricos, 47,77 por 1.000 palabras (p5 54,36). Dentro quedan
@@ -97,13 +99,15 @@ comillas rectas del original ("Spiderman").
 
 **Longitud.** 336 palabras de prosa: tramo 300-599, análisis completo.
 
-**RadiografIA: total 2, por debajo de la mediana.**
+**RadiografIA: total 1, por debajo de la mediana.**
 
 | Regla | Familia | Peso | n | Contribución | Por qué dispara |
 |---|---|---|---|---|---|
 | `disc-cierre-de-plantilla` | Discurso | 1 | 1 (presencia) | 1 | el último párrafo empieza por «En definitiva» |
-| `disc-sin-automenciones` | Discurso | 1 | 1 (ausencia) | 1 | ninguna aparición de su lista (mínimo 1): ni «yo», «mí», «mi», «mis» o «conmigo», ni «nosotros» o «nuestro». El texto va en primera persona con «me» («me gustan», «me fascinan»), que no está en ella |
 
+- **Ya no dispara `disc-sin-automenciones`:** desde la ampliación 6.4 cuenta
+  «me» y «nos», y el texto va en primera persona con «me» («me gustan», «me
+  fascinan»).
 - **Atenuantes:** ninguno.
 - **Subrayados:** «En definitiva» (`disc-cierre-de-plantilla`). El título lo
   subraya `canal-negrita-markdown`, que es informativa.
@@ -118,15 +122,40 @@ comillas rectas del original ("Spiderman").
 
 ## Los dos, lado a lado
 
-Con «opinion», el de Antonio suma 5 y queda entre la mediana y el p95. El de IA
-suma 2 y queda por debajo de la mediana. Ninguno de los dos llega al p95 de los
+Con «opinion», el de Antonio suma 3 y queda entre la mediana y el p95. El de IA
+suma 1 y queda por debajo de la mediana. Ninguno de los dos llega al p95 de los
 humanos de su género y longitud.
 
-Las dos señales del de Antonio son del texto entero: pocas comas y ningún
-marcador epistémico de la lista. Las del de IA son la fórmula de cierre y
-ninguna automención de la lista. No se ha cambiado nada para que la
-comparación salga de otra manera: ni el texto de Antonio, ni el de IA, ni las
-reglas.
+La única señal del de Antonio es del texto entero: pocas comas. La del de IA
+es la fórmula de cierre. Ningún texto se ha cambiado para que la comparación
+salga de otra manera. Las reglas cambiaron una vez, por dos huecos de lista
+que destaparon estos ejemplos, con fuente, firma de Antonio y revalidación
+(abajo, [«Historia»](#historia)).
+
+## Historia
+
+- **02/10/2026, encargo 6.3, antes de la ampliación.**
+  - El de Antonio sumaba **5**, entre la mediana y el p95:
+    `est-pocas-comas` 3 y `disc-sin-marcadores-epistemicos` 2.
+  - El de IA sumaba **2**, por debajo de la mediana:
+    `disc-cierre-de-plantilla` 1 y `disc-sin-automenciones` 1.
+  - La banda humana de opinión de 300 a 599 palabras era mediana 3 · p95
+    15,62 · p99 23,6.
+- **Por qué cambió: encargo 6.4, 02/10/2026, firmado por Antonio.** Los dos
+  ejemplos destaparon dos huecos de lista.
+  - D3 (`disc-sin-marcadores-epistemicos`) disparaba en el texto de Antonio,
+    que dice «me pareció» y «me ha parecido», porque su lista solo llevaba
+    «me parece». Ahora lleva las formas de primera persona de sus verbos y
+    «parecer» con «me» o «nos» (lemas de Herbold et al. 2023).
+  - D4 (`disc-sin-automenciones`) disparaba en el de IA, que dice «me
+    gustan», porque excluía «me» y «nos» por ambiguos con el reflexivo.
+    Pero son siempre de primera persona, y Tang y John (1999) los cuentan
+    entre las automenciones.
+- **Después.** Se recalculó el total de opinión y académico desde la caché y
+  se revalidó. La FPR no cambió en ningún género, y la decisión de
+  administrativo sigue igual. La banda de opinión de 300 a 599 palabras
+  quedó en mediana 2 · p95 15,14 · p99 23,6.
+- **Ninguno de los dos textos se ha tocado.**
 
 ## La primera generación, descartada
 
@@ -147,7 +176,7 @@ reglas.
 - **Lo que dio** (visto antes de decidir): 332 palabras de prosa. RadiografIA
   sumó −0,01, por debajo de la mediana: `est-frases-cortas` +3 y
   `disc-anecdota-en-primera-persona` −3,01, por «mi abuela». Español correcto
-  sumó 0.
+  sumó 0. Con la ampliación 6.4 da lo mismo.
 - **El texto:** el cuerpo que guardó el subagente, sin el preámbulo ni las
   notas.
 
