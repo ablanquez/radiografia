@@ -114,8 +114,8 @@ familias, calibrado y validado) está hecho.
 Los textos de la propia web también pasan por los dos paquetes, en un juez
 ([`web/jueces/textos-web.spec.ts`](web/jueces/textos-web.spec.ts)). Entran el
 texto visible de la página del analizador y todas las cadenas de la interfaz,
-también las del catálogo y las del cargador: 731 palabras de prosa,
-analizadas con «general». No entra el contenido de las fichas de las reglas,
+también las del catálogo, las del cargador y las del informe: 858 palabras
+de prosa, analizadas con «general». No entra el contenido de las fichas de las reglas,
 porque menciona las formas que las reglas buscan (abajo,
 [«Catálogo»](#catálogo)).
 
@@ -154,7 +154,8 @@ pulsar el botón, ves:
 
 Y antes de analizar eliges los paquetes: los dos incluidos, con sus
 casillas, y los tuyos, cargados desde el ordenador (abajo, [«Paquetes
-propios»](#paquetes-propios)).
+propios»](#paquetes-propios)). Después, «Descargar informe» imprime el
+resultado o lo guarda en PDF (abajo, [«Informe»](#informe)).
 
 El punto 6 del plan está cerrado: Antonio vio el ciclo entero en Chrome el
 02/10/2026. Después vino la **ampliación 6.4**, mantenimiento del paquete y
@@ -170,11 +171,17 @@ El **cargador de paquetes** (punto 8) está hecho desde el 02/10/2026: las
 casillas de los dos incluidos, un paquete propio que se lee en el navegador
 y no sale de él, la combinación con el origen de cada señal y los errores
 de validación con su regla y su campo (abajo, [«Paquetes
-propios»](#paquetes-propios)). Falta que Antonio lo vea en Chrome para
-cerrar el punto.
+propios»](#paquetes-propios)). Antonio lo vio en Chrome el 02/10/2026.
 
-Falta después, en el orden de la [hoja de ruta](#hoja-de-ruta): el informe
-PDF (punto 9), el diseño (10) y el despliegue (11).
+El **informe** (punto 9) está hecho desde el 02/10/2026: la misma página,
+preparada para imprimirse o guardarse en PDF desde el navegador, con la
+cabecera del análisis, la puntuación, el texto con sus subrayados y la sigla
+de cada familia, el desglose y la lista de señales con su explicación y su
+sugerencia (abajo, [«Informe»](#informe)). Falta que Antonio abra el PDF
+para cerrar el punto.
+
+Falta después, en el orden de la [hoja de ruta](#hoja-de-ruta): el diseño
+(punto 10) y el despliegue (11).
 
 ## Cómo ejecutar
 
@@ -206,10 +213,10 @@ npm run dev                    # http://localhost:4321/ y el catálogo en http:/
     dev` abierto.
   - Hasta el 02/10/2026 solo se probaba lo construido, y el catálogo rompió
     `npm run dev` sin que nada se pusiera rojo.
-  - Los jueces del cargador
-    ([`web/jueces/navegador.spec.ts`](web/jueces/navegador.spec.ts)) abren
-    la página en **Chrome**, sin ventana, y la manejan por su protocolo de
-    depuración. Hace falta Chrome instalado. Si no está en su ruta de
+  - Los jueces del cargador y los del informe
+    ([`web/jueces/navegador.spec.ts`](web/jueces/navegador.spec.ts) e
+    [`impresion.spec.ts`](web/jueces/impresion.spec.ts)) abren la página en
+    **Chrome**, sin ventana, y la manejan por su protocolo de depuración. Hace falta Chrome instalado. Si no está en su ruta de
     siempre, se le da con la variable `CHROME`. Sin Chrome, esos jueces
     fallan; no se saltan.
 - **Los tipos:** `npm run tipos` revisa los de los dos workspaces con `tsc`.
@@ -264,15 +271,15 @@ Nada sale del navegador. La página pide su JS y los dos paquetes incluidos,
 que se validan al arrancar, y un texto de ejemplo cuando se pulsa su botón.
 Un paquete propio no se pide: se lee del fichero, en el navegador (abajo,
 [«Paquetes propios»](#paquetes-propios)). Medido en el build de la web el
-02/10/2026, con el catálogo, el cargador y la CSP:
+02/10/2026, con el catálogo, el cargador, la CSP y el informe:
 
 | fichero | bytes |
 |---|---|
-| el JS del analizador (motor, validador, cargador y aviso MIT de Ajv; minificado por Vite) | 129.508 |
-| las cadenas de la interfaz que comparten el analizador y el catálogo (un JS aparte) | 4.877 |
+| el JS del analizador (motor, validador, cargador, informe y aviso MIT de Ajv; minificado por Vite) | 132.153 |
+| las cadenas de la interfaz que comparten el analizador y el catálogo (un JS aparte) | 5.445 |
 | `paquetes/radiografia.json` (con su calibración y los nombres de las reglas) | 342.163 |
 | `paquetes/espanol-correcto.json` | 20.822 |
-| `index.html` (con la CSP, 507 bytes) | 4.321 |
+| `index.html` (con la CSP, 507 bytes, y la hoja de impresión) | 5.522 |
 | `ejemplos/antonio.txt`, al pulsar su botón | 1.777 |
 | `ejemplos/ia.txt`, al pulsar su botón | 1.957 |
 
@@ -295,7 +302,7 @@ Además de cada página, pide el JS del buscador y el de las cadenas.
 | las 50 fichas juntas | 352.220 |
 
 `dist/` entero: 52 páginas HTML (el analizador, el índice y 50 fichas), 61
-ficheros y 940.228 bytes. Cada página lleva la CSP.
+ficheros y 944.642 bytes. Cada página lleva la CSP.
 
 ## Ejemplos
 
@@ -385,6 +392,67 @@ botones), que están en [`web/src/textos.ts`](web/src/textos.ts).
 - y, con `astro dev`
   ([`web/jueces/desarrollo.spec.ts`](web/jueces/desarrollo.spec.ts)), que el
   índice y una ficha también se sirven, sin errores.
+
+## Informe
+
+Tras analizar, el botón **«Descargar informe»** abre el diálogo de imprimir
+del navegador. El informe es la misma página preparada para el papel, sin
+librerías ni nada que se genere fuera: se imprime, o se guarda en PDF desde
+ese diálogo.
+
+**Qué incluye**, en una hoja A4 con márgenes de 2 cm:
+- la cabecera: la fecha y la hora del análisis, el género, las palabras de
+  prosa y el tramo, y los paquetes con su versión (los propios, marcados
+  «(propio)»);
+- la puntuación y la banda de cada paquete que la tiene;
+- la clave de las familias, con su sigla;
+- el texto con sus subrayados y, detrás de cada uno, entre corchetes, la
+  sigla de su familia: [L] léxico, [D] discurso…;
+- el desglose de cada paquete;
+- las señales, regla a regla: hasta cinco fragmentos de cada una, su
+  explicación, su sugerencia y la dirección de su ficha del catálogo. Las de
+  un paquete propio no tienen ficha, y lo dice;
+- al pie, la nota: RadiografIA analiza estilo; no demuestra autoría.
+
+No salen el cuadro de texto, los botones, el selector, el cargador, la
+navegación ni el panel de un subrayado (lo sustituye la lista de señales).
+Una regla no se parte entre dos páginas.
+
+**Cómo se guarda en PDF.**
+- En **Chrome** y en **Edge**, en el diálogo de imprimir, como destino,
+  «Guardar como PDF».
+- En **Firefox**, como destino, «Guardar como PDF».
+- El fichero se llama «RadiografIA.pdf» si no le das otro nombre.
+
+**El color no hace falta para leerlo.** Cada subrayado lleva su sigla y cada
+regla dice su familia y su paquete en texto. No hay que marcar «imprimir
+fondos»; se lee igual en una impresora en gris.
+
+**Imprime el último análisis.** Si después cambias el texto o los paquetes,
+vuelve a pulsar «Pon tu texto a contraluz» antes de imprimir; la cabecera
+dice de qué análisis es el informe.
+
+**Lo que no depende de la página.** El encabezado y el pie que añade el
+navegador (la dirección, la fecha, el número de página) dependen de sus
+ajustes: en Firefox, la casilla «Imprimir encabezados y pies de página». El
+informe lleva su propia fecha en la cabecera.
+
+**Los jueces**
+([`web/jueces/impresion.spec.ts`](web/jueces/impresion.spec.ts) y la lógica
+en [`informe.spec.ts`](web/jueces/informe.spec.ts)) comprueban, con Chrome:
+- que en papel no salen el formulario ni la navegación ni el panel, y sí
+  todo lo de arriba;
+- que cada subrayado lleva su sigla y cada regla de la lista, la dirección
+  de su ficha;
+- que, sin análisis, el botón está desactivado, y que con un texto de menos
+  de 100 palabras el informe lo dice y no pinta secciones vacías;
+- que el PDF que genera Chrome es válido y A4. Con el texto de prueba de la
+  combinación de los dos paquetes salen 16 páginas y unos 214 KB;
+- que ni imprimir ni preparar la impresión piden nada a la red.
+
+Que ninguna regla quede partida entre páginas lo pide la hoja
+(`break-inside: avoid`) y lo comprueba el juez en cada entrada. Que se
+cumple en el PDF se miró a ojo, página a página.
 
 ## Paquetes
 
