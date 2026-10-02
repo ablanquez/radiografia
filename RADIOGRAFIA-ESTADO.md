@@ -7,12 +7,13 @@ El ejecutor reporta descubrimientos; no toca este fichero.
 
 ## ESTADO ACTUAL — 2 de octubre de 2026
 
-**⭐ PUNTOS 1-6 CERRADOS (29/09-02/10). LA DEMO EXISTE Y ESTÁ VISTA.**
-`web/` (Astro 7.3.5 estático) sirve la pantalla mínima con los dos
-ejemplos precargados: el texto de Antonio puntúa 5 (entre la mediana y el
-p95 de opinión) y el de IA, 2 (por debajo de la mediana); se publica así
-y demuestra la nota de la casa: analiza estilo, no demuestra autoría. Al
-navegador viajan 123 KB de JS + 358 KB de JSON (+ 2 KB por ejemplo al
+**⭐ PUNTOS 1-6 CERRADOS (29/09-02/10), MÁS LA AMPLIACIÓN 6.4 DEL PAQUETE.
+LA DEMO EXISTE Y ESTÁ VISTA.** `web/` (Astro 7.3.5 estático) sirve la
+pantalla mínima con los dos ejemplos precargados: tras ampliar las listas
+de D3 y D4, el texto de Antonio puntúa 3 (entre la mediana y el p95 de
+opinión) y el de IA, 1 (por debajo de la mediana); se publica así y
+demuestra la nota de la casa: analiza estilo, no demuestra autoría. Al
+navegador viajan 123 KB de JS + 361 KB de JSON (+ 2 KB por ejemplo al
 pulsar). **npm test raíz: motor 867 (860 verde, 2 saltados, 5 todo) + web
 25/25**, tipos limpios. Seis bitácoras, todas cerradas. **Siguiente: punto
 7, catálogo de reglas.**
@@ -308,20 +309,35 @@ antes del verde, push = despliegue, bitácora por la skill
   --system-prompt ""`, claude-opus-5-5, 02/10) con la instrucción literal
   y sin estilo, y se congela; la primera generación (subagente que cargó
   el CLAUDE.md) se descartó y queda documentada. **Resultado: humano 5,
-  IA 2 con «opinion»; se publica así.** Los botones ponen el género
+  IA 2 con «opinion»; se publica así** (superado el mismo día por la 6.4:
+  3 y 1). Los botones ponen el género
   «opinion» [PROPIO] y no analizan solos. Textos de la web por los dos
   paquetes con lista declarada en un juez (subrayado; etiquetas sueltas);
   «—» → «sin dato». `.gitattributes` con eol=lf para los ejemplos.
   Jueces de web con --test-concurrency=1.
+- 02/10 — **Decisiones del 6.4 (listas de D3 y D4)**: ampliación firmada
+  tras el cierre del 6 como mantenimiento del paquete. D3: primera
+  persona de creer, pensar, suponer, opinar y considerar (con «que») en
+  presente, pretérito simple, imperfecto y perfecto; parecer solo con
+  me/nos (el «It seems» de Herbold sin opinante no cuenta); diría(mos)
+  que; en mi/nuestra opinión; a mi/nuestro juicio; formas sin tilde salvo
+  «opiné» y «consideré» (subjuntivos); imperfecto ambiguo con la tercera
+  persona declarado como FP. D4: entran «me» y «nos» (siempre de primera
+  persona en español; fuente verificada Tang y John 1999 vía Moradi y
+  Montazeri 2024; la lista propia de Hyland 2005 NO CONSTA y la tabla de
+  Pham solo trae I/we/my/our: la premisa del encargo estaba mal y el
+  ejecutor la corrigió); clíticos pegados al verbo fuera, declarados. Las
+  listas se fijaron por fuente y sondas en la parada; la validación solo
+  confirmó (FPR idéntica; administrativo intacto). docs/ejemplos.md guarda
+  el 5/2 anterior como historia; la tabla se actualiza en el mismo commit
+  que cambia sus cifras (regla «cada commit pasa solo»).
 
 ## 6 · Cabos abiertos
 
-- **Del 6.3, decisión pendiente para después del punto 6 (toca el
-  paquete y exige revalidar)**: la lista de D3 (epistémicos) no tiene las
-  conjugaciones de «parecer» («me pareció», «me ha parecido»), por eso
-  dispara en el texto de Antonio; la de D4 (automenciones) no tiene «me»
-  (excluido por ambiguo), por eso dispara en el de IA. Ampliar listas =
-  recalcular total y revalidar FPR. Propuesta: tanda corta antes del 10.
+- Del 6.4: zona sin juez: las tasas que citan las fichas no se comparan
+  con validacion.json (se pusieron al día a mano); el aviso de académico
+  «43 documentos cambian» compara con el manifiesto del descargador, que
+  no se versiona.
 - Del 6.3, método: los subagentes de Claude Code cargan el CLAUDE.md del
   proyecto → cualquier texto de IA futuro se genera con la CLI en modo
   limpio; la CLI del sistema (2.1.251) no admite Opus 5.5, la de VS Code
@@ -439,6 +455,9 @@ antes del verde, push = despliegue, bitácora por la skill
 
 ## Nevera
 
+- **D3, lemas de Herbold aún sin traducir** (v1.1): know, conclude, I am
+  sure, it is clear, it is believed («se cree»); celda 15 de su notebook
+  de replicación.
 - **Académico 100-299**: 99 documentos de calibración (< 100). Primera
   tarea de la v1.1: ampliar la muestra del CSIC por huella con la misma
   semilla hasta ≥ 120 por tramo y recalibrar (tamaño de muestra, no ajuste

@@ -568,7 +568,8 @@ Astro, sin diseño todavía: funciona, no luce.
       y ponen el género «opinion» sin analizar solos. **Resultado con
       «opinion»: el humano puntua 5 (entre mediana y p95: pocas comas,
       sin epistémicos) y el de IA 2 (por debajo de la mediana: cierre de
-      plantilla, sin automenciones)**; no se retoca nada; documentado en
+      plantilla, sin automenciones)** — cifras del 02/10 antes de la 6.4;
+      tras ella, 3 y 1 —; no se retoca nada; documentado en
       `docs/ejemplos.md` con un juez que lo compara con analizar() en cada
       npm test
 - [x] Los textos de la web pasan por los dos paquetes (6.3): 334 palabras
@@ -581,6 +582,35 @@ Astro, sin diseño todavía: funciona, no luce.
       ejemplos y estado
 - [x] **CICLO ENTERO VISTO POR ANTONIO EN CHROME (02/10, los cuatro textos
       del 6.2 y los dos ejemplos del 6.3). PUNTO 6 CERRADO (02/10)**
+- [x] **6.4 — Ampliación de las listas de D3 y D4 (firmada por Antonio el
+      02/10 tras el cierre; HECHA el 02/10; mantenimiento del paquete, no
+      reabre el punto)**: los ejemplos destaparon dos huecos de lista: D3 (sin
+      marcadores epistémicos) no tiene las conjugaciones de «parecer» ni
+      otras formas obvias de sus verbos, y por eso dispara en el texto de
+      Antonio aunque los tiene; D4 (sin automenciones) excluyó «me» y
+      «nos» como «ambiguos», pero en español son siempre de primera
+      persona (fuente verificada el 02/10: Tang y John 1999 vía Moradi y
+      Montazeri 2024 incluyen me/us entre los pronombres de primera
+      persona; la lista propia de Hyland 2005 NO CONSTA, y la tabla de
+      Pham solo trae I/we/my/our), y por
+      eso dispara en el texto de IA aunque dice «me gustan». Se amplían
+      las dos listas con fuente (Herbold para D3; Tang y John 1999 vía
+      Moradi y Montazeri 2024 para D4) y sondas,
+      Antonio firma las formas en una parada, se recalcula
+      `_total-radiografia` desde la caché y se revalida la FPR (son
+      ausencias: añadir formas solo las hace disparar menos); se
+      actualizan fichas, docs/ejemplos.md (su juez lo exige) y README.
+      **Resultado**: D3 con primera persona de creer/pensar/suponer/
+      opinar/considerar(que) en cuatro tiempos, parecer con me/nos,
+      diría(mos) que, en mi/nuestra opinión, a mi/nuestro juicio (lemas de
+      Herbold, celda 15 de su notebook; conjugación [PROPIO]); D4 con
+      «me» y «nos» (Tang y John 1999 vía Moradi y Montazeri 2024). Tasas en
+      humanos apartados: D3 académico 67,4 → 58,1 %, opinión 36,9 → 32,5 %;
+      D4 académico 53,5 → 39,5 %. FPR idéntica (no son estadísticas);
+      administrativo con los mismos cinco ids; `_total` recalculado en
+      opinión y académico (mediana de opinión 300-599: 3 → 2). **Ejemplos:
+      humano 3 (entre mediana y p95), IA 1 (por debajo)**; el 5/2 anterior
+      queda en docs/ejemplos.md como historia
 
 ## 7 — Catálogo de reglas
 
