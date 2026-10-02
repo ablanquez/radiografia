@@ -14,7 +14,7 @@
 
 ---
 
-## [2026-10-02] 🔴 ABIERTA — El aviso MIT de Ajv no viaja en el build de Astro: Vite 8 tira los comentarios legales al minificar
+## [2026-10-02] ✅ CERRADA — El aviso MIT de Ajv no viaja en el build de Astro: Vite 8 tira los comentarios legales al minificar
 
 **Categoría:** licencias de terceros (empaquetado del navegador)
 **Síntoma:** en un proyecto Astro 7.3.5 de prueba (scratchpad, encargo 6.2, parada 1), con el motor del repo tal cual importado por `@radiografia/motor/navegador`, `astro build` (Vite 8.3.2, Rolldown 1.2.12, minificador Oxc) deja un único JS sin el aviso: ni el copyright ni el texto de la licencia. THIRD-PARTY-NOTICES § 1.1 (`10c8da7`) y el plan dicen que el aviso viaja en el bundle.
@@ -29,10 +29,11 @@ $ node --test --test-name-pattern="aviso MIT" src/navegador.spec.ts
 Y el build de prueba, el mismo día:
 `dist/_astro/index.astro_astro_type_script_index_0_lang.CjrtYGur.js: 113291 bytes · «Evgeny Poberezkin»: 0 · «Permission is hereby granted»: 0`
 **Cómo se cazó:** instrumento (al buscar el banner en el JS del build de prueba de la parada 1 del 6.2)
-**Causa raíz:** ⏳ PENDIENTE
-**Arreglo aplicado:** ⏳ PENDIENTE
-**Commit:** ⏳ PENDIENTE
+**Causa raíz:** el juez juzgaba un sustituto del empaquetador, no lo que se publica. esbuild conserva los comentarios legales por defecto («These comments are preserved in output files by default», esbuild.github.io/api/#legal-comments); Vite 8, el de Astro, minifica el cliente con Oxc y, al minificar, fija `comments.legal = !options.minify`: los quita. Cuando el juez se escribió (6.1) aún no existía el build de Astro, y su cabecera daba por hecho que esbuild era «como el build».
+**Arreglo aplicado:** `web/astro.config.mjs`: `vite.build.rolldownOptions.output.comments.legal: true`, con sus citas (Vite build-options y Rolldown OutputOptions.comments). Juez 6 de `web/jueces/construccion.spec.ts` sobre el JS de `web/dist/`: el que lleva el validador lleva entero el LICENSE de ajv. Rojo sin `comments.legal` («_astro\index.astro_astro_type_script_index_0_lang._adyIPuq.js no lleva el LICENSE de ajv entero»), verde con él, contraprueba 2/2. La cabecera, el juez 3 y el describe de `motor/src/navegador.spec.ts` y THIRD-PARTY-NOTICES § 1.1 dicen ahora que el build real es el de Astro y que lo vigila el juez de web.
+**Commit:** `cb35b3e` (comments.legal en astro.config.mjs), `22ecf31` (juez 6 de web), `9bbc998` (los textos).
 **Ley que sale de aquí:** SIN LEY TODAVÍA
+Al cerrar (2026-10-02): un juez de lo que llega al usuario se pasa sobre el artefacto que se publica (`dist/`), no sobre un empaquetado que se le parece.
 **Traza:** `motor/src/navegador.spec.ts` (juez 3, `empaquetar` con esbuild); `motor/src/generar-validador.ts` (banner `/*!`); `node_modules/vite/dist/node/chunks/node.js:34428` (`comments: { legal: !options.minify, … }`); THIRD-PARTY-NOTICES.md § 1.1.
 
 ## [2026-09-30] ✅ CERRADA — El filtro «fiction» de Gutenberg deja pasar la crítica literaria («Spanish fiction -- History and criticism»)
