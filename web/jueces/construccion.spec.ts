@@ -25,42 +25,31 @@
  *      el formulario, y la línea que dice de quién es cada texto (encargo 6.3,
  *      a, juez 4).
  *
- * ⚠️ El build se hace DENTRO del primer juez que lo necesita (memorizado), no
- *    en el cuerpo del describe: si revienta ahí, node --test dice «fail 0»
- *    (docs/BITACORA.md, 2026-09-29).
+ * El build, memorizado y con la telemetría apagada, es el de apoyo.ts (lo
+ * comparte con textos-web.spec.ts). Astro preview también se arranca con
+ * ASTRO_TELEMETRY_DISABLED=1 (ENTORNO).
  *
- * [PROPIO, firmado en la parada 1 del 6.2] Astro se arranca siempre con
- *    ASTRO_TELEMETRY_DISABLED=1: el CLI manda telemetría por defecto en dev,
- *    build y preview, y una variable de entorno en un script de npm no es
- *    portable a Windows (cmd.exe).
- * [DOC] https://astro.build/telemetry/ — «You can also opt-out by setting the
- *    environment variable: ASTRO_TELEMETRY_DISABLED=1».
  * [DOC] https://docs.astro.build/en/reference/cli-reference/ — `astro
  *    preview`: «Starts a local server to serve the contents of your static
  *    directory (dist/ by default) created by running astro build»; acepta
  *    `--port` y `--host`.
- * [DOC] https://nodejs.org/api/child_process.html — npm es un .cmd en Windows
- *    y se lanza con `exec` (pasa por cmd.exe; comando fijo); astro se lanza
- *    con `spawn` de node sobre su `bin`, para poder cerrarlo con kill().
+ * [DOC] https://nodejs.org/api/child_process.html — astro se lanza con
+ *    `spawn` de node sobre su `bin`, para poder cerrarlo con kill().
  * [DOC] https://nodejs.org/api/net.html#serverlistenport-host-backlog-callback
  *    — con el puerto 0, el sistema elige uno libre.
  * [DOC] https://nodejs.org/api/test.html — node:test.
  */
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import { execSync, spawn } from 'node:child_process';
-import { existsSync, readFileSync, readdirSync, rmSync } from 'node:fs';
+import { spawn } from 'node:child_process';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { createServer, type AddressInfo } from 'node:net';
 import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { EJEMPLOS } from '../src/pantalla/ejemplos.ts';
+import { construir, DIST, ENTORNO, PAQUETES, WEB } from './apoyo.ts';
 
-const WEB = fileURLToPath(new URL('..', import.meta.url));
-const DIST = new URL('../dist/', import.meta.url);
-const PAQUETES = new URL('../../paquetes/', import.meta.url);
 const PUBLICOS = new URL('../public/ejemplos/', import.meta.url);
-const ENTORNO = { ...process.env, ASTRO_TELEMETRY_DISABLED: '1' };
 
 const BOTON = 'Pon tu texto a contraluz';
 const NOTA = 'RadiografIA analiza estilo; no demuestra autoría.';
@@ -78,16 +67,6 @@ function jsDeDist(): { ruta: string; texto: string }[] {
 function licenciaDeAjv(): string {
   const desdeElMotor = createRequire(new URL('../../motor/package.json', import.meta.url));
   return readFileSync(desdeElMotor.resolve('ajv/LICENSE'), 'utf8').replace(/\r\n/g, '\n').trim();
-}
-
-let salidaDelBuild: string | undefined;
-/** `npm run build` en web/, una vez, desde un dist/ vacío; devuelve lo que imprime. */
-function construir(): string {
-  if (salidaDelBuild === undefined) {
-    rmSync(DIST, { recursive: true, force: true });
-    salidaDelBuild = execSync('npm run build', { cwd: WEB, env: ENTORNO, encoding: 'utf8', stdio: 'pipe' });
-  }
-  return salidaDelBuild;
 }
 
 /** El ejecutable de astro: el `bin` de su package.json (astro exporta ./package.json). */

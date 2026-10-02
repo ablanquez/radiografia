@@ -1,6 +1,20 @@
 /**
- * Lo que comparten los jueces de la web que analizan con el motor (encargo
- * 6.3): el motor del navegador y los dos paquetes incluidos.
+ * Lo que comparten los jueces de la web (encargo 6.3): el build, el motor del
+ * navegador y los dos paquetes incluidos.
+ *
+ * El build: `npm run build` en web/, una vez por fichero de jueces, desde un
+ * dist/ vacío.
+ * ⚠️ Se llama DENTRO del primer juez que lo necesita, no en el cuerpo del
+ *    describe: si revienta ahí, node --test dice «fail 0» (docs/BITACORA.md,
+ *    2026-09-29).
+ * [PROPIO, firmado en la parada 1 del 6.2] Astro se arranca siempre con
+ *    ASTRO_TELEMETRY_DISABLED=1: el CLI manda telemetría por defecto en dev,
+ *    build y preview, y una variable de entorno en un script de npm no es
+ *    portable a Windows (cmd.exe).
+ * [DOC] https://astro.build/telemetry/ — «You can also opt-out by setting the
+ *    environment variable: ASTRO_TELEMETRY_DISABLED=1».
+ * [DOC] https://nodejs.org/api/child_process.html — npm es un .cmd en Windows
+ *    y se lanza con `exec` (pasa por cmd.exe; comando fijo).
  *
  * El motor es `@radiografia/motor/navegador`, la misma entrada que importa la
  * página. Su validador standalone (motor/dist/validador.standalone.js) no se
@@ -16,13 +30,25 @@
  *    --test-concurrency flag».
  */
 import { execSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { readFileSync, rmSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import type { Paquete } from '@radiografia/motor/navegador';
 import { FICHEROS } from '../src/pantalla/cargar.ts';
 
-const WEB = fileURLToPath(new URL('..', import.meta.url));
-const PAQUETES = new URL('../../paquetes/', import.meta.url);
+export const WEB = fileURLToPath(new URL('..', import.meta.url));
+export const DIST = new URL('../dist/', import.meta.url);
+export const PAQUETES = new URL('../../paquetes/', import.meta.url);
+export const ENTORNO = { ...process.env, ASTRO_TELEMETRY_DISABLED: '1' };
+
+let salidaDelBuild: string | undefined;
+/** `npm run build` en web/, una vez, desde un dist/ vacío; devuelve lo que imprime. */
+export function construir(): string {
+  if (salidaDelBuild === undefined) {
+    rmSync(DIST, { recursive: true, force: true });
+    salidaDelBuild = execSync('npm run build', { cwd: WEB, env: ENTORNO, encoding: 'utf8', stdio: 'pipe' });
+  }
+  return salidaDelBuild;
+}
 
 let motor: Promise<typeof import('@radiografia/motor/navegador')> | undefined;
 /** El motor del navegador, con su standalone generado (una vez por fichero de jueces). */
