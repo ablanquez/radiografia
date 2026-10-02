@@ -43,6 +43,8 @@ const DECLARADAS: Readonly<Record<string, string>> = {
     '«subrayado», la muestra de la leyenda, es el nombre de la función y no se cambia (decisión del 01/10). La regla busca la raíz subray- y no distingue el nombre del verbo; está declarado en su ficha.',
   'est-frases-cortas':
     'los textos de la web son etiquetas y mensajes sueltos, no prosa: cada uno cuenta como una frase, y salen muchas frases para tan pocas palabras. Juntarlos en frases largas para que no dispare sería escribir para la regla.',
+  'est-pocas-comas':
+    'la misma causa (encargo 8.1): los mensajes del cargador son frases sueltas y cortas, con dos puntos y sin incisos, y bajan las comas por punto por debajo de la banda humana. Meterles comas para que no dispare sería escribir para la regla.',
 };
 
 /** Los datos con que se llama a cada función de textos.ts: los que pinta la página en un análisis de verdad. */
@@ -69,6 +71,16 @@ const MUESTRAS: Readonly<Record<string, readonly unknown[]>> = {
   soloEnGeneros: [['Opinión', 'Académico']],
   entrePercentiles: ['1', '99'],
   recuentoDeReglas: [50],
+  // El cargador (encargo 8.1, b). El detalle del JSON roto es el mensaje de Chrome, tal cual: es del navegador, no de la web.
+  noSeCargaPorTamano: ['mi-paquete.json', '2,4', '2'],
+  noSeCargaPorJson: ['mi-paquete.json'],
+  elNavegadorDice: ['Expected double-quoted property name in JSON at position 28 (line 1 column 29)'],
+  noSeCargaPorEsquema: ['mi-paquete.json'],
+  noSeCargaPorNombre: ['mi-paquete.json', 'Mi paquete'],
+  noSeCargaPorNombreDeIncluido: ['mi-paquete.json', 'RadiografIA'],
+  paquetePropioCargado: ['Mi paquete', '1.0.0', 3],
+  paquetePropio: ['Mi paquete', '1.0.0', 3],
+  quitarPaquete: ['Mi paquete'],
 };
 
 /** El texto visible de la página construida y su placeholder. */

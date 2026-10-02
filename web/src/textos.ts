@@ -24,6 +24,31 @@ export const noSeCargo = (url: string, motivo: string): string => `no se pudo ca
 /** El «paquete» que se nombra cuando falla el análisis mismo. */
 export const EL_ANALISIS = 'el análisis';
 
+// El cargador de paquetes (encargo 8.1, b; firmado en la parada 1): las casillas de los incluidos, el paquete propio
+// (propios.ts) y los avisos. Lo que viene del fichero (su nombre, el del paquete) entra con textContent.
+export const noSeCargaPorTamano = (fichero: string, pesa: string, maximo: string): string =>
+  `No se carga «${fichero}»: pesa ${pesa} MB y el máximo es ${maximo} MB.`;
+export const noSeCargaPorJson = (fichero: string): string => `No se carga «${fichero}»: no es un JSON válido.`;
+/** Detrás del anterior: lo que dice el navegador de ese JSON, tal cual y en su idioma (firmado: marcado como suyo). */
+export const elNavegadorDice = (detalle: string): string => `El navegador dice: ${detalle}`;
+export const noSeCargaPorEsquema = (fichero: string): string => `No se carga «${fichero}»: no cumple el esquema de los paquetes. Esto es lo que falla:`;
+/** El nombre ya lo lleva otro paquete propio: se puede quitar ese o renombrar este. */
+export const noSeCargaPorNombre = (fichero: string, nombre: string): string =>
+  `No se carga «${fichero}»: ya hay un paquete propio que se llama «${nombre}». Dos paquetes con el mismo nombre no se distinguirían en las señales: quita el otro o cambia el nombre en el JSON.`;
+/** El nombre es el de un paquete incluido, marcado o no: a ese no se le puede quitar, solo queda renombrar este. */
+export const noSeCargaPorNombreDeIncluido = (fichero: string, nombre: string): string =>
+  `No se carga «${fichero}»: «${nombre}» es el nombre de un paquete incluido. Dos paquetes con el mismo nombre no se distinguirían en las señales: cambia el nombre en el JSON.`;
+export const paquetePropioCargado = (nombre: string, version: string, reglas: number): string =>
+  `Cargado «${nombre}» ${version}: ${reglas} ${reglas === 1 ? 'regla' : 'reglas'}.`;
+/** Cada paquete propio en su lista. */
+export const paquetePropio = (nombre: string, version: string, reglas: number): string => `${nombre} ${version} · ${reglas} ${reglas === 1 ? 'regla' : 'reglas'}`;
+export const QUITAR = 'Quitar';
+/** El nombre accesible del botón «Quitar» de cada paquete propio: «Quitar» y el paquete. */
+export const quitarPaquete = (nombre: string): string => `Quitar «${nombre}»`;
+export const SIN_PAQUETES_ACTIVOS = 'Marca al menos un paquete o carga uno propio para analizar.';
+export const PAQUETES_CAMBIADOS = 'Los paquetes han cambiado: vuelve a pulsar «Pon tu texto a contraluz».';
+export const SIN_ESCALA = 'Ningún paquete activo trae escala respecto a textos humanos: el resultado está en el desglose.';
+
 // Los textos de ejemplo (ejemplos.ts).
 export const ejemploNoCargado = (url: string, motivo: string): string => `No se ha podido cargar el ejemplo ${url}: ${motivo}.`;
 
