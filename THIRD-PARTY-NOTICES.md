@@ -38,8 +38,15 @@ Las que van en `dependencies` de [`motor/package.json`](motor/package.json).
 > en build y no se versiona). Dentro de ese fichero, lo ajeno es **una función de Ajv**,
 > `ajv/dist/runtime/ucs2length.js` (MIT, © Evgeny Poberezkin), y el código que Ajv genera a
 > partir de nuestros esquemas. `fast-uri` **no** está dentro (comprobado el 29/09: ninguna
-> aparición en el fichero empaquetado). Cuando el punto 6 lo sirva, el aviso MIT de Ajv tendrá que
-> viajar con él: cómo, **NO CONSTA** hasta que exista el build.
+> aparición en el fichero empaquetado).
+>
+> **El aviso MIT de Ajv viaja dentro de ese fichero** (encargo 6.1). `generar-validador.ts` le pone
+> en cabecera el `LICENSE` de `ajv` entero, copiado de `node_modules/ajv/LICENSE` al generar, en un
+> comentario `/*! … */` (el `banner` de esbuild). Lo vigila el juez 6 de
+> [`motor/src/standalone.spec.ts`](motor/src/standalone.spec.ts). La entrada del navegador,
+> [`motor/src/navegador.ts`](motor/src/navegador.ts), importa el validador. Al empaquetarla,
+> esbuild lleva el aviso al final del fichero como comentario legal, minificado o no
+> (comprobado el 02/10/2026).
 >
 > ⚠️ **Aquí estuvo `es-compromise` 0.3.1** (MIT, etiquetado gramatical), del 29/09 hasta el cierre
 > del encargo 3.3: se midió contra UD Spanish-AnCora, no llegó al umbral y se retiró con su capa

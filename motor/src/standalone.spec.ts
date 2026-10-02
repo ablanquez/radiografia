@@ -22,6 +22,8 @@
  *   5. El paquete real (encargo 5.5): paquetes/radiografia.json, con la
  *      calibración inyectada, mismo veredicto (válido) con el standalone que
  *      en vivo; y dos copias rotas a propósito, mismos errores.
+ *   6. El aviso MIT de Ajv (encargo 6.1): el fichero empieza por un
+ *      comentario «/*! … *\/» con el LICENSE de ajv entero.
  *
  * ⚠️ Se genera DENTRO de los tests (memorizado), no en un hook ni en el cuerpo
  *    del describe: si la generación revienta, cada juez cuenta como fallido
@@ -148,6 +150,20 @@ describe('el validador standalone es el mismo que el de Ajv en vivo', () => {
       assert.equal(enVivo.valido, false);
       assert.deepEqual(validarPaquete(roto, validador), enVivo);
     }
+  });
+
+  /**
+   * 6 · El aviso MIT de Ajv viaja dentro del fichero (encargo 6.1, c): la
+   * salida empieza por un comentario «/*! … *\/» que lleva entero el LICENSE de
+   * node_modules/ajv (finales de línea LF; el del paquete npm viene en CRLF).
+   */
+  test('6 · el fichero generado empieza por el aviso de licencia MIT de Ajv, el de su LICENSE entero', async () => {
+    const { codigo } = await generado();
+    const licencia = readFileSync(new URL('../node_modules/ajv/LICENSE', import.meta.url), 'utf8').replace(/\r\n/g, '\n').trim();
+    assert.match(licencia, /^The MIT License \(MIT\)\n\nCopyright \(c\) 2015-2021 Evgeny Poberezkin\n/, 'el LICENSE de ajv no es el que se miró el 02/10');
+    const cabecera = /^\/\*![\s\S]*?\*\//.exec(codigo)?.[0];
+    assert.ok(cabecera !== undefined, `el fichero no empieza por un comentario «/*! … */»: ${JSON.stringify(codigo.slice(0, 80))}`);
+    assert.ok(cabecera.includes(licencia), `la cabecera no lleva el LICENSE de ajv entero:\n${cabecera}`);
   });
 
   /**

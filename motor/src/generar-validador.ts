@@ -32,6 +32,17 @@
  *      `node_modules/esbuild/lib/main.d.ts`, 0.28.2: `outputs[fichero].imports`
  *      es la lista `{ path, kind, external }` de lo que la salida importa, con
  *      `kind` entre «import-statement», «require-call», «dynamic-import»…).
+ *      Y en cabecera, el aviso MIT de Ajv (encargo 6.1, c): su LICENSE
+ *      entero, copiado de node_modules/ajv/LICENSE al generar (con LF; el
+ *      del paquete npm viene en CRLF), en un comentario «/*! … *\/». Lo
+ *      vigila el juez 6 de standalone.spec.ts.
+ *      [DOC] https://esbuild.github.io/api/#banner — «Use this to insert an
+ *      arbitrary string at the beginning of generated JavaScript and CSS
+ *      files. This is typically used to insert comments.»
+ *      [DOC] https://esbuild.github.io/api/#legal-comments — un comentario
+ *      que empieza por «/*!» es «legal»: «These comments are preserved in
+ *      output files by default». Por si el build del punto 6 minifica con
+ *      esbuild.
  *
  * Por qué no la opción A (`unicode: false`, que quitaba ucs2length sin
  * empaquetar): en Ajv 8 esa opción está OBSOLETA. `dist/core.js` la lista en
@@ -60,7 +71,8 @@
  *    entero (TS2349 si se llama directamente), así que se llama por su
  *    `.default`, que en ejecución es la misma función.
  */
-import { mkdirSync } from 'node:fs';
+import { mkdirSync, readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { dirname } from 'node:path';
 import { Ajv2020 } from 'ajv/dist/2020.js';
@@ -87,6 +99,25 @@ export function generarCodigoAjv(): string {
 }
 
 /**
+ * El comentario de cabecera: qué es el fichero y el LICENSE de ajv tal cual
+ * (ajv no tiene campo `exports`, y `ajv/LICENSE` se resuelve como un fichero).
+ */
+function avisoDeAjv(): string {
+  const requerir = createRequire(import.meta.url);
+  const licencia = readFileSync(requerir.resolve('ajv/LICENSE'), 'utf8').replace(/\r\n/g, '\n').trim();
+  if (licencia.includes('*/')) throw new Error('el LICENSE de ajv lleva «*/» y cerraría el comentario de cabecera');
+  const { version } = requerir('ajv/package.json') as { version: string };
+  return [
+    '/*!',
+    `validador.standalone.js: generado por motor/src/generar-validador.ts con Ajv ${version} (https://ajv.js.org).`,
+    'Lleva código de Ajv. Su aviso de licencia, copiado de node_modules/ajv/LICENSE:',
+    '',
+    licencia,
+    '*/',
+  ].join('\n');
+}
+
+/**
  * Pasos 1 y 2: genera, empaqueta y escribe el validador en `destino`.
  * Devuelve el metafile de esbuild: qué importa la salida desde fuera.
  */
@@ -105,6 +136,7 @@ export async function generarValidador(destino: URL): Promise<Metafile> {
     platform: 'browser',
     minify: false,
     metafile: true,
+    banner: { js: avisoDeAjv() },
     outfile: salida,
     logLevel: 'warning',
   });
