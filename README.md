@@ -37,9 +37,9 @@ el texto ni las reglas.
 
 **En construcción.** Hoy (02/10/2026) existe el plan firmado, la
 investigación de las familias en [`docs/investigacion/`](docs/investigacion/),
-la **pantalla mínima** en [`web/`](web/) (abajo, [«Cómo
-ejecutar»](#cómo-ejecutar)) y, en la carpeta [`motor/`](motor/), el **motor
-completo**, probado con paquetes de prueba:
+la **pantalla mínima** y el **catálogo de reglas** en [`web/`](web/) (abajo,
+[«Cómo ejecutar»](#cómo-ejecutar) y [«Catálogo»](#catálogo)) y, en la carpeta
+[`motor/`](motor/), el **motor completo**, probado con paquetes de prueba:
 
 - el **esquema del paquete y de la ficha de regla** (JSON Schema 2020-12),
   con los parámetros de cada tipo de detector ya cerrados, y un
@@ -113,8 +113,10 @@ familias, calibrado y validado) está hecho.
 
 Los textos de la propia web también pasan por los dos paquetes, en un juez
 ([`web/jueces/textos-web.spec.ts`](web/jueces/textos-web.spec.ts)). Entran el
-texto visible de la página y todas las cadenas de la interfaz: 334 palabras de
-prosa, analizadas con «general».
+texto visible de la página del analizador y todas las cadenas de la interfaz,
+también las del catálogo: 527 palabras de prosa, analizadas con «general». No
+entra el contenido de las fichas de las reglas, porque menciona las formas
+que las reglas buscan (abajo, [«Catálogo»](#catálogo)).
 
 - **Español correcto** no da ninguna señal.
 - **RadiografIA** puntúa dos reglas, declaradas en el juez con su porqué:
@@ -143,8 +145,9 @@ pulsar el botón, ves:
 
 - los subrayados por familia;
 - el medidor con la banda;
-- la explicación y la sugerencia de cada regla, al tocar un subrayado;
-- el desglose de los dos paquetes.
+- la explicación y la sugerencia de cada regla, al tocar un subrayado, con su
+  nombre, que lleva a su ficha del catálogo;
+- el desglose de los dos paquetes, con un enlace a la ficha de cada regla.
 
 El punto 6 del plan está cerrado: Antonio vio el ciclo entero en Chrome el
 02/10/2026. Después vino la **ampliación 6.4**, mantenimiento del paquete y
@@ -152,9 +155,14 @@ no un punto nuevo. Completó las listas de dos reglas de ausencia, D3 (sin
 marcadores epistémicos) y D4 (sin automenciones), con fuente, y recalculó y
 revalidó la calibración (abajo, [«Validación»](#validación)).
 
-Falta, en el orden de la [hoja de ruta](#hoja-de-ruta): el catálogo de
-reglas (punto 7), el cargador de paquetes (8), el informe PDF (9), el
-diseño (10) y el despliegue (11).
+El **catálogo de reglas** (punto 7) está hecho desde el 02/10/2026: una
+página por regla y un índice con buscador y filtros (abajo,
+[«Catálogo»](#catálogo)). Cada regla tiene ya su nombre, con sus tildes.
+Falta que Antonio lo vea en Chrome para cerrar el punto.
+
+Falta después, en el orden de la [hoja de ruta](#hoja-de-ruta): el cargador
+de paquetes (punto 8), el informe PDF (9), el diseño (10) y el despliegue
+(11).
 
 ## Cómo ejecutar
 
@@ -164,7 +172,7 @@ Hace falta Node 24.12 o posterior. En la raíz del repositorio:
 npm install                    # instala los dos workspaces a la vez (motor/ y web/)
 npx astro telemetry disable    # una vez: apaga la telemetría de Astro en tu máquina
 cd web
-npm run dev                    # http://localhost:4321/
+npm run dev                    # http://localhost:4321/ y el catálogo en http://localhost:4321/reglas/
 ```
 
 - **`predev` y `prebuild`** corren solos antes de `npm run dev` y de `npm run
@@ -181,9 +189,10 @@ npm run dev                    # http://localhost:4321/
 - **Las pruebas:** `npm test` en la raíz corre los jueces del motor y los de
   la web, que construyen la página y la sirven con `astro preview`. `npm run
   tipos` revisa los tipos de los dos workspaces con `tsc`. No se usa `astro
-  check`: añadiría 77 paquetes al árbol y 67 MB para revisar los `.astro`, y
-  aquí los `.astro` solo llevan HTML y el import del script. La lógica va en
-  `.ts`, que revisa `tsc`.
+  check`: añadiría 77 paquetes al árbol y 67 MB para revisar los `.astro`.
+  Aquí los `.astro` llevan HTML, el import del script y, en el catálogo, la
+  plantilla de cada página. La lógica va en `.ts`, que revisa `tsc`, y lo
+  que pintan las plantillas lo miran los jueces sobre `dist/`.
 - **El aviso de npm sobre esbuild** (`allow-scripts … esbuild`) es lo
   esperado: su `postinstall` no está aprobado y funciona sin él
   ([`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md), § 1.4).
@@ -211,7 +220,8 @@ Get-Content -Encoding UTF8 -Raw texto.txt | Set-Clipboard
 
 ```text
 motor/      el motor: TypeScript sin compilar, sus jueces y las herramientas de calibración
-web/        la web estática en Astro 7: src/pages/index.astro, la lógica en src/pantalla/,
+web/        la web estática en Astro 7: el analizador en src/pages/index.astro con su lógica en
+            src/pantalla/; el catálogo en src/pages/reglas/ con su lógica en src/catalogo/;
             las cadenas de la interfaz en src/textos.ts y los textos de ejemplo en public/ejemplos/
 paquetes/   los dos paquetes de reglas incluidos (RadiografIA y Español correcto)
 data/       los datos de terceros y la calibración, cada carpeta con su licencia
@@ -226,20 +236,34 @@ con un solo `package-lock.json`. `web/` importa el motor por
 
 Nada sale del navegador. La página pide su JS y los dos paquetes, que se
 validan al arrancar, y un texto de ejemplo cuando se pulsa su botón. Medido
-en el build de la web el 02/10/2026:
+en el build de la web el 02/10/2026, con el catálogo:
 
 | fichero | bytes |
 |---|---|
-| el JS de la página (motor, validador y aviso MIT de Ajv; minificado por Vite) | 123.393 |
-| `paquetes/radiografia.json` (con su calibración) | 340.231 |
-| `paquetes/espanol-correcto.json` | 20.468 |
-| `index.html` | 2.950 |
+| el JS del analizador (motor, validador y aviso MIT de Ajv; minificado por Vite) | 123.483 |
+| las cadenas de la interfaz que comparten el analizador y el catálogo (un JS aparte) | 2.061 |
+| `paquetes/radiografia.json` (con su calibración y los nombres de las reglas) | 342.163 |
+| `paquetes/espanol-correcto.json` | 20.822 |
+| `index.html` | 3.003 |
 | `ejemplos/antonio.txt`, al pulsar su botón | 1.777 |
 | `ejemplos/ia.txt`, al pulsar su botón | 1.957 |
 
 Los paquetes van aparte del JS, y no dentro, para que el JS se quede en unos
 120 KB y los JSON se puedan guardar en caché por separado. Metidos en el
 build, el JS habría pasado de 400 KB.
+
+El catálogo no pide los paquetes ni el motor: es HTML hecho en build.
+Además de cada página, pide el JS del buscador y el de las cadenas.
+
+| fichero | bytes |
+|---|---|
+| `reglas/index.html`, el índice | 67.141 |
+| el JS del buscador y los filtros | 1.130 |
+| cada ficha, `reglas/<id>/index.html` | de 3.571 a 15.600 |
+| las 50 fichas juntas | 326.870 |
+
+`dist/` entero: 52 páginas HTML (el analizador, el índice y 50 fichas) y
+890.407 bytes.
 
 ## Ejemplos
 
@@ -266,6 +290,64 @@ Lo que el motor dice de cada uno, regla a regla, está en
 primera generación que se descartó. Un juez comprueba que sus cifras siguen
 siendo las que da el motor. Su apartado «Historia» cuenta por qué cambiaron
 con la ampliación 6.4: antes, el de Antonio sumaba 5 y el de IA 2.
+
+## Catálogo
+
+En `/reglas/` están todas las reglas de los dos paquetes, y cada una tiene
+su página, `/reglas/<id>/`. En local, con `npm run dev`, el índice está en
+http://localhost:4321/reglas/. Desde el analizador se llega por el enlace de
+la cabecera y por el nombre de cada regla, en el panel de un subrayado y en
+el desglose.
+
+- **El índice** lista las 50 reglas: nombre, id, paquete, familia,
+  detector, severidad, nivel de evidencia, peso y la primera frase de la
+  explicación.
+  - El buscador mira el nombre, el id y la explicación entera, sin
+    distinguir mayúsculas ni tildes.
+  - Los filtros son tres: familia, severidad y detector. Dentro de un
+    filtro vale cualquiera de las casillas marcadas; entre filtros, todos a
+    la vez.
+  - El recuento de reglas se anuncia a los lectores de pantalla.
+  - Hoy las 50 reglas tienen severidad «baja», así que el filtro de
+    severidad todavía no separa nada.
+- **La ficha** enseña la regla entera y literal:
+  - paquete, familia y detector, y cómo busca, dicho en palabras;
+  - peso, severidad y nivel de evidencia;
+  - explicación, sugerencia, excepciones y origen de la lista;
+  - las fuentes, enlazadas, y los ejemplos tal cual.
+- **El nombre** de cada regla es un campo de la ficha desde el 02/10/2026
+  (`nombre`, de 3 a 80 caracteres), y los 50 nombres los firmó Antonio.
+  - En el esquema es opcional, porque un paquete de terceros puede no
+    traerlo. Entonces la web enseña el id sin su prefijo.
+  - En RadiografIA y Español correcto lo exige un juez.
+
+**Cómo se genera.** Al construir, Astro lee los dos JSON de `paquetes/` y
+escribe una página por regla con `getStaticPaths`
+([`web/src/pages/reglas/`](web/src/pages/reglas/)).
+- Antes de escribirlas, valida los paquetes con el mismo validador que usa
+  el analizador.
+- El build para si un paquete no valida, o si un id está en los dos: las dos
+  fichas tendrían la misma URL.
+- El catálogo es HTML, sin `fetch`. Su único JS es el del buscador, que
+  oculta y enseña filas.
+
+**Las fichas no pasan por el juez de textos de la web.** Mencionan las
+formas que las reglas buscan («Espero que esto te ayude», «En
+conclusión»…). Analizarlas sería medir los ejemplos de las reglas, no los
+textos de la web: es mención, no uso, como en este README. Sí pasan por el
+juez todas las cadenas de la interfaz del catálogo (títulos, etiquetas,
+botones), que están en [`web/src/textos.ts`](web/src/textos.ts).
+
+**Los jueces del catálogo**, en
+[`web/jueces/catalogo.spec.ts`](web/jueces/catalogo.spec.ts), comprueban:
+- que hay una página por regla y que el índice las enlaza todas;
+- que cada ficha lleva su id, su nombre, una fuente enlazada y sus ejemplos
+  tal cual;
+- que todo enlace interno de `dist/` llega a una página;
+- que el índice lleva sus controles con sus etiquetas y la región que
+  anuncia el recuento;
+- y, con `astro preview`, que el índice y una ficha dan 200 y
+  `/reglas/no-existe/`, 404.
 
 ## Paquetes
 
@@ -778,14 +860,14 @@ género “Noticia” de 300 a 599 palabras», con su total y los percentiles.
   avisos de norma RAE (calcos y traducción, no estilo IA) que se combinan
   con el primero desde el desplegable.
 - **Tres tipos de detector**: patrón, estructural, estadístico.
-- **Ficha por regla**: id, familia, detector y sus parámetros, peso (que
-  puede ser **negativo**: un atenuante humano resta), severidad, si es
-  **informativa**, explicación, sugerencia, excepciones, **fuentes**,
-  **origen de la lista** («inventario propio…» cuando lo es), **nivel de
-  evidencia** (medido en español, medido en inglés, anecdótico, sin fuente
-  o norma) y ejemplos positivos y negativos. Los ejemplos son la
-  documentación y son los tests: cada positivo tiene que disparar la regla y
-  cada negativo no. El esquema está en
+- **Ficha por regla**: id, nombre (opcional en el esquema), familia,
+  detector y sus parámetros, peso (que puede ser **negativo**: un atenuante
+  humano resta), severidad, si es **informativa**, explicación, sugerencia,
+  excepciones, **fuentes**, **origen de la lista** («inventario propio…»
+  cuando lo es), **nivel de evidencia** (medido en español, medido en
+  inglés, anecdótico, sin fuente o norma) y ejemplos positivos y negativos.
+  Los ejemplos son la documentación y son los tests: cada positivo tiene que
+  disparar la regla y cada negativo no. El esquema está en
   [`motor/esquema/`](motor/esquema/).
 - **Catálogo público** con una página por regla.
 - **Informe PDF** desde la propia página.
