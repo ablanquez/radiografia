@@ -12,10 +12,14 @@
  *      (pintar.ts). El textarea sigue editable, y volver a pulsar reanaliza y
  *      sustituye lo pintado. Con menos de 100 palabras de prosa, «texto
  *      insuficiente» y nada más: el motor no analiza.
+ *   4. Los dos botones de los ejemplos (encargo 6.3, a; ejemplos.ts) ponen su
+ *      texto en el textarea y el género de los ejemplos en el selector, y no
+ *      analizan. Se activan con los paquetes, porque el selector no tiene
+ *      géneros hasta entonces [PROPIO].
  *
- * Sin red salvo los dos fetch de los paquetes; sin librerías de UI. Las
- * cadenas de la interfaz, en web/src/textos.ts (encargo 6.3, b); la de
- * `elemento` no lo es: es un fallo de programación que va a la consola.
+ * Sin red salvo los fetch de los paquetes y de los ejemplos; sin librerías de
+ * UI. Las cadenas de la interfaz, en web/src/textos.ts (encargo 6.3, b); la
+ * de `elemento` no lo es: es un fallo de programación que va a la consola.
  * [DOC] https://docs.astro.build/en/guides/client-side-scripts/ — «All scripts
  *    are TypeScript by default»; los imports se empaquetan y el script queda
  *    como type="module" (de ahí el await de primer nivel).
@@ -23,6 +27,7 @@
 import { analizar, validarPaquete, type Paquete } from '@radiografia/motor/navegador';
 import * as textos from '../textos.ts';
 import { cargarPaquetes } from './cargar.ts';
+import { cargarEjemplo, GENERO_DE_LOS_EJEMPLOS, type Ejemplo } from './ejemplos.ts';
 import { GENERO_POR_DEFECTO, generosDe, nombreDeGenero } from './generos.ts';
 import { indexar, pintarDesglose, pintarLeyenda, pintarMedidor, pintarPanel, pintarProblemas, pintarVista, type Indice } from './pintar.ts';
 
@@ -44,6 +49,11 @@ const leyenda = elemento<HTMLDivElement>('leyenda');
 const vista = elemento<HTMLDivElement>('vista');
 const panel = elemento<HTMLElement>('panel');
 const desglose = elemento<HTMLDivElement>('desglose');
+const botonesDeEjemplo: [HTMLButtonElement, Ejemplo][] = [
+  [elemento<HTMLButtonElement>('ejemplo-humano'), 'humano'],
+  [elemento<HTMLButtonElement>('ejemplo-ia'), 'ia'],
+];
+const estadoDelEjemplo = elemento<HTMLParagraphElement>('estado-ejemplo');
 
 function analizarYPintar(paquetes: readonly Paquete[], indice: Indice): void {
   const elTexto = texto.value;
@@ -86,6 +96,19 @@ if (carga.paquetes === null) {
   }
   genero.disabled = false;
   boton.disabled = false;
+  for (const [botonDeEjemplo, ejemplo] of botonesDeEjemplo) {
+    botonDeEjemplo.disabled = false;
+    botonDeEjemplo.addEventListener('click', async () => {
+      const carga = await cargarEjemplo(import.meta.env.BASE_URL, ejemplo, (url) => fetch(url));
+      if (carga.texto === null) {
+        estadoDelEjemplo.textContent = carga.problema;
+        return;
+      }
+      texto.value = carga.texto;
+      genero.value = GENERO_DE_LOS_EJEMPLOS;
+      estadoDelEjemplo.textContent = '';
+    });
+  }
   estado.textContent = textos.paquetesCargados(paquetes.map((p) => `${p.cabecera.nombre} ${p.cabecera.version}`));
   formulario.addEventListener('submit', (e) => {
     e.preventDefault();

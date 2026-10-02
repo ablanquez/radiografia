@@ -2,7 +2,8 @@
  * La carga de los dos paquetes incluidos al arrancar (encargo 6.2; firmado en
  * la parada 1, punto 5): fetch de web/public/paquetes/ (los copia
  * scripts/copiar-paquetes.ts) y validación con el validador standalone que
- * lleva navegador.ts. Es la única red de la página. Si un fetch falla o un
+ * lleva navegador.ts. Es la única red de la página al arrancar; la otra son
+ * los ejemplos, al pulsar su botón (ejemplos.ts). Si un fetch falla o un
  * paquete no valida, se devuelve qué paquete y por qué, con los mensajes del
  * validador, y ningún paquete: la página lo dice y desactiva el botón.
  *

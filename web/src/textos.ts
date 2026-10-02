@@ -20,6 +20,9 @@ export const noSeCargo = (url: string, motivo: string): string => `no se pudo ca
 /** El «paquete» que se nombra cuando falla el análisis mismo. */
 export const EL_ANALISIS = 'el análisis';
 
+// Los textos de ejemplo (ejemplos.ts).
+export const ejemploNoCargado = (url: string, motivo: string): string => `No se ha podido cargar el ejemplo ${url}: ${motivo}.`;
+
 // Los géneros del selector (generos.ts). [PROPIO, firmado en el encargo 6.2]
 export const NOMBRES_DE_GENERO: Readonly<Record<string, string>> = {
   general: 'General',

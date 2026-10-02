@@ -18,6 +18,12 @@
  *      MIT de Ajv: el LICENSE de ajv (docs/BITACORA.md, 2026-10-02: Vite 8
  *      quita los comentarios legales al minificar, y web/astro.config.mjs le
  *      pide que los conserve).
+ *   7. dist/ejemplos/ lleva los dos textos de ejemplo, byte a byte los de
+ *      public/ejemplos/, y estos están en UTF-8 sin BOM y con saltos \n
+ *      (encargo 6.3, a, juez 1).
+ *   8. dist/index.html lleva los dos botones de los ejemplos, que no envían
+ *      el formulario, y la línea que dice de quién es cada texto (encargo 6.3,
+ *      a, juez 4).
  *
  * ⚠️ El build se hace DENTRO del primer juez que lo necesita (memorizado), no
  *    en el cuerpo del describe: si revienta ahí, node --test dice «fail 0»
@@ -48,14 +54,18 @@ import { createRequire } from 'node:module';
 import { createServer, type AddressInfo } from 'node:net';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { EJEMPLOS } from '../src/pantalla/ejemplos.ts';
 
 const WEB = fileURLToPath(new URL('..', import.meta.url));
 const DIST = new URL('../dist/', import.meta.url);
 const PAQUETES = new URL('../../paquetes/', import.meta.url);
+const PUBLICOS = new URL('../public/ejemplos/', import.meta.url);
 const ENTORNO = { ...process.env, ASTRO_TELEMETRY_DISABLED: '1' };
 
 const BOTON = 'Pon tu texto a contraluz';
 const NOTA = 'RadiografIA analiza estilo; no demuestra autoría.';
+const BOTONES_DE_EJEMPLO = ['Cargar ejemplo: texto humano', 'Cargar ejemplo: texto de IA'];
+const PROCEDENCIA = 'El texto humano lo escribió Antonio; el de IA lo generó Claude Opus 5.5, sin instrucciones de estilo.';
 
 /** Los .js de dist/, a cualquier profundidad, con su ruta relativa y su texto. */
 function jsDeDist(): { ruta: string; texto: string }[] {
@@ -172,6 +182,29 @@ describe('la web construida', () => {
     const conValidador = jsDeDist().filter(({ texto }) => texto.includes('ucs2length'));
     assert.ok(conValidador.length > 0, 'ningún JS de dist/ lleva el validador standalone');
     for (const { ruta, texto } of conValidador) assert.ok(texto.replace(/\r\n/g, '\n').includes(licencia), `${ruta} no lleva el LICENSE de ajv entero`);
+  });
+
+  test('7 · dist/ejemplos/ lleva los dos textos de ejemplo, byte a byte los de public/ejemplos/, en UTF-8 sin BOM y con \\n', () => {
+    construir();
+    const ficheros = Object.values(EJEMPLOS).sort();
+    assert.deepEqual(readdirSync(PUBLICOS).sort(), ficheros, 'los ficheros de public/ejemplos/');
+    assert.deepEqual(readdirSync(new URL('ejemplos/', DIST)).sort(), ficheros, 'los ficheros de dist/ejemplos/');
+    for (const f of ficheros) {
+      const bytes = readFileSync(new URL(f, PUBLICOS));
+      assert.ok(bytes.equals(readFileSync(new URL(`ejemplos/${f}`, DIST))), `dist/ejemplos/${f} no es public/ejemplos/${f}`);
+      const texto = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes);
+      assert.ok(!texto.startsWith('\uFEFF'), `public/ejemplos/${f} empieza con BOM`);
+      assert.ok(!texto.includes('\r'), `public/ejemplos/${f} lleva \\r`);
+    }
+  });
+
+  test('8 · dist/index.html lleva los dos botones de los ejemplos y de quién es cada texto', () => {
+    construir();
+    const html = readFileSync(new URL('index.html', DIST), 'utf8');
+    for (const etiqueta of BOTONES_DE_EJEMPLO) {
+      assert.match(html, new RegExp(`<button [^>]*type="button"[^>]*>${etiqueta}</button>`), `sin el botón «${etiqueta}» (type="button")`);
+    }
+    assert.ok(html.includes(PROCEDENCIA), `sin «${PROCEDENCIA}»`);
   });
 
   test('5 · astro preview responde 200 en / y 404 en /no-existe', async () => {

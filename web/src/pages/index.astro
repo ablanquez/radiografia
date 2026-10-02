@@ -17,6 +17,10 @@
  *    — pre-wrap: «Sequences of white space are preserved. Lines are broken at
  *    newline characters […] and as necessary to fill line boxes»: la vista
  *    respeta los saltos del texto.
+ * Los botones de los ejemplos (encargo 6.3, a) son type="button": cargan el
+ *    texto y no envían el formulario, es decir, no analizan.
+ *    [DOC] https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/button
+ *    — type «button: The button has no default behavior».
  */
 ---
 
@@ -38,6 +42,12 @@
         <div id="problemas" class="problemas" role="alert" hidden></div>
         <label for="texto">Tu texto</label>
         <textarea id="texto" rows="12" placeholder="Pega aquí un texto en español."></textarea>
+        <div class="ejemplos">
+          <button id="ejemplo-humano" type="button" disabled>Cargar ejemplo: texto humano</button>
+          <button id="ejemplo-ia" type="button" disabled>Cargar ejemplo: texto de IA</button>
+        </div>
+        <p class="procedencia">El texto humano lo escribió Antonio; el de IA lo generó Claude Opus 5.5, sin instrucciones de estilo.</p>
+        <p id="estado-ejemplo" role="status"></p>
         <label for="genero">Género del texto</label>
         <select id="genero" disabled></select>
         <button id="analizar" type="submit" disabled>Pon tu texto a contraluz</button>
@@ -85,6 +95,14 @@
         display: block;
         margin-top: 1rem;
         padding: 0.5rem 1rem;
+      }
+      .ejemplos button {
+        display: inline-block;
+        margin-right: 0.5rem;
+      }
+      .procedencia {
+        margin-bottom: 0;
+        font-size: 0.9rem;
       }
       .problemas {
         color: #991b1b;

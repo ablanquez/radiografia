@@ -12,6 +12,7 @@ import { partirEnTramos } from '../src/pantalla/tramos.ts';
 import { idHumanizado } from '../src/pantalla/humanizar.ts';
 import { GENERO_POR_DEFECTO, generosDe, nombreDeGenero } from '../src/pantalla/generos.ts';
 import { cargarPaquetes, conBarraFinal, FICHEROS } from '../src/pantalla/cargar.ts';
+import { cargarEjemplo, urlDeEjemplo } from '../src/pantalla/ejemplos.ts';
 import type { Paquete, ResultadoDeValidacion } from '@radiografia/motor/navegador';
 
 describe('partirEnTramos: la vista partida por todos los límites de señal', () => {
@@ -113,5 +114,28 @@ describe('la carga de los paquetes', () => {
         { paquete: FICHEROS[1], mensajes: [`no se pudo cargar /paquetes/${FICHEROS[1]}: HTTP 404`] },
       ],
     });
+  });
+});
+
+describe('los textos de ejemplo (encargo 6.3, a)', () => {
+  test('la URL de cada ejemplo, con la base delante', () => {
+    assert.equal(urlDeEjemplo('/', 'humano'), '/ejemplos/antonio.txt');
+    assert.equal(urlDeEjemplo('/radiografia', 'ia'), '/radiografia/ejemplos/ia.txt');
+  });
+
+  test('cargarEjemplo: el texto tal cual llega, o por qué no se pudo', async () => {
+    const pedidas: string[] = [];
+    assert.deepEqual(await cargarEjemplo('/', 'ia', async (url) => (pedidas.push(url), new Response('«Así»\n\ny más.'))), { texto: '«Así»\n\ny más.', problema: null });
+    assert.deepEqual(pedidas, ['/ejemplos/ia.txt']);
+    assert.deepEqual(await cargarEjemplo('/', 'humano', async () => new Response('', { status: 404 })), {
+      texto: null,
+      problema: 'No se ha podido cargar el ejemplo /ejemplos/antonio.txt: HTTP 404.',
+    });
+    assert.deepEqual(
+      await cargarEjemplo('/', 'humano', async () => {
+        throw new TypeError('Failed to fetch');
+      }),
+      { texto: null, problema: 'No se ha podido cargar el ejemplo /ejemplos/antonio.txt: Failed to fetch.' },
+    );
   });
 });
