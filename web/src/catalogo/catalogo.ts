@@ -61,6 +61,33 @@ export function reglasDelCatalogo(paquetes: readonly Paquete[]): EntradaDelCatal
   return entradas;
 }
 
+const FRASES = new Intl.Segmenter('es', { granularity: 'sentence' });
+const cuenta = (texto: string, signo: string): number => texto.split(signo).length - 1;
+
+/**
+ * La primera frase de un texto, para el índice (encargo 7.1, b: la primera
+ * frase de la explicación), con Intl.Segmenter, como las frases del motor.
+ * [PROPIO] Si la frase que da el segmentador deja un paréntesis o unas
+ *    comillas angulares sin cerrar, se le suma la siguiente hasta que cuadren:
+ *    la explicación de est-poca-puntuacion lista los signos («(. , ; : ¿ ?
+ *    ¡ ! …)») y el segmentador cortaba en el «?» de dentro (visto el 02/10).
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter
+ *    — granularity «sentence»: «Split the input into segments at sentence
+ *    boundaries as determined by the locale».
+ */
+export function primeraFrase(texto: string): string {
+  let frase = '';
+  for (const { segment } of FRASES.segment(texto)) {
+    frase += segment;
+    if (cuenta(frase, '(') === cuenta(frase, ')') && cuenta(frase, '«') === cuenta(frase, '»')) break;
+  }
+  return frase.trim();
+}
+
+/** Los valores de los dos enum del esquema (regla.schema.json), en su orden: las casillas de los filtros. */
+export const SEVERIDADES = ['baja', 'media', 'alta'] as const;
+export const DETECTORES = ['patrón', 'estructural', 'estadístico'] as const;
+
 /** Un parámetro de la regla en palabras: etiqueta y valor; `codigo` si el valor se enseña tal cual (regex, banderas, métrica). */
 export interface Parametro {
   etiqueta: string;

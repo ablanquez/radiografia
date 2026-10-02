@@ -13,7 +13,8 @@ import { idHumanizado, nombreDeRegla } from '../src/pantalla/humanizar.ts';
 import { GENERO_POR_DEFECTO, generosDe, nombreDeGenero } from '../src/pantalla/generos.ts';
 import { cargarPaquetes, conBarraFinal, FICHEROS } from '../src/pantalla/cargar.ts';
 import { cargarEjemplo, urlDeEjemplo } from '../src/pantalla/ejemplos.ts';
-import { parametrosEnLlano, reglasDelCatalogo, urlDeRegla, urlDelAnalizador, urlDelCatalogo } from '../src/catalogo/catalogo.ts';
+import { parametrosEnLlano, primeraFrase, reglasDelCatalogo, urlDeRegla, urlDelAnalizador, urlDelCatalogo } from '../src/catalogo/catalogo.ts';
+import { coincide, paraBuscar } from '../src/catalogo/filtro.ts';
 import { paquetesIncluidos } from './apoyo.ts';
 import type { Paquete, ResultadoDeValidacion } from '@radiografia/motor/navegador';
 
@@ -181,6 +182,33 @@ describe('el catálogo de reglas (encargo 7.1, b)', () => {
     assert.throws(() => reglasDelCatalogo([paquete('Uno', ['a-1', 'x-1']), paquete('Dos', ['x-1'])]), {
       message: 'el id "x-1" está en «Uno» y en «Dos»: las dos fichas tendrían la misma URL, /reglas/x-1/',
     });
+  });
+
+  test('primeraFrase: la primera frase, sin cortar dentro de un paréntesis ni de unas comillas', () => {
+    assert.equal(primeraFrase('Una frase. Y otra.'), 'Una frase.');
+    // La de est-poca-puntuacion: el «?» de la lista de signos no cierra la frase.
+    assert.equal(
+      primeraFrase('Poca puntuación: cuenta (. , ; : ¿ ? ¡ ! ( ) « » —) por cada 1.000 palabras. Se compara.'),
+      'Poca puntuación: cuenta (. , ; : ¿ ? ¡ ! ( ) « » —) por cada 1.000 palabras.',
+    );
+    assert.equal(primeraFrase('Dice «¿Seguro? Sí.» y sigue. Otra.'), 'Dice «¿Seguro? Sí.» y sigue.');
+    assert.equal(primeraFrase('Sin punto final'), 'Sin punto final');
+  });
+
+  test('paraBuscar: minúsculas y sin tildes, para que «atribucion» encuentre «Atribución»', () => {
+    assert.equal(paraBuscar('Atribución Vaga · disc-atribucion-vaga'), 'atribucion vaga · disc-atribucion-vaga');
+  });
+
+  test('coincide: cada palabra buscada en el texto; dentro de un filtro, cualquiera; entre filtros, todos', () => {
+    const fila = { texto: paraBuscar('Atribución vaga disc-atribucion-vaga Opiniones atribuidas a una autoridad sin nombre'), familia: 'RadiografIA::discurso', severidad: 'media', detector: 'patrón' };
+    const nada = { consulta: '', familias: new Set<string>(), severidades: new Set<string>(), detectores: new Set<string>() };
+    assert.equal(coincide(fila, nada), true, 'sin filtro, todas');
+    assert.equal(coincide(fila, { ...nada, consulta: '  Autoridad   ATRIBUCIÓN ' }), true, 'dos palabras, en otro orden y con tilde');
+    assert.equal(coincide(fila, { ...nada, consulta: 'autoridad experta' }), false, 'una palabra que no está');
+    assert.equal(coincide(fila, { ...nada, familias: new Set(['RadiografIA::lexico', 'RadiografIA::discurso']) }), true, 'una de las familias marcadas');
+    assert.equal(coincide(fila, { ...nada, familias: new Set(['RadiografIA::lexico']) }), false, 'otra familia');
+    assert.equal(coincide(fila, { ...nada, severidades: new Set(['media']), detectores: new Set(['estructural']) }), false, 'la severidad sí y el detector no');
+    assert.equal(coincide(fila, { ...nada, consulta: 'vaga', severidades: new Set(['media']), detectores: new Set(['patrón', 'estructural']) }), true, 'todo a la vez');
   });
 
   test('parametrosEnLlano: lo que busca cada detector, en palabras', () => {

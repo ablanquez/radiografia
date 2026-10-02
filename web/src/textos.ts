@@ -136,3 +136,10 @@ export const DIRECCIONES: Readonly<Record<string, string>> = {
 export const BANDA_HUMANA = 'Banda humana';
 export const entrePercentiles = (abajo: string, arriba: string): string =>
   `entre los percentiles ${abajo} y ${arriba} de los textos humanos de su género y longitud`;
+
+// El índice del catálogo (src/pages/reglas/index.astro y catalogo/buscador.ts).
+export const PRESENTACION_DEL_CATALOGO =
+  'Todas las reglas de los dos paquetes incluidos. Cada una tiene su propia página, con su explicación, sus fuentes y sus ejemplos.';
+export const BUSCAR = 'Buscar por nombre, id o explicación';
+export const QUITAR_FILTROS = 'Quitar filtros';
+export const recuentoDeReglas = (n: number): string => `${n} ${n === 1 ? 'regla' : 'reglas'}`;

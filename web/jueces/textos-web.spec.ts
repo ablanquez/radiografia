@@ -68,6 +68,7 @@ const MUESTRAS: Readonly<Record<string, readonly unknown[]>> = {
   repeticion: [3],
   soloEnGeneros: [['Opinión', 'Académico']],
   entrePercentiles: ['1', '99'],
+  recuentoDeReglas: [50],
 };
 
 /** El texto visible de la página construida y su placeholder. */
