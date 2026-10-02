@@ -22,16 +22,34 @@
  *    vale como workspace la carpeta cuyo package.json tiene «workspaces»,
  *    como la raíz de este repo.
  *
- * Cada paquete pasa por validarPaquete (el del navegador, con el validador
- * standalone: el mismo que usa el analizador al cargarlos) antes de darlo por
- * Paquete; si no valida, el build para con sus errores. Y reglasDelCatalogo
- * para el build si un id está en los dos (catalogo.ts).
+ * Cada paquete pasa por validarPaquete con el validador standalone (los dos
+ * pasos que hace el analizador al cargarlos) antes de darlo por Paquete; si no
+ * valida, el build para con sus errores. Y reglasDelCatalogo para el build si
+ * un id está en los dos (catalogo.ts).
+ * ⚠️ Nada del motor del navegador (@radiografia/motor/navegador) en el
+ *    frontmatter: arrastra motor/src/terceros/silabea.cjs (navegador.ts →
+ *    analisis.ts → detector-estadistico.ts → metricas/index.ts →
+ *    metricas/ifsz.ts → silabea.cjs), que es CommonJS, y el SSR de
+ *    desarrollo de Vite evalúa el motor enlazado como ESM: «module is not
+ *    defined» en /reglas/ y en cada ficha con `npm run dev` (visto por
+ *    Antonio el 02/10, parada 2 del 7.1; en build no pasa). Lo vigila
+ *    jueces/desarrollo.spec.ts. Por eso la validación llega por dos entradas
+ *    del motor que no tocan las métricas («exports» de motor/package.json):
+ *    `@radiografia/motor/validacion` (validacion.ts, que solo importa
+ *    metricas/nombres.ts) y `@radiografia/motor/validador` (el standalone que
+ *    genera predev/prebuild en motor/dist/, sin imports). Los tipos sí
+ *    vienen de la entrada del navegador: `import type` se borra al compilar.
+ *    [DOC] https://nodejs.org/api/packages.html#subpath-exports — «custom
+ *    subpaths can be defined along with the main entry point»; «Now only the
+ *    defined subpath in "exports" can be imported by a consumer».
  * [PROPIO] El Record exige una entrada por fichero de FICHEROS: si el
  *    analizador carga un paquete más, tsc avisa aquí.
  */
 import radiografia from '../../../paquetes/radiografia.json';
 import espanolCorrecto from '../../../paquetes/espanol-correcto.json';
-import { validarPaquete, type Paquete } from '@radiografia/motor/navegador';
+import type { Paquete } from '@radiografia/motor/navegador';
+import { validarPaquete } from '@radiografia/motor/validacion';
+import { validarEsquemaPaquete } from '@radiografia/motor/validador';
 import { FICHEROS } from '../pantalla/cargar.ts';
 import { reglasDelCatalogo } from './catalogo.ts';
 
@@ -41,7 +59,7 @@ const LEIDOS: Readonly<Record<(typeof FICHEROS)[number], unknown>> = {
 };
 
 export const PAQUETES: readonly Paquete[] = FICHEROS.map((fichero) => {
-  const { valido, errores } = validarPaquete(LEIDOS[fichero]);
+  const { valido, errores } = validarPaquete(LEIDOS[fichero], validarEsquemaPaquete);
   if (!valido) throw new Error(`paquetes/${fichero} no valida:\n${errores.map((e) => e.texto).join('\n')}`);
   return LEIDOS[fichero] as Paquete;
 });

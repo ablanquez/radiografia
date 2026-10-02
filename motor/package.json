@@ -14,6 +14,14 @@
     "./navegador": {
       "types": "./src/navegador.ts",
       "default": "./src/navegador.ts"
+    },
+    "./validacion": {
+      "types": "./src/validacion.ts",
+      "default": "./src/validacion.ts"
+    },
+    "./validador": {
+      "types": "./src/validador-standalone.d.ts",
+      "default": "./dist/validador.standalone.js"
     }
   },
   "imports": {
