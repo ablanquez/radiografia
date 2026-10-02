@@ -7,14 +7,16 @@ El ejecutor reporta descubrimientos; no toca este fichero.
 
 ## ESTADO ACTUAL — 2 de octubre de 2026
 
-**⭐ PUNTOS 1-7 CERRADOS (29/09-02/10). LA DEMO EXISTE, ESTÁ VISTA Y TIENE
-CATÁLOGO.** `web/` sirve el analizador con los dos ejemplos (humano 3 /
-IA 1 con opinión) y el catálogo `/reglas` con 50 fichas con URL propia,
-buscador, tres filtros y enlaces cruzados. Al navegador viajan 123 KB de
-JS + 361 KB de JSON; dist/ entero 890 KB (52 HTML). **npm test raíz: motor
-882 (875 verde, 2 saltados, 5 todo) + web 43/43**, con juez de `astro
-dev`, build y preview; tipos limpios. Seis bitácoras, todas cerradas.
-**Siguiente: punto 8, cargador de paquetes.**
+**⭐ PUNTOS 1-8 CERRADOS (29/09-02/10).** La demo tiene analizador con
+ejemplos, catálogo de 50 fichas y **cargador de paquetes propios**:
+casillas para los incluidos, JSON desde el ordenador validado y combinado
+con origen visible, cero peticiones de red demostradas por un juez con
+Chrome headless (5 en la carga inicial, 0 después) y CSP `connect-src
+'self'` en la página publicada. dist/ 940 KB (52 HTML, 61 ficheros).
+**npm test raíz: motor 895 (888 verde, 2 saltados, 5 todo) + web 64/64**
+(las pruebas de web necesitan Chrome o la variable CHROME); tipos
+limpios. Seis bitácoras, todas cerradas. **Siguiente: punto 9, informe
+PDF.**
 
 ## 1 · Identidad
 
@@ -65,7 +67,7 @@ antes del verde, push = despliegue, bitácora por la skill
 ## 4 · El plan
 
 `PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1, 2 y 3 (29/09), 4 (30/09),
-5 (01/10), 6 y 7 (02/10). Abierto: el 8.
+5 (01/10), 6, 7 y 8 (02/10). Abierto: el 9.
 
 ## 5 · Decisiones
 
@@ -296,7 +298,7 @@ antes del verde, push = despliegue, bitácora por la skill
   frente a 410 KB importando en build); subrayados en vista por tramos
   (`span role="button"`, textContent, OWASP) y no Highlight API (Baseline
   solo desde 2026-03, no sirve en textarea, clic difícil) → punto 10;
-  los dos paquetes siempre activos (elegir es del punto 8); P22 ampliada
+  los dos paquetes siempre activos (elegir es del punto 8; hecho en 8.1); P22 ampliada
   a la cantidad entera; panel con id humanizado (nombre real: punto 7);
   `createRequire` para localizar ajv/LICENSE con el lock elevado (dos
   líneas autorizadas en motor/src). Corrección: Desplázame es Angular, no
@@ -348,16 +350,39 @@ antes del verde, push = despliegue, bitácora por la skill
   castellano. Las fichas no pasan por el juez de textos de la web
   (mención, no uso), sí las cadenas de interfaz del catálogo (527
   palabras).
+- 02/10 — **Decisiones del 8.1 (cargador)**: casillas y no desplegable;
+  <input type="file" sin name + File.text() [DOC MDN; UTF-8 por
+  especificación]; límite 2 MB [PROPIO]; orden tamaño → JSON.parse →
+  validarPaquete → nombre repetido contra todos los conocidos (el del
+  motor queda de red de seguridad); JSON roto con frase propia y el
+  detalle del navegador marcado; colores estables sobre todos los
+  paquetes conocidos, propios en discontinuo, paquete en texto (WCAG
+  1.4.1), sin title en el tramo; reglas propias con ficha completa en el
+  panel y en un <details> del desglose, sin enlace; paquete de prueba SIN
+  calibración (inventar percentiles sería mentir); **juez de red** por
+  CDP con tres testigos (requestWillBeSent, webSocketCreated,
+  securitypolicyviolation) y marca tras 500 ms de red quieta; **CSP**
+  vía security.csp de Astro (dev sin CSP por diseño; en el 11 valorar
+  cabecera del servidor); sin persistencia; aviso al cambiar paquetes con
+  resultado pintado; una línea autorizada en motor/src/ejemplos.spec.ts
+  (el paquete de prueba entra en su lista). Trampa cazada: con el
+  arranque de Chrome en before(), sin Chrome salía «fail 0» con cinco
+  «cancelled» (código 1): el arranque va dentro de los tests y el script
+  de clones filtra cancelled.
 
 ## 6 · Cabos abiertos
 
+- Del 8.1: npm test necesita Chrome (o CHROME); sin él falla, no se
+  salta. El juez de ejemplos del motor lee un fichero de web/
+  (acoplamiento declarado). El meta CSP va detrás del <link rel=icon
+  data:> (admitido y declarado). Nombre repetido con dos mensajes según
+  el otro sea incluido o propio.
 - Del 7.1: zona sin juez: ningún juez comprueba que cada palabra clave
   de los esquemas tenga mensaje en castellano (maxLength se coló; maxItems
   caería igual); las plantillas .astro no las revisa tsc (sin astro
-  check): lo que pintan lo miran los jueces sobre dist/. Para el punto 8:
-  el enlace del panel a /reglas/<id> supone que la regla tiene ficha; las
-  de un paquete propio cargado no la tendrán (404): decidir qué muestra
-  el panel en ese caso. Comentario de motor/src/validador-standalone.d.ts
+  check): lo que pintan lo miran los jueces sobre dist/. El cabo del
+  enlace del panel para reglas de paquetes propios quedó RESUELTO en 8.1
+  (ficha completa sin enlace). Comentario de motor/src/validador-standalone.d.ts
   corto (solo habla de `imports`; ahora también lo usa `./validador`).
   Las 50 reglas son «baja»: el filtro de severidad no separa nada hoy.
 - Del 6.4: zona sin juez: las tasas que citan las fichas no se comparan
@@ -480,6 +505,10 @@ antes del verde, push = despliegue, bitácora por la skill
 
 ## Nevera
 
+- **Paquetes propios, protecciones que no tiene la v1**: una regex con
+  retroceso catastrófico puede colgar la pestaña (sin Worker con tiempo
+  límite); un JSON que no sea UTF-8 se lee con caracteres de sustitución
+  y el esquema no lo detecta. Declarados en el README.
 - **D3, lemas de Herbold aún sin traducir** (v1.1): know, conclude, I am
   sure, it is clear, it is believed («se cree»); celda 15 de su notebook
   de replicación.

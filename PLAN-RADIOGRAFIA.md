@@ -1,8 +1,8 @@
 # PLAN — 005 RadiografIA
 
 Estado a 02/10/2026: **FIRMADO por Antonio el 29/09/2026**, publicado en
-`73ef265`. **PUNTOS 1, 2 y 3 CERRADOS el 29/09; 4 el 30/09; 5 el 01/10; 6
-y 7 el 02/10.** Se tacha lo hecho y
+`73ef265`. **PUNTOS 1, 2 y 3 CERRADOS el 29/09; 4 el 30/09; 5 el 01/10; 6,
+7 y 8 el 02/10.** Se tacha lo hecho y
 lo nuevo se añade en su punto, y solo por decisión de Antonio.
 
 Origen: BRAINSTORMING (1), 28-29/09/2026, y las decisiones de Antonio
@@ -52,7 +52,8 @@ La v1 entrega, y solo entrega, esto:
    ni veredicto), explicación y sugerencia por señal.
 5. **Catálogo público de reglas**: página por regla con URL propia,
    buscador y filtros; enlace cruzado desde cada subrayado.
-6. **Cargador de paquetes**: paquetes incluidos en desplegable; cargar
+6. **Cargador de paquetes**: paquetes incluidos en casillas (firmado
+   02/10: para combinar hay que marcar varios); cargar
    un JSON propio desde el ordenador (se lee en el navegador, no sale de
    él); combinar paquetes distinguiendo el origen de cada señal;
    validación con esquema que dice qué regla y qué campo fallan.
@@ -641,13 +642,38 @@ Astro, sin diseño todavía: funciona, no luce.
 
 ## 8 — Cargador de paquetes
 
-- [ ] Desplegable con los paquetes incluidos (RadiografIA y «español
-      correcto»)
-- [ ] Cargar JSON propio desde el ordenador; nada sale del navegador
-      (comprobado: cero peticiones al cargar y analizar)
-- [ ] Error de validación legible: regla y campo
-- [ ] Combinar paquetes; el subrayado distingue de qué paquete viene
-- [ ] Visto en Chrome. **PUNTO 8 CERRADO**
+- [x] **Decisión firmada 02/10 (cabo del 7)**: las reglas de un paquete
+      propio no tienen ficha en `/reglas`; el panel del analizador muestra
+      su ficha completa dentro del propio panel y sin enlace; las de los
+      paquetes incluidos siguen enlazando a su página (8.1: y en el
+      desglose un <details> con la ficha completa, para las señales de
+      texto entero que no tienen tramo)
+- [x] Casillas (no desplegable: para combinar hay que marcar varios;
+      firmado 02/10) con los paquetes incluidos (RadiografIA y «español
+      correcto») (8.1: desmarcar quita el paquete al reanalizar, con aviso
+      «Los paquetes han cambiado…»; sin ningún paquete activo, el botón se
+      desactiva; sin `_total-*` activo, sin banda y se dice)
+- [x] Cargar JSON propio desde el ordenador; nada sale del navegador
+      (comprobado: cero peticiones al cargar y analizar) (8.1: <input
+      type="file" accept="application/json,.json"> sin name, File.text()
+      [DOC MDN], límite 2 MB [PROPIO], orden tamaño → JSON → validador →
+      nombre repetido contra todos los conocidos; sin persistencia;
+      **juez de red con Chrome headless por CDP**: 5 peticiones en la
+      carga inicial y 0 después de cargar, analizar, abrir paneles y
+      marcar/desmarcar; **CSP** `connect-src 'self'; form-action 'self'`
+      en la página publicada vía security.csp de Astro [DOC], con juez;
+      dev sin CSP por diseño de Astro)
+- [x] Error de validación legible: regla y campo (8.1: lista con los
+      mensajes del validador tal cual; JSON roto con frase en castellano y
+      el detalle del navegador marcado)
+- [x] Combinar paquetes; el subrayado distingue de qué paquete viene
+      (8.1: clave paquete+familia; colores estables repartidos sobre todos
+      los conocidos; propios en subrayado discontinuo; nombre del paquete
+      en texto en leyenda, panel y desglose [WCAG 1.4.1]; selector de
+      género = unión de los activos, General primero)
+- [x] Visto en Chrome por Antonio (02/10: casillas, carga del paquete de
+      prueba, tres bloques, ficha sin enlace, inválido con su error, Red
+      vacía, desaparece al recargar). **PUNTO 8 CERRADO (02/10)**
 
 ## 9 — Informe PDF
 
@@ -667,7 +693,10 @@ botón. Nada se dibuja sin documento rector.
 (familia, detector, severidad); (2) el panel de la regla en el analizador,
 junto al tramo (tooltip/popover) y no debajo de la vista; (3) la CSS
 Custom Highlight API como mejora de los subrayados (Baseline 2026-03);
-(4) `.gitattributes` para fuentes autoalojadas antes de la primera.
+(4) `.gitattributes` para fuentes autoalojadas antes de la primera;
+(5) contraste: sobre blanco, los colores de familia #e69f00 (2,25:1) y
+#56b4e9 (2,31:1) no llegan al 3:1 de WCAG 1.4.11 para objetos gráficos; los
+demás dan de 3,06 a 5,19. La paleta del DISEÑO debe resolverlo.
 
 - [ ] `DISEÑO-RADIOGRAFIA.md`: investigación con doctrina (accesibilidad,
       legibilidad de texto largo, impresión), el concepto del icono
