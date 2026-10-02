@@ -8,9 +8,12 @@
  *     (ordenDeMuestra con la semilla), del manifiesto del corpus en caché. En
  *     cada uno, los párrafos de prosa que da el motor sobre el texto en caché
  *     (sin los que son un encabezado del original) son los `declarados` del
- *     original. Lo literal (<p> no vacíos) se cuenta y se dice: en Gutenberg
- *     coincide; en el BOE, no, por los formularios <dl>, las tablas y los <p>
- *     numerados (parrafos-de-origen.ts). Sin la caché, se salta y lo dice.
+ *     original. Lo literal (<p> no vacíos) se cuenta y se exige su cifra:
+ *     en Gutenberg coincide en los 20; en el BOE, en 5 de 20, por los
+ *     formularios <dl>, las tablas y los <p> numerados (parrafos-de-origen.ts).
+ *     [PROPIO, firmado por Antonio en la parada 2 del 6.1] En el BOE se
+ *     compara con esas tres formas declaradas; al pie de la letra: 5 de 20.
+ *     Sin la caché, se salta y lo dice.
  * [DOC] https://nodejs.org/api/test.html — node:test.
  */
 import { test, describe } from 'node:test';
@@ -43,6 +46,9 @@ describe('parrafosDeOrigen', () => {
 });
 
 const CORPUS = new URL('../../corpus/', import.meta.url);
+
+/** Los de la muestra en que la prosa del motor son, al pie de la letra, los <p> no vacíos (parada 2 del 6.1). */
+const LITERALES = { administrativo: 5, 'narrativa-clasica': 20 } as const;
 
 describe('la muestra: 20 documentos por corpus, el motor frente al original', () => {
   for (const genero of ['administrativo', 'narrativa-clasica'] as const) {
@@ -78,6 +84,7 @@ describe('la muestra: 20 documentos por corpus, el motor frente al original', ()
         t.diagnostic(`literal (prosa del motor = <p> no vacíos): ${literales} de ${muestra.length}`);
         for (const x of distintos) t.diagnostic(x);
         assert.deepEqual(distintos, []);
+        assert.equal(literales, LITERALES[genero], `al pie de la letra (<p> no vacíos): ${literales} de ${muestra.length}`);
       },
     );
   }

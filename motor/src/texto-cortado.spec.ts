@@ -14,8 +14,9 @@
  * 287 a 341 documentos (100-299 sin académico, que perdió su celda).
  * Coinciden 320 de 341 (93,8 %). Dos de las 18 ya coinciden y salen de la
  * lista; entran cinco, cada una con una de las mismas cuatro causas (la de
- * «¡» se escribe ahora «¡» o comilla: el mismo mecanismo). A firmar en la
- * parada 2.
+ * «¡» se escribe ahora «¡» o comilla: el mismo mecanismo, la excepción web
+ * a media frase). Firmado por Antonio en la parada 2 del 6.1: la lista queda
+ * aquí con sus ids.
  *
  * Los textos están en la caché de los corpus (motor/corpus/general/textos/),
  * que no se versiona: sin ella, el juez se salta y lo dice. Cada texto se

@@ -6,7 +6,8 @@
  *
  *   · pNoVacios — lo que pidió Antonio: los <p> con texto (fuera los vacíos;
  *     los encabezados no son <p>, y van aparte).
- *   · declarados — [PROPIO, a firmar en la parada 2 del 6.1] lo que de verdad
+ *   · declarados — [PROPIO, firmado por Antonio en la parada 2 del 6.1; al pie
+ *     de la letra, <p> no vacíos, el BOE da 5 de 20] lo que de verdad
  *     es un párrafo de PROSA para el motor en el BOE, que no siempre es un <p>:
  *       · el texto que va detrás de cada <p>, <dt> o <dd> de apertura, hasta
  *         la siguiente etiqueta de bloque (los formularios de los anuncios son
