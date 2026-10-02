@@ -47,7 +47,7 @@
 import { test, describe, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, readFileSync, readdirSync, rmSync, statSync } from 'node:fs';
-import { builtinModules } from 'node:module';
+import { builtinModules, createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -199,7 +199,7 @@ describe('la entrada del navegador (navegador.ts), empaquetada como en build', (
   });
 
   test('3 · el bundle, sin minificar y minificado, lleva entero el aviso MIT de Ajv', async () => {
-    const licencia = readFileSync(new URL('../node_modules/ajv/LICENSE', import.meta.url), 'utf8').replace(/\r\n/g, '\n').trim();
+    const licencia = readFileSync(createRequire(import.meta.url).resolve('ajv/LICENSE'), 'utf8').replace(/\r\n/g, '\n').trim();
     assert.match(licencia, /^The MIT License \(MIT\)\n\nCopyright \(c\) 2015-2021 Evgeny Poberezkin\n/, 'el LICENSE de ajv no es el que se miró el 02/10');
     for (const [nombre, e] of [['sin minificar', await elSinDatos()], ['minificado', await elMinificado()]] as const) {
       assert.ok(readFileSync(e.ruta, 'utf8').includes(licencia), `${nombre}: el bundle no lleva el LICENSE de ajv entero`);

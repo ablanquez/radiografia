@@ -39,6 +39,7 @@ import { test, describe, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { execSync } from 'node:child_process';
 import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -159,7 +160,7 @@ describe('el validador standalone es el mismo que el de Ajv en vivo', () => {
    */
   test('6 · el fichero generado empieza por el aviso de licencia MIT de Ajv, el de su LICENSE entero', async () => {
     const { codigo } = await generado();
-    const licencia = readFileSync(new URL('../node_modules/ajv/LICENSE', import.meta.url), 'utf8').replace(/\r\n/g, '\n').trim();
+    const licencia = readFileSync(createRequire(import.meta.url).resolve('ajv/LICENSE'), 'utf8').replace(/\r\n/g, '\n').trim();
     assert.match(licencia, /^The MIT License \(MIT\)\n\nCopyright \(c\) 2015-2021 Evgeny Poberezkin\n/, 'el LICENSE de ajv no es el que se miró el 02/10');
     const cabecera = /^\/\*![\s\S]*?\*\//.exec(codigo)?.[0];
     assert.ok(cabecera !== undefined, `el fichero no empieza por un comentario «/*! … */»: ${JSON.stringify(codigo.slice(0, 80))}`);
