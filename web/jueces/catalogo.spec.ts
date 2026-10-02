@@ -20,6 +20,12 @@
  *      región viva (role=status, aria-live=polite) y el script que filtra.
  *   6. astro preview sirve el índice y una ficha (200) y da 404 en
  *      /reglas/no-existe/.
+ *   7. El índice en su orden (cierre del 7.1, firmado por Antonio): los
+ *      paquetes como los carga el analizador; dentro, las familias alfabéticas
+ *      por su nombre visible, y dentro de cada una, las reglas alfabéticas por
+ *      su nombre (localeCompare con «es»). Las casillas de familia, igual; las
+ *      de detector, alfabéticas; las de severidad, baja → media → alta, que es
+ *      una escala.
  * El juez 4 del encargo (ningún JS de dist/ con Ajv ni node:) es el 3 de
  * construccion.spec.ts, que mira todo dist/ y sigue valiendo con las páginas
  * nuevas.
@@ -119,6 +125,28 @@ describe('el catálogo construido', () => {
     const scripts = [...html.matchAll(/<script type="module" src="([^"]+)"/g)].map((m) => m[1]!);
     assert.equal(scripts.length, 1, `el índice tenía que cargar un script: ${scripts.join(', ')}`);
     assert.ok(existsSync(new URL(`.${scripts[0]}`, DIST)), `no existe ${scripts[0]} en dist/`);
+  });
+
+  test('7 · el índice en su orden: paquetes como los carga el analizador; familias y reglas, alfabéticas por su nombre; casillas igual, y la severidad como escala', () => {
+    construir();
+    const html = readFileSync(new URL('index.html', REGLAS), 'utf8');
+    // El orden se calcula aquí con localeCompare, sin la función de orden de la web: es lo que se juzga.
+    const es = (a: string, b: string): number => a.localeCompare(b, 'es');
+    const paquetes = paquetesIncluidos();
+    const familias = paquetes.flatMap((p) => [...p.cabecera.familias].sort((a, b) => es(a.nombre, b.nombre)).map((f) => ({ p, f })));
+    const esperadas = familias.flatMap(({ p, f }) =>
+      p.reglas
+        .filter((r) => r.familia === f.id)
+        .sort((a, b) => es(a.nombre ?? '', b.nombre ?? ''))
+        .map((r) => urlDeRegla('/', r.id)),
+    );
+    const filas = [...html.matchAll(/<h2><a href="([^"]+)"/g)].map((m) => decodificar(m[1]!));
+    assert.deepEqual(filas, esperadas, 'las reglas del índice: paquete, familia alfabética, regla alfabética');
+    const casillas = (nombre: string): string[] =>
+      [...html.matchAll(new RegExp(`<input type="checkbox" name="${nombre}" value="([^"]*)"`, 'g'))].map((m) => decodificar(m[1]!));
+    assert.deepEqual(casillas('familia'), familias.map(({ p, f }) => `${p.cabecera.nombre}::${f.id}`), 'las casillas de familia');
+    assert.deepEqual(casillas('detector'), [...DETECTORES].sort(es), 'las casillas de detector, alfabéticas');
+    assert.deepEqual(casillas('severidad'), ['baja', 'media', 'alta'], 'las casillas de severidad, como escala');
   });
 
   test('6 · astro preview sirve el índice y una ficha (200) y da 404 en /reglas/no-existe/', async () => {

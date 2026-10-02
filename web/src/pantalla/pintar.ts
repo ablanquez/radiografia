@@ -39,11 +39,17 @@
  * aparte en la leyenda.
  *
  * Las cadenas de la interfaz están en web/src/textos.ts (encargo 6.3, b).
+ *
+ * El orden (cierre del 7.1, orden.ts): la leyenda y el desglose, como el
+ * índice del catálogo: paquetes como se cargan, familias alfabéticas por su
+ * nombre, reglas alfabéticas por el suyo. El panel de un tramo, no: enseña las
+ * reglas en el orden de sus señales.
  */
 import type { Paquete, Resultado } from '@radiografia/motor/navegador';
 import * as textos from '../textos.ts';
 import type { ProblemaDeCarga } from './cargar.ts';
 import { urlDeRegla } from '../catalogo/catalogo.ts';
+import { enOrden, type ClaveDeOrden } from '../orden.ts';
 import { nombreDeRegla } from './humanizar.ts';
 import { partirEnTramos } from './tramos.ts';
 
@@ -98,19 +104,20 @@ function enlaceARegla(indice: Indice, base: string, paquete: string, id: string)
 
 export function indexar(paquetes: readonly Paquete[]): Indice {
   const reglas = new Map<string, Regla>();
-  const familias: Indice['familias'] = [];
+  const familias: { posicion: number; familia: Indice['familias'][number] }[] = [];
   const claseDeFamilia = new Map<string, string>();
   let color = 0;
-  for (const paquete of paquetes) {
+  paquetes.forEach((paquete, posicion) => {
     const nombre = paquete.cabecera.nombre;
     for (const regla of paquete.reglas) reglas.set(clave(nombre, regla.id), regla);
     for (const familia of paquete.cabecera.familias) {
       const clase = familia.informativa ? 'familia-informativa' : `familia-color-${color++ % COLORES}`;
       claseDeFamilia.set(clave(nombre, familia.id), clase);
-      familias.push({ clave: clave(nombre, familia.id), paquete: nombre, nombre: familia.nombre, informativa: familia.informativa, clase });
+      familias.push({ posicion, familia: { clave: clave(nombre, familia.id), paquete: nombre, nombre: familia.nombre, informativa: familia.informativa, clase } });
     }
-  }
-  return { reglas, familias, claseDeFamilia };
+  });
+  // Los colores se reparten en el orden de declaración, como desde el 6.2; la lista va en el de presentación (orden.ts).
+  return { reglas, familias: enOrden(familias, (x) => [x.posicion, x.familia.nombre]).map((x) => x.familia), claseDeFamilia };
 }
 
 export function pintarProblemas(contenedor: HTMLElement, problemas: readonly ProblemaDeCarga[]): void {
@@ -267,6 +274,12 @@ function apartado(titulo: string, lineas: readonly Linea[]): HTMLElement[] {
 export function pintarDesglose(contenedor: HTMLElement, resultado: Resultado, paquetes: readonly Paquete[], indice: Indice, base: string): void {
   /** «Nombre (id): lo que se dice», con el nombre enlazado a su ficha. */
   const deRegla = (paquete: string, id: string, dice: string | null): Linea => [enlaceARegla(indice, base, paquete, id), dice === null ? ` (${id})` : ` (${id}): ${dice}`];
+  /** El orden de una regla en el desglose, el del catálogo: el nombre de su familia y el suyo (orden.ts). */
+  const nombresDeFamilia = new Map(indice.familias.map((f) => [f.clave, f.nombre]));
+  const ordenDeRegla = (paquete: string, id: string): ClaveDeOrden => {
+    const regla = indice.reglas.get(clave(paquete, id));
+    return [nombresDeFamilia.get(clave(paquete, regla?.familia ?? '')) ?? '', nombreDeRegla(id, regla)];
+  };
   contenedor.replaceChildren();
   resultado.paquetes.forEach((r, i) => {
     const cabecera = paquetes[i]!.cabecera;
@@ -275,9 +288,10 @@ export function pintarDesglose(contenedor: HTMLElement, resultado: Resultado, pa
     seccion.append(el('h3', `${r.paquete} ${cabecera.version}`));
     if (r.banda === null) seccion.append(el('p', cabecera.descripcion, 'descripcion'));
     seccion.append(el('p', p.total === null ? (p.motivo ?? '') : textos.total(cifra(p.total), p.unidad)));
-    for (const f of p.familias.filter((x) => !x.informativa)) {
+    const enOrdenDeRegla = <T>(lista: readonly T[], id: (x: T) => string): T[] => enOrden(lista, (x) => ordenDeRegla(r.paquete, id(x)));
+    for (const f of enOrden(p.familias.filter((x) => !x.informativa), (x) => [x.nombre])) {
       // Las reglas informativas de una familia que puntúa (las de contexto de Estadística) van aparte, abajo.
-      const conSenal = f.reglas.filter((x) => x.n > 0 && !x.informativa);
+      const conSenal = enOrdenDeRegla(f.reglas.filter((x) => x.n > 0 && !x.informativa), (x) => x.id);
       seccion.append(
         ...apartado(
           `${f.nombre}: ${cifra(f.total)}`,
@@ -289,22 +303,20 @@ export function pintarDesglose(contenedor: HTMLElement, resultado: Resultado, pa
     seccion.append(
       ...apartado(
         textos.DEL_TEXTO_ENTERO,
-        resultado.senalesTexto.filter((s) => s.paquete === r.paquete).map((s) => deRegla(r.paquete, s.reglaId, deLaSenalDeTexto(s))),
+        enOrdenDeRegla(resultado.senalesTexto.filter((s) => s.paquete === r.paquete), (s) => s.reglaId).map((s) => deRegla(r.paquete, s.reglaId, deLaSenalDeTexto(s))),
       ),
     );
     const porRegla = new Map<string, number>();
-    const informativasDeTexto: Linea[] = [];
+    const informativas: { id: string; linea: Linea }[] = [];
     for (const s of p.informativas) {
       if ('inicio' in s) porRegla.set(s.reglaId, (porRegla.get(s.reglaId) ?? 0) + 1);
-      else informativasDeTexto.push(deRegla(r.paquete, s.reglaId, deLaSenalDeTexto(s)));
+      else informativas.push({ id: s.reglaId, linea: deRegla(r.paquete, s.reglaId, deLaSenalDeTexto(s)) });
     }
+    for (const [id, n] of porRegla) informativas.push({ id, linea: deRegla(r.paquete, id, textos.reglaInformativa(n)) });
     seccion.append(
-      ...apartado(textos.INFORMATIVAS_EN_EL_DESGLOSE, [
-        ...[...porRegla].map(([id, n]) => deRegla(r.paquete, id, textos.reglaInformativa(n))),
-        ...informativasDeTexto,
-      ]),
-      ...apartado(textos.SIN_CALIBRACION, resultado.sinCalibracion.filter((s) => s.paquete === r.paquete).map((s) => deRegla(r.paquete, s.reglaId, s.motivo))),
-      ...apartado(textos.NO_APLICADAS, resultado.noAplicadas.filter((s) => s.paquete === r.paquete).map((s) => deRegla(r.paquete, s.reglaId, s.motivo))),
+      ...apartado(textos.INFORMATIVAS_EN_EL_DESGLOSE, enOrdenDeRegla(informativas, (x) => x.id).map((x) => x.linea)),
+      ...apartado(textos.SIN_CALIBRACION, enOrdenDeRegla(resultado.sinCalibracion.filter((s) => s.paquete === r.paquete), (s) => s.reglaId).map((s) => deRegla(r.paquete, s.reglaId, s.motivo))),
+      ...apartado(textos.NO_APLICADAS, enOrdenDeRegla(resultado.noAplicadas.filter((s) => s.paquete === r.paquete), (s) => s.reglaId).map((s) => deRegla(r.paquete, s.reglaId, s.motivo))),
     );
     contenedor.append(seccion);
   });

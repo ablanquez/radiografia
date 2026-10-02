@@ -15,6 +15,8 @@ import { cargarPaquetes, conBarraFinal, FICHEROS } from '../src/pantalla/cargar.
 import { cargarEjemplo, urlDeEjemplo } from '../src/pantalla/ejemplos.ts';
 import { parametrosEnLlano, primeraFrase, reglasDelCatalogo, urlDeRegla, urlDelAnalizador, urlDelCatalogo } from '../src/catalogo/catalogo.ts';
 import { coincide, paraBuscar } from '../src/catalogo/filtro.ts';
+import { enOrden } from '../src/orden.ts';
+import { indexar } from '../src/pantalla/pintar.ts';
 import { paquetesIncluidos } from './apoyo.ts';
 import type { Paquete, ResultadoDeValidacion } from '@radiografia/motor/navegador';
 
@@ -247,5 +249,44 @@ describe('el catálogo de reglas (encargo 7.1, b)', () => {
       'Dispara: por debajo de la banda humana',
       'Banda humana: entre los percentiles 1 y 99 de los textos humanos de su género y longitud',
     ]);
+  });
+});
+
+describe('el orden de presentación (cierre del 7.1, firmado por Antonio)', () => {
+  test('enOrden: por cada clave, los números de menor a mayor y los textos con localeCompare en «es»; sin tocar la lista', () => {
+    const palabras = ['Zeta', 'Ñu', 'árbol', 'Nube', 'Abeto', 'Árbol'];
+    assert.deepEqual(enOrden(palabras, (p) => [p]), ['Abeto', 'árbol', 'Árbol', 'Nube', 'Ñu', 'Zeta']);
+    assert.deepEqual(palabras, ['Zeta', 'Ñu', 'árbol', 'Nube', 'Abeto', 'Árbol'], 'la lista de entrada no cambia');
+    const filas = [
+      { p: 1, f: 'Ortotipografía', r: 'Mes' },
+      { p: 0, f: 'Sintaxis', r: 'Coletilla' },
+      { p: 0, f: 'Léxico', r: 'Verbos' },
+      { p: 0, f: 'Léxico', r: 'Adjetivo' },
+      { p: 1, f: 'Gramática', r: 'Pasiva' },
+    ];
+    assert.deepEqual(
+      enOrden(filas, (x) => [x.p, x.f, x.r]).map((x) => x.r),
+      ['Adjetivo', 'Verbos', 'Coletilla', 'Pasiva', 'Mes'],
+    );
+  });
+
+  test('generosDe: «general» primero y el resto alfabético por su nombre visible', () => {
+    assert.deepEqual(generosDe(paquetesIncluidos()[0]!), ['general', 'academico', 'administrativo', 'narrativa-clasica', 'noticia', 'opinion']);
+  });
+
+  test('indexar: las familias, por paquete y alfabéticas por su nombre; cada una con el color de antes', () => {
+    assert.deepEqual(
+      indexar(paquetesIncluidos()).familias.map((f) => [f.clave, f.clase]),
+      [
+        ['RadiografIA::canal', 'familia-informativa'],
+        ['RadiografIA::discurso', 'familia-color-4'],
+        ['RadiografIA::estadistica', 'familia-color-3'],
+        ['RadiografIA::lexico', 'familia-color-0'],
+        ['RadiografIA::puntuacion-formato', 'familia-color-2'],
+        ['RadiografIA::sintaxis', 'familia-color-1'],
+        ['Español correcto::gramatica', 'familia-color-5'],
+        ['Español correcto::ortotipografia', 'familia-color-6'],
+      ],
+    );
   });
 });

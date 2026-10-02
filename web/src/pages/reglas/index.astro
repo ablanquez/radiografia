@@ -13,6 +13,8 @@
  * El buscador y los filtros son JavaScript del navegador sobre esta lista ya
  * pintada (catalogo/buscador.ts): ocultan y enseñan filas, sin librerías y
  * sin volver a pintar. Sin JavaScript, la lista se ve entera.
+ * El orden de las filas y de las casillas de familia y de detector, el de
+ * orden.ts (cierre del 7.1); las de severidad, baja → media → alta.
  * Cada control con su etiqueta: el buscador con <label for>, y cada casilla
  * dentro de su <label>, agrupadas en un <fieldset> con su <legend>.
  * [DOC] https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/label
@@ -31,17 +33,27 @@
 import Catalogo from '../../layouts/Catalogo.astro';
 import { DETECTORES, primeraFrase, SEVERIDADES, urlDeRegla } from '../../catalogo/catalogo.ts';
 import { paraBuscar } from '../../catalogo/filtro.ts';
+import { enOrden } from '../../orden.ts';
 import { ENTRADAS, PAQUETES } from '../../catalogo/paquetes.ts';
 import { nombreDeRegla } from '../../pantalla/humanizar.ts';
 import * as textos from '../../textos.ts';
 
 const base = import.meta.env.BASE_URL;
 const peso = new Intl.NumberFormat('es');
-const familias = PAQUETES.flatMap((p) => p.cabecera.familias.map((f) => ({ valor: `${p.cabecera.nombre}::${f.id}`, etiqueta: `${f.nombre} (${p.cabecera.nombre})` })));
-const filas = ENTRADAS.map(({ regla, paquete, familia }) => {
-  const nombre = nombreDeRegla(regla.id, regla);
-  return { regla, paquete, familia, nombre, texto: paraBuscar(`${nombre} ${regla.id} ${regla.explicacion}`) };
-});
+// El orden (cierre del 7.1, orden.ts): paquetes como los carga el analizador; familias y reglas, alfabéticas por su nombre.
+const posicion = new Map(PAQUETES.map((p, i) => [p.cabecera.nombre, i]));
+const familias = enOrden(
+  PAQUETES.flatMap((p, i) => p.cabecera.familias.map((f) => ({ i, nombre: f.nombre, valor: `${p.cabecera.nombre}::${f.id}`, etiqueta: `${f.nombre} (${p.cabecera.nombre})` }))),
+  (f) => [f.i, f.nombre],
+);
+const detectores = enOrden(DETECTORES, (d) => [d]);
+const filas = enOrden(
+  ENTRADAS.map(({ regla, paquete, familia }) => {
+    const nombre = nombreDeRegla(regla.id, regla);
+    return { regla, paquete, familia, nombre, texto: paraBuscar(`${nombre} ${regla.id} ${regla.explicacion}`) };
+  }),
+  (x) => [posicion.get(x.paquete.nombre) ?? 0, x.familia.nombre, x.nombre],
+);
 ---
 
 <Catalogo titulo={textos.CATALOGO}>
@@ -60,7 +72,7 @@ const filas = ENTRADAS.map(({ regla, paquete, familia }) => {
     </fieldset>
     <fieldset>
       <legend>{textos.DETECTOR}</legend>
-      {DETECTORES.map((d) => <label><input type="checkbox" name="detector" value={d} /> {d}</label>)}
+      {detectores.map((d) => <label><input type="checkbox" name="detector" value={d} /> {d}</label>)}
     </fieldset>
     <button id="quitar-filtros" type="button">{textos.QUITAR_FILTROS}</button>
   </form>
