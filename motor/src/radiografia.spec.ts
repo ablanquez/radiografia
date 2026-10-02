@@ -1,7 +1,7 @@
 /**
  * El juez del paquete real, paquetes/radiografia.json (encargo 5.1; punto 5
  * del plan): lo que el esquema del motor no exige, porque sirve también a
- * paquetes de terceros, y RadiografIA sí. Diez condiciones:
+ * paquetes de terceros, y RadiografIA sí. Once condiciones:
  *   1. valida — pasa validarPaquete sin ningún error.
  *   2. sin-fuente — ninguna regla con nivelEvidencia «sin fuente»: el esquema
  *      lo admite para paquetes de terceros; RadiografIA no (decisión del 3.1,
@@ -55,6 +55,10 @@
  *      más allá por construcción («1 de cada 20» o «100» si mira un lado, «10»
  *      o «50» si mira los dos); y una regla en p99 lleva una excepción que
  *      empieza por «Corte en el percentil» y dice por qué (lo firmado).
+ *  11. nombre (encargo 7.1) — toda regla lleva nombre (el esquema lo deja
+ *      opcional, por los paquetes de terceros), que empieza por mayúscula, no
+ *      contiene el id, no termina en punto y no lo lleva otra regla del
+ *      paquete. Lo que dice cada nombre lo firmó Antonio en la parada 1 del 7.1.
  *
  * Cada condición tiene al menos un caso que la rompe sobre una copia del
  * paquete real, y el juez tiene que nombrar esa condición y ninguna otra
@@ -98,7 +102,7 @@ const MAXIMO: Readonly<Partial<Record<Regla['nivelEvidencia'], number>>> = {
   norma: 0,
 };
 
-type Condicion = 'valida' | 'sin-fuente' | 'fuente-https' | 'seis-familias' | 'canal-informativa' | 'ids' | 'peso' | 'regex-ascii' | 'regex-u' | 'estadistica';
+type Condicion = 'valida' | 'sin-fuente' | 'fuente-https' | 'seis-familias' | 'canal-informativa' | 'ids' | 'peso' | 'regex-ascii' | 'regex-u' | 'estadistica' | 'nombre';
 
 /** Las palabras de prosa de un ejemplo (umbral.ts): lo que decide si llega al tramo completo. */
 const palabras = (ejemplo: string): number => evaluarLongitud(analizarTexto(ejemplo)).palabrasProsa;
@@ -122,6 +126,7 @@ function comprobar(paquete: Paquete): Problema[] {
   if (familia.get('canal')?.informativa !== true) mal('canal-informativa', 'la familia canal no es informativa');
 
   const vistos = new Set<string>();
+  const nombres = new Set<string>();
   // Una barra inversa SIN escapar (con un número par de barras delante) seguida de la letra.
   const ASCII = /(?:^|[^\\])(?:\\\\)*\\[bBwW]/;
   const UNICODE = /(?:^|[^\\])(?:\\\\)*\\[pP]\{/;
@@ -169,6 +174,15 @@ function comprobar(paquete: Paquete): Problema[] {
       }
     }
 
+    if (r.nombre === undefined) mal('nombre', `regla "${r.id}": no tiene nombre`);
+    else {
+      if (!/^\p{Lu}/u.test(r.nombre)) mal('nombre', `regla "${r.id}": el nombre «${r.nombre}» no empieza por mayúscula`);
+      if (r.nombre.toLowerCase().includes(r.id)) mal('nombre', `regla "${r.id}": el nombre «${r.nombre}» contiene el id`);
+      if (r.nombre.endsWith('.')) mal('nombre', `regla "${r.id}": el nombre «${r.nombre}» termina en punto`);
+      if (nombres.has(r.nombre)) mal('nombre', `regla "${r.id}": el nombre «${r.nombre}» ya lo lleva otra regla del paquete`);
+      nombres.add(r.nombre);
+    }
+
     if (vistos.has(r.id)) mal('ids', `regla "${r.id}": id repetido`);
     vistos.add(r.id);
     const prefijo = PREFIJOS[r.familia];
@@ -191,7 +205,7 @@ function comprobar(paquete: Paquete): Problema[] {
 }
 
 describe('el paquete RadiografIA (paquetes/radiografia.json)', () => {
-  test('cumple las diez condiciones', () => {
+  test('cumple las once condiciones', () => {
     assert.deepEqual(comprobar(leer()), []);
   });
 });
@@ -361,11 +375,19 @@ describe('el juez de RadiografIA caza cada condición rota', () => {
         delete q.flags;
       },
     ],
+    // Encargo 7.1: el nombre de la regla.
+    ['una regla sin nombre', ['nombre'], (p) => delete regla(p, 'pf-raya-densidad').nombre],
+    // El esquema también lo caza (minLength 3).
+    ['un nombre vacío', ['valida', 'nombre'], (p) => (regla(p, 'pf-raya-densidad').nombre = '')],
+    ['un nombre que empieza por minúscula', ['nombre'], (p) => (regla(p, 'pf-raya-densidad').nombre = 'nombre en minúscula')],
+    ['un nombre que contiene el id', ['nombre'], (p) => (regla(p, 'pf-raya-densidad').nombre = 'Regla pf-raya-densidad')],
+    ['un nombre que termina en punto', ['nombre'], (p) => (regla(p, 'pf-raya-densidad').nombre = 'Nombre con punto.')],
+    ['dos reglas con el mismo nombre', ['nombre'], (p) => (regla(p, 'pf-raya-espaciada').nombre = regla(p, 'pf-raya-densidad').nombre)],
   ];
 
   test('hay al menos un caso por condición', () => {
     const cubiertas = new Set(casos.flatMap(([, condiciones]) => condiciones));
-    assert.deepEqual([...cubiertas].sort(), ['canal-informativa', 'estadistica', 'fuente-https', 'ids', 'peso', 'regex-ascii', 'regex-u', 'seis-familias', 'sin-fuente', 'valida']);
+    assert.deepEqual([...cubiertas].sort(), ['canal-informativa', 'estadistica', 'fuente-https', 'ids', 'nombre', 'peso', 'regex-ascii', 'regex-u', 'seis-familias', 'sin-fuente', 'valida']);
   });
 
   for (const [nombre, esperadas, romper] of casos) {

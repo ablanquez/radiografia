@@ -23,6 +23,7 @@
   "reglas": [
     {
       "id": "gram-pasiva-perifrastica",
+      "nombre": "Pasiva perifrástica con agente",
       "familia": "gramatica",
       "detector": "patrón",
       "parametros": {
@@ -71,6 +72,7 @@
     },
     {
       "id": "gram-posesivo-por-articulo",
+      "nombre": "Posesivo en lugar de artículo",
       "familia": "gramatica",
       "detector": "patrón",
       "parametros": {
@@ -120,6 +122,7 @@
     },
     {
       "id": "orto-punto-dentro-de-comillas",
+      "nombre": "Puntuación dentro de las comillas",
       "familia": "ortotipografia",
       "detector": "patrón",
       "parametros": {
@@ -163,6 +166,7 @@
     },
     {
       "id": "orto-mayuscula-en-cada-palabra-de-titulo",
+      "nombre": "Mayúscula en cada palabra del título",
       "familia": "ortotipografia",
       "detector": "estructural",
       "parametros": {
@@ -205,6 +209,7 @@
     },
     {
       "id": "orto-mes-o-dia-con-mayuscula",
+      "nombre": "Mes o día con mayúscula",
       "familia": "ortotipografia",
       "detector": "patrón",
       "parametros": {
@@ -248,6 +253,7 @@
     },
     {
       "id": "orto-cifras-a-la-inglesa",
+      "nombre": "Millares separados con coma",
       "familia": "ortotipografia",
       "detector": "patrón",
       "parametros": {
@@ -298,6 +304,7 @@
     },
     {
       "id": "orto-moneda-antepuesta",
+      "nombre": "Símbolo de moneda antepuesto",
       "familia": "ortotipografia",
       "detector": "patrón",
       "parametros": {

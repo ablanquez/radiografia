@@ -1,7 +1,7 @@
 /**
  * El juez del segundo paquete incluido, paquetes/espanol-correcto.json
  * (encargo 5.4; decisión 7 del 29/09: «siete avisos de norma RAE… nada más
- * en la v1»). Lo que el esquema del motor no exige y este paquete sí. Siete
+ * en la v1»). Lo que el esquema del motor no exige y este paquete sí. Ocho
  * condiciones:
  *   1. valida — pasa validarPaquete sin ningún error.
  *   2. siete-reglas — exactamente siete: el plan dice siete y ninguna más.
@@ -16,6 +16,10 @@
  *   7. prefijos — las familias declaradas son exactamente gramatica y
  *      ortotipografia, y cada id empieza por el prefijo de su familia
  *      (gram-, orto-).
+ *   8. nombre (encargo 7.1) — toda regla lleva nombre (el esquema lo deja
+ *      opcional, por los paquetes de terceros), que empieza por mayúscula, no
+ *      contiene el id, no termina en punto y no lo lleva otra regla del
+ *      paquete. Lo que dice cada nombre lo firmó Antonio en la parada 1 del 7.1.
  *
  * Cada condición tiene al menos un caso que la rompe sobre una copia del
  * paquete, y el juez tiene que nombrar esa condición y ninguna otra (salvo
@@ -46,7 +50,7 @@ const PREFIJOS: Readonly<Record<string, string>> = { gramatica: 'gram-', ortotip
 const REGLAS = 7;
 const RAE = 'https://www.rae.es/';
 
-type Condicion = 'valida' | 'siete-reglas' | 'norma' | 'peso-1' | 'fuente-rae' | 'ninguna-informativa' | 'prefijos';
+type Condicion = 'valida' | 'siete-reglas' | 'norma' | 'peso-1' | 'fuente-rae' | 'ninguna-informativa' | 'prefijos' | 'nombre';
 
 interface Problema {
   condicion: Condicion;
@@ -66,11 +70,20 @@ function comprobar(paquete: Paquete): Problema[] {
     mal('prefijos', `declara ${declaradas.join(', ')}; tienen que ser ${Object.keys(PREFIJOS).join(', ')}`);
   }
 
+  const nombres = new Set<string>();
   for (const r of paquete.reglas) {
     if (r.nivelEvidencia !== 'norma') mal('norma', `regla "${r.id}": nivelEvidencia «${r.nivelEvidencia}»`);
     if (r.peso !== 1) mal('peso-1', `regla "${r.id}": peso ${r.peso}`);
     if (r.informativa) mal('ninguna-informativa', `regla "${r.id}": es informativa y un aviso de norma se cuenta`);
     if (!r.fuente.some((f) => f.url.startsWith(RAE))) mal('fuente-rae', `regla "${r.id}": ninguna fuente en ${RAE}`);
+    if (r.nombre === undefined) mal('nombre', `regla "${r.id}": no tiene nombre`);
+    else {
+      if (!/^\p{Lu}/u.test(r.nombre)) mal('nombre', `regla "${r.id}": el nombre «${r.nombre}» no empieza por mayúscula`);
+      if (r.nombre.toLowerCase().includes(r.id)) mal('nombre', `regla "${r.id}": el nombre «${r.nombre}» contiene el id`);
+      if (r.nombre.endsWith('.')) mal('nombre', `regla "${r.id}": el nombre «${r.nombre}» termina en punto`);
+      if (nombres.has(r.nombre)) mal('nombre', `regla "${r.id}": el nombre «${r.nombre}» ya lo lleva otra regla del paquete`);
+      nombres.add(r.nombre);
+    }
     const prefijo = PREFIJOS[r.familia];
     if (prefijo === undefined) mal('prefijos', `regla "${r.id}": la familia "${r.familia}" no es de este paquete`);
     else if (!r.id.startsWith(prefijo)) mal('prefijos', `regla "${r.id}": no empieza por "${prefijo}", el prefijo de "${r.familia}"`);
@@ -79,7 +92,7 @@ function comprobar(paquete: Paquete): Problema[] {
 }
 
 describe('el paquete «Español correcto» (paquetes/espanol-correcto.json)', () => {
-  test('cumple las siete condiciones', () => {
+  test('cumple las ocho condiciones', () => {
     assert.deepEqual(comprobar(leer()), []);
   });
 });
@@ -95,7 +108,7 @@ describe('el juez de «Español correcto» caza cada condición rota', () => {
   const casos: [string, Condicion[], (p: Paquete) => void][] = [
     ['una severidad fuera del enum', ['valida'], (p) => (regla(p, 'orto-moneda-antepuesta').severidad = 'altísima' as Regla['severidad'])],
     ['seis reglas', ['siete-reglas'], (p) => (p.reglas = p.reglas.filter((r) => r.id !== 'orto-moneda-antepuesta'))],
-    ['ocho reglas (una copia con otro id)', ['siete-reglas'], (p) => p.reglas.push({ ...regla(p, 'orto-moneda-antepuesta'), id: 'orto-moneda-copia' })],
+    ['ocho reglas (una copia con otro id y otro nombre)', ['siete-reglas'], (p) => p.reglas.push({ ...regla(p, 'orto-moneda-antepuesta'), id: 'orto-moneda-copia', nombre: 'Copia de la moneda antepuesta' })],
     ['una regla «medido en inglés»', ['norma'], (p) => (regla(p, 'gram-pasiva-perifrastica').nivelEvidencia = 'medido en inglés')],
     ['una regla con peso 2', ['peso-1'], (p) => (regla(p, 'orto-cifras-a-la-inglesa').peso = 2)],
     ['una regla con peso 0', ['peso-1'], (p) => (regla(p, 'orto-cifras-a-la-inglesa').peso = 0)],
@@ -114,11 +127,19 @@ describe('el juez de «Español correcto» caza cada condición rota', () => {
     ['un id sin el prefijo de su familia', ['prefijos'], (p) => (regla(p, 'orto-moneda-antepuesta').id = 'moneda-antepuesta')],
     ['una regla de gramática con el prefijo «orto-»', ['prefijos'], (p) => (regla(p, 'gram-pasiva-perifrastica').familia = 'ortotipografia')],
     ['una tercera familia declarada', ['prefijos'], (p) => p.cabecera.familias.push({ id: 'lexico', nombre: 'Léxico', informativa: false })],
+    // Encargo 7.1: el nombre de la regla.
+    ['una regla sin nombre', ['nombre'], (p) => delete regla(p, 'orto-moneda-antepuesta').nombre],
+    // El esquema también lo caza (minLength 3).
+    ['un nombre vacío', ['valida', 'nombre'], (p) => (regla(p, 'orto-moneda-antepuesta').nombre = '')],
+    ['un nombre que empieza por minúscula', ['nombre'], (p) => (regla(p, 'orto-moneda-antepuesta').nombre = 'nombre en minúscula')],
+    ['un nombre que contiene el id', ['nombre'], (p) => (regla(p, 'orto-moneda-antepuesta').nombre = 'Regla orto-moneda-antepuesta')],
+    ['un nombre que termina en punto', ['nombre'], (p) => (regla(p, 'orto-moneda-antepuesta').nombre = 'Nombre con punto.')],
+    ['dos reglas con el mismo nombre', ['nombre'], (p) => (regla(p, 'orto-cifras-a-la-inglesa').nombre = regla(p, 'orto-moneda-antepuesta').nombre)],
   ];
 
   test('hay al menos un caso por condición', () => {
     const cubiertas = new Set(casos.flatMap(([, condiciones]) => condiciones));
-    assert.deepEqual([...cubiertas].sort(), ['fuente-rae', 'ninguna-informativa', 'norma', 'peso-1', 'prefijos', 'siete-reglas', 'valida']);
+    assert.deepEqual([...cubiertas].sort(), ['fuente-rae', 'ninguna-informativa', 'nombre', 'norma', 'peso-1', 'prefijos', 'siete-reglas', 'valida']);
   });
 
   for (const [nombre, esperadas, romper] of casos) {

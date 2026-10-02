@@ -2705,6 +2705,7 @@
   "reglas": [
     {
       "id": "canal-negrita-markdown",
+      "nombre": "Negrita de Markdown",
       "familia": "canal",
       "detector": "patrón",
       "parametros": {
@@ -2757,6 +2758,7 @@
     },
     {
       "id": "canal-encabezado-markdown",
+      "nombre": "Encabezado de Markdown",
       "familia": "canal",
       "detector": "estructural",
       "parametros": {
@@ -2800,6 +2802,7 @@
     },
     {
       "id": "canal-vineta-con-negrita-inicial",
+      "nombre": "Viñeta con rótulo en negrita",
       "familia": "canal",
       "detector": "estructural",
       "parametros": {
@@ -2841,6 +2844,7 @@
     },
     {
       "id": "canal-separador-o-tabla",
+      "nombre": "Separador o tabla de Markdown",
       "familia": "canal",
       "detector": "estructural",
       "parametros": {
@@ -2883,6 +2887,7 @@
     },
     {
       "id": "canal-espacio-estrecho-u202f",
+      "nombre": "Espacio estrecho de no separación",
       "familia": "canal",
       "detector": "patrón",
       "parametros": {
@@ -2929,6 +2934,7 @@
     },
     {
       "id": "canal-invisibles-unicode",
+      "nombre": "Caracteres de ancho cero",
       "familia": "canal",
       "detector": "patrón",
       "parametros": {
@@ -2978,6 +2984,7 @@
     },
     {
       "id": "pf-raya-densidad",
+      "nombre": "Densidad de rayas",
       "familia": "puntuacion-formato",
       "detector": "patrón",
       "parametros": {
@@ -3040,6 +3047,7 @@
     },
     {
       "id": "pf-raya-espaciada",
+      "nombre": "Raya entre espacios",
       "familia": "puntuacion-formato",
       "detector": "patrón",
       "parametros": {
@@ -3097,6 +3105,7 @@
     },
     {
       "id": "lex-frases-de-chatbot",
+      "nombre": "Fórmulas de asistente de chat",
       "familia": "lexico",
       "detector": "patrón",
       "parametros": {
@@ -3140,6 +3149,7 @@
     },
     {
       "id": "lex-verbos-de-enfasis",
+      "nombre": "Verbos de énfasis",
       "familia": "lexico",
       "detector": "patrón",
       "parametros": {
@@ -3189,6 +3199,7 @@
     },
     {
       "id": "lex-importancia",
+      "nombre": "Sustantivo «importancia»",
       "familia": "lexico",
       "detector": "patrón",
       "parametros": {
@@ -3237,6 +3248,7 @@
     },
     {
       "id": "lex-es-importante-mas-verbo",
+      "nombre": "Fórmula «es importante + verbo»",
       "familia": "lexico",
       "detector": "patrón",
       "parametros": {
@@ -3282,6 +3294,7 @@
     },
     {
       "id": "lex-innovador",
+      "nombre": "Adjetivo «innovador»",
       "familia": "lexico",
       "detector": "patrón",
       "parametros": {
@@ -3332,6 +3345,7 @@
     },
     {
       "id": "lex-imborrable-multidisciplinario-impecable",
+      "nombre": "Imborrable, multidisciplinario, impecable",
       "familia": "lexico",
       "detector": "patrón",
       "parametros": {
@@ -3387,6 +3401,7 @@
     },
     {
       "id": "lex-conector-de-apertura",
+      "nombre": "Conector de apertura",
       "familia": "lexico",
       "detector": "estructural",
       "parametros": {
@@ -3436,6 +3451,7 @@
     },
     {
       "id": "lex-trigramas-sobreusados",
+      "nombre": "Secuencias de tres palabras recurrentes",
       "familia": "lexico",
       "detector": "patrón",
       "parametros": {
@@ -3478,6 +3494,7 @@
     },
     {
       "id": "lex-traslados-del-ingles",
+      "nombre": "Calcos léxicos del inglés",
       "familia": "lexico",
       "detector": "patrón",
       "parametros": {
@@ -3554,6 +3571,7 @@
     },
     {
       "id": "lex-no-solo-sino",
+      "nombre": "No solo… sino",
       "familia": "lexico",
       "detector": "estructural",
       "parametros": {
@@ -3596,6 +3614,7 @@
     },
     {
       "id": "lex-verbos-corporativos",
+      "nombre": "Verbos corporativos",
       "familia": "lexico",
       "detector": "patrón",
       "parametros": {
@@ -3648,6 +3667,7 @@
     },
     {
       "id": "disc-cierre-de-plantilla",
+      "nombre": "Cierre de plantilla",
       "familia": "discurso",
       "detector": "estructural",
       "parametros": {
@@ -3700,6 +3720,7 @@
     },
     {
       "id": "disc-marcador-repetido",
+      "nombre": "Conector repetido",
       "familia": "discurso",
       "detector": "estructural",
       "parametros": {
@@ -3751,6 +3772,7 @@
     },
     {
       "id": "disc-sin-marcadores-epistemicos",
+      "nombre": "Sin marcadores de opinión ni duda",
       "familia": "discurso",
       "generos": [
         "opinion",
@@ -3807,6 +3829,7 @@
     },
     {
       "id": "disc-sin-automenciones",
+      "nombre": "Sin primera persona",
       "familia": "discurso",
       "generos": [
         "opinion",
@@ -3866,6 +3889,7 @@
     },
     {
       "id": "disc-encuadre-ordinal",
+      "nombre": "Marcadores de orden",
       "familia": "discurso",
       "detector": "estructural",
       "parametros": {
@@ -3910,6 +3934,7 @@
     },
     {
       "id": "disc-referencia-interna-concreta",
+      "nombre": "Referencia interna concreta",
       "familia": "discurso",
       "detector": "patrón",
       "parametros": {
@@ -3955,6 +3980,7 @@
     },
     {
       "id": "disc-puffery-de-significancia",
+      "nombre": "Importancia inflada",
       "familia": "discurso",
       "detector": "patrón",
       "parametros": {
@@ -3997,6 +4023,7 @@
     },
     {
       "id": "disc-atribucion-vaga",
+      "nombre": "Atribución vaga",
       "familia": "discurso",
       "detector": "patrón",
       "parametros": {
@@ -4044,6 +4071,7 @@
     },
     {
       "id": "disc-retos-y-futuro",
+      "nombre": "Fórmula de retos y futuro",
       "familia": "discurso",
       "detector": "patrón",
       "parametros": {
@@ -4086,6 +4114,7 @@
     },
     {
       "id": "disc-anecdota-en-primera-persona",
+      "nombre": "Anécdota en primera persona",
       "familia": "discurso",
       "detector": "patrón",
       "parametros": {
@@ -4134,6 +4163,7 @@
     },
     {
       "id": "sint-gerundio-adjunto-final",
+      "nombre": "Coletilla de gerundio final",
       "familia": "sintaxis",
       "detector": "estructural",
       "parametros": {
@@ -4190,6 +4220,7 @@
     },
     {
       "id": "est-frases-cortas",
+      "nombre": "Frases cortas",
       "familia": "estadistica",
       "detector": "estadístico",
       "parametros": {
@@ -4235,6 +4266,7 @@
     },
     {
       "id": "est-ritmo-uniforme",
+      "nombre": "Frases de longitud pareja",
       "familia": "estadistica",
       "detector": "estadístico",
       "parametros": {
@@ -4289,6 +4321,7 @@
     },
     {
       "id": "est-pocas-comas",
+      "nombre": "Pocas comas",
       "familia": "estadistica",
       "detector": "estadístico",
       "parametros": {
@@ -4335,6 +4368,7 @@
     },
     {
       "id": "est-poca-puntuacion-secundaria",
+      "nombre": "Poca puntuación secundaria",
       "familia": "estadistica",
       "detector": "estadístico",
       "parametros": {
@@ -4380,6 +4414,7 @@
     },
     {
       "id": "est-poca-puntuacion",
+      "nombre": "Poca puntuación",
       "familia": "estadistica",
       "detector": "estadístico",
       "parametros": {
@@ -4429,6 +4464,7 @@
     },
     {
       "id": "est-nominalizacion",
+      "nombre": "Muchas nominalizaciones",
       "familia": "estadistica",
       "detector": "estadístico",
       "parametros": {
@@ -4478,6 +4514,7 @@
     },
     {
       "id": "est-repeticion-de-secuencias",
+      "nombre": "Secuencias de cuatro palabras repetidas",
       "familia": "estadistica",
       "detector": "estadístico",
       "parametros": {
@@ -4523,6 +4560,7 @@
     },
     {
       "id": "est-diversidad-mattr",
+      "nombre": "Diversidad del vocabulario (MATTR)",
       "familia": "estadistica",
       "detector": "estadístico",
       "parametros": {
@@ -4573,6 +4611,7 @@
     },
     {
       "id": "est-diversidad-mtld",
+      "nombre": "Diversidad del vocabulario (MTLD)",
       "familia": "estadistica",
       "detector": "estadístico",
       "parametros": {
@@ -4627,6 +4666,7 @@
     },
     {
       "id": "est-diversidad-hdd",
+      "nombre": "Diversidad del vocabulario (HD-D)",
       "familia": "estadistica",
       "detector": "estadístico",
       "parametros": {
@@ -4681,6 +4721,7 @@
     },
     {
       "id": "est-legibilidad-ifsz",
+      "nombre": "Legibilidad (INFLESZ)",
       "familia": "estadistica",
       "detector": "estadístico",
       "parametros": {
@@ -4727,6 +4768,7 @@
     },
     {
       "id": "est-ttr",
+      "nombre": "Proporción de palabras distintas (TTR)",
       "familia": "estadistica",
       "detector": "estadístico",
       "parametros": {
@@ -4773,6 +4815,7 @@
     },
     {
       "id": "est-pronombres-anaforicos",
+      "nombre": "Pronombres anafóricos",
       "familia": "estadistica",
       "detector": "estadístico",
       "parametros": {
