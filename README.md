@@ -36,9 +36,10 @@ el texto ni las reglas.
 ## Estado
 
 **En construcción.** Hoy (02/10/2026) existe el plan firmado, la
-investigación de las familias en [`docs/investigacion/`](docs/investigacion/)
-y, en la carpeta [`motor/`](motor/), el **motor completo**, probado con
-paquetes de prueba:
+investigación de las familias en [`docs/investigacion/`](docs/investigacion/),
+la **pantalla mínima** en [`web/`](web/) (abajo, [«Cómo
+ejecutar»](#cómo-ejecutar)) y, en la carpeta [`motor/`](motor/), el **motor
+completo**, probado con paquetes de prueba:
 
 - el **esquema del paquete y de la ficha de regla** (JSON Schema 2020-12),
   con los parámetros de cada tipo de detector ya cerrados, y un
@@ -79,9 +80,10 @@ paquetes de prueba:
   ([`motor/src/navegador.ts`](motor/src/navegador.ts)): el análisis, la
   escala y el validador de paquetes, sin Ajv y sin nada de Node. El
   validador de esquema va compilado de antemano, en build. Empaquetada y sin
-  minificar ocupa unos 210 KB, y unos 570 KB con los dos paquetes y su
-  calibración (medido el 02/10/2026). Un juez comprueba que hace lo mismo
-  que el motor en Node.
+  minificar con esbuild ocupa unos 210 KB, y unos 570 KB con los dos
+  paquetes y su calibración (medido el 02/10/2026). Un juez comprueba que
+  hace lo mismo que el motor en Node. Lo que viaja de verdad al navegador, en
+  el build de la web, está abajo, en [«Cómo ejecutar»](#cómo-ejecutar).
 
 Las **métricas** del detector estadístico, cada una con su fórmula y su
 fuente en [`motor/src/metricas/`](motor/src/metricas/):
@@ -124,9 +126,75 @@ referencias ajenas**, no dadas por buenas:
   necesitaban; su código se retiró. La medida entera, en
   [`docs/investigacion/pos-medida.md`](docs/investigacion/pos-medida.md).
 
-No hay pantalla: lo que promete la entrada de este README (subrayados,
-medidor, catálogo) es lo que se va a construir, en el orden de la [hoja de
-ruta](#hoja-de-ruta).
+La pantalla es la mínima: funciona, no luce. Pegas el texto, eliges el
+género y, al pulsar el botón, ves los subrayados por familia, el medidor con
+la banda, la explicación y la sugerencia de cada regla al tocar un
+subrayado, y el desglose de los dos paquetes. Falta, en el orden de la [hoja
+de ruta](#hoja-de-ruta): los textos de ejemplo y el paso de los textos de la
+web por los dos paquetes (6.3), el catálogo de reglas (punto 7), el cargador
+de paquetes (8), el informe PDF (9), el diseño (10) y el despliegue (11).
+
+## Cómo ejecutar
+
+Hace falta Node 24.12 o posterior. En la raíz del repositorio:
+
+```bash
+npm install                    # instala los dos workspaces a la vez (motor/ y web/)
+npx astro telemetry disable    # una vez: apaga la telemetría de Astro en tu máquina
+cd web
+npm run dev                    # http://localhost:4321/
+```
+
+- **`predev` y `prebuild`** corren solos antes de `npm run dev` y de `npm run
+  build`. Generan el validador de esquema que lleva el navegador (`npm run
+  generar` del motor, a `motor/dist/`) y copian `paquetes/*.json` a
+  `web/public/paquetes/`, de donde la página los pide al arrancar. Ninguna
+  de las dos carpetas se versiona.
+- **Después de tocar `motor/src/`**, reinicia el servidor con `npm run dev
+  -- --force`. Vite pre-empaqueta el motor, porque lleva un fichero CommonJS
+  (`motor/src/terceros/silabea.cjs`), y sin `--force` sigue sirviendo el de
+  antes (la nota está en [`web/astro.config.mjs`](web/astro.config.mjs)).
+- **La versión construida:** `npm run build` y `npm run preview`, en la
+  misma dirección.
+- **Las pruebas:** `npm test` en la raíz corre los jueces del motor y los de
+  la web, que construyen la página y la sirven con `astro preview`. `npm run
+  tipos` revisa los tipos de los dos workspaces con `tsc`. No se usa `astro
+  check`: añadiría 77 paquetes al árbol y 67 MB para revisar los `.astro`, y
+  aquí los `.astro` solo llevan HTML y el import del script. La lógica va en
+  `.ts`, que revisa `tsc`.
+- **El aviso de npm sobre esbuild** (`allow-scripts … esbuild`) es lo
+  esperado: su `postinstall` no está aprobado y funciona sin él
+  ([`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md), § 1.4).
+
+### Estructura
+
+```text
+motor/      el motor: TypeScript sin compilar, sus jueces y las herramientas de calibración
+web/        la web estática en Astro 7: src/pages/index.astro y la lógica en src/pantalla/
+paquetes/   los dos paquetes de reglas incluidos (RadiografIA y Español correcto)
+data/       los datos de terceros y la calibración, cada carpeta con su licencia
+docs/       la investigación de cada familia y la bitácora de fallos
+```
+
+La raíz es un [workspace de npm](https://docs.npmjs.com/cli/v11/using-npm/workspaces)
+con un solo `package-lock.json`. `web/` importa el motor por
+`@radiografia/motor/navegador`, la entrada sin Ajv ni nada de Node.
+
+### Lo que viaja al navegador
+
+Nada sale del navegador: la página solo pide su JS y los dos paquetes, que
+se validan al arrancar. Medido en el build de la web el 02/10/2026:
+
+| fichero | bytes |
+|---|---|
+| el JS de la página (motor, validador y aviso MIT de Ajv; minificado por Vite) | 122.383 |
+| `paquetes/radiografia.json` (con su calibración) | 336.923 |
+| `paquetes/espanol-correcto.json` | 20.468 |
+| `index.html` | 2.478 |
+
+Los paquetes van aparte del JS, y no dentro, para que el JS se quede en unos
+120 KB y los JSON se puedan guardar en caché por separado. Metidos en el
+build, el JS habría pasado de 400 KB.
 
 ## Paquetes
 
@@ -549,8 +617,9 @@ Hay cuatro bandas:
 La calcula `bandaHumana()`
 ([`motor/src/banda.ts`](motor/src/banda.ts)), y `analizar()` la devuelve
 en el resultado de cada paquete, con los percentiles de referencia (p5,
-p50, p95 y p99) y el número de textos de la celda. La pinta la interfaz
-en el punto 6.
+p50, p95 y p99) y el número de textos de la celda. La pantalla la dice en
+texto claro: «Tu texto queda por encima del p95 de los textos humanos del
+género “Noticia” de 300 a 599 palabras», con su total y los percentiles.
 
 - **Sin banda.** Un paquete sin clave `_total-*` en su calibración, como
   «Español correcto», no tiene banda. Si el género no tiene celda para esa
@@ -563,7 +632,8 @@ en el punto 6.
   ninguna señal y la mediana del total es 0: los cuatro géneros con celda
   de 100 a 299 palabras y administrativo de 300 a 599. Ahí, un texto sin
   ninguna señal cae «entre la mediana y el p95», porque está justo en la
-  mediana. Cómo se dice en pantalla se decide en el punto 6.
+  mediana. Por eso la pantalla, con un total de 0, dice «sin señales» y no
+  da la banda.
 
 ## Cómo está pensado
 
