@@ -3160,6 +3160,7 @@
         "Prensa y crónica: «destacar» y «subrayar» son verbos corrientes para citar declaraciones («El ministro destacó que…»). El motor no distingue ese uso: la señal cuenta por acumulación.",
         "Frecuencia en wordfreq: «destaca», Zipf 4,44, y «destacar», 4,37: aparecen mucho en textos humanos.",
         "La raíz coge también «destacado», «destacada» o «destacable» como adjetivos («un destacado escritor»); «destacamento» no cuenta.",
+        "Falso positivo conocido: «subrayado» y «subrayados» como sustantivo (el nombre de la función de RadiografIA, y el del acto de subrayar). La regla busca la raíz subray- y no distingue el nombre del verbo. La web lo usa en su interfaz y no se cambia (decisión del 01/10; lo vigila web/jueces/textos-web.spec.ts).",
         "Juzek avisa de que las señales léxicas cambian de un modelo a otro (GPT frente a Gemini, ρ = 0,46) y de que su trabajo no está pensado para detectar IA.",
         "En la revalidación del 6.1 (02/10/2026, textos humanos apartados) dispara en el 46,5 % de los textos académicos de 300 palabras o más (78,9 % en los de 600 o más). No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
       ],
