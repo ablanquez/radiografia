@@ -109,10 +109,19 @@ inventados; los de RadiografIA están medidos con textos humanos (abajo,
 se apartaron antes de medir (abajo, [«Validación»](#validación)).
 
 Con eso, el punto 5 del plan (el paquete RadiografIA con sus seis
-familias, calibrado y validado) está hecho. Los textos de la propia web
-pasan por los dos paquetes en un juez
-([`web/jueces/textos-web.spec.ts`](web/jueces/textos-web.spec.ts)), con lo
-que RadiografIA marca en ellos declarado y explicado.
+familias, calibrado y validado) está hecho.
+
+Los textos de la propia web también pasan por los dos paquetes, en un juez
+([`web/jueces/textos-web.spec.ts`](web/jueces/textos-web.spec.ts)). Entran el
+texto visible de la página y todas las cadenas de la interfaz: 334 palabras de
+prosa, analizadas con «general».
+
+- **Español correcto** no da ninguna señal.
+- **RadiografIA** puntúa dos reglas, declaradas en el juez con su porqué:
+  - `lex-verbos-de-enfasis`, por «subrayado», el nombre de la función, que
+    está declarado en su ficha;
+  - `est-frases-cortas`, porque son etiquetas sueltas, no prosa, y cada una
+    cuenta como una frase.
 
 Las piezas de apoyo que las reglas necesitarán están **medidas contra
 referencias ajenas**, no dadas por buenas:

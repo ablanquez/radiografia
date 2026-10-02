@@ -44,7 +44,7 @@ export const EXPLICACION = 'Explicación';
 export const SUGERENCIA = 'Sugerencia';
 export const NIVEL_DE_EVIDENCIA = 'Nivel de evidencia';
 export const ORIGEN_DE_LA_LISTA = 'Origen de la lista';
-export const SIN_DATO = '—';
+export const SIN_DATO = 'sin dato';
 
 // El medidor.
 export const TEXTO_INSUFICIENTE = 'Texto insuficiente';

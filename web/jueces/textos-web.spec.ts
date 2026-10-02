@@ -43,8 +43,6 @@ const DECLARADAS: Readonly<Record<string, string>> = {
     '«subrayado», la muestra de la leyenda, es el nombre de la función y no se cambia (decisión del 01/10). La regla busca la raíz subray- y no distingue el nombre del verbo; está declarado en su ficha.',
   'est-frases-cortas':
     'los textos de la web son etiquetas y mensajes sueltos, no prosa: cada uno cuenta como una frase, y salen muchas frases para tan pocas palabras. Juntarlos en frases largas para que no dispare sería escribir para la regla.',
-  'pf-raya-densidad':
-    'la raya sola es la marca de «sin dato» del panel («Origen de la lista: —»), no una raya de inciso; la regla cuenta toda raya (U+2014).',
 };
 
 /** Los datos con que se llama a cada función de textos.ts: los que pinta la página en un análisis de verdad. */
