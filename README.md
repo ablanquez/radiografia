@@ -114,16 +114,19 @@ familias, calibrado y validado) está hecho.
 Los textos de la propia web también pasan por los dos paquetes, en un juez
 ([`web/jueces/textos-web.spec.ts`](web/jueces/textos-web.spec.ts)). Entran el
 texto visible de la página del analizador y todas las cadenas de la interfaz,
-también las del catálogo: 527 palabras de prosa, analizadas con «general». No
-entra el contenido de las fichas de las reglas, porque menciona las formas
-que las reglas buscan (abajo, [«Catálogo»](#catálogo)).
+también las del catálogo y las del cargador: 731 palabras de prosa,
+analizadas con «general». No entra el contenido de las fichas de las reglas,
+porque menciona las formas que las reglas buscan (abajo,
+[«Catálogo»](#catálogo)).
 
 - **Español correcto** no da ninguna señal.
-- **RadiografIA** puntúa dos reglas, declaradas en el juez con su porqué:
+- **RadiografIA** puntúa tres reglas, declaradas en el juez con su porqué:
   - `lex-verbos-de-enfasis`, por «subrayado», el nombre de la función, que
     está declarado en su ficha;
   - `est-frases-cortas`, porque son etiquetas sueltas, no prosa, y cada una
-    cuenta como una frase.
+    cuenta como una frase;
+  - `est-pocas-comas`, por lo mismo: los mensajes del cargador son frases
+    sueltas y cortas, sin incisos.
 
 Las piezas de apoyo que las reglas necesitarán están **medidas contra
 referencias ajenas**, no dadas por buenas:
@@ -147,7 +150,11 @@ pulsar el botón, ves:
 - el medidor con la banda;
 - la explicación y la sugerencia de cada regla, al tocar un subrayado, con su
   nombre, que lleva a su ficha del catálogo;
-- el desglose de los dos paquetes, con un enlace a la ficha de cada regla.
+- el desglose de cada paquete, con un enlace a la ficha de cada regla.
+
+Y antes de analizar eliges los paquetes: los dos incluidos, con sus
+casillas, y los tuyos, cargados desde el ordenador (abajo, [«Paquetes
+propios»](#paquetes-propios)).
 
 El punto 6 del plan está cerrado: Antonio vio el ciclo entero en Chrome el
 02/10/2026. Después vino la **ampliación 6.4**, mantenimiento del paquete y
@@ -155,14 +162,19 @@ no un punto nuevo. Completó las listas de dos reglas de ausencia, D3 (sin
 marcadores epistémicos) y D4 (sin automenciones), con fuente, y recalculó y
 revalidó la calibración (abajo, [«Validación»](#validación)).
 
-El **catálogo de reglas** (punto 7) está hecho desde el 02/10/2026: una
-página por regla y un índice con buscador y filtros (abajo,
-[«Catálogo»](#catálogo)). Cada regla tiene ya su nombre, con sus tildes.
-Falta que Antonio lo vea en Chrome para cerrar el punto.
+El **catálogo de reglas** (punto 7) está cerrado: una página por regla y un
+índice con buscador y filtros (abajo, [«Catálogo»](#catálogo)), y cada regla
+con su nombre, con sus tildes. Antonio lo vio en Chrome el 02/10/2026.
 
-Falta después, en el orden de la [hoja de ruta](#hoja-de-ruta): el cargador
-de paquetes (punto 8), el informe PDF (9), el diseño (10) y el despliegue
-(11).
+El **cargador de paquetes** (punto 8) está hecho desde el 02/10/2026: las
+casillas de los dos incluidos, un paquete propio que se lee en el navegador
+y no sale de él, la combinación con el origen de cada señal y los errores
+de validación con su regla y su campo (abajo, [«Paquetes
+propios»](#paquetes-propios)). Falta que Antonio lo vea en Chrome para
+cerrar el punto.
+
+Falta después, en el orden de la [hoja de ruta](#hoja-de-ruta): el informe
+PDF (punto 9), el diseño (10) y el despliegue (11).
 
 ## Cómo ejecutar
 
@@ -194,6 +206,12 @@ npm run dev                    # http://localhost:4321/ y el catálogo en http:/
     dev` abierto.
   - Hasta el 02/10/2026 solo se probaba lo construido, y el catálogo rompió
     `npm run dev` sin que nada se pusiera rojo.
+  - Los jueces del cargador
+    ([`web/jueces/navegador.spec.ts`](web/jueces/navegador.spec.ts)) abren
+    la página en **Chrome**, sin ventana, y la manejan por su protocolo de
+    depuración. Hace falta Chrome instalado. Si no está en su ruta de
+    siempre, se le da con la variable `CHROME`. Sin Chrome, esos jueces
+    fallan; no se saltan.
 - **Los tipos:** `npm run tipos` revisa los de los dos workspaces con `tsc`.
   No se usa `astro check`: añadiría 77 paquetes al árbol y 67 MB para
   revisar los `.astro`.
@@ -229,7 +247,8 @@ Get-Content -Encoding UTF8 -Raw texto.txt | Set-Clipboard
 motor/      el motor: TypeScript sin compilar, sus jueces y las herramientas de calibración
 web/        la web estática en Astro 7: el analizador en src/pages/index.astro con su lógica en
             src/pantalla/; el catálogo en src/pages/reglas/ con su lógica en src/catalogo/;
-            las cadenas de la interfaz en src/textos.ts y los textos de ejemplo en public/ejemplos/
+            las cadenas de la interfaz en src/textos.ts; los textos de ejemplo y los dos paquetes
+            de prueba del cargador en public/ejemplos/
 paquetes/   los dos paquetes de reglas incluidos (RadiografIA y Español correcto)
 data/       los datos de terceros y la calibración, cada carpeta con su licencia
 docs/       la investigación de cada familia, los textos de ejemplo y la bitácora de fallos
@@ -241,19 +260,25 @@ con un solo `package-lock.json`. `web/` importa el motor por
 
 ### Lo que viaja al navegador
 
-Nada sale del navegador. La página pide su JS y los dos paquetes, que se
-validan al arrancar, y un texto de ejemplo cuando se pulsa su botón. Medido
-en el build de la web el 02/10/2026, con el catálogo:
+Nada sale del navegador. La página pide su JS y los dos paquetes incluidos,
+que se validan al arrancar, y un texto de ejemplo cuando se pulsa su botón.
+Un paquete propio no se pide: se lee del fichero, en el navegador (abajo,
+[«Paquetes propios»](#paquetes-propios)). Medido en el build de la web el
+02/10/2026, con el catálogo, el cargador y la CSP:
 
 | fichero | bytes |
 |---|---|
-| el JS del analizador (motor, validador y aviso MIT de Ajv; minificado por Vite) | 123.483 |
-| las cadenas de la interfaz que comparten el analizador y el catálogo (un JS aparte) | 2.061 |
+| el JS del analizador (motor, validador, cargador y aviso MIT de Ajv; minificado por Vite) | 129.508 |
+| las cadenas de la interfaz que comparten el analizador y el catálogo (un JS aparte) | 4.877 |
 | `paquetes/radiografia.json` (con su calibración y los nombres de las reglas) | 342.163 |
 | `paquetes/espanol-correcto.json` | 20.822 |
-| `index.html` | 3.003 |
+| `index.html` (con la CSP, 507 bytes) | 4.321 |
 | `ejemplos/antonio.txt`, al pulsar su botón | 1.777 |
 | `ejemplos/ia.txt`, al pulsar su botón | 1.957 |
+
+Los dos paquetes de prueba, `ejemplos/paquete-prueba.json` (6.900 bytes) y
+`ejemplos/paquete-prueba-invalido.json` (6.904), se publican para
+descargarlos y copiarlos, pero la página no los pide.
 
 Los paquetes van aparte del JS, y no dentro, para que el JS se quede en unos
 120 KB y los JSON se puedan guardar en caché por separado. Metidos en el
@@ -264,13 +289,13 @@ Además de cada página, pide el JS del buscador y el de las cadenas.
 
 | fichero | bytes |
 |---|---|
-| `reglas/index.html`, el índice | 67.141 |
-| el JS del buscador y los filtros | 1.130 |
-| cada ficha, `reglas/<id>/index.html` | de 3.571 a 15.600 |
-| las 50 fichas juntas | 326.870 |
+| `reglas/index.html`, el índice | 67.648 |
+| el JS del buscador y los filtros | 1.131 |
+| cada ficha, `reglas/<id>/index.html` | de 4.078 a 16.107 |
+| las 50 fichas juntas | 352.220 |
 
-`dist/` entero: 52 páginas HTML (el analizador, el índice y 50 fichas) y
-890.407 bytes.
+`dist/` entero: 52 páginas HTML (el analizador, el índice y 50 fichas), 61
+ficheros y 940.228 bytes. Cada página lleva la CSP.
 
 ## Ejemplos
 
@@ -300,8 +325,10 @@ con la ampliación 6.4: antes, el de Antonio sumaba 5 y el de IA 2.
 
 ## Catálogo
 
-En `/reglas/` están todas las reglas de los dos paquetes, y cada una tiene
-su página, `/reglas/<id>/`. En local, con `npm run dev`, el índice está en
+En `/reglas/` están todas las reglas de los dos paquetes incluidos, y cada
+una tiene su página, `/reglas/<id>/`. Las de un paquete propio no: su ficha
+se ve entera en el analizador (abajo, [«Paquetes
+propios»](#paquetes-propios)). En local, con `npm run dev`, el índice está en
 http://localhost:4321/reglas/. Desde el analizador se llega por el enlace de
 la cabecera y por el nombre de cada regla, en el panel de un subrayado y en
 el desglose.
@@ -424,6 +451,100 @@ En [`paquetes/`](paquetes/):
 
   Un juez comprueba que son siete, todas de norma, con peso 1 y con su
   sección de rae.es, y que ninguna es informativa.
+
+## Paquetes propios
+
+Un paquete propio es un JSON con la forma de los incluidos: una cabecera
+(nombre, versión, idioma, descripción, autor, licencia y familias) y una
+lista de reglas, cada una con su ficha. Se carga en el analizador y se
+combina con los incluidos.
+
+**Cómo se escribe.**
+- El esquema está en [`motor/esquema/`](motor/esquema/):
+  `paquete.schema.json` y `regla.schema.json`, en JSON Schema 2020-12. Con
+  la línea `"$schema"` que llevan los incluidos, VS Code avisa de los
+  errores mientras se escribe.
+- Las fichas del catálogo (`/reglas/<id>/`) sirven de modelo: cada una
+  enseña la regla entera y cómo busca, dicho en palabras.
+- Hay uno de ejemplo, corto:
+  [`web/public/ejemplos/paquete-prueba.json`](web/public/ejemplos/paquete-prueba.json).
+  Son tres reglas en la familia «Pruebas», una de patrón («a nivel de»), una
+  estructural (pregunta sin signo de apertura) y una informativa («okey» u
+  OK), con la norma del *Diccionario panhispánico de dudas*. No mide estilo
+  de IA: sirve para probar el cargador y para copiarlo. No trae
+  calibración.
+- Su gemelo,
+  [`paquete-prueba-invalido.json`](web/public/ejemplos/paquete-prueba-invalido.json),
+  es el mismo con un campo mal, el peso de la primera regla, para ver el
+  error. Ninguno de los dos se carga solo.
+
+**Cómo se carga.** En el analizador, en el bloque «Paquetes»:
+- «Cargar un paquete propio (JSON)» y eliges el fichero. Si entra, aparece en
+  la lista con su nombre, su versión y su número de reglas, y un botón
+  «Quitar».
+- Las casillas de RadiografIA y Español correcto ponen o quitan los
+  incluidos.
+- Al pulsar «Pon tu texto a contraluz» se analiza con los incluidos marcados
+  y después con los propios. Si cambias los paquetes con un resultado en
+  pantalla, la página te dice que vuelvas a analizar; si no queda ninguno
+  activo, que marques uno.
+
+**Qué se comprueba**, en este orden. La primera comprobación que falla
+corta, y el paquete no entra:
+1. Que no pase de 2 MB (2 × 1.024 × 1.024 bytes; RadiografIA, con su
+   calibración, ocupa 342 KB). Un fichero más grande no se llega a leer.
+2. Que sea JSON. Si no lo es, la página lo dice y, detrás, copia lo que dice
+   el navegador, en su idioma.
+3. Que cumpla el esquema y lo que el esquema no ve: ids repetidos, familias
+   sin declarar, expresiones regulares que no compilan… Es el mismo
+   validador de los incluidos, y la página enseña cada error con su regla y
+   su campo: `regla "prueba-a-nivel-de" (reglas[0]) · campo "peso": tiene
+   que ser número`.
+4. Que no se llame como otro paquete, incluido (marcado o no) o propio: las
+   señales de los dos no se distinguirían.
+
+**Cómo se ve.**
+- Cada señal dice de qué paquete viene: la leyenda nombra cada familia con
+  su paquete, cada paquete tiene su bloque en el desglose y el panel de un
+  subrayado dice el paquete de cada regla.
+- Las familias de un paquete propio se subrayan con trazo discontinuo.
+- Las reglas de un paquete propio no tienen página en el catálogo. El panel
+  enseña su ficha completa, y en el desglose se despliega al pulsar su
+  línea.
+- El selector de género junta los géneros de la calibración de los paquetes
+  activos, con «General» siempre.
+- Un paquete sin escala (sin clave `_total-*` en su calibración) no tiene
+  banda; si ninguno de los activos la tiene, el medidor lo dice.
+
+**No sale del navegador**, y no es una promesa:
+- El fichero se lee en la página con `File.text()` y no se sube a ningún
+  sitio.
+- Un juez ([`web/jueces/navegador.spec.ts`](web/jueces/navegador.spec.ts))
+  abre la página en Chrome y espera a que cargue. Después carga los dos
+  paquetes de prueba desde el disco, analiza tres veces, abre paneles, marca
+  y desmarca casillas y quita el propio. Exige **cero peticiones de red**
+  desde la carga inicial, y si hubiera alguna, la lista.
+- Las páginas publicadas llevan además una política de seguridad (CSP): el
+  navegador no conecta con ningún otro origen (`connect-src 'self'`) ni
+  envía un formulario a otro sitio (`form-action 'self'`). Otro juez mira
+  que la lleven todas. `npm run dev` va sin ella: Astro no la aplica en
+  desarrollo.
+
+**No se guarda.** Ni en el navegador ni en la dirección de la página: al
+recargar, el paquete propio desaparece, y la página lo avisa. Salir de la
+página, al catálogo por ejemplo, también puede perderlo.
+
+**Lo que no se protege**, declarado:
+- Una expresión regular de un paquete propio puede colgar la pestaña si es
+  de las que se atascan (retroceso catastrófico): el análisis corre en la
+  página, sin un proceso aparte con tiempo límite.
+- El fichero se lee como UTF-8, y un BOM delante no molesta. Un JSON
+  guardado en otra codificación, como latin-1, se lee con caracteres de
+  sustitución que el esquema no detecta.
+
+**Para verlo a mano en la pestaña Red de Chrome**, pega el texto en vez de
+usar «Cargar ejemplo»: ese botón pide el texto de ejemplo al servidor, y esa
+petición saldría en la lista.
 
 ## Estadística
 
@@ -867,8 +988,9 @@ género “Noticia” de 300 a 599 palabras», con su total y los percentiles.
   [`docs/investigacion/`](docs/investigacion/), hecha antes de escribir su
   primera regla.
 - **Dos paquetes incluidos**: RadiografIA y **«español correcto»**, siete
-  avisos de norma RAE (calcos y traducción, no estilo IA) que se combinan
-  con el primero desde el desplegable.
+  avisos de norma RAE (calcos y traducción, no estilo IA), cada uno con su
+  casilla; y los **paquetes propios** que cargue cada uno, que se combinan
+  con ellos sin salir del navegador.
 - **Tres tipos de detector**: patrón, estructural, estadístico.
 - **Ficha por regla**: id, nombre (opcional en el esquema), familia,
   detector y sus parámetros, peso (que puede ser **negativo**: un atenuante
