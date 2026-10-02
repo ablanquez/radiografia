@@ -25,29 +25,17 @@
  *      el formulario, y la línea que dice de quién es cada texto (encargo 6.3,
  *      a, juez 4).
  *
- * El build, memorizado y con la telemetría apagada, es el de apoyo.ts (lo
- * comparte con textos-web.spec.ts). Astro preview también se arranca con
- * ASTRO_TELEMETRY_DISABLED=1 (ENTORNO).
+ * El build, memorizado y con la telemetría apagada, y astro preview son los
+ * de apoyo.ts (los comparte con textos-web.spec.ts y catalogo.spec.ts).
  *
- * [DOC] https://docs.astro.build/en/reference/cli-reference/ — `astro
- *    preview`: «Starts a local server to serve the contents of your static
- *    directory (dist/ by default) created by running astro build»; acepta
- *    `--port` y `--host`.
- * [DOC] https://nodejs.org/api/child_process.html — astro se lanza con
- *    `spawn` de node sobre su `bin`, para poder cerrarlo con kill().
- * [DOC] https://nodejs.org/api/net.html#serverlistenport-host-backlog-callback
- *    — con el puerto 0, el sistema elige uno libre.
  * [DOC] https://nodejs.org/api/test.html — node:test.
  */
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import { spawn } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { createServer, type AddressInfo } from 'node:net';
-import { dirname, join } from 'node:path';
 import { EJEMPLOS } from '../src/pantalla/ejemplos.ts';
-import { construir, DIST, ENTORNO, PAQUETES, WEB } from './apoyo.ts';
+import { conPreview, construir, DIST, PAQUETES } from './apoyo.ts';
 
 const PUBLICOS = new URL('../public/ejemplos/', import.meta.url);
 
@@ -67,53 +55,6 @@ function jsDeDist(): { ruta: string; texto: string }[] {
 function licenciaDeAjv(): string {
   const desdeElMotor = createRequire(new URL('../../motor/package.json', import.meta.url));
   return readFileSync(desdeElMotor.resolve('ajv/LICENSE'), 'utf8').replace(/\r\n/g, '\n').trim();
-}
-
-/** El ejecutable de astro: el `bin` de su package.json (astro exporta ./package.json). */
-function binDeAstro(): string {
-  const paquete = createRequire(import.meta.url).resolve('astro/package.json');
-  const { bin } = JSON.parse(readFileSync(paquete, 'utf8')) as { bin: { astro: string } };
-  return join(dirname(paquete), bin.astro);
-}
-
-function puertoLibre(): Promise<number> {
-  return new Promise((resolver, rechazar) => {
-    const servidor = createServer();
-    servidor.once('error', rechazar);
-    servidor.listen(0, '127.0.0.1', () => {
-      const { port } = servidor.address() as AddressInfo;
-      servidor.close(() => resolver(port));
-    });
-  });
-}
-
-/** Arranca `astro preview` en un puerto libre, espera a que responda, hace `pedir` y lo cierra. */
-async function conPreview(pedir: (url: string) => Promise<void>): Promise<void> {
-  const puerto = await puertoLibre();
-  const hijo = spawn(process.execPath, [binDeAstro(), 'preview', '--port', String(puerto), '--host', '127.0.0.1'], {
-    cwd: WEB,
-    env: ENTORNO,
-    stdio: ['ignore', 'pipe', 'pipe'],
-  });
-  let registro = '';
-  hijo.stdout.on('data', (d) => (registro += d));
-  hijo.stderr.on('data', (d) => (registro += d));
-  const url = `http://127.0.0.1:${puerto}/`;
-  try {
-    const limite = Date.now() + 30_000;
-    for (;;) {
-      try {
-        await fetch(url);
-        break;
-      } catch {
-        if (Date.now() > limite || hijo.exitCode !== null) throw new Error(`astro preview no responde en ${url}:\n${registro}`);
-        await new Promise((r) => setTimeout(r, 250));
-      }
-    }
-    await pedir(url);
-  } finally {
-    hijo.kill();
-  }
 }
 
 describe('la web construida', () => {

@@ -1,0 +1,83 @@
+---
+/**
+ * El armazón de las páginas del catálogo (encargo 7.1, b): html, head,
+ * cabecera con el nombre de la web y el contenido de cada página en el
+ * <slot />. Funciona, no luce: el diseño es del punto 10. La página del
+ * analizador (index.astro) no lo usa: no se toca más que para su enlace.
+ *
+ * [DOC] https://docs.astro.build/en/basics/layouts/ — «Layouts are Astro
+ *    components used to provide a reusable UI structure, such as a page
+ *    template»; llevan «a page shell (<html>, <head> and <body> tags)» y «a
+ *    <slot /> to specify where individual page content should be injected»;
+ *    «commonly placed in a src/layouts directory».
+ * [DOC] https://docs.astro.build/en/reference/directives-reference/#settext —
+ *    una expresión {texto} se escapa: set:text «is automatically escaped by
+ *    Astro» y equivale a «directly inserting a variable in template
+ *    expressions». Ningún set:html en el catálogo: lo que viene de los
+ *    paquetes entra como texto (OWASP, encargo 6.2).
+ * [PROPIO] `<link rel="icon" href="data:,">`, como en index.astro: sin él,
+ *    Chrome pide /favicon.ico por su cuenta.
+ */
+import { urlDelAnalizador } from '../catalogo/catalogo.ts';
+
+interface Props {
+  /** Lo que va delante de «RadiografIA» en el título de la pestaña. */
+  titulo: string;
+}
+
+const { titulo } = Astro.props;
+const analizador = urlDelAnalizador(import.meta.env.BASE_URL);
+---
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" href="data:," />
+    <title>{titulo} · RadiografIA</title>
+  </head>
+  <body>
+    <header>
+      <p class="marca"><a href={analizador}>RadiografIA</a></p>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <style is:global>
+      :root {
+        font-family: system-ui, sans-serif;
+        line-height: 1.5;
+        color: #1f2937;
+        background: #ffffff;
+      }
+      body {
+        max-width: 52rem;
+        margin: 0 auto;
+        padding: 1rem;
+      }
+      .marca {
+        font-weight: 600;
+      }
+      .id-regla {
+        margin-top: 0;
+        font-size: 0.8rem;
+        color: #4b5563;
+      }
+      dt {
+        font-weight: 600;
+      }
+      dd {
+        margin: 0 0 0.5rem 0;
+      }
+      code {
+        overflow-wrap: anywhere;
+      }
+      .ejemplo {
+        white-space: pre-wrap;
+        font: inherit;
+        border-left: 3px solid #d1d5db;
+        padding-left: 0.75rem;
+      }
+    </style>
+  </body>
+</html>

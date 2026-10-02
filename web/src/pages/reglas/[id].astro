@@ -1,0 +1,90 @@
+---
+/**
+ * La ficha de cada regla, con URL propia: /reglas/<id>/ (encargo 7.1, b;
+ * plan, punto 7). Una página estática por regla de los dos paquetes, generada
+ * al construir; todo el contenido de la ficha, literal, y la interfaz con las
+ * cadenas de textos.ts.
+ *
+ * [DOC] https://docs.astro.build/en/guides/routing/#dynamic-routes — «An
+ *    Astro page file can specify dynamic route parameters in its filename to
+ *    generate multiple, matching pages»; en modo estático, «a dynamic route
+ *    must export a getStaticPaths() that returns an array of objects with a
+ *    params property».
+ * [DOC] https://docs.astro.build/en/reference/routing-reference/#getstaticpaths
+ *    — en params «only strings are supported as values», porque van en la
+ *    URL; props «aren't limited to only strings»: la entrada entera del
+ *    catálogo va por props.
+ * Los ejemplos van en <pre> (con white-space: pre-wrap en el layout): se ven
+ *    tal cual, con sus saltos, sus asteriscos y sus almohadillas, que son lo
+ *    que las reglas de canal buscan.
+ */
+import Catalogo from '../../layouts/Catalogo.astro';
+import { parametrosEnLlano, urlDelAnalizador, type EntradaDelCatalogo } from '../../catalogo/catalogo.ts';
+import { ENTRADAS } from '../../catalogo/paquetes.ts';
+import { nombreDeRegla } from '../../pantalla/humanizar.ts';
+import * as textos from '../../textos.ts';
+
+export function getStaticPaths() {
+  return ENTRADAS.map((entrada) => ({ params: { id: entrada.regla.id }, props: { entrada } }));
+}
+
+interface Props {
+  entrada: EntradaDelCatalogo;
+}
+
+const { regla, paquete, familia } = Astro.props.entrada;
+const nombre = nombreDeRegla(regla.id, regla);
+const base = import.meta.env.BASE_URL;
+const peso = new Intl.NumberFormat('es').format(regla.peso);
+---
+
+<Catalogo titulo={nombre}>
+  <nav>
+    <a href={urlDelAnalizador(base)}>{textos.PROBAR_EN_EL_ANALIZADOR}</a>
+  </nav>
+  <h1>{nombre}</h1>
+  <p class="id-regla">{regla.id} · {paquete.nombre}</p>
+  {(regla.informativa || familia.informativa) && <p>{textos.INFORMATIVA}</p>}
+  <dl>
+    <dt>{textos.PAQUETE}</dt>
+    <dd>{textos.paqueteConVersion(paquete.nombre, paquete.version, paquete.descripcion)}</dd>
+    <dt>{textos.FAMILIA}</dt>
+    <dd>{familia.nombre}</dd>
+    <dt>{textos.DETECTOR}</dt>
+    <dd>{regla.detector}</dd>
+    <dt>{textos.PESO}</dt>
+    <dd>{peso}</dd>
+    <dt>{textos.SEVERIDAD}</dt>
+    <dd>{regla.severidad}</dd>
+    <dt>{textos.NIVEL_DE_EVIDENCIA}</dt>
+    <dd>{regla.nivelEvidencia}</dd>
+  </dl>
+  <h2>{textos.COMO_BUSCA}</h2>
+  <dl>
+    {
+      parametrosEnLlano(regla).map((p) => (
+        <>
+          <dt>{p.etiqueta}</dt>
+          <dd>{p.codigo ? <code>{p.valor}</code> : p.valor}</dd>
+        </>
+      ))
+    }
+  </dl>
+  <h2>{textos.EXPLICACION}</h2>
+  <p>{regla.explicacion}</p>
+  <h2>{textos.SUGERENCIA}</h2>
+  <p>{regla.sugerencia}</p>
+  <h2>{textos.EXCEPCIONES}</h2>
+  {regla.excepciones.length === 0 ? <p>{textos.NINGUNA}</p> : <ul>{regla.excepciones.map((e) => <li>{e}</li>)}</ul>}
+  <h2>{textos.ORIGEN_DE_LA_LISTA}</h2>
+  <p>{regla.origenLista ?? textos.SIN_DATO}</p>
+  <h2>{textos.FUENTES}</h2>
+  <ul>{regla.fuente.map((f) => <li><a href={f.url}>{f.titulo}</a></li>)}</ul>
+  <h2>{textos.DONDE_DISPARA}</h2>
+  {regla.ejemplos.positivos.map((e) => <pre class="ejemplo">{e}</pre>)}
+  <h2>{textos.DONDE_NO_DISPARA}</h2>
+  {regla.ejemplos.negativos.map((e) => <pre class="ejemplo">{e}</pre>)}
+  <nav>
+    <a href={urlDelAnalizador(base)}>{textos.PROBAR_EN_EL_ANALIZADOR}</a>
+  </nav>
+</Catalogo>

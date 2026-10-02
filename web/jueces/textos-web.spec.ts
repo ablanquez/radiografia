@@ -32,7 +32,7 @@ import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import * as textos from '../src/textos.ts';
-import { construir, DIST, motorDelNavegador, paquetesIncluidos } from './apoyo.ts';
+import { construir, decodificar, DIST, motorDelNavegador, paquetesIncluidos } from './apoyo.ts';
 
 const GENERO = 'general';
 const MINIMO = 100;
@@ -60,19 +60,15 @@ const MUESTRAS: Readonly<Record<string, readonly unknown[]>> = {
   reglaInformativa: ['Negrita de Markdown (canal-negrita-markdown)', 2],
   ausencia: ['Sin primera persona (disc-sin-automenciones)', 0, 1],
   estadistica: ['Pocas comas (est-pocas-comas)', 'ratio-comas-puntos', '0,38', 'por debajo de la banda humana', '0,49', '0,92', '2,27', '10,67', '31'],
+  // El catálogo (encargo 7.1, b): la descripción es de muestra, porque la de verdad es del paquete, no de la web.
+  paqueteConVersion: ['RadiografIA', '0.1.0', 'Reglas de estilo.'],
+  numeroDeFormas: [4],
+  ausenciaDe: [1],
+  minimoDeApariciones: [2],
+  repeticion: [3],
+  soloEnGeneros: [['Opinión', 'Académico']],
+  entrePercentiles: ['1', '99'],
 };
-
-const ENTIDADES: Readonly<Record<string, string>> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" };
-
-function decodificar(texto: string): string {
-  return texto.replace(/&(#x[0-9a-f]+|#[0-9]+|[a-z]+);/gi, (entidad, nombre: string) => {
-    if (nombre.startsWith('#x') || nombre.startsWith('#X')) return String.fromCodePoint(parseInt(nombre.slice(2), 16));
-    if (nombre.startsWith('#')) return String.fromCodePoint(parseInt(nombre.slice(1), 10));
-    const caracter = ENTIDADES[nombre];
-    assert.ok(caracter !== undefined, `dist/index.html lleva una entidad que el juez no sabe leer: ${entidad}`);
-    return caracter;
-  });
-}
 
 /** El texto visible de la página construida y su placeholder. */
 function textosDelHtml(html: string): string[] {

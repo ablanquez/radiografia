@@ -13,6 +13,8 @@ import { idHumanizado, nombreDeRegla } from '../src/pantalla/humanizar.ts';
 import { GENERO_POR_DEFECTO, generosDe, nombreDeGenero } from '../src/pantalla/generos.ts';
 import { cargarPaquetes, conBarraFinal, FICHEROS } from '../src/pantalla/cargar.ts';
 import { cargarEjemplo, urlDeEjemplo } from '../src/pantalla/ejemplos.ts';
+import { parametrosEnLlano, reglasDelCatalogo, urlDeRegla, urlDelAnalizador, urlDelCatalogo } from '../src/catalogo/catalogo.ts';
+import { paquetesIncluidos } from './apoyo.ts';
 import type { Paquete, ResultadoDeValidacion } from '@radiografia/motor/navegador';
 
 describe('partirEnTramos: la vista partida por todos los límites de señal', () => {
@@ -145,5 +147,77 @@ describe('los textos de ejemplo (encargo 6.3, a)', () => {
       }),
       { texto: null, problema: 'No se ha podido cargar el ejemplo /ejemplos/antonio.txt: Failed to fetch.' },
     );
+  });
+});
+
+describe('el catálogo de reglas (encargo 7.1, b)', () => {
+  const paquete = (nombre: string, ids: string[]): Paquete =>
+    ({
+      cabecera: { nombre, version: '0.1.0', descripcion: `El paquete ${nombre}.`, familias: [{ id: 'f', nombre: 'Efe', informativa: false }] },
+      reglas: ids.map((id) => ({ id, familia: 'f' })),
+    }) as unknown as Paquete;
+
+  test('las URL del catálogo, de cada ficha y del analizador, con la base delante y la barra final', () => {
+    assert.equal(urlDelAnalizador('/'), '/');
+    assert.equal(urlDelCatalogo('/'), '/reglas/');
+    assert.equal(urlDeRegla('/', 'disc-atribucion-vaga'), '/reglas/disc-atribucion-vaga/');
+    assert.equal(urlDelAnalizador('/radiografia'), '/radiografia/');
+    assert.equal(urlDeRegla('/radiografia', 'est-ttr'), '/radiografia/reglas/est-ttr/');
+  });
+
+  test('reglasDelCatalogo: cada regla con su paquete y su familia, en el orden de los paquetes', () => {
+    const entradas = reglasDelCatalogo([paquete('Uno', ['a-1', 'a-2']), paquete('Dos', ['b-1'])]);
+    assert.deepEqual(
+      entradas.map((e) => [e.regla.id, e.paquete.nombre, e.paquete.descripcion, e.familia.nombre]),
+      [
+        ['a-1', 'Uno', 'El paquete Uno.', 'Efe'],
+        ['a-2', 'Uno', 'El paquete Uno.', 'Efe'],
+        ['b-1', 'Dos', 'El paquete Dos.', 'Efe'],
+      ],
+    );
+  });
+
+  test('reglasDelCatalogo: un id en dos paquetes para el build, nombrando los dos', () => {
+    assert.throws(() => reglasDelCatalogo([paquete('Uno', ['a-1', 'x-1']), paquete('Dos', ['x-1'])]), {
+      message: 'el id "x-1" está en «Uno» y en «Dos»: las dos fichas tendrían la misma URL, /reglas/x-1/',
+    });
+  });
+
+  test('parametrosEnLlano: lo que busca cada detector, en palabras', () => {
+    const regla = (id: string) => {
+      const r = paquetesIncluidos()[0]!.reglas.find((x) => x.id === id);
+      assert.ok(r, `el paquete ya no trae ${id}`);
+      return r;
+    };
+    const regex = (id: string): string | undefined => {
+      const r = regla(id);
+      assert.ok(r.detector !== 'estadístico', `${id} no tiene regex`);
+      return r.parametros.regex;
+    };
+    const llano = (id: string) => parametrosEnLlano(regla(id)).map((p) => `${p.etiqueta}: ${p.valor}${p.codigo ? ' [código]' : ''}`);
+    assert.deepEqual(llano('lex-innovador'), ['Dónde mira: palabra a palabra', 'Formas: 4 formas']);
+    assert.deepEqual(llano('disc-sin-automenciones'), [
+      'Dónde mira: en cada frase entera',
+      `Expresión regular: ${regex('disc-sin-automenciones')} [código]`,
+      'Banderas: iu [código]',
+      'Cuándo señala: si no aparece ninguna en el texto entero, y solo con 300 palabras de prosa o más',
+      'Géneros: solo en Opinión y Académico',
+    ]);
+    assert.deepEqual(llano('disc-marcador-repetido'), [
+      'Dónde mira: al principio de cada frase',
+      `Expresión regular: ${regex('disc-marcador-repetido')} [código]`,
+      'Banderas: iu [código]',
+      'Repetición: solo cuenta la forma que aparece 3 veces o más',
+    ]);
+    assert.deepEqual(llano('canal-separador-o-tabla'), [
+      'Dónde mira: al principio de cada párrafo',
+      `Expresión regular: ${regex('canal-separador-o-tabla')} [código]`,
+      'También mira: viñetas, encabezados y tablas',
+    ]);
+    assert.deepEqual(llano('est-pocas-comas'), [
+      'Métrica: ratio-comas-puntos [código]',
+      'Dispara: por debajo de la banda humana',
+      'Banda humana: entre los percentiles 1 y 99 de los textos humanos de su género y longitud',
+    ]);
   });
 });
