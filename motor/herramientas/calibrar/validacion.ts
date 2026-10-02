@@ -14,10 +14,10 @@
  *     validación (p5, p50, p95, p99) frente a la celda de calibración.
  *   · resumirGenero — la FPR del género, con sus tramos juntos: es la que se
  *     juzga contra el 5 %. [PROPIO, parada 2 del 5.6, opción (b) firmada por
- *     Antonio] En las celdas más pequeñas (de 18 a 32 documentos de
+ *     Antonio] En las celdas más pequeñas (de 19 a 32 documentos de
  *     validación), uno o dos documentos ya pasan del 5 % (1/19 = 5,3 %;
  *     2/32 = 6,3 %), y el criterio celda a celda se queda en «ninguno» o
- *     «uno»; juntos, cada género tiene de 61 (académico) a 742 (opinión).
+ *     «uno»; juntos, cada género tiene de 43 (académico) a 742 (opinión).
  *     Las celdas se siguen enseñando una a una.
  *   · intervaloDeWilson — el intervalo de confianza al 95 % de esa FPR
  *     (respuesta a la parada tras e) del 5.6: administrativo queda en 5 de

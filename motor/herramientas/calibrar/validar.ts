@@ -82,7 +82,7 @@ const fichero: FicheroDeValidacion & Record<string, unknown> = {
   semilla: SEMILLA,
   motor,
   criterio:
-    'FPR de la familia estadística: proporción de documentos humanos de VALIDACIÓN (reparto «validacion»: sha256("semilla|id") ≥ 0,8) en los que disparan 2 o más reglas estadísticas que puntúan; objetivo ≤ 5 % por GÉNERO, con sus tramos juntos (conjunto), y cada celda género × tramo se enseña aparte. [PROPIO, parada 2 del 5.6, opción (b) firmada por Antonio] En las celdas más pequeñas (de 18 a 32 documentos), uno o dos documentos ya pasan del 5 % (1 de 19 es el 5,3 %; 2 de 32, el 6,3 %). Cada documento se analiza con el género de su corpus. Con la FPR de cada género, su intervalo de Wilson al 95 % (intervaloFpr). Un género por encima del 5 % lleva la decisión firmada (decision) del resultado que se aceptó.',
+    'FPR de la familia estadística: proporción de documentos humanos de VALIDACIÓN (reparto «validacion»: sha256("semilla|id") ≥ 0,8) en los que disparan 2 o más reglas estadísticas que puntúan; objetivo ≤ 5 % por GÉNERO, con sus tramos juntos (conjunto), y cada celda género × tramo se enseña aparte. [PROPIO, parada 2 del 5.6, opción (b) firmada por Antonio] En las celdas más pequeñas (de 19 a 32 documentos), uno o dos documentos ya pasan del 5 % (1 de 19 es el 5,3 %; 2 de 32, el 6,3 %). Cada documento se analiza con el género de su corpus. Con la FPR de cada género, su intervalo de Wilson al 95 % (intervaloFpr). Un género por encima del 5 % lleva la decisión firmada (decision) del resultado que se aceptó.',
   generos: {},
 };
 const manifiestos: Record<string, Manifiesto> = {};
