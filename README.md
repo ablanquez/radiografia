@@ -146,10 +146,15 @@ pulsar el botón, ves:
 - la explicación y la sugerencia de cada regla, al tocar un subrayado;
 - el desglose de los dos paquetes.
 
-Con eso, el punto 6 del plan está completo, a falta de que Antonio vea el
-ciclo entero en Chrome. Falta, en el orden de la [hoja de
-ruta](#hoja-de-ruta): el catálogo de reglas (punto 7), el cargador de
-paquetes (8), el informe PDF (9), el diseño (10) y el despliegue (11).
+El punto 6 del plan está cerrado: Antonio vio el ciclo entero en Chrome el
+02/10/2026. Después vino la **ampliación 6.4**, mantenimiento del paquete y
+no un punto nuevo. Completó las listas de dos reglas de ausencia, D3 (sin
+marcadores epistémicos) y D4 (sin automenciones), con fuente, y recalculó y
+revalidó la calibración (abajo, [«Validación»](#validación)).
+
+Falta, en el orden de la [hoja de ruta](#hoja-de-ruta): el catálogo de
+reglas (punto 7), el cargador de paquetes (8), el informe PDF (9), el
+diseño (10) y el despliegue (11).
 
 ## Cómo ejecutar
 
@@ -226,7 +231,7 @@ en el build de la web el 02/10/2026:
 | fichero | bytes |
 |---|---|
 | el JS de la página (motor, validador y aviso MIT de Ajv; minificado por Vite) | 123.393 |
-| `paquetes/radiografia.json` (con su calibración) | 337.252 |
+| `paquetes/radiografia.json` (con su calibración) | 340.231 |
 | `paquetes/espanol-correcto.json` | 20.468 |
 | `index.html` | 2.950 |
 | `ejemplos/antonio.txt`, al pulsar su botón | 1.777 |
@@ -259,7 +264,8 @@ empieza al pulsar «Pon tu texto a contraluz».
 Lo que el motor dice de cada uno, regla a regla, está en
 [`docs/ejemplos.md`](docs/ejemplos.md), con la procedencia completa y una
 primera generación que se descartó. Un juez comprueba que sus cifras siguen
-siendo las que da el motor.
+siendo las que da el motor. Su apartado «Historia» cuenta por qué cambiaron
+con la ampliación 6.4: antes, el de Antonio sumaba 5 y el de IA 2.
 
 ## Paquetes
 
@@ -574,6 +580,16 @@ textos porque cambió su mezcla (arriba, [«Los seis
 géneros»](#los-seis-géneros)). Administrativo sigue igual, con los mismos
 cinco textos.
 
+**Revalidado en el 6.4**, después de ampliar las listas de dos ausencias:
+D3, sin marcadores epistémicos, y D4, sin automenciones (abajo, [«Qué se
+ajustó y por qué»](#qué-se-ajustó-y-por-qué)).
+
+- **La FPR no cambia en ningún género:** D3 y D4 no son reglas
+  estadísticas.
+- **Administrativo** sigue igual, con los mismos cinco textos.
+- **Cambia el total en opinión y académico.** Por eso se recalculó su celda
+  de calibración y la tabla por celda de abajo lleva las cifras nuevas.
+
 **Administrativo queda en 5,1 % (5 de 98) y se acepta con declaración.**
 Lo decidió Antonio el 01/10/2026, y para este género modifica el criterio
 del plan. Los motivos:
@@ -611,11 +627,11 @@ la celda de calibración):
 |  | 300-599 | 30 | 6,7 % (2) | 20,0 % | 7,8 / 10,2 | 53,3 / 74,6 |
 |  | 600+ | 244 | 1,6 % (4) | 12,3 % | 14,5 / 15,9 | 51,2 / 48,5 |
 | `academico` | 100-299 | 18 (sin celda) | — | — | — | — |
-|  | 300-599 | 24 | 4,2 % (1) | 41,7 % | 7,7 / 5,1 | 14,2 / 21,0 |
-|  | 600+ | 19 | 0,0 % (0) | 21,1 % | 6,2 / 5,5 | 12,6 / 13,6 |
+|  | 300-599 | 24 | 4,2 % (1) | 41,7 % | 6,7 / 5,1 | 14,2 / 21,0 |
+|  | 600+ | 19 | 0,0 % (0) | 21,1 % | 5,4 / 5,4 | 11,1 / 13,6 |
 | `opinion` | 100-299 | 178 | 0,6 % (1) | 12,4 % | 0,0 / 0,0 | 21,6 / 19,4 |
-|  | 300-599 | 383 | 0,8 % (3) | 9,9 % | 3,0 / 3,0 | 16,3 / 15,6 |
-|  | 600+ | 181 | 2,2 % (4) | 19,9 % | 4,6 / 4,0 | 11,6 / 12,2 |
+|  | 300-599 | 383 | 0,8 % (3) | 9,9 % | 2,0 / 2,0 | 15,3 / 15,1 |
+|  | 600+ | 181 | 2,2 % (4) | 19,9 % | 4,4 / 3,8 | 11,0 / 12,1 |
 
 ### Qué se ajustó y por qué
 
@@ -649,11 +665,32 @@ validación del 5.6, siete reglas de otras familias saltaban en más del
 narrativa (92,3 %) o la falta de marcadores de opinión en lo académico
 (47,5 %). En la del 6.1 son nueve. Lo académico se valida ahora solo
 desde 300 palabras, donde las ausencias sí se juzgan, y sube: la falta de
-marcadores de opinión llega al 67,4 %. Pasan también del 25 %
+marcadores de opinión llegó al 67,4 %. Pasan también del 25 %
 `lex-no-solo-sino` (32,6 %) y `lex-importancia` (30,2 %), las dos en lo
 académico. Las fichas de esas nueve reglas llevan las cifras de la
 revalidación del 6.1 (02/10/2026), con su fecha. En la v1 no se ajustan.
 El detalle, regla a regla y celda a celda, está en `validacion.json`.
+
+**La ampliación 6.4** (02/10/2026, firmada por Antonio) no ajusta ningún
+umbral: completa dos listas que se habían quedado cortas. Los textos de
+ejemplo lo destaparon.
+
+- **D3, sin marcadores epistémicos.** La lista solo llevaba «me parece» de
+  «parecer», y una sola forma de cada verbo. Ahora lleva la primera persona
+  de creer, pensar, suponer, opinar y considerar que en cuatro tiempos, y
+  «parecer» con «me» o «nos». Los lemas son los de Herbold et al. 2023.
+- **D4, sin automenciones.** No contaba «me» ni «nos». Ahora sí: son
+  siempre de primera persona, y Tang y John (1999) los cuentan entre las
+  automenciones.
+
+Son reglas de ausencia, así que disparan menos. En los textos apartados:
+
+| regla | académico (300 palabras o más) | opinión |
+|---|---|---|
+| D3 | 67,4 % → 58,1 % | 36,9 % → 32,5 % |
+| D4 | 53,5 % → 39,5 % | 23,7 % → 6,5 % |
+
+Las fichas de D3 y D4 llevan ya las cifras del 6.4.
 
 **Límites del método.** Hay una sola validación, con la misma muestra
 medida dos veces: antes de los ajustes y después. Los ajustes se
@@ -661,7 +698,10 @@ propusieron con lo que se veía en los textos de calibración, pero su
 efecto en la validación se enseñó, simulado, antes de firmarlos. La
 decisión sobre administrativo se tomó viendo la validación. La
 revalidación del 6.1 midió la misma muestra una tercera vez, con el motor
-nuevo, y después no se cambió nada. Con eso, el 20 % apartado ya no es una
+nuevo, y después no se cambió nada. La del 6.4 la midió una cuarta vez.
+Las listas de D3 y D4 se fijaron con sondas y fuente. Su efecto en estos
+textos se enseñó en la parada, antes de firmarlas, y después no se cambió
+nada. Con eso, el 20 % apartado ya no es una
 muestra que nadie haya mirado: para una comprobación limpia hace falta
 otra muestra.
 
