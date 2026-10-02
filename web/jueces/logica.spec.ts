@@ -78,7 +78,7 @@ describe('los géneros del selector', () => {
 
   test('las claves de la calibración, sin repetir, con «general» primero', () => {
     assert.equal(GENERO_POR_DEFECTO, 'general');
-    assert.deepEqual(generosDe(paquete), ['general', 'noticia', 'opinion']);
+    assert.deepEqual(generosDe([paquete]), ['general', 'noticia', 'opinion']);
   });
 
   test('el nombre visible de cada género; si no lo tiene, la clave', () => {
@@ -271,7 +271,7 @@ describe('el orden de presentación (cierre del 7.1, firmado por Antonio)', () =
   });
 
   test('generosDe: «general» primero y el resto alfabético por su nombre visible', () => {
-    assert.deepEqual(generosDe(paquetesIncluidos()[0]!), ['general', 'academico', 'administrativo', 'narrativa-clasica', 'noticia', 'opinion']);
+    assert.deepEqual(generosDe([paquetesIncluidos()[0]!]), ['general', 'academico', 'administrativo', 'narrativa-clasica', 'noticia', 'opinion']);
   });
 
   test('indexar: las familias, por paquete y alfabéticas por su nombre; cada una con el color de antes', () => {

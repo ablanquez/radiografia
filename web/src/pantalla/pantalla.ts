@@ -87,7 +87,7 @@ if (carga.paquetes === null) {
 } else {
   const paquetes = carga.paquetes;
   const indice = indexar(paquetes);
-  for (const clave of generosDe(paquetes[0]!)) {
+  for (const clave of generosDe(paquetes)) {
     const opcion = document.createElement('option');
     opcion.value = clave;
     opcion.textContent = nombreDeGenero(clave);

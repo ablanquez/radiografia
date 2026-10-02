@@ -79,13 +79,29 @@ function campo(nombre: string, valor: string): HTMLParagraphElement {
 const formato = new Intl.NumberFormat('es', { maximumFractionDigits: 2 });
 const cifra = (x: number): string => formato.format(x);
 
-/** Lo que se busca por clave: las reglas y las familias de los paquetes, con su clase de color. */
+/**
+ * Lo que se busca por clave: las reglas y las familias de los paquetes, con su
+ * clase de color. Desde el 8.1 (firmado en la parada 1), de TODOS los paquetes
+ * que conoce la página, activos o no: los incluidos y después los propios, en
+ * el orden de carga. Así una familia no cambia de color al marcar o desmarcar
+ * una casilla. La clave es paquete + familia: dos familias que se llaman
+ * igual en dos paquetes son dos entradas.
+ * [PROPIO] Las familias de un paquete propio llevan además la clase
+ *    familia-propia (subrayado discontinuo en index.astro): con siete colores
+ *    y siete familias que puntúan en los incluidos, las de un propio repiten
+ *    color. El paquete se dice siempre en texto: en la leyenda, en el panel y
+ *    en el desglose.
+ *    [DOC] https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html — 1.4.1:
+ *    «Color is not used as the only visual means of conveying information».
+ */
 export interface Indice {
   /** «paquete::reglaId» → la ficha. */
   reglas: Map<string, Regla>;
   familias: { clave: string; paquete: string; nombre: string; informativa: boolean; clase: string }[];
   /** «paquete::familiaId» → su clase de color. */
   claseDeFamilia: Map<string, string>;
+  /** Los nombres de los paquetes propios: sus reglas no tienen ficha en /reglas/. */
+  propios: ReadonlySet<string>;
 }
 
 const clave = (paquete: string, id: string): string => `${paquete}::${id}`;
@@ -102,7 +118,7 @@ function enlaceARegla(indice: Indice, base: string, paquete: string, id: string)
   return enlace;
 }
 
-export function indexar(paquetes: readonly Paquete[]): Indice {
+export function indexar(paquetes: readonly Paquete[], propios: ReadonlySet<string> = new Set()): Indice {
   const reglas = new Map<string, Regla>();
   const familias: { posicion: number; familia: Indice['familias'][number] }[] = [];
   const claseDeFamilia = new Map<string, string>();
@@ -111,13 +127,14 @@ export function indexar(paquetes: readonly Paquete[]): Indice {
     const nombre = paquete.cabecera.nombre;
     for (const regla of paquete.reglas) reglas.set(clave(nombre, regla.id), regla);
     for (const familia of paquete.cabecera.familias) {
-      const clase = familia.informativa ? 'familia-informativa' : `familia-color-${color++ % COLORES}`;
+      const deColor = familia.informativa ? 'familia-informativa' : `familia-color-${color++ % COLORES}`;
+      const clase = propios.has(nombre) ? `${deColor} familia-propia` : deColor;
       claseDeFamilia.set(clave(nombre, familia.id), clase);
       familias.push({ posicion, familia: { clave: clave(nombre, familia.id), paquete: nombre, nombre: familia.nombre, informativa: familia.informativa, clase } });
     }
   });
   // Los colores se reparten en el orden de declaración, como desde el 6.2; la lista va en el de presentación (orden.ts).
-  return { reglas, familias: enOrden(familias, (x) => [x.posicion, x.familia.nombre]).map((x) => x.familia), claseDeFamilia };
+  return { reglas, familias: enOrden(familias, (x) => [x.posicion, x.familia.nombre]).map((x) => x.familia), claseDeFamilia, propios };
 }
 
 export function pintarProblemas(contenedor: HTMLElement, problemas: readonly ProblemaDeCarga[]): void {

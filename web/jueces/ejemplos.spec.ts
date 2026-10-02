@@ -77,6 +77,6 @@ describe('los textos de ejemplo con el motor', () => {
   });
 
   test('el género de los ejemplos está en la calibración de RadiografIA', () => {
-    assert.ok(generosDe(paquetesIncluidos()[0]!).includes(GENERO_DE_LOS_EJEMPLOS), `«${GENERO_DE_LOS_EJEMPLOS}» no está en el selector`);
+    assert.ok(generosDe(paquetesIncluidos()).includes(GENERO_DE_LOS_EJEMPLOS), `«${GENERO_DE_LOS_EJEMPLOS}» no está en el selector`);
   });
 });
