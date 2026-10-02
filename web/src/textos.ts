@@ -49,6 +49,26 @@ export const SIN_PAQUETES_ACTIVOS = 'Marca al menos un paquete o carga uno propi
 export const PAQUETES_CAMBIADOS = 'Los paquetes han cambiado: vuelve a pulsar «Pon tu texto a contraluz».';
 export const SIN_ESCALA = 'Ningún paquete activo trae escala respecto a textos humanos: el resultado está en el desglose.';
 
+// El informe para imprimir (encargo 9.1, b; firmado en la parada 1): el botón, la cabecera, la lista de señales, la
+// clave de siglas, el pie y el párrafo de cuando no hay análisis. Lo del usuario y de las fichas entra con textContent.
+export const DESCARGAR_INFORME = 'Descargar informe';
+export const INFORME_DE_RADIOGRAFIA = 'Informe de RadiografIA';
+/** La fecha y la hora del análisis, ya escritas por Intl.DateTimeFormat. */
+export const analisisDel = (fecha: string): string => `Análisis del ${fecha}`;
+/** Cada paquete del análisis en la cabecera del informe: los propios, marcados. */
+export const paqueteDelInforme = (nombre: string, version: string, propio: boolean): string => `${nombre} ${version}${propio ? ' (propio)' : ''}`;
+export const paquetesDelInforme = (paquetes: readonly string[]): string => `Paquetes: ${paquetes.join(' · ')}`;
+export const SENALES_DEL_INFORME = 'Las señales, regla a regla';
+/** Cuántas señales dio una regla y sus primeros fragmentos, entre comillas; las que no caben, contadas. */
+export const senalesDeLaRegla = (n: number, fragmentos: readonly string[], resto: number): string =>
+  `${n} ${n === 1 ? 'señal' : 'señales'}: ${fragmentos.map((f) => `«${f}»`).join(', ')}${resto > 0 ? ` y ${resto} más` : ''}.`;
+/** Una señal del texto entero, con lo que dice el desglose (ausencia o estadística). */
+export const senalDelTextoEntero = (dice: string | null): string => (dice === null ? 'Del texto entero.' : `Del texto entero: ${dice}.`);
+export const REGLA_PROPIA_SIN_FICHA = 'Regla de un paquete propio: sin página en el catálogo.';
+export const CLAVE_DE_SIGLAS = 'En el texto, detrás de cada subrayado, va entre corchetes la sigla de su familia.';
+export const NOTA_DE_AUTORIA = 'RadiografIA analiza estilo; no demuestra autoría.';
+export const SIN_INFORME = 'No hay análisis que imprimir: pega un texto y pulsa «Pon tu texto a contraluz».';
+
 // Los textos de ejemplo (ejemplos.ts).
 export const ejemploNoCargado = (url: string, motivo: string): string => `No se ha podido cargar el ejemplo ${url}: ${motivo}.`;
 

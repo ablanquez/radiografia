@@ -81,6 +81,12 @@ const MUESTRAS: Readonly<Record<string, readonly unknown[]>> = {
   paquetePropioCargado: ['Mi paquete', '1.0.0', 3],
   paquetePropio: ['Mi paquete', '1.0.0', 3],
   quitarPaquete: ['Mi paquete'],
+  // El informe (encargo 9.1, b): la fecha como la escribe Intl.DateTimeFormat en «es» con dateStyle long y timeStyle short.
+  analisisDel: ['2 de octubre de 2026 a las 16:40'],
+  paqueteDelInforme: ['Paquete de prueba', '1.0.0', true],
+  paquetesDelInforme: [['RadiografIA 0.1.0', 'Español correcto 0.1.0', 'Paquete de prueba 1.0.0 (propio)']],
+  senalesDeLaRegla: [7, ['okey', 'OK', 'okey', 'oká', 'okey'], 2],
+  senalDelTextoEntero: ['ausencia: 0 apariciones; señala por debajo de 1'],
 };
 
 /** El texto visible de la página construida y su placeholder. */
