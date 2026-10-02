@@ -21,6 +21,12 @@
  * paquete, y el juez tiene que nombrar esa condición y ninguna otra (salvo
  * cuando el validador también la caza: se dice en el caso).
  *
+ * Y desde el encargo 6.2 (respuesta a la parada 1, punto 9): P22,
+ * orto-moneda-antepuesta, subraya la cantidad entera, no solo el símbolo y la
+ * primera cifra, y sin comerse el punto final de la frase. Cada positivo de su
+ * ficha lleva aquí su fragmento esperado: el esquema no admite un fragmento en
+ * los ejemplos (son cadenas), y ejemplos.spec.ts solo mira que disparen.
+ *
  * ⚠️ El paquete se lee DENTRO de cada test (docs/BITACORA.md, 2026-09-29).
  * [DOC] https://nodejs.org/api/test.html — node:test.
  */
@@ -28,6 +34,8 @@ import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { validarPaquete } from './validar.ts';
+import { detectar } from './analizar.ts';
+import { analizarTexto } from './texto.ts';
 import type { Paquete, Regla } from './paquete.ts';
 
 const RUTA = new URL('../../paquetes/espanol-correcto.json', import.meta.url);
@@ -121,4 +129,23 @@ describe('el juez de «Español correcto» caza cada condición rota', () => {
       assert.deepEqual([...new Set(problemas.map((x) => x.condicion))].sort(), [...esperadas].sort(), JSON.stringify(problemas, null, 2));
     });
   }
+});
+
+describe('orto-moneda-antepuesta (P22) subraya la cantidad entera', () => {
+  /** Cada positivo de la ficha con el fragmento que tiene que subrayar: el símbolo y la cifra entera, sin el punto final. */
+  const FRAGMENTOS: Readonly<Record<string, string>> = {
+    'Cuesta $100.': '$100',
+    'Cuesta €100.': '€100',
+    'El billete vale £ 20.': '£ 20',
+    'Cuesta $1.500,00.': '$1.500,00',
+  };
+
+  test('cada positivo, con su fragmento esperado', () => {
+    const regla = leer().reglas.find((r) => r.id === 'orto-moneda-antepuesta');
+    assert.ok(regla, 'el paquete ya no trae orto-moneda-antepuesta');
+    assert.deepEqual([...regla.ejemplos.positivos].sort(), Object.keys(FRAGMENTOS).sort(), 'los positivos de la ficha y los de este juez');
+    for (const ejemplo of regla.ejemplos.positivos) {
+      assert.deepEqual(detectar(regla, analizarTexto(ejemplo)).map((s) => s.fragmento), [FRAGMENTOS[ejemplo]], ejemplo);
+    }
+  });
 });

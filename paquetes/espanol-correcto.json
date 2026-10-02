@@ -301,7 +301,7 @@
       "familia": "ortotipografia",
       "detector": "patrón",
       "parametros": {
-        "regex": "[$€£¥]\\s?\\d",
+        "regex": "[$€£¥]\\s?\\d(?:[\\d.,]*\\d)?",
         "flags": "iu",
         "ambito": "frase",
         "normalizar": {
@@ -330,7 +330,8 @@
         "positivos": [
           "Cuesta $100.",
           "Cuesta €100.",
-          "El billete vale £ 20."
+          "El billete vale £ 20.",
+          "Cuesta $1.500,00."
         ],
         "negativos": [
           "Cuesta 100 €.",
