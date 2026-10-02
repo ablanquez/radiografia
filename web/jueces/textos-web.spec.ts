@@ -57,8 +57,8 @@ const MUESTRAS: Readonly<Record<string, readonly unknown[]>> = {
   datosDelTexto: [314, '300-599', 'Opinión'],
   total: ['5', 'puntos por 1.000 palabras de prosa'],
   reglaConSenales: ['Pocas comas (est-pocas-comas)', 1, '3'],
-  reglaInformativa: ['Negrita markdown (canal-negrita-markdown)', 2],
-  ausencia: ['Sin automenciones (disc-sin-automenciones)', 0, 1],
+  reglaInformativa: ['Negrita de Markdown (canal-negrita-markdown)', 2],
+  ausencia: ['Sin primera persona (disc-sin-automenciones)', 0, 1],
   estadistica: ['Pocas comas (est-pocas-comas)', 'ratio-comas-puntos', '0,38', 'por debajo de la banda humana', '0,49', '0,92', '2,27', '10,67', '31'],
 };
 

@@ -71,7 +71,7 @@ function analizarYPintar(paquetes: readonly Paquete[], indice: Indice): void {
     if (hayAnalisis) {
       pintarLeyenda(leyenda, indice);
       pintarVista(vista, elTexto, r.senales, indice, (indices) => pintarPanel(panel, indices.map((i) => r.senales[i]!), indice));
-      pintarDesglose(desglose, r, paquetes);
+      pintarDesglose(desglose, r, paquetes, indice);
     }
     problemas.hidden = true;
     resultado.hidden = false;

@@ -9,7 +9,7 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { partirEnTramos } from '../src/pantalla/tramos.ts';
-import { idHumanizado } from '../src/pantalla/humanizar.ts';
+import { idHumanizado, nombreDeRegla } from '../src/pantalla/humanizar.ts';
 import { GENERO_POR_DEFECTO, generosDe, nombreDeGenero } from '../src/pantalla/generos.ts';
 import { cargarPaquetes, conBarraFinal, FICHEROS } from '../src/pantalla/cargar.ts';
 import { cargarEjemplo, urlDeEjemplo } from '../src/pantalla/ejemplos.ts';
@@ -55,6 +55,14 @@ describe('idHumanizado (firmado en la parada 1 del 6.2, punto 10)', () => {
     assert.equal(idHumanizado('canal-espacio-estrecho-u202f'), 'Espacio estrecho u202f');
     assert.equal(idHumanizado('orto-moneda-antepuesta'), 'Moneda antepuesta');
     assert.equal(idHumanizado('singuion'), 'Singuion');
+  });
+});
+
+describe('nombreDeRegla (encargo 7.1)', () => {
+  test('el campo nombre de la ficha; sin él (paquetes de terceros), el id humanizado', () => {
+    assert.equal(nombreDeRegla('disc-atribucion-vaga', { nombre: 'Atribución vaga' }), 'Atribución vaga');
+    assert.equal(nombreDeRegla('disc-atribucion-vaga', {}), 'Atribucion vaga');
+    assert.equal(nombreDeRegla('disc-atribucion-vaga', undefined), 'Atribucion vaga');
   });
 });
 

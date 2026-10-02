@@ -42,7 +42,7 @@
 import type { Paquete, Resultado } from '@radiografia/motor/navegador';
 import * as textos from '../textos.ts';
 import type { ProblemaDeCarga } from './cargar.ts';
-import { idHumanizado } from './humanizar.ts';
+import { nombreDeRegla } from './humanizar.ts';
 import { partirEnTramos } from './tramos.ts';
 
 type Regla = Paquete['reglas'][number];
@@ -81,6 +81,11 @@ export interface Indice {
 }
 
 const clave = (paquete: string, id: string): string => `${paquete}::${id}`;
+
+/** «Nombre (id)»: el nombre de la ficha (encargo 7.1; si no lo trae, el id humanizado) y el id tal cual. */
+function quien(indice: Indice, paquete: string, id: string): string {
+  return `${nombreDeRegla(id, indice.reglas.get(clave(paquete, id)))} (${id})`;
+}
 
 export function indexar(paquetes: readonly Paquete[]): Indice {
   const reglas = new Map<string, Regla>();
@@ -173,8 +178,8 @@ export function pintarPanel(contenedor: HTMLElement, senales: readonly SenalCali
     if (vistas.has(k)) continue;
     vistas.add(k);
     const ficha = el('article', undefined, 'ficha');
-    ficha.append(el('h4', idHumanizado(senal.reglaId)), el('p', `${senal.reglaId} · ${senal.paquete}`, 'id-regla'));
     const regla = indice.reglas.get(k);
+    ficha.append(el('h4', nombreDeRegla(senal.reglaId, regla)), el('p', `${senal.reglaId} · ${senal.paquete}`, 'id-regla'));
     if (regla !== undefined) {
       ficha.append(
         campo(textos.EXPLICACION, regla.explicacion),
@@ -223,15 +228,15 @@ export function pintarMedidor(contenedor: HTMLElement, resultado: Resultado, nom
 }
 
 /** Una señal del texto entero, en una línea: la estadística con su valor y su banda; la ausencia con sus cuentas. */
-function lineaDeTexto(s: SenalDeTexto): string {
-  const quien = `${idHumanizado(s.reglaId)} (${s.reglaId})`;
-  if ('coincidencias' in s) return textos.ausencia(quien, s.coincidencias, s.minimo);
+function lineaDeTexto(s: SenalDeTexto, paquete: string, indice: Indice): string {
+  const regla = quien(indice, paquete, s.reglaId);
+  if ('coincidencias' in s) return textos.ausencia(regla, s.coincidencias, s.minimo);
   if ('valor' in s) {
     const c = s.referencia;
     const lado = s.lado === null ? textos.DENTRO_DE_LA_BANDA : (textos.LADOS[s.lado] ?? s.lado);
-    return textos.estadistica(quien, s.metrica, cifra(s.valor), lado, cifra(c.p1), cifra(c.p5), cifra(c.p50), cifra(c.p95), cifra(c.p99));
+    return textos.estadistica(regla, s.metrica, cifra(s.valor), lado, cifra(c.p1), cifra(c.p5), cifra(c.p50), cifra(c.p95), cifra(c.p99));
   }
-  return quien;
+  return regla;
 }
 
 /** Una lista con un título; nada si no hay elementos. */
@@ -242,7 +247,7 @@ function apartado(titulo: string, lineas: readonly string[]): HTMLElement[] {
   return [el('h4', titulo), lista];
 }
 
-export function pintarDesglose(contenedor: HTMLElement, resultado: Resultado, paquetes: readonly Paquete[]): void {
+export function pintarDesglose(contenedor: HTMLElement, resultado: Resultado, paquetes: readonly Paquete[], indice: Indice): void {
   contenedor.replaceChildren();
   resultado.paquetes.forEach((r, i) => {
     const cabecera = paquetes[i]!.cabecera;
@@ -257,25 +262,25 @@ export function pintarDesglose(contenedor: HTMLElement, resultado: Resultado, pa
       seccion.append(
         ...apartado(
           `${f.nombre}: ${cifra(f.total)}`,
-          conSenal.map((x) => textos.reglaConSenales(`${idHumanizado(x.id)} (${x.id})`, x.n, cifra(x.contribucion))),
+          conSenal.map((x) => textos.reglaConSenales(quien(indice, r.paquete, x.id), x.n, cifra(x.contribucion))),
         ),
       );
       if (conSenal.length === 0) seccion.append(el('h4', `${f.nombre}: ${cifra(f.total)}`), el('p', textos.NINGUNA_SENAL, 'nada'));
     }
-    seccion.append(...apartado(textos.DEL_TEXTO_ENTERO, resultado.senalesTexto.filter((s) => s.paquete === r.paquete).map(lineaDeTexto)));
+    seccion.append(...apartado(textos.DEL_TEXTO_ENTERO, resultado.senalesTexto.filter((s) => s.paquete === r.paquete).map((s) => lineaDeTexto(s, r.paquete, indice))));
     const porRegla = new Map<string, number>();
     const informativasDeTexto: string[] = [];
     for (const s of p.informativas) {
       if ('inicio' in s) porRegla.set(s.reglaId, (porRegla.get(s.reglaId) ?? 0) + 1);
-      else informativasDeTexto.push(lineaDeTexto(s));
+      else informativasDeTexto.push(lineaDeTexto(s, r.paquete, indice));
     }
     seccion.append(
       ...apartado(textos.INFORMATIVAS_EN_EL_DESGLOSE, [
-        ...[...porRegla].map(([id, n]) => textos.reglaInformativa(`${idHumanizado(id)} (${id})`, n)),
+        ...[...porRegla].map(([id, n]) => textos.reglaInformativa(quien(indice, r.paquete, id), n)),
         ...informativasDeTexto,
       ]),
-      ...apartado(textos.SIN_CALIBRACION, resultado.sinCalibracion.filter((s) => s.paquete === r.paquete).map((s) => `${idHumanizado(s.reglaId)} (${s.reglaId}): ${s.motivo}`)),
-      ...apartado(textos.NO_APLICADAS, resultado.noAplicadas.filter((s) => s.paquete === r.paquete).map((s) => `${idHumanizado(s.reglaId)} (${s.reglaId}): ${s.motivo}`)),
+      ...apartado(textos.SIN_CALIBRACION, resultado.sinCalibracion.filter((s) => s.paquete === r.paquete).map((s) => `${quien(indice, r.paquete, s.reglaId)}: ${s.motivo}`)),
+      ...apartado(textos.NO_APLICADAS, resultado.noAplicadas.filter((s) => s.paquete === r.paquete).map((s) => `${quien(indice, r.paquete, s.reglaId)}: ${s.motivo}`)),
     );
     contenedor.append(seccion);
   });
