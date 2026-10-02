@@ -6,7 +6,7 @@
   },
   "semilla": "radiografia-calibracion-2026",
   "motor": {
-    "commit": "3f19a7c762ca6b8ef43400c1681255dc922d60c1",
+    "commit": "c917a7d725d0d9216c52d168709c537108171385",
     "limpio": true
   },
   "criterio": "FPR de la familia estadística: proporción de documentos humanos de VALIDACIÓN (reparto «validacion»: sha256(\"semilla|id\") ≥ 0,8) en los que disparan 2 o más reglas estadísticas que puntúan; objetivo ≤ 5 % por GÉNERO, con sus tramos juntos (conjunto), y cada celda género × tramo se enseña aparte. [PROPIO, parada 2 del 5.6, opción (b) firmada por Antonio] En las celdas más pequeñas (de 19 a 32 documentos), uno o dos documentos ya pasan del 5 % (1 de 19 es el 5,3 %; 2 de 32, el 6,3 %). Cada documento se analiza con el género de su corpus. Con la FPR de cada género, su intervalo de Wilson al 95 % (intervaloFpr). Un género por encima del 5 % lleva la decisión firmada (decision) del resultado que se aceptó.",
@@ -3393,12 +3393,12 @@
               "proporcion": 0
             },
             "disc-sin-marcadores-epistemicos": {
-              "documentos": 20,
-              "proporcion": 0.833333
+              "documentos": 19,
+              "proporcion": 0.791667
             },
             "disc-sin-automenciones": {
-              "documentos": 17,
-              "proporcion": 0.708333
+              "documentos": 14,
+              "proporcion": 0.583333
             },
             "disc-encuadre-ordinal": {
               "documentos": 0,
@@ -3484,15 +3484,15 @@
           "total": {
             "validacion": {
               "p5": 0.254669,
-              "p50": 7.719446,
+              "p50": 6.675065,
               "p95": 14.22922,
               "p99": 23.432519
             },
             "calibracion": {
-              "p5": 1,
+              "p5": 0,
               "p50": 5.059322,
               "p95": 21.019827,
-              "p99": 30.33634,
+              "p99": 28.35634,
               "n": 100
             }
           }
@@ -3614,12 +3614,12 @@
               "proporcion": 0.263158
             },
             "disc-sin-marcadores-epistemicos": {
-              "documentos": 9,
-              "proporcion": 0.473684
-            },
-            "disc-sin-automenciones": {
               "documentos": 6,
               "proporcion": 0.315789
+            },
+            "disc-sin-automenciones": {
+              "documentos": 3,
+              "proporcion": 0.157895
             },
             "disc-encuadre-ordinal": {
               "documentos": 6,
@@ -3705,13 +3705,13 @@
           "total": {
             "validacion": {
               "p5": -3.116104,
-              "p50": 6.173792,
-              "p95": 12.57073,
-              "p99": 14.032687
+              "p50": 5.423488,
+              "p95": 11.083588,
+              "p99": 13.735258
             },
             "calibracion": {
               "p5": 1.361285,
-              "p50": 5.462297,
+              "p50": 5.445634,
               "p95": 13.591149,
               "p99": 16.281865,
               "n": 101
@@ -4607,12 +4607,12 @@
               "proporcion": 0
             },
             "disc-sin-marcadores-epistemicos": {
-              "documentos": 202,
-              "proporcion": 0.527415
+              "documentos": 182,
+              "proporcion": 0.475196
             },
             "disc-sin-automenciones": {
-              "documentos": 138,
-              "proporcion": 0.360313
+              "documentos": 42,
+              "proporcion": 0.109661
             },
             "disc-encuadre-ordinal": {
               "documentos": 1,
@@ -4698,14 +4698,14 @@
           "total": {
             "validacion": {
               "p5": 0,
-              "p50": 3,
-              "p95": 16.286322,
-              "p99": 23.951716
+              "p50": 2,
+              "p95": 15.295336,
+              "p99": 23.771716
             },
             "calibracion": {
               "p5": 0,
-              "p50": 3,
-              "p95": 15.618781,
+              "p50": 2,
+              "p95": 15.14476,
               "p99": 23.599488,
               "n": 1663
             }
@@ -4990,12 +4990,12 @@
               "proporcion": 0.01105
             },
             "disc-sin-marcadores-epistemicos": {
-              "documentos": 72,
-              "proporcion": 0.39779
+              "documentos": 59,
+              "proporcion": 0.325967
             },
             "disc-sin-automenciones": {
-              "documentos": 38,
-              "proporcion": 0.209945
+              "documentos": 6,
+              "proporcion": 0.033149
             },
             "disc-encuadre-ordinal": {
               "documentos": 1,
@@ -5081,15 +5081,15 @@
           "total": {
             "validacion": {
               "p5": 0,
-              "p50": 4.590164,
-              "p95": 11.570248,
-              "p99": 14.373272
+              "p50": 4.371742,
+              "p95": 11.025761,
+              "p99": 14.364317
             },
             "calibracion": {
               "p5": 0,
-              "p50": 4,
-              "p95": 12.203605,
-              "p99": 18.916014,
+              "p50": 3.762525,
+              "p95": 12.115284,
+              "p99": 17.757567,
               "n": 726
             }
           }
