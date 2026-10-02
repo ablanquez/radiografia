@@ -7,17 +7,18 @@ El ejecutor reporta descubrimientos; no toca este fichero.
 
 ## ESTADO ACTUAL — 2 de octubre de 2026
 
-**⭐ PUNTOS 1-5 CERRADOS (29/09-01/10). PUNTO 6 EN MARCHA (02/10, encargo
-6.1 hecho):** el motor está listo para el navegador: párrafos según
-CommonMark (un texto pegado y cortado a 76 columnas ya da la misma FPR
-que sin cortar), corpus de BOE y Gutenberg regenerados con línea en blanco
-y recalibración repetida (académico 100-299 sin celda; 224 celdas;
-conjunto 2,1 %), núcleo sin Ajv y `navegador.ts` como entrada para Astro
-(bundle 210 KB sin datos, 572 KB con los dos paquetes; 0 ficheros de Ajv).
-**865 jueces: 858 en verde, 2 saltados con motivo, 5 `todo`**, `tsc`
-limpio. 27 commits locales de Claude Code sobre `869db0e`. Falta del punto
-6: el proyecto Astro y el ciclo mínimo en Chrome (6.2) y los textos (6.3).
-No hay pantalla todavía.
+**⭐ PUNTOS 1-5 CERRADOS (29/09-01/10). PUNTO 6 EN MARCHA (02/10, encargos
+6.1 y 6.2 hechos): LA DEMO EXISTE.** `web/` (Astro 7.3.5 estático) sirve la
+pantalla mínima: textarea, selector de género, botón, subrayados por
+familia en una vista por tramos, medidor con la banda humana («sin
+señales», «sin calibración», «poco fiable», «texto insuficiente»), panel
+al tocar un tramo, desglose de los dos paquetes y la nota de autoría.
+Ciclo entero visto por Antonio en Chrome el 02/10 con cuatro textos
+(entero, 99, 150 y correo cortado a mano). Al navegador viajan 122 KB de
+JS + 357 KB de JSON. Repo como workspaces (`motor` + `web`, lock en la
+raíz). **npm test raíz: motor 867 (860 verde, 2 saltados, 5 todo) + web
+17/17**, tipos limpios. Seis bitácoras, todas cerradas. Falta del punto
+6: los textos de ejemplo y los textos de la web (6.3).
 
 ## 1 · Identidad
 
@@ -32,7 +33,11 @@ No hay pantalla todavía.
 ## 2 · Stack (firme)
 
 - Astro estático, sin backend. TypeScript. Reglas en JSON por paquetes,
-  validadas con esquema. Nada sale del navegador.
+  validadas con esquema. Nada sale del navegador. **Web** (`web/`, desde
+  02/10): Astro 7.3.5 fijada exacta, sin integraciones, HTML + TypeScript
+  del navegador; repo como npm workspaces (`motor` + `web`, lock en la
+  raíz); el motor entra por `@radiografia/motor/navegador`; los paquetes
+  se sirven desde `public/` y se validan con el standalone al cargar.
 - **Motor** (`motor/`, paquete npm propio, se prueba sin Astro): JSON
   Schema 2020-12; Ajv 8 (`Ajv2020`) en Node para jueces y para generar el
   validador standalone; `node --test` sobre `.ts` sin transpilar (type
@@ -62,8 +67,7 @@ antes del verde, push = despliegue, bitácora por la skill
 ## 4 · El plan
 
 `PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1, 2 y 3 (29/09), 4 (30/09),
-5 (01/10). Abierto: el 6 (6.1 hecho el 02/10: CommonMark, recalibración,
-núcleo sin Ajv; quedan 6.2 Astro y ciclo mínimo, 6.3 textos).
+5 (01/10). Abierto: el 6 (6.1 y 6.2 hechos el 02/10; queda 6.3 textos).
 
 ## 5 · Decisiones
 
@@ -279,15 +283,48 @@ núcleo sin Ajv; quedan 6.2 Astro y ciclo mínimo, 6.3 textos).
   02/10. El standalone llega por `#validador-standalone` (imports de
   package.json; Node, TS y Vite lo documentan; esbuild lo resuelve); el
   aviso MIT de Ajv va en el banner `/*!` del standalone y en el bundle.
+- 02/10 — **Decisiones del 6.2 (Astro)**: repo como npm workspaces
+  (`motor`, `web`; raíz private; lock en la raíz; motor/package-lock.json
+  retirado) [DOC npm]; Astro 7.3.5 exacta, montaje manual sobre la
+  plantilla minimal, tsconfig estricto, sin astro check (77 entradas para
+  CI), telemetría apagada en los jueces y `npx astro telemetry disable`
+  en la máquina de Antonio; allowScripts de esbuild sigue sin aprobarse;
+  `exports` del motor para `./navegador` (autorizado: empaquetado, no
+  motor); Vite trata el motor como fuente enlazada → optimizeDeps.include
+  y reiniciar dev con --force tras tocar motor/src [DOC Vite monorepos];
+  **Vite quita los comentarios legales al minificar** (bitácora nº6):
+  `comments.legal: true` y juez de web sobre el JS de dist/; datos por
+  public/ + fetch con BASE_URL + validación con el standalone (122 KB de JS
+  frente a 410 KB importando en build); subrayados en vista por tramos
+  (`span role="button"`, textContent, OWASP) y no Highlight API (Baseline
+  solo desde 2026-03, no sirve en textarea, clic difícil) → punto 10;
+  los dos paquetes siempre activos (elegir es del punto 8); P22 ampliada
+  a la cantidad entera; panel con id humanizado (nombre real: punto 7);
+  `createRequire` para localizar ajv/LICENSE con el lock elevado (dos
+  líneas autorizadas en motor/src). Corrección: Desplázame es Angular, no
+  Astro; sirve de referencia solo su raíz de workspaces, y versiona
+  app/dist porque el panel de Hostinger no ejecuta el CLI (punto 11).
 
 ## 6 · Cabos abiertos
 
-- Para 6.2: el bundle del navegador lleva 210 KB sin datos (73 % el
-  standalone, sobre todo los esquemas con `$comment`: valorar quitarlos en
-  build) y 572 KB con los dos paquetes y su calibración; con \r\n la copia
-  de trabajo lleva dos espacios donde el salto y una regex con un espacio
-  literal no casa ahí (declarado). En las cinco celdas con mediana del
-  total en 0, «sin señales» antes de la banda.
+- Para el punto 7 (catálogo): los nombres humanizados del panel salen del
+  id y pierden tildes («Atribucion vaga», «Mayuscula…»); el nombre real
+  de cada regla lo decide el catálogo (¿campo `nombre` en la ficha?
+  decisión de esquema para entonces).
+- Para el punto 10 (diseño): el panel de la regla se pinta debajo de la
+  vista, no junto al tramo (tooltip/popover es decisión de diseño);
+  Highlight API como mejora; `.gitattributes` para fuentes.
+- Para el punto 11: el panel de Hostinger no ejecuta el CLI (Desplázame
+  versiona app/dist); con Astro, prever versionar o subir web/dist.
+- Para quien repita la prueba manual: leer un .txt desde PowerShell con
+  `Get-Content -Encoding UTF8 -Raw` antes de `Set-Clipboard`; sin ello las
+  tildes y las comillas llegan rotas y el análisis cambia (02/10: 356
+  palabras y 17,04 en vez de 325 y 47,08). Se anota en el README en 6.3.
+- Del 6.2: al navegador viajan 122 KB de JS (con el standalone y el
+  aviso MIT) y 357 KB de JSON; queda valorar quitar los `$comment` del
+  standalone en build. Con \r\n la copia de trabajo lleva dos espacios
+  donde el salto y una regex con un espacio literal no casa ahí; el
+  textarea normaliza a \n, así que no aparece en la pantalla (declarado).
 - Del 6.1: la excepción web parte el párrafo en texto cortado cuando una
   línea acaba en punto; afecta a D1 (declarado en su ficha), no a las
   frases. El CSIC pierde el 90,6 % de sus saltos (correcto: una frase por
@@ -359,9 +396,9 @@ núcleo sin Ajv; quedan 6.2 Astro y ciclo mínimo, 6.3 textos).
 - Sigue abierto (como `todo`): abreviaturas («Sr.») parten la frase y los
   compuestos con guión cuentan dos palabras; la calibración no justificó
   una lista de abreviaturas (S1 no dispara por eso en humanos).
-- Del 3.1/3.2 para el punto 6: HECHO en 6.1 (núcleo sin Ajv, standalone
-  en el navegador, aviso MIT dentro). Queda valorar en 6.2 quitar los
-  `$comment` del standalone en build (73 % del bundle sin datos).
+- Del 3.1/3.2 para el punto 6: HECHO en 6.1 y 6.2 (núcleo sin Ajv,
+  standalone en el navegador, aviso MIT dentro y vigilado en el build de
+  Astro). Lo del `$comment` del standalone está en el cabo del 6.2.
 - El guardián del NOTICES de **Desplázame** lee ficheros dentro del
   `describe` y tiene el mismo agujero de la bitácora nº1 (resumen `fail 0`
   con juez roto). Llevar a su cierre.

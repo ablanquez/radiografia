@@ -488,8 +488,14 @@ Fuente citada en cada ficha (sale del punto 2 y de `CANDIDATAS.md`).
 
 Astro, sin diseño todavía: funciona, no luce.
 
-- [ ] Proyecto Astro creado, 200 comprobado con contraprueba, visto en
-      Chrome → PENDIENTE (6.2). **Hecha en 6.1 (02/10) la parte de motor**:
+- [x] Proyecto Astro creado, 200 comprobado con contraprueba, visto en
+      Chrome (6.2, 02/10: Astro 7.3.5 exacta en `web/`, workspaces raíz
+      `motor` + `web` con lock en la raíz, montaje manual sobre la
+      plantilla minimal, tsconfig estricto, `lang="es"`; `exports` del motor
+      para `navegador.ts`; optimizeDeps.include y comments.legal en
+      astro.config con su doc; sin astro check; telemetría apagada en
+      jueces; allowScripts de esbuild sin aprobar; 200 en / y 404 en
+      /no-existe vistos por Antonio). **Hecha en 6.1 (02/10) la parte de motor**:
       `validar.ts` y `analizar.ts` partidos en un núcleo sin Ajv
       (`validacion.ts`, `analisis.ts`); `navegador.ts` como entrada para
       Astro (analizar, bandaHumana, validarPaquete con el standalone por
@@ -531,16 +537,27 @@ Astro, sin diseño todavía: funciona, no luce.
       **académico 100-299 queda SIN CELDA (99 < 100)**, general recompuesto
       (100-299 con noticia, administrativo y opinión × 155; 600+ con 5 ×
       101); 224 celdas. AnCora manual: 896/1.025 se mantiene
-- [ ] Área de texto + selector de género (listado desde
+- [x] Área de texto + selector de género (listado desde
       `cabecera.calibracion`, «general» por defecto; decisión 30/09) +
-      botón «Pon tu texto a contraluz»
-- [ ] Subrayados por familia sobre el texto
-- [ ] Medidor global con desglose por familia: la **banda humana**
-      (`bandaHumana()`), con «sin señales» cuando el total es 0 (en seis
+      botón «Pon tu texto a contraluz» (6.2, 02/10; paquetes por fetch
+      desde public/ con BASE_URL y validados con el standalone al arrancar;
+      análisis al pulsar; textarea editable después)
+- [x] Subrayados por familia sobre el texto (6.2: vista por tramos debajo
+      del textarea, `span role="button"` con clic/Enter/Espacio, un
+      subrayado por familia, canal aparte, todo por textContent; la
+      Highlight API queda para el punto 10)
+- [x] Medidor global con desglose por familia: la **banda humana**
+      (`bandaHumana()`), con «sin señales» cuando el total es 0 (en cinco
       celdas la mediana es 0 y un texto limpio caería «entre la mediana y
-      el p95»), y «sin calibración» cuando no hay celda
-- [ ] Al tocar un subrayado: explicación y sugerencia de la regla
-- [ ] Nota «analiza estilo, no demuestra autoría» junto al medidor
+      el p95»), y «sin calibración» cuando no hay celda (6.2: además
+      palabras de prosa, tramo y género; «texto insuficiente» y «poco
+      fiable»; desglose paquete → familia → regla, señales de texto,
+      informativas, noAplicadas; Español correcto aparte sin banda)
+- [x] Al tocar un subrayado: explicación y sugerencia de la regla (6.2:
+      panel con id humanizado, explicación, sugerencia, evidencia, origen
+      de la lista y paquete, literales de la ficha; **se pinta debajo, no
+      junto al tramo: dónde y cómo es del punto 10**)
+- [x] Nota «analiza estilo, no demuestra autoría» junto al medidor (6.2)
 - [ ] Textos de ejemplo precargados (el de Antonio, pasado por el motor
       y con el resultado documentado)
 - [ ] Los textos de la web pasan por los dos paquetes (casilla heredada
