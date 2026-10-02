@@ -18,8 +18,8 @@
  *    debajo de la mediana», estrictamente por debajo. La mediana y el p95
  *    caen «entre la mediana y el p95», y el p99, «por encima del p95».
  *    ⚠️ En las celdas con la mediana en 0 (la mitad de los humanos de ese
- *    género y tramo no da ninguna señal: noticia, administrativo, académico
- *    y opinión de 100 a 299, entre otras), un texto sin señales cae «entre la
+ *    género y tramo no da ninguna señal: noticia, administrativo y opinión
+ *    de 100 a 299, entre otras), un texto sin señales cae «entre la
  *    mediana y el p95»: está en la mediana. Cómo se dice en pantalla, punto 6.
  * [PROPIO] Un paquete con dos claves `_total-*` no tiene una escala sino dos:
  *    para. El validador (validar.ts) solo admite `_total-radiografia`.
