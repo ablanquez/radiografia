@@ -109,8 +109,10 @@ inventados; los de RadiografIA están medidos con textos humanos (abajo,
 se apartaron antes de medir (abajo, [«Validación»](#validación)).
 
 Con eso, el punto 5 del plan (el paquete RadiografIA con sus seis
-familias, calibrado y validado) está hecho salvo los textos de la web, que
-pasarán por los dos paquetes en el punto 6.
+familias, calibrado y validado) está hecho. Los textos de la propia web
+pasan por los dos paquetes en un juez
+([`web/jueces/textos-web.spec.ts`](web/jueces/textos-web.spec.ts)), con lo
+que RadiografIA marca en ellos declarado y explicado.
 
 Las piezas de apoyo que las reglas necesitarán están **medidas contra
 referencias ajenas**, no dadas por buenas:
@@ -126,13 +128,19 @@ referencias ajenas**, no dadas por buenas:
   necesitaban; su código se retiró. La medida entera, en
   [`docs/investigacion/pos-medida.md`](docs/investigacion/pos-medida.md).
 
-La pantalla es la mínima: funciona, no luce. Pegas el texto, eliges el
-género y, al pulsar el botón, ves los subrayados por familia, el medidor con
-la banda, la explicación y la sugerencia de cada regla al tocar un
-subrayado, y el desglose de los dos paquetes. Falta, en el orden de la [hoja
-de ruta](#hoja-de-ruta): los textos de ejemplo y el paso de los textos de la
-web por los dos paquetes (6.3), el catálogo de reglas (punto 7), el cargador
-de paquetes (8), el informe PDF (9), el diseño (10) y el despliegue (11).
+La pantalla es la mínima: funciona, no luce. Pegas el texto, o cargas uno
+de los dos ejemplos (abajo, [«Ejemplos»](#ejemplos)), eliges el género y, al
+pulsar el botón, ves:
+
+- los subrayados por familia;
+- el medidor con la banda;
+- la explicación y la sugerencia de cada regla, al tocar un subrayado;
+- el desglose de los dos paquetes.
+
+Con eso, el punto 6 del plan está completo, a falta de que Antonio vea el
+ciclo entero en Chrome. Falta, en el orden de la [hoja de
+ruta](#hoja-de-ruta): el catálogo de reglas (punto 7), el cargador de
+paquetes (8), el informe PDF (9), el diseño (10) y el despliegue (11).
 
 ## Cómo ejecutar
 
@@ -166,14 +174,34 @@ npm run dev                    # http://localhost:4321/
   esperado: su `postinstall` no está aprobado y funciona sin él
   ([`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md), § 1.4).
 
+### Prueba manual
+
+Para pasar a mano un `.txt` por la pantalla, cópialo al portapapeles
+leyéndolo como UTF-8. En PowerShell:
+
+```powershell
+Get-Content -Encoding UTF8 -Raw texto.txt | Set-Clipboard
+```
+
+- **Sin `-Encoding UTF8`, las tildes y las comillas llegan rotas.** Windows
+  PowerShell 5.1, la que trae Windows, lee un fichero sin BOM con la página
+  de códigos ANSI del sistema. La [doc de
+  Microsoft](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_character_encoding?view=powershell-5.1)
+  lo dice así: «`Get-Content` […] uses the `Default` ANSI encoding».
+- **Y el análisis cambia.** El 02/10/2026, el texto de
+  `motor/src/combinacion-real.spec.ts` con «Noticia» dio 356 palabras de
+  prosa y un total de 17,04, en vez de 325 y 47,08.
+- **`-Raw`** lee el fichero de una vez, con sus saltos de línea.
+
 ### Estructura
 
 ```text
 motor/      el motor: TypeScript sin compilar, sus jueces y las herramientas de calibración
-web/        la web estática en Astro 7: src/pages/index.astro y la lógica en src/pantalla/
+web/        la web estática en Astro 7: src/pages/index.astro, la lógica en src/pantalla/,
+            las cadenas de la interfaz en src/textos.ts y los textos de ejemplo en public/ejemplos/
 paquetes/   los dos paquetes de reglas incluidos (RadiografIA y Español correcto)
 data/       los datos de terceros y la calibración, cada carpeta con su licencia
-docs/       la investigación de cada familia y la bitácora de fallos
+docs/       la investigación de cada familia, los textos de ejemplo y la bitácora de fallos
 ```
 
 La raíz es un [workspace de npm](https://docs.npmjs.com/cli/v11/using-npm/workspaces)
@@ -182,19 +210,47 @@ con un solo `package-lock.json`. `web/` importa el motor por
 
 ### Lo que viaja al navegador
 
-Nada sale del navegador: la página solo pide su JS y los dos paquetes, que
-se validan al arrancar. Medido en el build de la web el 02/10/2026:
+Nada sale del navegador. La página pide su JS y los dos paquetes, que se
+validan al arrancar, y un texto de ejemplo cuando se pulsa su botón. Medido
+en el build de la web el 02/10/2026:
 
 | fichero | bytes |
 |---|---|
-| el JS de la página (motor, validador y aviso MIT de Ajv; minificado por Vite) | 122.383 |
-| `paquetes/radiografia.json` (con su calibración) | 336.923 |
+| el JS de la página (motor, validador y aviso MIT de Ajv; minificado por Vite) | 123.393 |
+| `paquetes/radiografia.json` (con su calibración) | 337.252 |
 | `paquetes/espanol-correcto.json` | 20.468 |
-| `index.html` | 2.478 |
+| `index.html` | 2.950 |
+| `ejemplos/antonio.txt`, al pulsar su botón | 1.777 |
+| `ejemplos/ia.txt`, al pulsar su botón | 1.957 |
 
 Los paquetes van aparte del JS, y no dentro, para que el JS se quede en unos
 120 KB y los JSON se puedan guardar en caché por separado. Metidos en el
 build, el JS habría pasado de 400 KB.
+
+## Ejemplos
+
+Dos botones junto al cuadro de texto cargan dos textos sobre el mismo tema,
+por qué gustan los cómics, y seleccionan el género «Opinión». El análisis
+empieza al pulsar «Pon tu texto a contraluz».
+
+- **El texto humano**
+  ([`web/public/ejemplos/antonio.txt`](web/public/ejemplos/antonio.txt)) lo
+  escribió Antonio, el autor del proyecto, y lo entregó el 02/10/2026. **No se
+  retoca, diga lo que diga el motor**: lo que sale se documenta.
+- **El texto de IA** ([`web/public/ejemplos/ia.txt`](web/public/ejemplos/ia.txt))
+  lo generó Claude Opus 5.5 (`claude-opus-5-5`) el 02/10/2026.
+  - Recibió una sola instrucción y nada más: «Escribe un texto de unas 330
+    palabras, en español, sobre por qué te gustan los cómics, mencionando
+    Spiderman, Flash, Green Lantern y Daredevil.»
+  - Sin instrucciones de estilo, por la CLI de Claude Code, sin herramientas y
+    con el prompt de sistema vacío.
+  - Se guardó tal cual, con su título en negrita de Markdown, y no se
+    regenera.
+
+Lo que el motor dice de cada uno, regla a regla, está en
+[`docs/ejemplos.md`](docs/ejemplos.md), con la procedencia completa y una
+primera generación que se descartó. Un juez comprueba que sus cifras siguen
+siendo las que da el motor.
 
 ## Paquetes
 
