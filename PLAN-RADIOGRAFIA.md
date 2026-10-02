@@ -1,8 +1,8 @@
 # PLAN — 005 RadiografIA
 
 Estado a 02/10/2026: **FIRMADO por Antonio el 29/09/2026**, publicado en
-`73ef265`. **PUNTOS 1, 2 y 3 CERRADOS el 29/09; 4 el 30/09; 5 el 01/10
-(la casilla de los textos de la web, trasladada al punto 6).** Se tacha lo hecho y
+`73ef265`. **PUNTOS 1, 2 y 3 CERRADOS el 29/09; 4 el 30/09; 5 el 01/10; 6
+el 02/10.** Se tacha lo hecho y
 lo nuevo se añade en su punto, y solo por decisión de Antonio.
 
 Origen: BRAINSTORMING (1), 28-29/09/2026, y las decisiones de Antonio
@@ -558,13 +558,29 @@ Astro, sin diseño todavía: funciona, no luce.
       de la lista y paquete, literales de la ficha; **se pinta debajo, no
       junto al tramo: dónde y cómo es del punto 10**)
 - [x] Nota «analiza estilo, no demuestra autoría» junto al medidor (6.2)
-- [ ] Textos de ejemplo precargados (el de Antonio, pasado por el motor
-      y con el resultado documentado)
-- [ ] Los textos de la web pasan por los dos paquetes (casilla heredada
-      del punto 5, decisión 01/10): si RadiografIA los marca, se cambian o
-      se declara por qué no; de paso, «subrayado» entra en los FP declarados
-      de lex-verbos-de-enfasis
-- [ ] **CICLO ENTERO VISTO POR ANTONIO EN CHROME. PUNTO 6 CERRADO**
+- [x] Textos de ejemplo precargados (6.3, 02/10): `web/public/ejemplos/
+      antonio.txt` (314 palabras de prosa, byte a byte, con tres erratas
+      corregidas por él y sin su edad) y `ia.txt` (336 palabras; generado
+      UNA vez con la CLI de Claude en modo limpio —claude-opus-5-5,
+      02/10 11:51, sin instrucciones de estilo—; la primera generación se
+      descartó porque el subagente cargó el CLAUDE.md del proyecto, y
+      está documentada como descartada). Dos botones que cargan el texto
+      y ponen el género «opinion» sin analizar solos. **Resultado con
+      «opinion»: el humano puntua 5 (entre mediana y p95: pocas comas,
+      sin epistémicos) y el de IA 2 (por debajo de la mediana: cierre de
+      plantilla, sin automenciones)**; no se retoca nada; documentado en
+      `docs/ejemplos.md` con un juez que lo compara con analizar() en cada
+      npm test
+- [x] Los textos de la web pasan por los dos paquetes (6.3): 334 palabras
+      de prosa de la interfaz, con «general»; Español correcto 0; en
+      RadiografIA quedan declaradas en el juez `textos-web.spec.ts`
+      lex-verbos-de-enfasis («subrayado», nombre de la función: FP
+      declarado en su ficha) y est-frases-cortas (etiquetas sueltas, no
+      prosa); el «—» del panel pasó a «sin dato» para no declarar
+      pf-raya-densidad. README con prueba manual (`-Encoding UTF8`),
+      ejemplos y estado
+- [x] **CICLO ENTERO VISTO POR ANTONIO EN CHROME (02/10, los cuatro textos
+      del 6.2 y los dos ejemplos del 6.3). PUNTO 6 CERRADO (02/10)**
 
 ## 7 — Catálogo de reglas
 

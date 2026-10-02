@@ -7,18 +7,15 @@ El ejecutor reporta descubrimientos; no toca este fichero.
 
 ## ESTADO ACTUAL — 2 de octubre de 2026
 
-**⭐ PUNTOS 1-5 CERRADOS (29/09-01/10). PUNTO 6 EN MARCHA (02/10, encargos
-6.1 y 6.2 hechos): LA DEMO EXISTE.** `web/` (Astro 7.3.5 estático) sirve la
-pantalla mínima: textarea, selector de género, botón, subrayados por
-familia en una vista por tramos, medidor con la banda humana («sin
-señales», «sin calibración», «poco fiable», «texto insuficiente»), panel
-al tocar un tramo, desglose de los dos paquetes y la nota de autoría.
-Ciclo entero visto por Antonio en Chrome el 02/10 con cuatro textos
-(entero, 99, 150 y correo cortado a mano). Al navegador viajan 122 KB de
-JS + 357 KB de JSON. Repo como workspaces (`motor` + `web`, lock en la
-raíz). **npm test raíz: motor 867 (860 verde, 2 saltados, 5 todo) + web
-17/17**, tipos limpios. Seis bitácoras, todas cerradas. Falta del punto
-6: los textos de ejemplo y los textos de la web (6.3).
+**⭐ PUNTOS 1-6 CERRADOS (29/09-02/10). LA DEMO EXISTE Y ESTÁ VISTA.**
+`web/` (Astro 7.3.5 estático) sirve la pantalla mínima con los dos
+ejemplos precargados: el texto de Antonio puntúa 5 (entre la mediana y el
+p95 de opinión) y el de IA, 2 (por debajo de la mediana); se publica así
+y demuestra la nota de la casa: analiza estilo, no demuestra autoría. Al
+navegador viajan 123 KB de JS + 358 KB de JSON (+ 2 KB por ejemplo al
+pulsar). **npm test raíz: motor 867 (860 verde, 2 saltados, 5 todo) + web
+25/25**, tipos limpios. Seis bitácoras, todas cerradas. **Siguiente: punto
+7, catálogo de reglas.**
 
 ## 1 · Identidad
 
@@ -67,7 +64,7 @@ antes del verde, push = despliegue, bitácora por la skill
 ## 4 · El plan
 
 `PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1, 2 y 3 (29/09), 4 (30/09),
-5 (01/10). Abierto: el 6 (6.1 y 6.2 hechos el 02/10; queda 6.3 textos).
+5 (01/10), 6 (02/10). Abierto: el 7.
 
 ## 5 · Decisiones
 
@@ -304,9 +301,33 @@ antes del verde, push = despliegue, bitácora por la skill
   líneas autorizadas en motor/src). Corrección: Desplázame es Angular, no
   Astro; sirve de referencia solo su raíz de workspaces, y versiona
   app/dist porque el panel de Hostinger no ejecuta el CLI (punto 11).
+- 02/10 — **Decisiones del 6.3 (textos)**: el texto de Antonio entra byte a
+  byte (él corrigió tres erratas y quitó su edad antes de entregarlo) y
+  NO se retoca aunque el motor lo marque; el de IA se genera UNA vez con
+  la CLI de Claude en modo limpio (`claude -p --safe-mode --tools ""
+  --system-prompt ""`, claude-opus-5-5, 02/10) con la instrucción literal
+  y sin estilo, y se congela; la primera generación (subagente que cargó
+  el CLAUDE.md) se descartó y queda documentada. **Resultado: humano 5,
+  IA 2 con «opinion»; se publica así.** Los botones ponen el género
+  «opinion» [PROPIO] y no analizan solos. Textos de la web por los dos
+  paquetes con lista declarada en un juez (subrayado; etiquetas sueltas);
+  «—» → «sin dato». `.gitattributes` con eol=lf para los ejemplos.
+  Jueces de web con --test-concurrency=1.
 
 ## 6 · Cabos abiertos
 
+- **Del 6.3, decisión pendiente para después del punto 6 (toca el
+  paquete y exige revalidar)**: la lista de D3 (epistémicos) no tiene las
+  conjugaciones de «parecer» («me pareció», «me ha parecido»), por eso
+  dispara en el texto de Antonio; la de D4 (automenciones) no tiene «me»
+  (excluido por ambiguo), por eso dispara en el de IA. Ampliar listas =
+  recalcular total y revalidar FPR. Propuesta: tanda corta antes del 10.
+- Del 6.3, método: los subagentes de Claude Code cargan el CLAUDE.md del
+  proyecto → cualquier texto de IA futuro se genera con la CLI en modo
+  limpio; la CLI del sistema (2.1.251) no admite Opus 5.5, la de VS Code
+  (2.1.286) sí. Zonas sin juez: la tabla de tamaños del README y la cifra
+  de palabras de los textos de la web. Disco C: al 98 % tras 46 clones de
+  verificación (borrados; ahora se borra cada clon al terminar).
 - Para el punto 7 (catálogo): los nombres humanizados del panel salen del
   id y pierden tildes («Atribucion vaga», «Mayuscula…»); el nombre real
   de cada regla lo decide el catálogo (¿campo `nombre` en la ficha?
@@ -319,7 +340,7 @@ antes del verde, push = despliegue, bitácora por la skill
 - Para quien repita la prueba manual: leer un .txt desde PowerShell con
   `Get-Content -Encoding UTF8 -Raw` antes de `Set-Clipboard`; sin ello las
   tildes y las comillas llegan rotas y el análisis cambia (02/10: 356
-  palabras y 17,04 en vez de 325 y 47,08). Se anota en el README en 6.3.
+  palabras y 17,04 en vez de 325 y 47,08). Anotado en el README (6.3).
 - Del 6.2: al navegador viajan 122 KB de JS (con el standalone y el
   aviso MIT) y 357 KB de JSON; queda valorar quitar los `$comment` del
   standalone en build. Con \r\n la copia de trabajo lleva dos espacios
