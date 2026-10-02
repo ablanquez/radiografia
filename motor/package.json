@@ -10,6 +10,12 @@
     "tipos": "tsc --noEmit",
     "generar": "node src/generar-validador.ts"
   },
+  "exports": {
+    "./navegador": {
+      "types": "./src/navegador.ts",
+      "default": "./src/navegador.ts"
+    }
+  },
   "imports": {
     "#validador-standalone": {
       "types": "./src/validador-standalone.d.ts",

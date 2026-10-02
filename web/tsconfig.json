@@ -1,0 +1,14 @@
+{
+  /* [DOC] https://docs.astro.build/en/guides/typescript/ — «Three extensible
+     tsconfig.json templates are included in Astro: base, strict, and
+     strictest». Aquí strict, con el include y el exclude de la plantilla
+     `minimal` (github.com/withastro/astro/tree/main/examples/minimal).
+
+     [PROPIO, firmado en la parada 1 del 6.2] Sin `astro check`: la lógica de
+     la pantalla va en .ts, que revisa `tsc --noEmit` (npm run tipos), y los
+     .astro solo llevan HTML y el import del script. Los tipos del motor llegan
+     por el campo `exports` de motor/package.json («types»). */
+  "extends": "astro/tsconfigs/strict",
+  "include": [".astro/types.d.ts", "**/*"],
+  "exclude": ["dist"]
+}

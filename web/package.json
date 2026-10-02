@@ -1,0 +1,28 @@
+{
+  "name": "@radiografia/web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "description": "La web estática de RadiografIA, en Astro: el texto se analiza en el navegador con el motor y nada sale de él.",
+  "scripts": {
+    "predev": "npm run generar --workspace @radiografia/motor && node scripts/copiar-paquetes.ts",
+    "dev": "astro dev",
+    "prebuild": "npm run generar --workspace @radiografia/motor && node scripts/copiar-paquetes.ts",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "tipos": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=24.12.0"
+  },
+  "dependencies": {
+    "@radiografia/motor": "*",
+    "astro": "7.3.5"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.0",
+    "typescript": "^5.9.3"
+  }
+}

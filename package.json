@@ -1,0 +1,17 @@
+{
+  "name": "radiografia",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Raíz de los workspaces de RadiografIA: el motor (motor/) y la web estática en Astro (web/). Aquí no vive código.",
+  "license": "Apache-2.0",
+  "workspaces": [
+    "motor",
+    "web"
+  ],
+  "scripts": {
+    "tipos": "npm run tipos --workspaces"
+  },
+  "engines": {
+    "node": ">=24.12.0"
+  }
+}

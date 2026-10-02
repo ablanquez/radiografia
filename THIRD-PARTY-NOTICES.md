@@ -4,18 +4,20 @@ La licencia Apache 2.0 cubre **el código y los paquetes de reglas** de Radiogra
 lo ajeno**, que conserva sus propias condiciones. Aquí está, una por una, con lo que sabemos y lo
 que no.
 
-> ℹ️ **Estado a 30/09/2026.** Lo ajeno es software y datos. Software (§ 1): **seis**
-> dependencias declaradas en [`motor/package.json`](motor/package.json) —una de ejecución y
-> cinco de desarrollo—, el árbol que arrastran y **un fichero de código ajeno incorporado** al
-> repositorio (§ 1.5). Datos (§ 2): las carpetas de [`data/`](data/), **aparte del código
-> Apache 2.0**, cada una con su licencia al lado.
+> ℹ️ **Estado a 02/10/2026.** Lo ajeno es software y datos. Software (§ 1): **siete**
+> dependencias declaradas en los dos workspaces, [`motor/package.json`](motor/package.json) y
+> [`web/package.json`](web/package.json) —dos de ejecución y cinco de desarrollo—, el árbol que
+> arrastran y **un fichero de código ajeno incorporado** al repositorio (§ 1.5). Datos (§ 2):
+> las carpetas de [`data/`](data/), **aparte del código Apache 2.0**, cada una con su licencia
+> al lado.
 >
 > Las **fuentes de cada regla** (estudios, guías, corpus) no van aquí: se citan en la ficha de
 > la regla y en el catálogo. Lo propio (logo, marca) irá en `PROCEDENCIA.md`.
 >
 > ⭐ **Las cifras y las tablas de este documento las vigila un juez**:
-> [`motor/src/notices.spec.ts`](motor/src/notices.spec.ts) las compara con `motor/package.json`,
-> `motor/package-lock.json`, el código incorporado y las carpetas de `data/`. Si entra o sale
+> [`motor/src/notices.spec.ts`](motor/src/notices.spec.ts) las compara con los `package.json` de
+> los workspaces, el `package-lock.json` de la raíz, el código incorporado y las carpetas de
+> `data/`. Si entra o sale
 > una dependencia, un fichero ajeno o una carpeta de datos y nadie toca este fichero, la suite
 > del motor se pone roja. Es la herencia de Desplázame, donde la cifra de la cabecera se quedó
 > vieja tres veces seguidas antes de que alguien escribiera el guion que cuenta.
@@ -26,11 +28,14 @@ que no.
 
 ### 1.1 · Dependencias de ejecución
 
-Las que van en `dependencies` de [`motor/package.json`](motor/package.json).
+Las que van en `dependencies` de [`motor/package.json`](motor/package.json) y de
+[`web/package.json`](web/package.json). `web` declara también `@radiografia/motor`, que es el
+otro workspace y no es de terceros.
 
 | Paquete | Versión | Licencia | Para qué |
 |---|---|---|---|
-| `ajv` | 8.20.0 | MIT | El validador de JSON Schema: comprueba cada paquete de reglas contra `motor/esquema/` (clase `Ajv2020`, draft 2020-12), en vivo en Node y, en build, genera el validador standalone |
+| `ajv` | 8.20.0 | MIT | (motor) El validador de JSON Schema: comprueba cada paquete de reglas contra `motor/esquema/` (clase `Ajv2020`, draft 2020-12), en vivo en Node y, en build, genera el validador standalone |
+| `astro` | 7.3.5 | MIT | (web) El marco de la web estática: compila `web/src/pages/` a HTML y, con Vite 8 y Rolldown, empaqueta el script de la página. Fijada exacta (encargo 6.2). Sus binarios, en § 1.4 |
 
 > **Lo que viajará al navegador — y lo que no.** `ajv` entero **no** viajará: el navegador
 > llevará `motor/dist/validador.standalone.js`, la función de validación que
@@ -48,6 +53,10 @@ Las que van en `dependencies` de [`motor/package.json`](motor/package.json).
 > esbuild lleva el aviso al final del fichero como comentario legal, minificado o no
 > (comprobado el 02/10/2026).
 >
+> **De `astro` no viaja nada al navegador.** Genera el HTML en build. El JS de la página es el
+> motor, el validador y los ayudantes que escribe el empaquetador: en el build de prueba de la
+> parada 1 del 6.2 (02/10/2026) no había código de Vite ni de Astro en el JS.
+>
 > ⚠️ **Aquí estuvo `es-compromise` 0.3.1** (MIT, etiquetado gramatical), del 29/09 hasta el cierre
 > del encargo 3.3: se midió contra UD Spanish-AnCora, no llegó al umbral y se retiró con su capa
 > y su lista de pronombres. La medida, en
@@ -59,59 +68,104 @@ No se distribuyen: no viajan al navegador. Se listan igualmente, una a una.
 
 | Paquete | Versión | Licencia | Para qué |
 |---|---|---|---|
-| `typescript` | 5.9.3 | Apache-2.0 | `tsc --noEmit`: revisa los tipos. No compila nada; Node ejecuta el `.ts` borrando tipos |
-| `@types/node` | 24.19.0 | MIT | Los tipos de Node 24 (`node:test`, `node:fs`) para que `tsc` pueda revisar |
-| `@tsconfig/node24` | 24.0.5 | MIT | La base de `tsconfig` para Node 24 |
-| `@tsconfig/node-ts` | 23.6.4 | MIT | La base de `tsconfig` para ejecutar TypeScript con borrado de tipos |
-| `esbuild` | 0.28.2 | MIT | Empaqueta el validador standalone en un solo fichero sin dependencias (`npm run generar`). Su binario, en § 1.4 |
+| `typescript` | 5.9.3 | Apache-2.0 | (motor y web) `tsc --noEmit`: revisa los tipos. No compila nada; Node ejecuta el `.ts` borrando tipos |
+| `@types/node` | 24.19.1 | MIT | (motor y web) Los tipos de Node 24 (`node:test`, `node:fs`) para que `tsc` pueda revisar |
+| `@tsconfig/node24` | 24.0.5 | MIT | (motor) La base de `tsconfig` para Node 24 |
+| `@tsconfig/node-ts` | 23.6.4 | MIT | (motor) La base de `tsconfig` para ejecutar TypeScript con borrado de tipos |
+| `esbuild` | 0.28.2 | MIT | (motor) Empaqueta el validador standalone en un solo fichero sin dependencias (`npm run generar`). Su binario, en § 1.4 |
 
-**Mirado una a una (29/09/2026):** el `LICENSE` de cada una de las seis declaradas, abierto en
-`motor/node_modules/`, dice lo mismo que su campo `license`: MIT (Evgeny Poberezkin) en `ajv`;
-Apache License 2.0 en `typescript`; MIT (Microsoft Corporation) en `@types/node` y en las dos
-bases de `@tsconfig`; MIT (Evan Wallace) en el `LICENSE.md` de `esbuild`.
+`@types/node` pasó de 24.19.0 a 24.19.1 el 02/10/2026, al regenerar el lock en la raíz (encargo
+6.2): es un parche de tipos dentro del rango `^24.19.0` que declaran los dos workspaces.
+
+**Mirado una a una:** el `LICENSE` de cada una de las siete declaradas, abierto en
+`node_modules/`, dice lo mismo que su campo `license`: MIT (Evgeny Poberezkin) en `ajv`; Apache
+License 2.0 en `typescript`; MIT (Microsoft Corporation) en `@types/node` y en las dos bases de
+`@tsconfig`; MIT (Evan Wallace) en el `LICENSE.md` de `esbuild` (29/09/2026); MIT (Fred K.
+Schott) en `astro` (02/10/2026).
 
 ### 1.3 · El árbol transitivo — existe, y no se lista aquí
 
-Las seis declaradas arrastran **treinta y una** dependencias transitivas en el lock. No se
-enumeran una a una aquí: la lista que manda es [`motor/package-lock.json`](motor/package-lock.json),
-versionado precisamente para eso. Cada entrada trae su versión, su origen y su licencia.
+Las siete declaradas arrastran **doscientas noventa** dependencias transitivas en el lock. No se
+enumeran una a una aquí: la lista que manda es [`package-lock.json`](package-lock.json), el de la
+raíz, versionado precisamente para eso (desde el encargo 6.2 hay uno solo, para los dos
+workspaces). Cada entrada trae su versión, su origen y su licencia. No cuentan la raíz, las
+carpetas de los workspaces ni sus enlaces en `node_modules/`.
 
-⚠️ **De esas treinta y una, veintiséis son los binarios de esbuild, uno por sistema**
-(`@esbuild/win32-x64`, `@esbuild/linux-x64`, `@esbuild/darwin-arm64`…). El lock los apunta todos
-como opcionales y npm **instala solo el del sistema en que corre**: en esta máquina, uno (§ 1.4).
-`npm ls --all` enseña los otros veinticinco como `UNMET OPTIONAL DEPENDENCY`, y es lo esperado.
+⚠️ **De esas doscientas noventa, en esta máquina se instalan ciento ochenta y nueve.** El resto
+son opcionales que npm **solo instala en el sistema que les toca**:
+
+- **91 binarios de otros sistemas**: 25 de esbuild, 14 de Rolldown, 13 de sharp y 10 de su
+  libvips, 10 de lightningcss, 9 del compilador de Astro, 8 de satteri,
+  `@img/sharp-webcontainers-wasm32` y `fsevents` (solo macOS). Los de Windows de 64 bits, en
+  § 1.4.
+- **10 piezas de WebAssembly de reserva** (`@emnapi/*`, `@napi-rs/wasm-runtime`,
+  `@tybys/wasm-util`, `@img/sharp-wasm32` y `tslib`), para los sistemas sin binario nativo.
+
+`npm ls --all` enseña los que faltan como `UNMET OPTIONAL DEPENDENCY`, y es lo esperado.
 
 ```bash
-cd motor
-npm ls --depth=0   # las declaradas
-npm ls --all       # el árbol entero
+npm ls --depth=0 --workspaces   # las declaradas, por workspace (en la raíz)
+npm ls --all                    # el árbol entero
 ```
 
-**El reparto de licencias del árbol transitivo, leído del `package-lock.json` el 29/09/2026:**
+**El reparto de licencias del árbol transitivo, leído del `package-lock.json` de la raíz el
+02/10/2026:**
 
 | Licencia | Paquetes |
 |---|---|
-| MIT | 30 |
-| BSD-3-Clause | 1 |
-| **Total** | **31** |
+| MIT | 221 |
+| Apache-2.0 | 16 |
+| MPL-2.0 | 12 |
+| LGPL-3.0-or-later | 10 |
+| ISC | 8 |
+| BSD-2-Clause | 8 |
+| BSD-3-Clause | 4 |
+| Apache-2.0 AND LGPL-3.0-or-later | 3 |
+| BlueOak-1.0.0 | 3 |
+| CC0-1.0 | 2 |
+| Apache-2.0 AND LGPL-3.0-or-later AND MIT | 1 |
+| Python-2.0 | 1 |
+| 0BSD | 1 |
+| **Total** | **290** |
 
-### 1.4 · El binario de esbuild
+⚠️ **Dos licencias que no son permisivas, y por qué no obligan aquí.** Las dos llegan con
+`astro` y son **herramientas de build: no se distribuyen ni viajan al navegador** (el JS de la
+página no lleva código suyo, § 1.1):
 
-`esbuild` es un programa nativo: el paquete npm es un envoltorio y el ejecutable llega en un
-paquete aparte, según el sistema.
+- **LGPL-3.0-or-later — `sharp`** (Apache-2.0), dependencia opcional de `astro` para tratar
+  imágenes. Sus binarios llevan libvips y sus bibliotecas: los diez `@img/sharp-libvips-*` (LGPL),
+  los `@img/sharp-win32-*` (Apache-2.0 AND LGPL) y `@img/sharp-wasm32`. Aquí solo se instala
+  `@img/sharp-win32-x64` (§ 1.4). La web no trata imágenes.
+- **MPL-2.0 — `lightningcss`**, de Vite, que analiza y minifica el CSS, y sus once binarios. Aquí
+  se instalan `lightningcss` y `lightningcss-win32-x64-msvc` (§ 1.4).
 
-| Paquete | Versión | Licencia | Qué es |
-|---|---|---|---|
-| `@esbuild/win32-x64` | 0.28.2 | MIT | El ejecutable `esbuild.exe` para Windows de 64 bits, el que usa esta máquina |
+### 1.4 · Los binarios nativos
 
-- **No trae fichero de licencia.** El paquete solo tiene `README.md`, `esbuild.exe` y
-  `package.json`, donde declara `"license": "MIT"` y el mismo repositorio que `esbuild`
-  (`github.com/evanw/esbuild`), cuyo `LICENSE.md` es el MIT de § 1.2. El texto de la licencia
-  dentro del propio paquete: **NO CONSTA**.
+Seis herramientas del árbol son programas nativos: el paquete npm es un envoltorio y el binario
+llega en un paquete aparte, según el sistema. En esta máquina (Windows de 64 bits) se instalan
+seis, todos de **herramientas de build: no se distribuyen ni viajan al navegador**.
+
+| Paquete | Versión | Licencia | Qué es | Texto de la licencia en el paquete |
+|---|---|---|---|---|
+| `@esbuild/win32-x64` | 0.28.2 | MIT | `esbuild.exe`, el de `esbuild` (§ 1.2) | **NO CONSTA** |
+| `@rolldown/binding-win32-x64-msvc` | 1.2.12 | MIT | El empaquetador de Vite 8 (`rolldown-binding.win32-x64-msvc.node`) | **NO CONSTA** |
+| `@astrojs/compiler-binding-win32-x64-msvc` | 0.5.1 | MIT | El compilador de los `.astro` (`@astrojs/compiler-rs`) | **NO CONSTA** |
+| `@bruits/satteri-win32-x64-msvc` | 0.10.5 | MIT | El procesador de Markdown de Astro (`@astrojs/markdown-satteri`) | **NO CONSTA** |
+| `lightningcss-win32-x64-msvc` | 1.33.0 | MPL-2.0 | El analizador y minificador de CSS de Vite (`lightningcss`) | `LICENSE` (MPL 2.0) |
+| `@img/sharp-win32-x64` | 0.35.5 | Apache-2.0 AND LGPL-3.0-or-later | `sharp` para Windows, con `lib/libvips-42.dll` | `LICENSE` (Apache 2.0); el de la LGPL, **NO CONSTA** |
+
+- **Cuatro no traen fichero de licencia.** Solo llevan `README.md`, el binario y `package.json`,
+  donde declaran `"license": "MIT"` y el repositorio de su herramienta (`evanw/esbuild`,
+  `rolldown/rolldown`, `withastro/compiler-rs`, `bruits/satteri`). El de esbuild remite al
+  `LICENSE.md` MIT de § 1.2. El texto de la licencia dentro de cada paquete: **NO CONSTA**.
+- **`@img/sharp-win32-x64`** trae el `LICENSE` de Apache 2.0 de sharp. Su `README.md` lista las
+  bibliotecas que van dentro de `libvips-42.dll` y su licencia, varias LGPLv3 (fribidi, glib,
+  libexif, libheif, librsvg…). El texto de la LGPL-3.0 dentro del paquete: **NO CONSTA**.
 - **npm 11 no ejecutó el `postinstall` de `esbuild`** (`node install.js`): lo bloquea hasta que
   alguien lo apruebe (`npm warn allow-scripts … esbuild@0.28.2 (postinstall: node install.js)`).
-  No se ha aprobado (decisión de Antonio, 3.2). `esbuild` funciona sin él: `npm run generar` y
-  los jueces del standalone lo ejecutan.
+  No se ha aprobado (decisión de Antonio, 3.2; confirmada en la parada 1 del 6.2: la plantilla
+  `minimal` de Astro lo aprueba con `"allowScripts"`, y aquí no se copia). `esbuild` funciona sin
+  él: `npm run generar`, los jueces del standalone, `astro dev` y `astro build` lo ejecutan.
 
 ### 1.5 · Código de terceros incorporado
 

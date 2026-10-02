@@ -12,11 +12,25 @@
  * [PROPIO] Adaptado, no copiado. Allí se cuentan fichas de DATOS (§ 1.x);
  * aquí hoy solo hay software, así que lo que envejece es otra cosa y se mide
  * contra la fuente de verdad, no contra otra línea del mismo documento:
- *   1. la cifra de declaradas de la cabecera  ↔ motor/package.json
- *   2. las filas de las tablas § 1.1 y § 1.2   ↔ motor/package.json (ni muertas
+ *   1. la cifra de declaradas de la cabecera  ↔ los package.json de los
+ *      workspaces
+ *   2. las filas de las tablas § 1.1 y § 1.2   ↔ esos package.json (ni muertas
  *      ni sin ficha, cada una en su tabla)
- *   3. versión y licencia de cada fila          ↔ motor/package-lock.json
- *   4. la cifra de transitivas de § 1.3         ↔ motor/package-lock.json
+ *   3. versión y licencia de cada fila          ↔ el package-lock.json de la raíz
+ *   4. la cifra de transitivas de § 1.3         ↔ el package-lock.json de la raíz
+ *
+ * Desde el encargo 6.2 (adaptación autorizada en la parada 1), el repositorio
+ * es una raíz de npm workspaces (motor/ y web/), con un solo lock en la raíz.
+ * Las declaradas son la unión de `dependencies` y `devDependencies` de los
+ * workspaces, sin los paquetes de los propios workspaces (web declara
+ * @radiografia/motor, que no es de terceros). En el lock no cuentan como
+ * transitivas la raíz (""), las carpetas de los workspaces («motor», «web») ni
+ * sus enlaces en node_modules/ (`"link": true`).
+ * [DOC] https://docs.npmjs.com/cli/v11/using-npm/workspaces — cada workspace
+ *    se enlaza en el node_modules/ de la raíz.
+ * [PROPIO] Los números en letra, hasta 999 y en femenino («una», «veintiuna»,
+ *    «doscientas»), porque lo que se cuenta son dependencias: la misma
+ *    concordancia que usaba la tabla de hasta cuarenta que había antes.
  *
  * Y desde el encargo 3.3, los DATOS de terceros (§ 2), contra la carpeta data/:
  *   5. cada carpeta bajo data/ tiene su ficha «### 2.x · `data/<carpeta>/`»,
@@ -52,23 +66,28 @@ const NOTICES = new URL('../../THIRD-PARTY-NOTICES.md', import.meta.url);
 const DATOS = new URL('../../data/', import.meta.url);
 const TERCEROS = new URL('./terceros/', import.meta.url);
 const RAIZ = new URL('../../', import.meta.url);
-const PACKAGE = new URL('../package.json', import.meta.url);
-const LOCK = new URL('../package-lock.json', import.meta.url);
+const PAQUETE_RAIZ = new URL('../../package.json', import.meta.url);
+const LOCK = new URL('../../package-lock.json', import.meta.url);
 
-/**
- * Los números que el documento escribe con letra, en negrita. En femenino,
- * porque lo que cuenta son «dependencias» (una, veintiuna, treinta y una).
- */
-const EN_LETRA: Readonly<Record<string, number>> = {
-  una: 1, dos: 2, tres: 3, cuatro: 4, cinco: 5, seis: 6, siete: 7, ocho: 8, nueve: 9, diez: 10,
-  once: 11, doce: 12, trece: 13, catorce: 14, quince: 15, dieciséis: 16, diecisiete: 17,
-  dieciocho: 18, diecinueve: 19, veinte: 20,
-  veintiuna: 21, veintidós: 22, veintitrés: 23, veinticuatro: 24, veinticinco: 25,
-  veintiséis: 26, veintisiete: 27, veintiocho: 28, veintinueve: 29, treinta: 30,
-  'treinta y una': 31, 'treinta y dos': 32, 'treinta y tres': 33, 'treinta y cuatro': 34,
-  'treinta y cinco': 35, 'treinta y seis': 36, 'treinta y siete': 37, 'treinta y ocho': 38,
-  'treinta y nueve': 39, cuarenta: 40,
-};
+const UNIDADES = ['', 'una', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve'];
+const DE_DIEZ_A_VEINTINUEVE = [
+  'diez', 'once', 'doce', 'trece', 'catorce', 'quince', 'dieciséis', 'diecisiete', 'dieciocho', 'diecinueve',
+  'veinte', 'veintiuna', 'veintidós', 'veintitrés', 'veinticuatro', 'veinticinco', 'veintiséis', 'veintisiete', 'veintiocho', 'veintinueve',
+];
+const DECENAS = ['', '', '', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'];
+const CENTENAS = ['', 'ciento', 'doscientas', 'trescientas', 'cuatrocientas', 'quinientas', 'seiscientas', 'setecientas', 'ochocientas', 'novecientas'];
+
+/** Un número de 1 a 999 escrito con letra, en femenino: 31 → «treinta y una», 290 → «doscientas noventa». */
+function enLetra(n: number): string {
+  if (n === 100) return 'cien';
+  const resto = n % 100;
+  const decenasYUnidades =
+    resto === 0 ? '' : resto < 10 ? UNIDADES[resto]! : resto < 30 ? DE_DIEZ_A_VEINTINUEVE[resto - 10]! : `${DECENAS[Math.floor(resto / 10)]}${resto % 10 === 0 ? '' : ` y ${UNIDADES[resto % 10]}`}`;
+  return [CENTENAS[Math.floor(n / 100)], decenasYUnidades].filter((p) => p !== '').join(' ');
+}
+
+/** Los números que el documento escribe con letra, en negrita, de 1 a 999. */
+const EN_LETRA: ReadonlyMap<string, number> = new Map(Array.from({ length: 999 }, (_, i) => [enLetra(i + 1), i + 1]));
 
 interface Fila {
   paquete: string;
@@ -79,6 +98,13 @@ interface Fila {
 interface EntradaLock {
   version: string;
   license?: string;
+  link?: boolean;
+}
+
+interface PackageJson {
+  name: string;
+  dependencies?: Record<string, string>;
+  devDependencies?: Record<string, string>;
 }
 
 /** El número en letra que precede a `frase`, en negrita: «**cinco** dependencias declaradas». */
@@ -88,8 +114,8 @@ function cifraDicha(texto: string, frase: string): number {
   const patron = new RegExp(`\\*\\*([a-zéó ]+)\\*\\*[\\s>]+${frase.replaceAll(' ', '[\\s>]+')}`);
   const dicho = patron.exec(texto);
   assert.ok(dicho, `el NOTICES tiene que decir en negrita cuántas «${frase}» hay`);
-  const cuantas = EN_LETRA[dicho[1]!];
-  assert.ok(cuantas !== undefined, `«${dicho[1]}» no está en la tabla de números con letra de este juez: añádelo`);
+  const cuantas = EN_LETRA.get(dicho[1]!);
+  assert.ok(cuantas !== undefined, `«${dicho[1]}» no es un número de 1 a 999 escrito con letra, en femenino`);
   return cuantas;
 }
 
@@ -122,21 +148,24 @@ function leer(): ReturnType<typeof leerTodo> {
 
 function leerTodo() {
   const texto = readFileSync(NOTICES, 'utf8');
-  const pkg = JSON.parse(readFileSync(PACKAGE, 'utf8')) as {
-    dependencies?: Record<string, string>;
-    devDependencies?: Record<string, string>;
-  };
+  const { workspaces } = JSON.parse(readFileSync(PAQUETE_RAIZ, 'utf8')) as { workspaces: string[] };
+  const paquetes = workspaces.map((w) => JSON.parse(readFileSync(new URL(`${w}/package.json`, RAIZ), 'utf8')) as PackageJson);
+  const propios = new Set(paquetes.map((p) => p.name));
+  /** Las declaradas en un campo, unidas entre workspaces y sin los paquetes de los propios workspaces. */
+  const declaradasEn = (campo: 'dependencies' | 'devDependencies'): string[] =>
+    [...new Set(paquetes.flatMap((p) => Object.keys(p[campo] ?? {})))].filter((n) => !propios.has(n)).sort();
   const lock = JSON.parse(readFileSync(LOCK, 'utf8')) as { packages: Record<string, EntradaLock> };
   return {
     texto,
     lock,
-    ejecucion: Object.keys(pkg.dependencies ?? {}).sort(),
-    desarrollo: Object.keys(pkg.devDependencies ?? {}).sort(),
+    workspaces,
+    ejecucion: declaradasEn('dependencies'),
+    desarrollo: declaradasEn('devDependencies'),
   };
 }
 
 describe('el THIRD-PARTY-NOTICES no puede envejecer solo', () => {
-  test('1 · la cabecera dice tantas dependencias declaradas como declara motor/package.json', () => {
+  test('1 · la cabecera dice tantas dependencias declaradas como declaran los package.json de los workspaces', () => {
     const { texto, ejecucion, desarrollo } = leer();
     assert.equal(cifraDicha(texto, 'dependencias declaradas'), ejecucion.length + desarrollo.length);
   });
@@ -147,22 +176,23 @@ describe('el THIRD-PARTY-NOTICES no puede envejecer solo', () => {
     assert.deepEqual(filasDe(texto, '1.2').map((f) => f.paquete).sort(), desarrollo, '§ 1.2 frente a devDependencies');
   });
 
-  test('3 · versión y licencia de cada fila son las que instala el package-lock.json', () => {
+  test('3 · versión y licencia de cada fila son las que instala el package-lock.json de la raíz', () => {
     const { texto, lock } = leer();
     for (const fila of [...filasDe(texto, '1.1'), ...filasDe(texto, '1.2')]) {
       const instalada = lock.packages[`node_modules/${fila.paquete}`];
-      assert.ok(instalada, `${fila.paquete} no está en el package-lock.json`);
+      assert.ok(instalada, `${fila.paquete} no está en node_modules/ del package-lock.json de la raíz`);
       assert.equal(fila.version, instalada.version, `versión de ${fila.paquete}`);
       assert.equal(fila.licencia, instalada.license, `licencia de ${fila.paquete}`);
     }
   });
 
-  test('4 · § 1.3 dice tantas transitivas como trae el package-lock.json', () => {
-    const { texto, lock, ejecucion, desarrollo } = leer();
+  test('4 · § 1.3 dice tantas transitivas como trae el package-lock.json de la raíz', () => {
+    const { texto, lock, workspaces, ejecucion, desarrollo } = leer();
     const declaradas = new Set([...ejecucion, ...desarrollo]);
-    const transitivas = Object.keys(lock.packages).filter(
-      (ruta) => ruta !== '' && !declaradas.has(ruta.replace(/^.*node_modules\//, '')),
-    );
+    const transitivas = Object.entries(lock.packages)
+      .filter(([ruta, entrada]) => ruta !== '' && !workspaces.includes(ruta) && entrada.link !== true)
+      .map(([ruta]) => ruta)
+      .filter((ruta) => !declaradas.has(ruta.replace(/^.*node_modules\//, '')));
     assert.equal(cifraDicha(texto, 'dependencias transitivas'), transitivas.length);
   });
 });

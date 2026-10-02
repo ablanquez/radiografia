@@ -12,6 +12,11 @@ motor/dist/
 # manifiestos, sin texto (data/calibracion/).
 motor/corpus/
 
+# Los paquetes de reglas que la web sirve por fetch (encargo 6.2): los copia
+# web/scripts/copiar-paquetes.ts desde paquetes/ antes de `astro dev` y de
+# `astro build`. La fuente es paquetes/, que sí se versiona.
+web/public/paquetes/
+
 # generated types
 .astro/
 
