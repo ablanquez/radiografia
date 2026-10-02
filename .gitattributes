@@ -1,0 +1,8 @@
+# Los textos de ejemplo de la pantalla (encargo 6.3) se sirven byte a byte,
+# con saltos \n. Git para Windows trae core.autocrlf=true, y sin esta línea un
+# clon los sacaría con \r\n y la web los serviría así.
+# [DOC] https://git-scm.com/docs/gitattributes — `text`: «Line endings are
+#    normalized to LF in the index every time the file is checked in»; `eol`
+#    «lf»: «uses the same line endings in the working directory as in the index
+#    when the file is checked out».
+web/public/ejemplos/*.txt text eol=lf
