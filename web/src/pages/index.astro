@@ -44,6 +44,9 @@
  *    las de un propio, porque su regla va después.
  *    [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/text-decoration-style
  *    — dashed: «Draws a dashed line»; Baseline desde enero de 2020.
+ * El botón «Descargar informe» (encargo 9.1, b; firmado en la parada 1),
+ *    type="button" y desactivado hasta el primer resultado: abre el diálogo de
+ *    imprimir (pantalla.ts), donde se elige «Guardar como PDF».
  * La hoja de impresión (encargo 9.1, b; firmada en la parada 1): el informe
  *    es esta misma página en papel, sin librerías; «Guardar como PDF» del
  *    diálogo de imprimir lo convierte en PDF. Va en este mismo <style>: Astro
@@ -90,7 +93,7 @@
  *    «there isn't any guarantee that print-color-adjust will do anything».
  */
 import { urlDelCatalogo } from '../catalogo/catalogo.ts';
-import { CATALOGO, NOTA_DE_AUTORIA, SIN_INFORME } from '../textos.ts';
+import { CATALOGO, DESCARGAR_INFORME, NOTA_DE_AUTORIA, SIN_INFORME } from '../textos.ts';
 
 const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
 ---
@@ -133,6 +136,7 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
           <div id="errores-propio" class="problemas" role="alert" hidden></div>
         </fieldset>
         <button id="analizar" type="submit" disabled>Pon tu texto a contraluz</button>
+        <button id="informe" type="button" disabled>{DESCARGAR_INFORME}</button>
         <p id="aviso-paquetes" role="status"></p>
       </form>
       <section id="resultado" aria-labelledby="titulo-resultado" hidden>

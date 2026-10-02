@@ -36,7 +36,13 @@
  *      analizar se pintan también, del mismo resultado, la cabecera del
  *      informe (con la fecha y la hora del análisis) y la lista de señales,
  *      que la hoja de impresión de index.astro enseña solo en papel. Imprime
- *      el último análisis pintado, y su cabecera dice cuál.
+ *      el último análisis pintado, y su cabecera dice cuál. El botón
+ *      «Descargar informe» se activa con el primer resultado y abre el diálogo
+ *      de imprimir; si los paquetes cambian después, sigue activo e imprime
+ *      ese último resultado.
+ *      [DOC] https://developer.mozilla.org/en-US/docs/Web/API/Window/print —
+ *      «Opens the print dialog to print the current document»; «This method
+ *      will block while the print dialog is open».
  *      [DOC] https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat
  *      — dateStyle y timeStyle, «long» y «short»; la zona horaria, «the
  *      runtime's time zone».
@@ -105,6 +111,8 @@ const avisoDePaquetes = elemento<HTMLParagraphElement>('aviso-paquetes');
 const cabeceraDelInforme = elemento<HTMLDivElement>('cabecera-informe');
 const senalesDelInforme = elemento<HTMLDivElement>('senales-informe');
 const fechaDelAnalisis = new Intl.DateTimeFormat('es', { dateStyle: 'long', timeStyle: 'short' });
+const botonDelInforme = elemento<HTMLButtonElement>('informe');
+botonDelInforme.addEventListener('click', () => window.print());
 
 /** true si lo analizado salió bien y está pintado: cambiar los paquetes lo deja atrás. */
 let hayResultado = false;
@@ -132,6 +140,7 @@ function analizarYPintar(paquetes: readonly Paquete[], indice: Indice): void {
     problemas.hidden = true;
     resultado.hidden = false;
     hayResultado = true;
+    botonDelInforme.disabled = false;
     avisoDePaquetes.textContent = '';
   } catch (fallo) {
     pintarProblemas(problemas, [{ paquete: textos.EL_ANALISIS, mensajes: [(fallo as Error).message] }]);

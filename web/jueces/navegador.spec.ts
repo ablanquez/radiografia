@@ -33,6 +33,8 @@
  *    los tests como «cancelled» y dice «fail 0» (visto el 02/10; el mismo
  *    agujero que construir() en docs/BITACORA.md, 2026-09-29). Va en una
  *    promesa memorizada que cada test espera: sin Chrome, fallan los cinco.
+ *    Desde el 9.1 el arranque y los testigos están en chrome.ts
+ *    (abrirAnalizadorConTestigos), que comparte con impresion.spec.ts.
  *
  * El fichero se elige con DOM.setFileInputFiles, como si lo eligiera quien usa
  * la página: el input dispara «input» y «change» (visto en la parada 1).
@@ -52,28 +54,24 @@ import { fileURLToPath } from 'node:url';
 import * as textos from '../src/textos.ts';
 import { urlDeRegla } from '../src/catalogo/catalogo.ts';
 import { generosDe } from '../src/pantalla/generos.ts';
-import { abrirPreview, construir, EJEMPLOS_PUBLICOS, PAQUETES_DE_PRUEBA, paqueteDePrueba, paquetesIncluidos, TEXTO_DE_TRES_PAQUETES } from './apoyo.ts';
-import { abrirChrome, type Pestana } from './chrome.ts';
+import { EJEMPLOS_PUBLICOS, PAQUETES_DE_PRUEBA, paqueteDePrueba, paquetesIncluidos, TEXTO_DE_TRES_PAQUETES } from './apoyo.ts';
+import { abrirAnalizadorConTestigos, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
 
 const PRUEBA = 'Paquete de prueba';
 const esperar = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
 
-interface Peticion {
-  tipo: string;
-  url: string;
-}
-
 describe('el cargador en Chrome, sobre astro preview', () => {
-  let preview: { url: string; cerrar: () => void } | undefined;
-  let pestana: Pestana | undefined;
-  const carga: Peticion[] = [];
-  const despues: Peticion[] = [];
-  let marcada = false;
+  /** El arranque, una vez (chrome.ts, abrirAnalizadorConTestigos). Lo espera cada test. */
+  let sesion: AnalizadorConTestigos | undefined;
+  let arranque: Promise<AnalizadorConTestigos> | undefined;
+  const arrancar = async (): Promise<void> => {
+    sesion = await (arranque ??= abrirAnalizadorConTestigos());
+  };
 
   /** La pestaña, que abre el arranque. */
   const p = (): Pestana => {
-    assert.ok(pestana, 'Chrome no llegó a abrirse');
-    return pestana;
+    assert.ok(sesion, 'Chrome no llegó a abrirse');
+    return sesion.pestana;
   };
 
   /** Elige un fichero de web/public/ejemplos/ en el input del paquete propio. */
@@ -93,48 +91,8 @@ describe('el cargador en Chrome, sobre astro preview', () => {
   const aviso = (): Promise<string> => p().evaluar(`document.getElementById('aviso-paquetes').textContent`);
   const casilla = (nombre: string): Promise<void> => p().evaluar(`document.querySelector('#incluidos input[value="${nombre}"]').click()`);
 
-  /** El arranque, una vez: build, preview, Chrome, la página cargada y la marca. Lo espera cada test. */
-  let arranque: Promise<void> | undefined;
-  const arrancar = (): Promise<void> => (arranque ??= arrancarUnaVez());
-  async function arrancarUnaVez(): Promise<void> {
-    construir();
-    preview = await abrirPreview();
-    pestana = await abrirChrome();
-    const enVuelo = new Set<string>();
-    let ultimo = Date.now();
-    pestana.alEvento((metodo, datos) => {
-      const lista = marcada ? despues : carga;
-      if (metodo === 'Network.requestWillBeSent') {
-        const { requestId, type, request } = datos as { requestId: string; type?: string; request: { url: string } };
-        lista.push({ tipo: type ?? '?', url: request.url });
-        enVuelo.add(requestId);
-        ultimo = Date.now();
-      }
-      if (metodo === 'Network.loadingFinished' || metodo === 'Network.loadingFailed') {
-        enVuelo.delete((datos as { requestId: string }).requestId);
-        ultimo = Date.now();
-      }
-      if (metodo === 'Network.webSocketCreated') lista.push({ tipo: 'WebSocket', url: (datos as { url: string }).url });
-    });
-    for (const dominio of ['Network', 'Runtime', 'Page', 'DOM']) await pestana.cdp(`${dominio}.enable`);
-    await pestana.cdp('Page.addScriptToEvaluateOnNewDocument', {
-      source: `window.__violaciones = []; document.addEventListener('securitypolicyviolation', (e) => window.__violaciones.push(e.effectiveDirective + ' ' + e.blockedURI));`,
-    });
-    await pestana.cdp('Page.navigate', { url: preview.url });
-    const cargados = textos.paquetesCargados(paquetesIncluidos().map((x) => `${x.cabecera.nombre} ${x.cabecera.version}`));
-    await pestana.hasta(`document.getElementById('estado')?.textContent === ${JSON.stringify(cargados)}`, 'los paquetes incluidos cargados');
-    // La red quieta: nada en vuelo y nada nuevo durante 500 ms.
-    const limite = Date.now() + 15_000;
-    while (enVuelo.size > 0 || Date.now() - ultimo < 500) {
-      if (Date.now() > limite) throw new Error(`la red no se aquieta: ${enVuelo.size} peticiones en vuelo`);
-      await esperar(100);
-    }
-    marcada = true;
-  }
-
   after(async () => {
-    await pestana?.cerrar();
-    preview?.cerrar();
+    await sesion?.cerrar();
   });
 
   test('5 · el paquete inválido no entra y dice por qué; el de prueba entra y el selector no cambia', async () => {
@@ -260,9 +218,10 @@ describe('el cargador en Chrome, sobre astro preview', () => {
   test('3 · cero peticiones de red después de la carga inicial, y la carga inicial, toda del mismo origen', async (t) => {
     await arrancar();
     await esperar(1000);
-    assert.ok(preview, 'astro preview no llegó a abrirse');
-    const origen = new URL(preview.url).origin;
-    const violaciones = await p().evaluar<string[]>('window.__violaciones');
+    assert.ok(sesion, 'astro preview no llegó a abrirse');
+    const { carga, despues } = sesion;
+    const origen = new URL(sesion.url).origin;
+    const violaciones = await sesion.violaciones();
     const enLinea = (lista: readonly string[]): string => (lista.length === 0 ? 'ninguna' : lista.join(' · '));
     t.diagnostic(`carga inicial (${carga.length}): ${enLinea(carga.map((x) => `${x.tipo} ${x.url}`))}`);
     t.diagnostic(`después de la marca (${despues.length}): ${enLinea(despues.map((x) => `${x.tipo} ${x.url}`))}`);

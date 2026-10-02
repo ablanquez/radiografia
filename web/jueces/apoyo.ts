@@ -97,6 +97,25 @@ export const TEXTO_DE_TRES_PAQUETES = [
   'Habrá que hablarlo con calma la semana que viene, cuando vuelvan los que están de viaje y se pueda reunir a todo el mundo en la misma sala.',
 ].join(' ');
 
+/**
+ * El texto de motor/src/combinacion-real.spec.ts (encargo 5.4), copiado tal
+ * cual para el juez del informe (encargo 9.1, b; firmado en la parada 1): de
+ * más de 300 palabras, con señales de los dos paquetes incluidos y de varias
+ * familias. No se importa porque importar aquel fichero correría sus tests;
+ * un juez de impresion.spec.ts comprueba que cada línea sigue en él.
+ */
+export const TEXTO_DE_COMBINACION_REAL = [
+  '## Cinco Claves Para Mejorar Tu Productividad En El Trabajo',
+  'La productividad se ha convertido en uno de los temas más relevantes del mundo laboral. En este artículo exploraremos cinco claves que pueden transformar la forma de trabajar de cualquier empresa, mejorando la concentración de todo el equipo.',
+  'El método fue desarrollado por un equipo de psicólogos de la Universidad de Stanford en 2019. Desde entonces, más de 1,500 empresas lo han adoptado, y su licencia básica cuesta $100 al año. Los expertos coinciden en que su impacto es notable.',
+  'La primera clave es planificar la semana. Cada Lunes, antes de abrir el correo, conviene dedicar diez minutos a fijar las prioridades. La próxima sesión de formación será el Lunes 3 de Marzo, y la inscripción ya está abierta.',
+  'La segunda clave es la comunicación. En la última reunión, la directora levantó su mano y pidió silencio antes de explicar el nuevo sistema. Su mensaje fue claro: «menos reuniones y más resultados.» Además, cada equipo recibió una guía práctica.',
+  'La tercera clave es desconectar. Diversos estudios demuestran que las pausas breves mejoran el rendimiento. Además, reducir las notificaciones del móvil desempeña un papel fundamental en la concentración, permitiendo centrarse en las tareas importantes.',
+  'La cuarta clave es delegar. Muchos directivos siguen revisando cada documento antes de enviarlo, aunque sus equipos están preparados para hacerlo solos. Delegar no significa desentenderse: significa confiar, dar instrucciones claras y revisar los resultados al final de la semana, no a cada paso. Además, las empresas que lo han probado dicen que las decisiones llegan antes y que los empleados se sienten más valorados.',
+  'La quinta clave es medir. Sin datos, cualquier cambio es una intuición; con ellos, es posible saber qué funciona y qué no. Una hoja de cálculo sencilla basta para anotar las horas dedicadas a cada proyecto y compararlas con los objetivos.',
+  'En conclusión, mejorar la productividad no depende de trabajar más horas, sino de trabajar mejor. Con planificación, comunicación y pausas, cualquier equipo puede alcanzar sus objetivos.',
+].join('\n');
+
 /** El ejecutable de astro: el `bin` de su package.json (astro exporta ./package.json). */
 export function binDeAstro(): string {
   const paquete = createRequire(import.meta.url).resolve('astro/package.json');
