@@ -14,7 +14,15 @@
  *      defecto y con «noticia»; y un paquete roto lanza el mismo
  *      PaqueteInvalido. bandaHumana va dentro de analizar y, suelta, con una
  *      celda de verdad.
+ *   3. El aviso MIT de Ajv viaja en el paquete del navegador (respuesta al
+ *      informe final del 6.1): el bundle de navegador.ts, sin minificar y
+ *      minificado, lleva entero el LICENSE de node_modules/ajv (con LF). El
+ *      standalone lo trae en cabecera (generar-validador.ts) y esbuild lo
+ *      conserva como comentario legal, al final del fichero.
  *
+ * [DOC] https://esbuild.github.io/api/#legal-comments — un comentario que
+ *    empieza por «/*!» es «legal»: «These comments are preserved in output
+ *    files by default».
  * [PROPIO] `#validador-standalone` (motor/package.json, «imports») lleva en
  *    build a motor/dist/validador.standalone.js. Aquí se enchufa el que el juez
  *    genera en un temporal, con un plugin de esbuild: standalone.spec.ts borra y
@@ -79,7 +87,7 @@ const DE_NODE = new Set(builtinModules);
 const esDeNode = (ruta: string): boolean => ruta.startsWith('node:') || DE_NODE.has(ruta);
 
 /** Empaqueta como el build: `entrada` es un fichero o, con `stdin`, el código de una entrada en motor/src/. */
-async function empaquetar(nombre: string, entrada: { fichero: string } | { stdin: string }): Promise<Empaquetado> {
+async function empaquetar(nombre: string, entrada: { fichero: string } | { stdin: string }, minify = false): Promise<Empaquetado> {
   const standalone = await standaloneDelTemporal();
   const enchufe: Plugin = {
     name: 'validador-standalone-del-temporal',
@@ -96,7 +104,7 @@ async function empaquetar(nombre: string, entrada: { fichero: string } | { stdin
     bundle: true,
     format: 'esm',
     platform: 'browser',
-    minify: false,
+    minify,
     metafile: true,
     external: ['node:*', ...builtinModules],
     plugins: [enchufe],
@@ -109,6 +117,8 @@ async function empaquetar(nombre: string, entrada: { fichero: string } | { stdin
 let sinDatos: Promise<Empaquetado> | undefined;
 let conDatos: Promise<Empaquetado> | undefined;
 const elSinDatos = () => (sinDatos ??= empaquetar('navegador', { fichero: ENTRADA }));
+let minificado: Promise<Empaquetado> | undefined;
+const elMinificado = () => (minificado ??= empaquetar('navegador-minificado', { fichero: ENTRADA }, true));
 const elConDatos = () =>
   (conDatos ??= empaquetar('navegador-con-datos', {
     stdin: [
@@ -185,6 +195,14 @@ describe('la entrada del navegador (navegador.ts), empaquetada como en build', (
     const calibracion = radiografia.cabecera.calibracion;
     for (const total of [0, 5, 40]) {
       assert.deepEqual(nav.bandaHumana(total, 'general', '300-599', calibracion), bandaHumana(total, 'general', '300-599', calibracion), String(total));
+    }
+  });
+
+  test('3 · el bundle, sin minificar y minificado, lleva entero el aviso MIT de Ajv', async () => {
+    const licencia = readFileSync(new URL('../node_modules/ajv/LICENSE', import.meta.url), 'utf8').replace(/\r\n/g, '\n').trim();
+    assert.match(licencia, /^The MIT License \(MIT\)\n\nCopyright \(c\) 2015-2021 Evgeny Poberezkin\n/, 'el LICENSE de ajv no es el que se miró el 02/10');
+    for (const [nombre, e] of [['sin minificar', await elSinDatos()], ['minificado', await elMinificado()]] as const) {
+      assert.ok(readFileSync(e.ruta, 'utf8').includes(licencia), `${nombre}: el bundle no lleva el LICENSE de ajv entero`);
     }
   });
 });
