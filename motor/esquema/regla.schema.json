@@ -28,6 +28,12 @@
       "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
       "$comment": "[PROPIO] Minúsculas, cifras y guiones: el id va tal cual en la URL /reglas/<id> del catálogo (punto 7 del plan). Que no se repita dentro del paquete lo comprueba validar.ts: JSON Schema no compara un dato con otro dato (uniqueItems compara reglas enteras, no un campo)."
     },
+    "nombre": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 80,
+      "$comment": "[PROPIO] Encargo 7.1 (02/10/2026, firmado por Antonio): el título visible de la regla, el que enseñan el panel del analizador y el catálogo («Atribución vaga»), con sus tildes. Opcional, por los paquetes de terceros: donde falta, la web humaniza el id. Que RadiografIA y Español correcto lo lleven en todas sus reglas lo exigen sus jueces (radiografia.spec.ts y espanol-correcto.spec.ts), no este esquema."
+    },
     "familia": {
       "type": "string",
       "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",

@@ -55,6 +55,8 @@ export interface Cabecera {
 
 interface ReglaComun {
   id: string;
+  /** Encargo 7.1: el título visible de la regla. Opcional en el esquema, por los paquetes de terceros. */
+  nombre?: string;
   familia: string;
   peso: number;
   severidad: 'baja' | 'media' | 'alta';

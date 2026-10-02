@@ -41,6 +41,8 @@ function cargar(fichero: string): unknown {
  * estructural, y generos en una regla de ausencia y en una de presencia. Y
  * `valido-total-de-paquete.json` (encargo 5.5): el válido estadístico con el
  * total de un paquete, «_total-radiografia», entre las claves de la calibración.
+ * Y `valido-con-nombre.json` (encargo 7.1): el válido con el campo opcional
+ * «nombre» en la primera regla y sin él en la segunda.
  */
 const VALIDOS = [
   'valido.json',
@@ -52,6 +54,7 @@ const VALIDOS = [
   'valido-sobre-no-prosa.json',
   'valido-recuento-y-generos.json',
   'valido-total-de-paquete.json',
+  'valido-con-nombre.json',
 ] as const;
 
 /**
@@ -267,6 +270,14 @@ const INVALIDOS: readonly CasoInvalido[] = [
     campo: 'cabecera.calibracion._totalx-radiografia',
     mensajeIncluye: '"_total-"',
   },
+  // ── Encargo 7.1: el nombre de la regla ──
+  {
+    // nombre vacío (un solo diff de valido-con-nombre.json): de 3 a 80 caracteres.
+    fichero: 'invalido-nombre-vacio.json',
+    regla: { indice: 0, id: 'd6-referencia-interna' },
+    campo: 'nombre',
+    mensajeIncluye: 'al menos 3 caracteres',
+  },
 ];
 
 describe('validarPaquete', () => {
@@ -274,9 +285,9 @@ describe('validarPaquete', () => {
    * Ningún fixture sin juez: si entra uno nuevo en la carpeta y nadie lo añade
    * aquí, esto se pone rojo en vez de dejarlo sin mirar.
    */
-  test('la carpeta de fixtures tiene exactamente los treinta y nueve que se juzgan', () => {
-    assert.equal(VALIDOS.length, 9, 'nueve válidos');
-    assert.equal(INVALIDOS.length, 30, 'treinta inválidos');
+  test('la carpeta de fixtures tiene exactamente los cuarenta y uno que se juzgan', () => {
+    assert.equal(VALIDOS.length, 10, 'diez válidos');
+    assert.equal(INVALIDOS.length, 31, 'treinta y un inválidos');
     const esperados = [...VALIDOS, ...INVALIDOS.map((c) => c.fichero)].sort();
     // Solo los FICHEROS de la raíz: los paquetes. Las subcarpetas (fixtures/referencia/)
     // guardan datos de referencia de otros jueces (encargo 3.3).
