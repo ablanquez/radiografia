@@ -35,7 +35,7 @@ el texto ni las reglas.
 
 ## Estado
 
-**En construcción.** Hoy (01/10/2026) existe el plan firmado, la
+**En construcción.** Hoy (02/10/2026) existe el plan firmado, la
 investigación de las familias en [`docs/investigacion/`](docs/investigacion/)
 y, en la carpeta [`motor/`](motor/), el **motor completo**, probado con
 paquetes de prueba:
@@ -47,7 +47,9 @@ paquetes de prueba:
   nombrar;
 - el **texto segmentado** en párrafos, frases y palabras, con sus posiciones
   exactas sobre el original y cada párrafo marcado como prosa o no (viñetas,
-  tablas y código no cuentan);
+  tablas y código no cuentan). Los párrafos se leen como en CommonMark: un
+  salto de línea simple no parte el párrafo (abajo, [«Cómo está
+  pensado»](#cómo-está-pensado));
 - el **umbral de longitud**: menos de 100 palabras de prosa, texto
   insuficiente y no se analiza; de 100 a 299, resultado poco fiable; 300 o
   más, completo;
@@ -72,7 +74,14 @@ paquetes de prueba:
   ni veredicto;
 - la **combinación de paquetes**: se analizan varios a la vez, cada señal
   dice de qué paquete viene y cada paquete lleva su propio desglose. Está
-  probada también con los dos paquetes reales juntos.
+  probada también con los dos paquetes reales juntos;
+- la **entrada del navegador**
+  ([`motor/src/navegador.ts`](motor/src/navegador.ts)): el análisis, la
+  escala y el validador de paquetes, sin Ajv y sin nada de Node. El
+  validador de esquema va compilado de antemano, en build. Empaquetada y sin
+  minificar ocupa unos 210 KB, y unos 570 KB con los dos paquetes y su
+  calibración (medido el 02/10/2026). Un juez comprueba que hace lo mismo
+  que el motor en Node.
 
 Las **métricas** del detector estadístico, cada una con su fórmula y su
 fuente en [`motor/src/metricas/`](motor/src/metricas/):
@@ -220,15 +229,13 @@ género lo elige quien analiza; si no elige, «general».
 - **No demuestran autoría.** La dirección de cada regla sale de los
   estudios que cita su ficha, y salirse de lo habitual en su género no dice
   quién escribió el texto.
-- ⚠️ **Texto cortado a mano.** El motor toma cada línea como un párrafo, que
-  es lo que pega un cuadro de texto. Un texto con saltos de línea dentro de
-  los párrafos (un PDF copiado, un correo, un Markdown cortado a 76
-  columnas como este README) cuenta una frase por línea. Los 287 textos
-  humanos de validación de «general», cortados a 76 columnas, hacen saltar
-  `est-frases-cortas` en el 43,2 % (el 4,2 % tal cual), y la tasa de falsos
-  positivos sube del 3,1 % al 8,0 %. Este README da esa señal en
-  «Calibración» y en «Validación» por eso: con las líneas de cada párrafo
-  unidas, no la da. Sin arreglo todavía.
+- **Texto cortado a mano.** Desde el 6.1, un salto de línea simple no parte
+  el párrafo (abajo, [«Cómo está pensado»](#cómo-está-pensado)). Los 341
+  textos humanos de validación de «general», cortados a 76 columnas, hacen
+  saltar `est-frases-cortas` en el 4,4 % (el 4,1 % tal cual), y la tasa de
+  falsos positivos es la misma en los dos casos, el 2,9 %. Con el motor
+  anterior, que tomaba cada línea por un párrafo, eran el 43,2 % y el 8,0 %,
+  sobre los 287 textos de entonces.
 
 ## Calibración
 
@@ -240,7 +247,10 @@ para cada una de las trece métricas y para el total del propio paquete,
 en seis géneros y tres tramos (100-299, 300-599 y 600 palabras o más).
 
 El total se recalculó en el 5.6 con las trece reglas estadísticas dentro,
-cada una comparada con las celdas de su métrica que trae el paquete.
+cada una comparada con las celdas de su métrica que trae el paquete. En el
+6.1, cuando el motor pasó a leer los párrafos como CommonMark, se midió todo
+otra vez, en dos vueltas: la segunda, para que el total se calculara con las
+celdas nuevas ya dentro del paquete.
 
 ### Cómo se reproduce
 
@@ -253,17 +263,27 @@ ejecutan a mano desde `motor/`:
    `descargar-academico.ts` y `descargar-opinion.ts`. Cada uno lee la
    licencia en origen, respeta el `robots.txt` y la pausa de cada sitio, y
    no pasa de 30 minutos de descarga. Los textos van a `motor/corpus/`,
-   que no se versiona; el manifiesto no lleva texto.
-2. **`node herramientas/calibrar/calibrar.ts <género>`**: mide cada documento
+   que no se versiona; el manifiesto no lleva texto. Los del BOE y los de
+   Gutenberg dejan una línea en blanco entre párrafo y párrafo, uno por
+   cada `<p>` del original. El CSIC trae una frase por línea y no conserva
+   los párrafos: su manifiesto lo declara, y que el motor una esas líneas es
+   lo correcto.
+2. **`node herramientas/calibrar/regenerar-textos.ts administrativo`** (y
+   `narrativa-clasica`), desde el 6.1: vuelve a sacar los mismos documentos
+   de la copia de los originales que guarda el descargador en
+   `motor/corpus/<género>/fuente/`, sin red y sin volver a muestrear, con
+   la línea en blanco entre párrafos. Para si falta un original o si un
+   texto cambia en algo más que los espacios y los saltos.
+3. **`node herramientas/calibrar/calibrar.ts <género>`**: mide cada documento
    con el motor de hoy (el mismo segmentador y las mismas métricas que
    medirán tu texto) y escribe en [`data/calibracion/`](data/calibracion/)
    las celdas, las omitidas, los disparos de cada regla por tramo y las
    notas, más el manifiesto: id, huella sha256, tramo y reparto de cada
    documento, sin texto.
-3. **`construir-general.ts`** y después `calibrar.ts general`, para la mezcla.
-4. **`inyectar-calibracion.ts`**: vuelca las celdas de los seis ficheros en
+4. **`construir-general.ts`** y después `calibrar.ts general`, para la mezcla.
+5. **`inyectar-calibracion.ts`**: vuelca las celdas de los seis ficheros en
    el paquete. Solo las celdas: las notas se quedan en `data/calibracion/`.
-5. **`validar.ts`**: analiza con el paquete los textos de validación y
+6. **`validar.ts`**: analiza con el paquete los textos de validación y
    escribe [`validacion.json`](data/calibracion/validacion.json) (abajo,
    [«Validación»](#validación)).
 
@@ -279,7 +299,7 @@ Las reglas son siempre las mismas:
   no se rellena: se declara omitida y el motor dice «sin calibración» en ese
   género y tramo.
 - **Cada fichero lleva el commit del motor** con que se midió. Si cambian el
-  segmentador o el silabeo, se vuelve a medir.
+  segmentador o el silabeo, se vuelve a medir, como en el 6.1.
 
 ### Los seis géneros
 
@@ -295,21 +315,21 @@ Mediana (p50) de cuatro de las catorce claves, sacada de los ficheros de
 |  | 300-599 | 100 | 4,84 | 0,748 | 71,6 | 0,0 |
 |  | 600+ | 110 | 4,12 | 0,739 | 87,4 | 1,0 |
 | `narrativa-clasica` | 100-299 | 65 (sin celda) | — | — | — | — |
-|  | 300-599 | 124 | 5,83 | 0,814 | 18,2 | 10,2 |
-|  | 600+ | 895 | 5,26 | 0,820 | 20,0 | 15,9 |
-| `academico` | 100-299 | 100 | 3,33 | 0,796 | 53,3 | 0,0 |
-|  | 300-599 | 100 | 3,22 | 0,798 | 48,9 | 4,9 |
-|  | 600+ | 100 | 3,18 | 0,795 | 53,5 | 5,5 |
+|  | 300-599 | 124 | 5,78 | 0,814 | 18,2 | 10,2 |
+|  | 600+ | 895 | 5,24 | 0,820 | 20,0 | 15,9 |
+| `academico` | 100-299 | 99 (sin celda) | — | — | — | — |
+|  | 300-599 | 100 | 3,05 | 0,798 | 48,7 | 5,1 |
+|  | 600+ | 101 | 3,02 | 0,795 | 53,8 | 5,5 |
 | `opinion` | 100-299 | 739 | 2,66 | 0,821 | 20,8 | 0,0 |
 |  | 300-599 | 1663 | 3,02 | 0,818 | 23,9 | 3,0 |
 |  | 600+ | 726 | 2,95 | 0,816 | 27,8 | 4,0 |
-| `general` | 100-299 | 400 | 3,47 | 0,795 | 41,5 | 0,0 |
-|  | 300-599 | 500 | 3,63 | 0,799 | 34,7 | 1,8 |
-|  | 600+ | 500 | 3,44 | 0,802 | 38,2 | 4,0 |
+| `general` | 100-299 | 465 | 3,63 | 0,795 | 38,5 | 0,0 |
+|  | 300-599 | 500 | 3,59 | 0,799 | 34,7 | 1,9 |
+|  | 600+ | 505 | 3,36 | 0,802 | 38,1 | 3,9 |
 
 Celdas publicadas: 42 por género (14 claves × 3 tramos) en noticia,
-administrativo, académico, opinión y general; en narrativa clásica, 28, con
-las 14 de 100-299 omitidas. En total van al paquete 238 celdas.
+administrativo, opinión y general; en narrativa clásica y en académico, 28,
+con las 14 de 100-299 omitidas. En total van al paquete 224 celdas.
 
 - **`noticia`**: [UD Spanish-AnCora](https://github.com/UniversalDependencies/UD_Spanish-AnCora)
   r2.18, noticias de la agencia EFE y de El Periódico del año 2000, sin el
@@ -326,7 +346,8 @@ las 14 de 100-299 omitidas. En total van al paquete 238 celdas.
 - **`opinion`**: críticas de cine de usuarios de MuchoCine (hacia 2005-2008).
 - **`general`**, el género por defecto: por tramo, los géneros que tienen ese
   tramo calibrado y el mismo número de documentos de cada uno, elegidos por
-  huella. En 100-299 entran 4 × 100; en 300-599 y en 600+, 5 × 100.
+  huella. En 100-299 entran noticia, administrativo y opinión, 155 de cada
+  uno; en 300-599, 5 × 100; en 600+, 5 × 101.
 
 ### Lo que no está
 
@@ -335,6 +356,12 @@ las 14 de 100-299 omitidas. En total van al paquete 238 celdas.
 - **Narrativa clásica de 100 a 299 palabras**: quedaron 65 capítulos de
   calibración, menos de 100. No se subió el tope por libro para llenar la
   celda, porque se habría concentrado en tres libros.
+- **Académico de 100 a 299 palabras**: desde el 6.1 quedan 99 documentos de
+  calibración, uno menos del mínimo. En un artículo, una cita partida en dos
+  líneas deja la segunda empezando por «129) », y el motor anterior la
+  contaba como viñeta. Con los párrafos de CommonMark es prosa, y el
+  artículo gana palabras y pasa a 300-599. No se ajustó nada. Ampliar la
+  muestra por huella, con la misma semilla, queda para la v1.1.
 - **Wikipedia**: la investigación la proponía para «general»; la mezcla
   lleva solo los cinco géneros calibrados.
 
@@ -343,7 +370,7 @@ las 14 de 100-299 omitidas. En total van al paquete 238 celdas.
 - **Narrativa clásica es anterior a 1946**: arrastra un sesgo de época
   (siglos XVI a XX, sobre todo XIX) y no representa la narrativa
   contemporánea. La raya de diálogo, norma en español, hace saltar
-  `pf-raya-densidad` en 814 de 895 capítulos de 600+.
+  `pf-raya-densidad` en 813 de 895 capítulos de 600+.
 - **Administrativo mezcla tres subgéneros** con percentiles conjuntos, con
   un tope del 60 % por subgénero en cada tramo. No es la proporción natural
   del BOE; el subgénero de cada documento queda en el manifiesto, para
@@ -366,7 +393,8 @@ las 14 de 100-299 omitidas. En total van al paquete 238 celdas.
 - **Segmentador**: el del motor no parte las frases igual que la anotación
   de AnCora en 129 de 1025 documentos (93 con más frases, 36 con menos).
   Las medianas casi coinciden: 3,57 frente a 3,52 en 100-299, 3,19 frente a
-  3,16 en 300-599 y 2,85 frente a 2,88 en 600+.
+  3,16 en 300-599 y 2,85 frente a 2,88 en 600+. Medido otra vez con el motor
+  del 6.1, sale igual.
 
 Las licencias de cada corpus, citadas literalmente, están en
 [`data/calibracion/LICENSE-CORPUS.md`](data/calibracion/LICENSE-CORPUS.md).
@@ -383,27 +411,35 @@ resultado, sin texto, en
 [`data/calibracion/validacion.json`](data/calibracion/validacion.json).
 
 **Se juzga por género**, con sus tres tramos juntos. En las celdas más
-pequeñas, de 18 a 32 textos de validación, uno o dos textos ya pasan del
+pequeñas, de 19 a 32 textos de validación, uno o dos textos ya pasan del
 5 % (1 de 19 es el 5,3 %, y 2 de 32, el 6,3 %): celda a celda, el criterio
 sería «ninguno» o «uno». Es una decisión propia, firmada por Antonio en la
 parada 2 del 5.6. Las celdas se enseñan igual, una a una.
 
 | género | textos | FPR | intervalo de Wilson al 95 % | al menos una regla |
 |---|---|---|---|---|
-| `general` | 287 | 3,1 % (9) | 1,7 % a 5,9 % | 15,3 % |
+| `general` | 341 | 2,9 % (10) | 1,6 % a 5,3 % | 14,4 % |
 | `noticia` | 205 | 2,4 % (5) | 1,0 % a 5,6 % | 15,1 % |
 | `administrativo` | 98 | **5,1 % (5)** | 2,2 % a 11,4 % | 19,4 % |
-| `narrativa-clasica` | 274 | 2,9 % (8) | 1,5 % a 5,7 % | 12,8 % |
-| `academico` | 61 | 3,3 % (2) | 0,9 % a 11,2 % | 29,5 % |
+| `narrativa-clasica` | 274 | 2,2 % (6) | 1,0 % a 4,7 % | 13,1 % |
+| `academico` | 43 | 2,3 % (1) | 0,4 % a 12,1 % | 32,6 % |
 | `opinion` | 742 | 1,1 % (8) | 0,5 % a 2,1 % | 12,9 % |
 
-En conjunto, 37 de 1.667 textos: el 2,2 %. El intervalo es el de Wilson
+En conjunto, 35 de 1.703 textos: el 2,1 %. El intervalo es el de Wilson
 (1927), con la fórmula del manual de estadística de NIST/SEMATECH
 ([§ 7.2.4.1](https://www.itl.nist.gov/div898/handbook/prc/section2/prc241.htm)):
 el rango de proporciones que la muestra no permite descartar. El de
-general, noticia, narrativa clásica y académico también incluye el 5 %:
-la muestra tampoco demuestra que estén por debajo. Solo el de opinión
-queda entero por debajo.
+general, noticia y académico también incluye el 5 %: la muestra tampoco
+demuestra que estén por debajo. Los de narrativa clásica y opinión quedan
+enteros por debajo.
+
+**Revalidado en el 6.1**, con el motor nuevo de párrafos y la misma
+muestra: ningún género sube. Bajan narrativa clásica (del 2,9 % al 2,2 %)
+y académico (del 3,3 % al 2,3 %), que pierde los 18 textos de 100 a 299
+palabras porque ese tramo se quedó sin celda. General pasa de 287 a 341
+textos porque cambió su mezcla (arriba, [«Los seis
+géneros»](#los-seis-géneros)). Administrativo sigue igual, con los mismos
+cinco textos.
 
 **Administrativo queda en 5,1 % (5 de 98) y se acepta con declaración.**
 Lo decidió Antonio el 01/10/2026, y para este género modifica el criterio
@@ -429,9 +465,9 @@ la celda de calibración):
 
 | género | tramo | textos | FPR | al menos una regla | total p50: validación / calibración | total p95: validación / calibración |
 |---|---|---|---|---|---|---|
-| `general` | 100-299 | 72 | 0,0 % (0) | 8,3 % | 0,0 / 0,0 | 12,8 / 15,2 |
-|  | 300-599 | 120 | 4,2 % (5) | 16,7 % | 3,0 / 1,8 | 27,9 / 32,2 |
-|  | 600+ | 95 | 4,2 % (4) | 18,9 % | 4,0 / 4,0 | 24,0 / 31,1 |
+| `general` | 100-299 | 126 | 0,8 % (1) | 7,9 % | 0,0 / 0,0 | 13,0 / 14,1 |
+|  | 300-599 | 120 | 4,2 % (5) | 16,7 % | 3,0 / 1,9 | 27,9 / 32,2 |
+|  | 600+ | 95 | 4,2 % (4) | 20,0 % | 4,0 / 3,9 | 24,0 / 30,4 |
 | `noticia` | 100-299 | 86 | 1,2 % (1) | 5,8 % | 0,0 / 0,0 | 27,2 / 16,4 |
 |  | 300-599 | 98 | 3,1 % (3) | 21,4 % | 3,0 / 2,4 | 20,1 / 17,6 |
 |  | 600+ | 21 | 4,8 % (1) | 23,8 % | 2,3 / 3,0 | 13,3 / 13,7 |
@@ -439,19 +475,20 @@ la celda de calibración):
 |  | 300-599 | 24 | 0,0 % (0) | 16,7 % | 0,0 / 0,0 | 3,0 / 4,7 |
 |  | 600+ | 32 | 9,4 % (3) | 21,9 % | 2,5 / 1,0 | 6,4 / 6,9 |
 | `narrativa-clasica` | 100-299 | 19 (sin celda) | — | — | — | — |
-|  | 300-599 | 30 | 6,7 % (2) | 16,7 % | 7,8 / 10,2 | 53,3 / 74,6 |
-|  | 600+ | 244 | 2,5 % (6) | 12,3 % | 14,6 / 15,9 | 51,8 / 48,5 |
-| `academico` | 100-299 | 18 | 0,0 % (0) | 16,7 % | 0,0 / 0,0 | 12,8 / 16,0 |
-|  | 300-599 | 24 | 8,3 % (2) | 45,8 % | 7,7 / 4,9 | 14,2 / 21,0 |
-|  | 600+ | 19 | 0,0 % (0) | 21,1 % | 6,2 / 5,5 | 12,8 / 13,6 |
+|  | 300-599 | 30 | 6,7 % (2) | 20,0 % | 7,8 / 10,2 | 53,3 / 74,6 |
+|  | 600+ | 244 | 1,6 % (4) | 12,3 % | 14,5 / 15,9 | 51,2 / 48,5 |
+| `academico` | 100-299 | 18 (sin celda) | — | — | — | — |
+|  | 300-599 | 24 | 4,2 % (1) | 41,7 % | 7,7 / 5,1 | 14,2 / 21,0 |
+|  | 600+ | 19 | 0,0 % (0) | 21,1 % | 6,2 / 5,5 | 12,6 / 13,6 |
 | `opinion` | 100-299 | 178 | 0,6 % (1) | 12,4 % | 0,0 / 0,0 | 21,6 / 19,4 |
 |  | 300-599 | 383 | 0,8 % (3) | 9,9 % | 3,0 / 3,0 | 16,3 / 15,6 |
 |  | 600+ | 181 | 2,2 % (4) | 19,9 % | 4,6 / 4,0 | 11,6 / 12,2 |
 
 ### Qué se ajustó y por qué
 
-La primera validación, con las siete reglas cortando en el p95 (o el p5),
-dio un **7,7 %** en conjunto (128 de 1.667), y 13 de las 17 celdas pasaban
+La primera validación, en el 5.6, con las siete reglas cortando en el p95
+(o el p5), dio un **7,7 %** en conjunto (128 de 1.667), y 13 de las 17
+celdas pasaban
 del 5 %. Por género: general 8,4 %, noticia 7,3 %, administrativo 13,3 %,
 narrativa clásica 10,2 %, académico 13,1 % y opinión 5,4 %. Con siete
 reglas independientes, cada una en el 5 %, lo esperable era un 4,4 %. El
@@ -473,21 +510,29 @@ de cada regla:
 
 Las tablas pasadas a texto, los párrafos numerados y los títulos sin punto
 quedan declarados como falso positivo conocido en las fichas de frases
-cortas, pocas comas, poca puntuación y poca puntuación secundaria. Siete
-reglas de otras familias saltan en más del 25 % de los textos humanos de
-algún género, por ejemplo la raya en la narrativa (92,3 %) o la falta de
-marcadores de opinión en lo académico (47,5 %). Su ficha lo dice, igual
-que la de `lex-no-solo-sino`, que llega al 57,9 % en lo académico de 600
-palabras o más. En la v1 no se ajustan. El detalle, regla a regla y celda
-a celda, está en `validacion.json`.
+cortas, pocas comas, poca puntuación y poca puntuación secundaria. En la
+validación del 5.6, siete reglas de otras familias saltaban en más del
+25 % de los textos humanos de algún género, por ejemplo la raya en la
+narrativa (92,3 %) o la falta de marcadores de opinión en lo académico
+(47,5 %). Su ficha lo dice con esas cifras, igual que la de
+`lex-no-solo-sino`, que llegaba al 57,9 % en lo académico de 600 palabras
+o más. En la del 6.1 son nueve. Lo académico se valida ahora solo desde
+300 palabras, donde las ausencias sí se juzgan, y sube: la falta de
+marcadores de opinión llega al 67,4 %. Pasan también del 25 %
+`lex-no-solo-sino` (32,6 %) y `lex-importancia` (30,2 %), las dos en lo
+académico. Las fichas siguen con las cifras del 5.6. En la v1 no se
+ajustan. El detalle, regla a regla y celda a celda, está en
+`validacion.json`.
 
 **Límites del método.** Hay una sola validación, con la misma muestra
 medida dos veces: antes de los ajustes y después. Los ajustes se
 propusieron con lo que se veía en los textos de calibración, pero su
 efecto en la validación se enseñó, simulado, antes de firmarlos. La
-decisión sobre administrativo se tomó viendo la validación. Con eso, el
-20 % apartado ya no es una muestra que nadie haya mirado: para una
-comprobación limpia hace falta otra muestra.
+decisión sobre administrativo se tomó viendo la validación. La
+revalidación del 6.1 midió la misma muestra una tercera vez, con el motor
+nuevo, y después no se cambió nada. Con eso, el 20 % apartado ya no es una
+muestra que nadie haya mirado: para una comprobación limpia hace falta
+otra muestra.
 
 ## Escala
 
@@ -516,15 +561,39 @@ en el punto 6.
 - **Los bordes** son decisión propia: «por encima» es estrictamente por
   encima, como en las reglas estadísticas, y la mediana y el p95 caen
   «entre la mediana y el p95».
-- ⚠️ **Mediana 0.** En seis celdas, la mitad de los textos humanos no da
-  ninguna señal y la mediana del total es 0: los cinco géneros con celda de
-  100 a 299 palabras y administrativo de 300 a 599. Ahí, un texto sin
+- ⚠️ **Mediana 0.** En cinco celdas, la mitad de los textos humanos no da
+  ninguna señal y la mediana del total es 0: los cuatro géneros con celda
+  de 100 a 299 palabras y administrativo de 300 a 599. Ahí, un texto sin
   ninguna señal cae «entre la mediana y el p95», porque está justo en la
   mediana. Cómo se dice en pantalla se decide en el punto 6.
 
 ## Cómo está pensado
 
 - **Astro estático, sin backend.** Todo corre en el navegador.
+- **Párrafos como en CommonMark.** Una línea en blanco separa dos párrafos
+  y un salto de línea simple no (especificación CommonMark 0.31.2, § 4.8 y
+  § 6.8). Así, un texto cortado a mano (un correo, un PDF copiado, un
+  Markdown a 76 columnas como este README) se lee con sus párrafos.
+  Viñetas, encabezados, tablas, código y separadores se reconocen por la
+  línea. Las posiciones de cada señal siguen siendo las del texto original.
+- **La excepción web**, decisión propia: un salto simple tras «.», «!»,
+  «?», «…», «»» o una comilla de cierre, seguido de una línea que empieza
+  por mayúscula, «¿», «¡», «—», «« o una comilla, abre párrafo. Un cuadro
+  de texto web separa los párrafos con un solo salto, y sin la excepción
+  los juntaría. Su **coste**, declarado: en un texto cortado a mano, si el
+  corte cae justo tras un punto y antes de una mayúscula, parte un párrafo
+  que no lo era.
+  - Los 341 textos humanos de validación de «general», cortados a 76
+    columnas: 320 (el 93,8 %) dan las mismas frases que sin cortar. Las 21
+    diferencias tienen cuatro causas, listadas una a una en
+    [`motor/src/texto-cortado.spec.ts`](motor/src/texto-cortado.spec.ts):
+    ítems numerados, filas de tabla y rayas de AnCora que el corte parte, y
+    la excepción a media frase.
+  - En el corpus académico, que trae una frase por línea, la excepción
+    parte el 90,6 % de los saltos entre líneas de prosa.
+  - Las reglas que miran el principio o el final de un párrafo lo notan:
+    el cierre de plantilla no ve «En conclusión» si el último párrafo se
+    parte. Lo dice su ficha.
 - **Seis familias de reglas**: léxico, sintaxis, puntuación y formato,
   estadística, discurso y **canal** (Markdown residual, Unicode invisible,
   emojis: artefactos de copiar desde un asistente). Canal es
