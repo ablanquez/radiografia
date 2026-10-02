@@ -7,6 +7,13 @@
  *      cada una.
  *   2. Cada ficha lleva su id, su nombre, al menos una de sus fuentes como
  *      enlace y sus ejemplos tal cual, cada uno en su <pre>.
+ *   3. Los enlaces internos llegan: todo href que empieza por «/» en las
+ *      páginas de dist/ (analizador, índice y fichas) apunta a un fichero de
+ *      dist/; el analizador enlaza el catálogo en su cabecera; y la URL de
+ *      ficha que pinta el analizador en el panel y en el desglose (urlDeRegla,
+ *      con la base) existe para cada regla de los dos paquetes. Que el panel la
+ *      use lo ve Chrome, no este juez: esos enlaces los crea el script al
+ *      analizar.
  *   5. El índice lleva el buscador con su <label>, los tres filtros (familia,
  *      severidad, detector) en su <fieldset> con su <legend> y cada casilla
  *      dentro de su <label>, el botón «Quitar filtros», el recuento en una
@@ -27,7 +34,7 @@ import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import * as textos from '../src/textos.ts';
-import { DETECTORES, SEVERIDADES, urlDeRegla } from '../src/catalogo/catalogo.ts';
+import { DETECTORES, SEVERIDADES, urlDeRegla, urlDelCatalogo } from '../src/catalogo/catalogo.ts';
 import { conPreview, construir, decodificar, DIST, paquetesIncluidos } from './apoyo.ts';
 
 const REGLAS = new URL('reglas/', DIST);
@@ -69,6 +76,22 @@ describe('el catálogo construido', () => {
       const ejemplos = [...html.matchAll(/<pre class="ejemplo">([\s\S]*?)<\/pre>/g)].map((m) => decodificar(m[1]!));
       assert.deepEqual(ejemplos, [...r.ejemplos.positivos, ...r.ejemplos.negativos], `${r.id}: los ejemplos de la ficha y los del JSON`);
     }
+  });
+
+  test('3 · todo enlace interno de dist/ llega a una página; el analizador enlaza el catálogo y cada ficha existe en su URL', () => {
+    construir();
+    const paginas = readdirSync(DIST, { recursive: true, encoding: 'utf8' })
+      .map((f) => f.replaceAll('\\', '/'))
+      .filter((f) => f.endsWith('.html'));
+    assert.ok(paginas.length > reglas().length, `dist/ tiene ${paginas.length} páginas HTML`);
+    const existe = (href: string): boolean => {
+      const ruta = href.split(/[?#]/)[0]!.slice(1);
+      return existsSync(new URL(ruta === '' || ruta.endsWith('/') ? `${ruta}index.html` : ruta, DIST));
+    };
+    const rotos = paginas.flatMap((p) => hrefs(readFileSync(new URL(p, DIST), 'utf8')).filter((h) => h.startsWith('/') && !existe(h)).map((h) => `${p}: ${h}`));
+    assert.deepEqual(rotos, [], 'enlaces internos que no llegan a nada');
+    assert.ok(hrefs(readFileSync(new URL('index.html', DIST), 'utf8')).includes(urlDelCatalogo('/')), 'el analizador no enlaza el catálogo');
+    assert.deepEqual(reglas().map((r) => urlDeRegla('/', r.id)).filter((u) => !existe(u)), [], 'URL de ficha que no existen');
   });
 
   test('5 · el índice lleva el buscador, los tres filtros con sus etiquetas, «Quitar filtros», el recuento en una región viva y su script', () => {

@@ -1,9 +1,10 @@
 ---
 /**
- * La única página de la web (encargo 6.2, c): la pantalla mínima. Solo HTML y
- * el import del script (firmado en la parada 1: sin `astro check`, la lógica
- * va en .ts revisados con tsc, en src/pantalla/). Funciona, no luce: el
- * diseño es del punto 10.
+ * La página del analizador (encargo 6.2, c): la pantalla mínima; desde el 7.1,
+ * el catálogo vive en src/pages/reglas/. HTML, el import del script y la URL
+ * del enlace al catálogo (firmado en la parada 1 del 6.2: sin `astro check`,
+ * la lógica va en .ts revisados con tsc, en src/pantalla/ y src/catalogo/).
+ * Funciona, no luce: el diseño es del punto 10.
  *
  * [DOC] https://docs.astro.build/en/install/manual/ — src/pages/index.astro.
  * [DOC] https://docs.astro.build/en/guides/styling/ — los <style> de un
@@ -21,7 +22,13 @@
  *    texto y no envían el formulario, es decir, no analizan.
  *    [DOC] https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/button
  *    — type «button: The button has no default behavior».
+ * El enlace de la cabecera lleva al catálogo de reglas (encargo 7.1, b), con
+ *    la base de Astro (catalogo.ts) y el texto de textos.ts.
  */
+import { urlDelCatalogo } from '../catalogo/catalogo.ts';
+import { CATALOGO } from '../textos.ts';
+
+const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
 ---
 
 <html lang="es">
@@ -35,6 +42,7 @@
     <header>
       <h1>RadiografIA</h1>
       <p>A contraluz se nota todo.</p>
+      <nav><a href={catalogo}>{CATALOGO}</a></nav>
     </header>
     <main>
       <form id="formulario">

@@ -63,10 +63,10 @@ export const tusPercentiles = (total: string, n: number, p50: string, p95: strin
   `Tu total: ${total}. En esos textos humanos (n = ${n}): mediana ${p50} · p95 ${p95} · p99 ${p99}.`;
 export const datosDelTexto = (palabras: number, tramo: string, genero: string): string => `Palabras de prosa: ${palabras} · Tramo: ${tramo} · Género: ${genero}`;
 
-// El desglose.
+// El desglose. Lo de cada regla va detrás de su nombre (enlazado a su ficha desde el 7.1) y su id: «Nombre (id): …».
 export const total = (cifra: string, unidad: string): string => `Total: ${cifra} ${unidad}.`;
-export const reglaConSenales = (quien: string, n: number, contribucion: string): string => `${quien}: ${n} ${n === 1 ? 'señal' : 'señales'}, contribución ${contribucion}`;
-export const reglaInformativa = (quien: string, n: number): string => `${quien}: ${n} ${n === 1 ? 'señal' : 'señales'}`;
+export const reglaConSenales = (n: number, contribucion: string): string => `${n} ${n === 1 ? 'señal' : 'señales'}, contribución ${contribucion}`;
+export const reglaInformativa = (n: number): string => `${n} ${n === 1 ? 'señal' : 'señales'}`;
 export const NINGUNA_SENAL = 'Ninguna señal.';
 export const DEL_TEXTO_ENTERO = 'Del texto entero';
 export const INFORMATIVAS_EN_EL_DESGLOSE = 'Informativas: se enseñan, no suman';
@@ -74,10 +74,10 @@ export const SIN_CALIBRACION = 'Sin calibración';
 export const NO_APLICADAS = 'No aplicadas';
 export const LADOS: Readonly<Record<string, string>> = { arriba: 'por encima de la banda humana', abajo: 'por debajo de la banda humana' };
 export const DENTRO_DE_LA_BANDA = 'dentro de la banda humana';
-export const ausencia = (quien: string, coincidencias: number, minimo: number): string =>
-  `${quien}: ausencia: ${coincidencias} ${coincidencias === 1 ? 'aparición' : 'apariciones'}; señala por debajo de ${minimo}`;
-export const estadistica = (quien: string, metrica: string, valor: string, lado: string, p1: string, p5: string, p50: string, p95: string, p99: string): string =>
-  `${quien}: ${metrica} = ${valor}, ${lado}; en los textos humanos: p1 ${p1} · p5 ${p5} · mediana ${p50} · p95 ${p95} · p99 ${p99}`;
+export const ausencia = (coincidencias: number, minimo: number): string =>
+  `ausencia: ${coincidencias} ${coincidencias === 1 ? 'aparición' : 'apariciones'}; señala por debajo de ${minimo}`;
+export const estadistica = (metrica: string, valor: string, lado: string, p1: string, p5: string, p50: string, p95: string, p99: string): string =>
+  `${metrica} = ${valor}, ${lado}; en los textos humanos: p1 ${p1} · p5 ${p5} · mediana ${p50} · p95 ${p95} · p99 ${p99}`;
 
 // El catálogo de reglas (encargo 7.1, b): src/pages/reglas/, src/layouts/Catalogo.astro y src/catalogo/.
 // Solo la interfaz: el contenido de las fichas (nombre, explicación, ejemplos…) viene de los paquetes y menciona

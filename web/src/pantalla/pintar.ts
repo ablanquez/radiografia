@@ -9,7 +9,8 @@
  *    — «The most fundamental safe way to populate the DOM with untrusted data
  *    is to use the safe assignment property textContent»; innerHTML,
  *    outerHTML y document.write, fuera. Los atributos que se ponen son class,
- *    role, tabindex y data-* (dataset), que no ejecutan nada.
+ *    role, tabindex y data-* (dataset), que no ejecutan nada, y desde el 7.1
+ *    el href del enlace a la ficha de cada regla (enlaceARegla).
  *
  * La vista de resultado: el texto analizado, partido en tramos por todos los
  * límites de señal de los dos paquetes (tramos.ts). Cada tramo con señales
@@ -42,6 +43,7 @@
 import type { Paquete, Resultado } from '@radiografia/motor/navegador';
 import * as textos from '../textos.ts';
 import type { ProblemaDeCarga } from './cargar.ts';
+import { urlDeRegla } from '../catalogo/catalogo.ts';
 import { nombreDeRegla } from './humanizar.ts';
 import { partirEnTramos } from './tramos.ts';
 
@@ -82,9 +84,16 @@ export interface Indice {
 
 const clave = (paquete: string, id: string): string => `${paquete}::${id}`;
 
-/** «Nombre (id)»: el nombre de la ficha (encargo 7.1; si no lo trae, el id humanizado) y el id tal cual. */
-function quien(indice: Indice, paquete: string, id: string): string {
-  return `${nombreDeRegla(id, indice.reglas.get(clave(paquete, id)))} (${id})`;
+/**
+ * El nombre de la regla (encargo 7.1: el de su ficha; si no lo trae, el id
+ * humanizado), enlazado a su ficha del catálogo, /reglas/<id>/ con la base
+ * (urlDeRegla). El id lo limita el esquema a minúsculas, cifras y guiones: el
+ * href no puede ser un «javascript:».
+ */
+function enlaceARegla(indice: Indice, base: string, paquete: string, id: string): HTMLAnchorElement {
+  const enlace = el('a', nombreDeRegla(id, indice.reglas.get(clave(paquete, id))));
+  enlace.href = urlDeRegla(base, id);
+  return enlace;
 }
 
 export function indexar(paquetes: readonly Paquete[]): Indice {
@@ -170,7 +179,7 @@ export function pintarVista(
   }
 }
 
-export function pintarPanel(contenedor: HTMLElement, senales: readonly SenalCalificada[], indice: Indice): void {
+export function pintarPanel(contenedor: HTMLElement, senales: readonly SenalCalificada[], indice: Indice, base: string): void {
   contenedor.replaceChildren(el('h3', textos.TITULO_DEL_PANEL));
   const vistas = new Set<string>();
   for (const senal of senales) {
@@ -179,7 +188,9 @@ export function pintarPanel(contenedor: HTMLElement, senales: readonly SenalCali
     vistas.add(k);
     const ficha = el('article', undefined, 'ficha');
     const regla = indice.reglas.get(k);
-    ficha.append(el('h4', nombreDeRegla(senal.reglaId, regla)), el('p', `${senal.reglaId} · ${senal.paquete}`, 'id-regla'));
+    const titulo = el('h4');
+    titulo.append(enlaceARegla(indice, base, senal.paquete, senal.reglaId));
+    ficha.append(titulo, el('p', `${senal.reglaId} · ${senal.paquete}`, 'id-regla'));
     if (regla !== undefined) {
       ficha.append(
         campo(textos.EXPLICACION, regla.explicacion),
@@ -227,27 +238,35 @@ export function pintarMedidor(contenedor: HTMLElement, resultado: Resultado, nom
   contenedor.append(datos);
 }
 
-/** Una señal del texto entero, en una línea: la estadística con su valor y su banda; la ausencia con sus cuentas. */
-function lineaDeTexto(s: SenalDeTexto, paquete: string, indice: Indice): string {
-  const regla = quien(indice, paquete, s.reglaId);
-  if ('coincidencias' in s) return textos.ausencia(regla, s.coincidencias, s.minimo);
+/** Lo que se dice de una señal del texto entero, detrás de su regla: la estadística con su valor y su banda; la ausencia con sus cuentas. */
+function deLaSenalDeTexto(s: SenalDeTexto): string | null {
+  if ('coincidencias' in s) return textos.ausencia(s.coincidencias, s.minimo);
   if ('valor' in s) {
     const c = s.referencia;
     const lado = s.lado === null ? textos.DENTRO_DE_LA_BANDA : (textos.LADOS[s.lado] ?? s.lado);
-    return textos.estadistica(regla, s.metrica, cifra(s.valor), lado, cifra(c.p1), cifra(c.p5), cifra(c.p50), cifra(c.p95), cifra(c.p99));
+    return textos.estadistica(s.metrica, cifra(s.valor), lado, cifra(c.p1), cifra(c.p5), cifra(c.p50), cifra(c.p95), cifra(c.p99));
   }
-  return regla;
+  return null;
 }
 
+/** Una línea de una lista: texto y nodos (el enlace de la regla). */
+type Linea = readonly (string | Node)[];
+
 /** Una lista con un título; nada si no hay elementos. */
-function apartado(titulo: string, lineas: readonly string[]): HTMLElement[] {
+function apartado(titulo: string, lineas: readonly Linea[]): HTMLElement[] {
   if (lineas.length === 0) return [];
   const lista = el('ul');
-  for (const linea of lineas) lista.append(el('li', linea));
+  for (const linea of lineas) {
+    const elemento = el('li');
+    elemento.append(...linea);
+    lista.append(elemento);
+  }
   return [el('h4', titulo), lista];
 }
 
-export function pintarDesglose(contenedor: HTMLElement, resultado: Resultado, paquetes: readonly Paquete[], indice: Indice): void {
+export function pintarDesglose(contenedor: HTMLElement, resultado: Resultado, paquetes: readonly Paquete[], indice: Indice, base: string): void {
+  /** «Nombre (id): lo que se dice», con el nombre enlazado a su ficha. */
+  const deRegla = (paquete: string, id: string, dice: string | null): Linea => [enlaceARegla(indice, base, paquete, id), dice === null ? ` (${id})` : ` (${id}): ${dice}`];
   contenedor.replaceChildren();
   resultado.paquetes.forEach((r, i) => {
     const cabecera = paquetes[i]!.cabecera;
@@ -262,25 +281,30 @@ export function pintarDesglose(contenedor: HTMLElement, resultado: Resultado, pa
       seccion.append(
         ...apartado(
           `${f.nombre}: ${cifra(f.total)}`,
-          conSenal.map((x) => textos.reglaConSenales(quien(indice, r.paquete, x.id), x.n, cifra(x.contribucion))),
+          conSenal.map((x) => deRegla(r.paquete, x.id, textos.reglaConSenales(x.n, cifra(x.contribucion)))),
         ),
       );
       if (conSenal.length === 0) seccion.append(el('h4', `${f.nombre}: ${cifra(f.total)}`), el('p', textos.NINGUNA_SENAL, 'nada'));
     }
-    seccion.append(...apartado(textos.DEL_TEXTO_ENTERO, resultado.senalesTexto.filter((s) => s.paquete === r.paquete).map((s) => lineaDeTexto(s, r.paquete, indice))));
+    seccion.append(
+      ...apartado(
+        textos.DEL_TEXTO_ENTERO,
+        resultado.senalesTexto.filter((s) => s.paquete === r.paquete).map((s) => deRegla(r.paquete, s.reglaId, deLaSenalDeTexto(s))),
+      ),
+    );
     const porRegla = new Map<string, number>();
-    const informativasDeTexto: string[] = [];
+    const informativasDeTexto: Linea[] = [];
     for (const s of p.informativas) {
       if ('inicio' in s) porRegla.set(s.reglaId, (porRegla.get(s.reglaId) ?? 0) + 1);
-      else informativasDeTexto.push(lineaDeTexto(s, r.paquete, indice));
+      else informativasDeTexto.push(deRegla(r.paquete, s.reglaId, deLaSenalDeTexto(s)));
     }
     seccion.append(
       ...apartado(textos.INFORMATIVAS_EN_EL_DESGLOSE, [
-        ...[...porRegla].map(([id, n]) => textos.reglaInformativa(quien(indice, r.paquete, id), n)),
+        ...[...porRegla].map(([id, n]) => deRegla(r.paquete, id, textos.reglaInformativa(n))),
         ...informativasDeTexto,
       ]),
-      ...apartado(textos.SIN_CALIBRACION, resultado.sinCalibracion.filter((s) => s.paquete === r.paquete).map((s) => `${quien(indice, r.paquete, s.reglaId)}: ${s.motivo}`)),
-      ...apartado(textos.NO_APLICADAS, resultado.noAplicadas.filter((s) => s.paquete === r.paquete).map((s) => `${quien(indice, r.paquete, s.reglaId)}: ${s.motivo}`)),
+      ...apartado(textos.SIN_CALIBRACION, resultado.sinCalibracion.filter((s) => s.paquete === r.paquete).map((s) => deRegla(r.paquete, s.reglaId, s.motivo))),
+      ...apartado(textos.NO_APLICADAS, resultado.noAplicadas.filter((s) => s.paquete === r.paquete).map((s) => deRegla(r.paquete, s.reglaId, s.motivo))),
     );
     contenedor.append(seccion);
   });
