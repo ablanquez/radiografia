@@ -1,6 +1,6 @@
 # PLAN — 005 RadiografIA
 
-Estado a 01/10/2026: **FIRMADO por Antonio el 29/09/2026**, publicado en
+Estado a 02/10/2026: **FIRMADO por Antonio el 29/09/2026**, publicado en
 `73ef265`. **PUNTOS 1, 2 y 3 CERRADOS el 29/09; 4 el 30/09; 5 el 01/10
 (la casilla de los textos de la web, trasladada al punto 6).** Se tacha lo hecho y
 lo nuevo se añade en su punto, y solo por decisión de Antonio.
@@ -444,7 +444,8 @@ Fuente citada en cada ficha (sale del punto 2 y de `CANDIDATAS.md`).
       `motor/corpus/` fuera del repo; percentiles tipo 7 en
       `data/calibracion/<genero>.json` solo en celdas con n ≥ 100, e
       inyectados en `paquetes/radiografia.json`: **14 claves × 6 géneros =
-      238 celdas**. Géneros y corpus: noticia (AnCora, 1.025 docs, 3LB-CAST
+      238 celdas** (224 tras la recalibración del 6.1: académico 100-299 sin
+      celda). Géneros y corpus: noticia (AnCora, 1.025 docs, 3LB-CAST
       fuera), administrativo (BOE, 463, turnos con tope 60 % por
       subgénero), narrativa-clasica (Gutenberg, 1.377 capítulos de 237
       libros, dominio público comprobado en el TRLPI; **100-299 omitida**,
@@ -488,14 +489,17 @@ Fuente citada en cada ficha (sale del punto 2 y de `CANDIDATAS.md`).
 Astro, sin diseño todavía: funciona, no luce.
 
 - [ ] Proyecto Astro creado, 200 comprobado con contraprueba, visto en
-      Chrome. Al importar el motor: **separar formateador y comprobaciones
-      posteriores en un módulo sin Ajv** (`validar.ts` compila Ajv al
-      cargarse y arrastraría 1 MB al navegador); el navegador usa
-      `validador.standalone.js` (159 KB tras cerrar `parametros` y
-      `calibracion`; sobre todo los esquemas con sus `$comment`: valorar
-      quitarlos en build). El aviso MIT de `ucs2length`
-      (Ajv) viaja con ese fichero
-- [ ] **Segmentación de párrafos según CommonMark** (firmado 01/10;
+      Chrome → PENDIENTE (6.2). **Hecha en 6.1 (02/10) la parte de motor**:
+      `validar.ts` y `analizar.ts` partidos en un núcleo sin Ajv
+      (`validacion.ts`, `analisis.ts`); `navegador.ts` como entrada para
+      Astro (analizar, bandaHumana, validarPaquete con el standalone por
+      `#validador-standalone`); el aviso MIT de Ajv viaja en la cabecera
+      del standalone (`/*!`, banner de esbuild) y en el bundle; juez con el
+      metafile: 0 ficheros de ajv y 0 `node:*` en el bundle (antes 83);
+      bundle sin minificar 210 KB sin datos (73 % es el standalone), 572 KB
+      con los dos paquetes y su calibración; 116 KB minificado sin datos.
+      Pendiente del 6.2: la creación del proyecto Astro y el 200 en Chrome
+- [x] **Segmentación de párrafos según CommonMark** (6.1, 01-02/10):
       sustituye la decisión [PROPIO] del 4.1 «párrafo = cada línea»):
       salto de línea simple = *soft line break* = espacio; línea en blanco
       = párrafo; continuación perezosa de viñetas [DOC CommonMark §6.8,
@@ -507,7 +511,26 @@ Astro, sin diseño todavía: funciona, no luce.
       `est-frases-cortas` pasa del 4,2 % al 43,2 % y la FPR del 3,1 % al
       8,0 %); desplazamientos exactos sobre el original; recalibración
       reproducible después (0-2 documentos afectados por género) y
-      validación repetida
+      validación repetida. **Añadido 01/10 tras la parada 1 del 6.1**: los
+      corpus de BOE y Gutenberg estaban guardados con un párrafo por línea
+      (como texto pegado); los descargadores los reescriben desde la caché
+      con línea en blanco entre párrafos antes de recalibrar (CSIC, una
+      frase por línea, se deja y se declara); y los detectores leen la
+      copia de trabajo con el salto como espacio (misma longitud,
+      desplazamientos sobre el original), porque 20 regex con espacio
+      literal no casarían en texto cortado. Umbral del juez de los 287
+      textos: ≥ 93 % de frases coincidentes con causas declaradas [PROPIO].
+      **HECHO (02/10)**: 320/341 textos cortados con las mismas frases (4
+      causas: ítems y tablas cortados, «- -» en AnCora, excepción a mitad
+      de frase); con el motor nuevo, el texto cortado a 76 columnas ya da
+      la misma FPR que sin cortar (2,9 %) y est-frases-cortas 4,4 % frente
+      a 4,1 %. Recalibración desde la caché con los corpus de BOE y
+      Gutenberg regenerados con línea en blanco (20/20 y 5/20 al pie de la
+      letra, formas del BOE declaradas): ninguna FPR sube (conjunto 35 de
+      1.703 = 2,1 %); administrativo con los mismos cinco ids;
+      **académico 100-299 queda SIN CELDA (99 < 100)**, general recompuesto
+      (100-299 con noticia, administrativo y opinión × 155; 600+ con 5 ×
+      101); 224 celdas. AnCora manual: 896/1.025 se mantiene
 - [ ] Área de texto + selector de género (listado desde
       `cabecera.calibracion`, «general» por defecto; decisión 30/09) +
       botón «Pon tu texto a contraluz»

@@ -5,20 +5,19 @@ El ejecutor reporta descubrimientos; no toca este fichero.
 
 ---
 
-## ESTADO ACTUAL — 1 de octubre de 2026
+## ESTADO ACTUAL — 2 de octubre de 2026
 
-**⭐ PUNTOS 1-5 CERRADOS (29/09-01/10).** La casilla de los textos de la
-web está trasladada al punto 6, donde nacerán esos textos. Los dos
-paquetes reales están completos: **RadiografIA 0.1.0** con las seis
-familias (canal 6 informativas, puntuación 2, léxico 11, discurso 10,
-sintaxis 1, estadística 13), calibración humana de seis géneros (238
-celdas) y **validación sobre el 20 % apartado** (FPR por género con
-intervalo de Wilson; administrativo 5,1 % aceptado con declaración); y
-**Español correcto 0.1.0** con sus siete avisos. El motor devuelve la
-**banda del total respecto a los humanos** del género y tramo. **839
-jueces: 832 en verde, 2 saltados con motivo, 5 `todo`**, `tsc` limpio.
-Cinco bitácoras cerradas. **Siguiente: punto 6, la pantalla mínima: aquí
-ya existe la demo.** No hay pantalla todavía.
+**⭐ PUNTOS 1-5 CERRADOS (29/09-01/10). PUNTO 6 EN MARCHA (02/10, encargo
+6.1 hecho):** el motor está listo para el navegador: párrafos según
+CommonMark (un texto pegado y cortado a 76 columnas ya da la misma FPR
+que sin cortar), corpus de BOE y Gutenberg regenerados con línea en blanco
+y recalibración repetida (académico 100-299 sin celda; 224 celdas;
+conjunto 2,1 %), núcleo sin Ajv y `navegador.ts` como entrada para Astro
+(bundle 210 KB sin datos, 572 KB con los dos paquetes; 0 ficheros de Ajv).
+**865 jueces: 858 en verde, 2 saltados con motivo, 5 `todo`**, `tsc`
+limpio. 27 commits locales de Claude Code sobre `869db0e`. Falta del punto
+6: el proyecto Astro y el ciclo mínimo en Chrome (6.2) y los textos (6.3).
+No hay pantalla todavía.
 
 ## 1 · Identidad
 
@@ -63,8 +62,8 @@ antes del verde, push = despliegue, bitácora por la skill
 ## 4 · El plan
 
 `PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1, 2 y 3 (29/09), 4 (30/09),
-5 (01/10). Abierto: el 6, con la casilla nueva de segmentación CommonMark
-firmada el 01/10.
+5 (01/10). Abierto: el 6 (6.1 hecho el 02/10: CommonMark, recalibración,
+núcleo sin Ajv; quedan 6.2 Astro y ciclo mínimo, 6.3 textos).
 
 ## 5 · Decisiones
 
@@ -263,24 +262,44 @@ firmada el 01/10.
   **Severidad**: se queda «baja» en todas las reglas de la v1; la
   calibración no dio criterio para subirla y la escala del medidor es la
   banda, no la severidad.
+- 01-02/10 — **Decisiones del 6.1**: párrafos según CommonMark §4.8/§6.8/
+  §5.2 [DOC] con la excepción web [PROPIO] (cierre de frase + línea en
+  mayúscula, ¿, ¡, raya, comilla = párrafo); regla del 1 de CommonMark;
+  regla horizontal como bloque; línea sangrada tras ítem sigue en el ítem;
+  Intl.Segmenter parte en \n, así que frases, palabras y DETECTORES
+  trabajan sobre una copia con \r y \n como espacio (misma longitud,
+  desplazamientos sobre el original). Los corpus de BOE y Gutenberg
+  estaban guardados con un párrafo por línea: se regeneran desde la caché
+  con línea en blanco (CSIC, una frase por línea, se deja y se declara).
+  Juez de los 287/341 textos cortados: ≥ 93 % de frases coincidentes con
+  causas declaradas [PROPIO]; juez de párrafos de origen del BOE contra
+  tres formas declaradas (5/20 al pie de la letra). Académico 100-299 sin
+  celda (99 < 100): mínimo firme, nada se ajusta; a la nevera ampliar la
+  muestra por huella en la v1.1. Fichas con cifras de la revalidación del
+  02/10. El standalone llega por `#validador-standalone` (imports de
+  package.json; Node, TS y Vite lo documentan; esbuild lo resuelve); el
+  aviso MIT de Ajv va en el banner `/*!` del standalone y en el bundle.
 
 ## 6 · Cabos abiertos
 
-- **Del 5.6 (01/10), FIRMADA el 01/10 como casilla del punto 6**: el
-  motor trata cada línea como párrafo (decisión [PROPIO] del 4.1). Un texto
-  cortado a mano (PDF o correo pegado, Markdown a 76 columnas) cuenta una
-  frase por línea: en los 287 textos de validación de «general» cortados a
-  76 columnas, `est-frases-cortas` pasa del 4,2 % al 43,2 % y la FPR del
-  3,1 % al 8,0 %; también infla el recuento de prosa. Doctrina: CommonMark
-  (soft line break = espacio; línea en blanco = párrafo) y RFC 3676
-  («embarrassing line wrap»). La casilla está escrita en el plan, punto 6,
-  antes de tocar código.
-- Para el punto 6: en las seis celdas con mediana del total en 0, un texto
-  sin señales cae en «entre la mediana y el p95»; la interfaz debe decir
-  «sin señales» cuando el total sea 0 antes de pintar la banda. P22
-  subraya solo «$1» (ampliar regex). La sección «Paquetes» del README
-  dispara 44,3 en RadiografIA por MENCIONAR las formas que busca: el
-  motor no distingue mención de uso (declarado).
+- Para 6.2: el bundle del navegador lleva 210 KB sin datos (73 % el
+  standalone, sobre todo los esquemas con `$comment`: valorar quitarlos en
+  build) y 572 KB con los dos paquetes y su calibración; con \r\n la copia
+  de trabajo lleva dos espacios donde el salto y una regex con un espacio
+  literal no casa ahí (declarado). En las cinco celdas con mediana del
+  total en 0, «sin señales» antes de la banda.
+- Del 6.1: la excepción web parte el párrafo en texto cortado cuando una
+  línea acaba en punto; afecta a D1 (declarado en su ficha), no a las
+  frases. El CSIC pierde el 90,6 % de sus saltos (correcto: una frase por
+  línea). Las tasas > 25 % por género están en nueve fichas con fecha
+  02/10.
+- **Del 5.6 (01/10), HECHO en 6.1 (02/10)**: el motor trataba cada línea
+  como párrafo; con la segmentación CommonMark el texto cortado a 76
+  columnas da la misma FPR que sin cortar (2,9 %). Doctrina: CommonMark y
+  RFC 3676. Detalle en la casilla del plan.
+- Para el punto 6: P22 subraya solo «$1» (ampliar regex). La sección
+  «Paquetes» del README dispara 44,3 en RadiografIA por MENCIONAR las
+  formas que busca: el motor no distingue mención de uso (declarado).
 - Del 5.5 (01/10): residuo de coma flotante en `puntuar.ts` → ARREGLADO
   en 5.6 (redondeo a 6 decimales); `general.json` registra el motor 430075b
   (src idéntico al de su constructor); el manifiesto de noticia solo
@@ -310,23 +329,23 @@ firmada el 01/10.
   cierran con fórmula; los epistémicos de Herbold son 14 regex de su código
   (sin «maybe»; «perhaps» y «probably» son modales); 30/90 humanos con
   cero epistémicos. NGLE leída vía web.archive.org (rae.es da 403).
-- Del 5.2 (30/09), para la calibración: solapes que suman dos veces
-  («es importante destacar» en énfasis y en fórmula; «Cabe destacar» en
-  énfasis y en conector). Límites declarados: «destacarlo» con enclítico
-  no se señala; «no se trata solo de X, sino» tampoco; L15 no coge
-  «optimice». L15 sigue cogiendo «potencia» (nombre), declarado.
+- Del 5.2 (30/09), declarados y sin cambio en la v1: solapes que suman dos
+  veces («es importante destacar» en énfasis y en fórmula; «Cabe
+  destacar» en énfasis y en conector). Límites declarados: «destacarlo»
+  con enclítico no se señala; «no se trata solo de X, sino» tampoco; L15
+  no coge «optimice» y sigue cogiendo «potencia» (nombre).
 - Del 5.1 (30/09): **P24 (emojis y flechas) sin fuente en la
   investigación** → fuera hasta que aparezca una; cautelas técnicas si
   entra: `\p{Emoji_Presentation}` excluye © ® ™ pero también ⚠️ y ✔️
   (texto + U+FE0F); un emoji inicial dispararía viñeta y prosa a la vez.
   JS trata U+202F y U+FEFF como `\s`: si caen en el
   borde de frase o párrafo el motor los recorta (BOM inicial no cuenta).
-  P11+P12 puntuan dos veces una raya espaciada y P11 desde la primera raya
-  → validación 5.6 (en narrativa 600+ dispara en 814/895). P3 no cubre
+  P11+P12 puntuan dos veces una raya espaciada y P11 desde la primera
+  raya: medido en la validación (narrativa 600+: 813/895), declarado en
+  las fichas, pesos sin tocar en la v1. P3 no cubre
   listas numeradas con negrita. Sin cita
   de Microsoft para la autocorrección de «--» (no estaba en la
-  investigación; no se afirmó). `ejemplos-estadisticos.spec.ts` aún no
-  incluye el paquete real (5.6). P5 ajustado en 5.2 (no cuenta entre
+  investigación; no se afirmó). P5 ajustado en 5.2 (no cuenta entre
   cifras).
 - Del 4.3, lo que sigue abierto tras el 5.5: «…» (U+2026) no parte la
   frase y «...» sí (ICU; afecta a métricas de frase e IFSZ); silabea
@@ -337,15 +356,12 @@ firmada el 01/10.
 - Para las tandas de reglas: `tildes:true` junta «pasó/paso» y
   «está/esta»; en 5.2 se usó `tildes:false`; mantenerlo salvo
   justificación.
-- Para el punto 5: abreviaturas («Sr.») parten la frase y los compuestos
-  con guión cuentan dos palabras; decidir con datos si hace falta una
-  lista de abreviaturas antes del segmentador.
-- Para el punto 6 (de los encargos 3.1/3.2): `validar.ts` compila Ajv al
-  importarse → separar formateador y comprobaciones posteriores en un
-  módulo sin Ajv; el navegador usa `validador.standalone.js` (159 KB tras
-  cerrar `parametros` y `calibracion`; sobre todo los esquemas con
-  `$comment`: valorar quitarlos en build); el aviso MIT de `ucs2length`
-  viaja con él. Ya anotado en la casilla del punto 6.
+- Sigue abierto (como `todo`): abreviaturas («Sr.») parten la frase y los
+  compuestos con guión cuentan dos palabras; la calibración no justificó
+  una lista de abreviaturas (S1 no dispara por eso en humanos).
+- Del 3.1/3.2 para el punto 6: HECHO en 6.1 (núcleo sin Ajv, standalone
+  en el navegador, aviso MIT dentro). Queda valorar en 6.2 quitar los
+  `$comment` del standalone en build (73 % del bundle sin datos).
 - El guardián del NOTICES de **Desplázame** lee ficheros dentro del
   `describe` y tiene el mismo agujero de la bitácora nº1 (resumen `fail 0`
   con juez roto). Llevar a su cierre.
@@ -359,12 +375,16 @@ firmada el 01/10.
   primera fuente autoalojada en el punto 10 — herencia de la nº40 de
   Desplazame. Propuesto el 29/09 como casilla del punto 10; Antonio aún
   no ha dicho si entra en el plan.
-- Fuentes no leídas enteras que las fichas tendrán que abrir en el punto
-  5: PDF de Pham 2026 (cifras por categoría), PUCP-Metrix, Berber
-  Sardinha 2024, `license.txt` de SUBTLEX-ESP.
+- Fuentes no leídas enteras (pendientes para la v1.1 o cuando una ficha
+  lo exija): PDF de Pham 2026 (cifras por categoría; leído en 5.3), PUCP-
+  Metrix, Berber Sardinha 2024, `license.txt` de SUBTLEX-ESP.
 
 ## Nevera
 
+- **Académico 100-299**: 99 documentos de calibración (< 100). Primera
+  tarea de la v1.1: ampliar la muestra del CSIC por huella con la misma
+  semilla hasta ≥ 120 por tramo y recalibrar (tamaño de muestra, no ajuste
+  sobre validación).
 - **Tablas del BOE pasadas a texto como no-prosa** (v1.1): los cinco ids
   aceptados en la validación de administrativo (BOE-B-2010-33306,
   BOE-B-2012-3733, BOE-A-2012-3750, BOE-B-2010-33269, BOE-A-2012-7964)
