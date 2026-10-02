@@ -49,13 +49,17 @@ otro workspace y no es de terceros.
 > en cabecera el `LICENSE` de `ajv` entero, copiado de `node_modules/ajv/LICENSE` al generar, en un
 > comentario `/*! … */` (el `banner` de esbuild). Lo vigila el juez 6 de
 > [`motor/src/standalone.spec.ts`](motor/src/standalone.spec.ts). La entrada del navegador,
-> [`motor/src/navegador.ts`](motor/src/navegador.ts), importa el validador. Al empaquetarla,
-> esbuild lleva el aviso al final del fichero como comentario legal, minificado o no
-> (comprobado el 02/10/2026).
+> [`motor/src/navegador.ts`](motor/src/navegador.ts), importa el validador. **El build real de
+> la web es el de Astro** (Vite 8 con Rolldown), y Vite quita los comentarios legales al
+> minificar salvo que se le pida conservarlos: [`web/astro.config.mjs`](web/astro.config.mjs) se
+> lo pide (`comments.legal`). Que el JS de `web/dist/` lleve el `LICENSE` de `ajv` entero lo
+> vigila el juez 6 de [`web/jueces/construccion.spec.ts`](web/jueces/construccion.spec.ts)
+> (docs/BITACORA.md, 2026-10-02). Empaquetar con esbuild, como hace
+> [`motor/src/navegador.spec.ts`](motor/src/navegador.spec.ts), no equivale a ese build.
 >
 > **De `astro` no viaja nada al navegador.** Genera el HTML en build. El JS de la página es el
-> motor, el validador y los ayudantes que escribe el empaquetador: en el build de prueba de la
-> parada 1 del 6.2 (02/10/2026) no había código de Vite ni de Astro en el JS.
+> motor, el validador y los ayudantes que escribe el empaquetador: en el build de la web
+> (02/10/2026), el JS no lleva código de Vite ni de Astro.
 >
 > ⚠️ **Aquí estuvo `es-compromise` 0.3.1** (MIT, etiquetado gramatical), del 29/09 hasta el cierre
 > del encargo 3.3: se midió contra UD Spanish-AnCora, no llegó al umbral y se retiró con su capa

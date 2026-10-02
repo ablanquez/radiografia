@@ -1,7 +1,11 @@
 /**
  * Los jueces de la entrada del navegador (encargo 6.1, c): motor/src/navegador.ts
- * empaquetado con esbuild como lo empaquetará el build (bundle, platform
- * browser, ESM, sin minificar).
+ * empaquetado con esbuild (bundle, platform browser, ESM, sin minificar).
+ * ⚠️ Empaquetar con esbuild NO es el build de la web: el build real es el de
+ *    Astro (Vite 8 con Rolldown y el minificador Oxc, web/), que trata los
+ *    comentarios legales de otra manera (docs/BITACORA.md, 2026-10-02). Lo
+ *    que llega de verdad al navegador lo vigilan los jueces de la web
+ *    construida, web/jueces/construccion.spec.ts.
  *
  *   1. El metafile: ningún input de node_modules/ajv y ninguna importación de
  *      un módulo de Node (`node:*` o su nombre sin prefijo), ni en el paquete
@@ -14,11 +18,14 @@
  *      defecto y con «noticia»; y un paquete roto lanza el mismo
  *      PaqueteInvalido. bandaHumana va dentro de analizar y, suelta, con una
  *      celda de verdad.
- *   3. El aviso MIT de Ajv viaja en el paquete del navegador (respuesta al
- *      informe final del 6.1): el bundle de navegador.ts, sin minificar y
- *      minificado, lleva entero el LICENSE de node_modules/ajv (con LF). El
+ *   3. El aviso MIT de Ajv en el bundle de esbuild (respuesta al informe
+ *      final del 6.1): el bundle de navegador.ts, sin minificar y minificado
+ *      con esbuild, lleva entero el LICENSE de node_modules/ajv (con LF). El
  *      standalone lo trae en cabecera (generar-validador.ts) y esbuild lo
- *      conserva como comentario legal, al final del fichero.
+ *      conserva como comentario legal, al final del fichero. Que el aviso
+ *      viaje en el JS de la web lo juzga el juez 6 de
+ *      web/jueces/construccion.spec.ts: Vite 8 lo quita al minificar si no se
+ *      le pide conservarlo (web/astro.config.mjs).
  *
  * [DOC] https://esbuild.github.io/api/#legal-comments — un comentario que
  *    empieza por «/*!» es «legal»: «These comments are preserved in output
@@ -139,7 +146,7 @@ function loQueSobra(metafile: Metafile): { ajv: string[]; deNode: string[]; sali
 
 const leer = (fichero: string): Paquete => JSON.parse(readFileSync(new URL(fichero, PAQUETES), 'utf8')) as Paquete;
 
-describe('la entrada del navegador (navegador.ts), empaquetada como en build', () => {
+describe('la entrada del navegador (navegador.ts), empaquetada con esbuild', () => {
   test('1 · el metafile: ningún input de node_modules/ajv ni importación de un módulo de Node, con y sin datos', async (t) => {
     const sin = await elSinDatos();
     const con = await elConDatos();
