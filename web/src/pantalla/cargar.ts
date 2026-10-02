@@ -16,6 +16,7 @@
  *    sustituya; la página pasa fetch y el validarPaquete de navegador.ts.
  */
 import type { Paquete, ResultadoDeValidacion } from '@radiografia/motor/navegador';
+import { noSeCargo } from '../textos.ts';
 
 /** Los dos paquetes incluidos, en el orden en que se analizan: RadiografIA y Español correcto. */
 export const FICHEROS = ['radiografia.json', 'espanol-correcto.json'] as const;
@@ -43,7 +44,7 @@ export async function cargarPaquetes(
     try {
       const respuesta = await pedir(url);
       if (!respuesta.ok) {
-        problemas.push({ paquete: fichero, mensajes: [`no se pudo cargar ${url}: HTTP ${respuesta.status}`] });
+        problemas.push({ paquete: fichero, mensajes: [noSeCargo(url, `HTTP ${respuesta.status}`)] });
         continue;
       }
       const dato: unknown = await respuesta.json();
@@ -54,7 +55,7 @@ export async function cargarPaquetes(
       }
       paquetes.push(dato as Paquete);
     } catch (fallo) {
-      problemas.push({ paquete: fichero, mensajes: [`no se pudo cargar ${url}: ${(fallo as Error).message}`] });
+      problemas.push({ paquete: fichero, mensajes: [noSeCargo(url, (fallo as Error).message)] });
     }
   }
   return problemas.length === 0 ? { paquetes, problemas: [] } : { paquetes: null, problemas };

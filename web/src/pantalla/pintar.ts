@@ -36,8 +36,11 @@
  * Las señales del texto entero (ausencias y estadísticas) no tienen tramo: van
  * al desglose. Las familias informativas (canal) llevan otro estilo y van
  * aparte en la leyenda.
+ *
+ * Las cadenas de la interfaz están en web/src/textos.ts (encargo 6.3, b).
  */
 import type { Paquete, Resultado } from '@radiografia/motor/navegador';
+import * as textos from '../textos.ts';
 import type { ProblemaDeCarga } from './cargar.ts';
 import { idHumanizado } from './humanizar.ts';
 import { partirEnTramos } from './tramos.ts';
@@ -68,8 +71,6 @@ function campo(nombre: string, valor: string): HTMLParagraphElement {
 const formato = new Intl.NumberFormat('es', { maximumFractionDigits: 2 });
 const cifra = (x: number): string => formato.format(x);
 
-const TRAMOS_EN_PALABRAS: Readonly<Record<string, string>> = { '100-299': '100 a 299', '300-599': '300 a 599', '600+': '600 o más' };
-
 /** Lo que se busca por clave: las reglas y las familias de los paquetes, con su clase de color. */
 export interface Indice {
   /** «paquete::reglaId» → la ficha. */
@@ -99,7 +100,7 @@ export function indexar(paquetes: readonly Paquete[]): Indice {
 }
 
 export function pintarProblemas(contenedor: HTMLElement, problemas: readonly ProblemaDeCarga[]): void {
-  contenedor.replaceChildren(el('p', 'No se han podido cargar los paquetes de reglas, y sin ellos no se analiza nada:'));
+  contenedor.replaceChildren(el('p', textos.PROBLEMAS_DE_CARGA));
   for (const { paquete, mensajes } of problemas) {
     const lista = el('ul');
     for (const mensaje of mensajes) lista.append(el('li', mensaje));
@@ -113,11 +114,11 @@ export function pintarLeyenda(contenedor: HTMLElement, indice: Indice): void {
   const informativas = el('ul', undefined, 'leyenda');
   for (const f of indice.familias) {
     const elemento = el('li');
-    elemento.append(el('span', 'subrayado', `muestra ${f.clase}`), ` ${f.nombre} (${f.paquete})`);
+    elemento.append(el('span', textos.MUESTRA_DE_SUBRAYADO, `muestra ${f.clase}`), ` ${f.nombre} (${f.paquete})`);
     (f.informativa ? informativas : puntuan).append(elemento);
   }
-  contenedor.replaceChildren(el('h3', 'Familias'), puntuan);
-  if (informativas.childElementCount > 0) contenedor.append(el('p', 'Informativas: se señalan y no suman.'), informativas);
+  contenedor.replaceChildren(el('h3', textos.FAMILIAS), puntuan);
+  if (informativas.childElementCount > 0) contenedor.append(el('p', textos.INFORMATIVAS_EN_LA_LEYENDA), informativas);
 }
 
 function familiaDe(senal: SenalCalificada, indice: Indice): string {
@@ -165,7 +166,7 @@ export function pintarVista(
 }
 
 export function pintarPanel(contenedor: HTMLElement, senales: readonly SenalCalificada[], indice: Indice): void {
-  contenedor.replaceChildren(el('h3', 'Lo que señala este tramo'));
+  contenedor.replaceChildren(el('h3', textos.TITULO_DEL_PANEL));
   const vistas = new Set<string>();
   for (const senal of senales) {
     const k = clave(senal.paquete, senal.reglaId);
@@ -176,10 +177,10 @@ export function pintarPanel(contenedor: HTMLElement, senales: readonly SenalCali
     const regla = indice.reglas.get(k);
     if (regla !== undefined) {
       ficha.append(
-        campo('Explicación', regla.explicacion),
-        campo('Sugerencia', regla.sugerencia),
-        campo('Nivel de evidencia', regla.nivelEvidencia),
-        campo('Origen de la lista', regla.origenLista ?? '—'),
+        campo(textos.EXPLICACION, regla.explicacion),
+        campo(textos.SUGERENCIA, regla.sugerencia),
+        campo(textos.NIVEL_DE_EVIDENCIA, regla.nivelEvidencia),
+        campo(textos.ORIGEN_DE_LA_LISTA, regla.origenLista ?? textos.SIN_DATO),
       );
     }
     contenedor.append(ficha);
@@ -191,29 +192,29 @@ export function pintarPanel(contenedor: HTMLElement, senales: readonly SenalCali
 function lineasDeBanda(r: ResultadoDePaquete, nombreDelGenero: string, tramo: string | null): HTMLElement[] {
   const lineas: HTMLElement[] = [];
   const total = r.puntuacion.total;
-  if (total === 0) lineas.push(el('p', `Sin señales: ${r.paquete} no ha encontrado nada que puntúe en este texto.`, 'banda'));
+  if (total === 0) lineas.push(el('p', textos.sinSenales(r.paquete), 'banda'));
   if (r.banda === null) return lineas;
   if (r.banda.banda === 'sin calibración') {
-    lineas.push(el('p', `Sin calibración: ${r.banda.motivo}.`, 'banda'));
+    lineas.push(el('p', textos.sinCalibracion(r.banda.motivo), 'banda'));
   } else if (total !== null && total !== 0) {
     const b = r.banda;
     lineas.push(
-      el('p', `Tu texto queda ${b.banda} de los textos humanos del género «${nombreDelGenero}» de ${TRAMOS_EN_PALABRAS[tramo ?? ''] ?? tramo} palabras.`, 'banda'),
-      el('p', `Tu total: ${cifra(total)}. En esos textos humanos (n = ${b.n}): mediana ${cifra(b.p50)} · p95 ${cifra(b.p95)} · p99 ${cifra(b.p99)}.`, 'percentiles'),
+      el('p', textos.tuBanda(b.banda, nombreDelGenero, textos.TRAMOS_EN_PALABRAS[tramo ?? ''] ?? `${tramo}`), 'banda'),
+      el('p', textos.tusPercentiles(cifra(total), b.n, cifra(b.p50), cifra(b.p95), cifra(b.p99)), 'percentiles'),
     );
   }
   return lineas;
 }
 
 export function pintarMedidor(contenedor: HTMLElement, resultado: Resultado, nombreDelGenero: string): void {
-  const datos = el('p', `Palabras de prosa: ${resultado.palabrasProsa} · Tramo: ${resultado.tramoDeCalibracion ?? 'menos de 100'} · Género: ${nombreDelGenero}`, 'datos');
+  const datos = el('p', textos.datosDelTexto(resultado.palabrasProsa, resultado.tramoDeCalibracion ?? textos.MENOS_DE_100, nombreDelGenero), 'datos');
   const primero = resultado.paquetes[0]?.puntuacion;
   contenedor.replaceChildren();
   if (resultado.tramo === 'insuficiente') {
-    contenedor.append(el('p', 'Texto insuficiente', 'estado-tramo'), el('p', primero?.motivo ?? ''), datos);
+    contenedor.append(el('p', textos.TEXTO_INSUFICIENTE, 'estado-tramo'), el('p', primero?.motivo ?? ''), datos);
     return;
   }
-  if (resultado.tramo === 'poco-fiable') contenedor.append(el('p', 'Resultado poco fiable', 'estado-tramo'), el('p', primero?.aviso ?? ''));
+  if (resultado.tramo === 'poco-fiable') contenedor.append(el('p', textos.POCO_FIABLE, 'estado-tramo'), el('p', primero?.aviso ?? ''));
   // Solo los paquetes con escala (clave `_total-*`); Español correcto no la tiene y va aparte, en su desglose.
   for (const r of resultado.paquetes.filter((x) => x.banda !== null)) {
     contenedor.append(el('h3', r.paquete), ...lineasDeBanda(r, nombreDelGenero, resultado.tramoDeCalibracion));
@@ -221,16 +222,14 @@ export function pintarMedidor(contenedor: HTMLElement, resultado: Resultado, nom
   contenedor.append(datos);
 }
 
-const LADOS: Readonly<Record<string, string>> = { arriba: 'por encima de la banda humana', abajo: 'por debajo de la banda humana' };
-
 /** Una señal del texto entero, en una línea: la estadística con su valor y su banda; la ausencia con sus cuentas. */
 function lineaDeTexto(s: SenalDeTexto): string {
   const quien = `${idHumanizado(s.reglaId)} (${s.reglaId})`;
-  if ('coincidencias' in s) return `${quien}: ausencia: ${s.coincidencias} ${s.coincidencias === 1 ? 'aparición' : 'apariciones'}; señala por debajo de ${s.minimo}`;
+  if ('coincidencias' in s) return textos.ausencia(quien, s.coincidencias, s.minimo);
   if ('valor' in s) {
     const c = s.referencia;
-    const lado = s.lado === null ? 'dentro de la banda humana' : (LADOS[s.lado] ?? s.lado);
-    return `${quien}: ${s.metrica} = ${cifra(s.valor)}, ${lado}; en los textos humanos: p1 ${cifra(c.p1)} · p5 ${cifra(c.p5)} · mediana ${cifra(c.p50)} · p95 ${cifra(c.p95)} · p99 ${cifra(c.p99)}`;
+    const lado = s.lado === null ? textos.DENTRO_DE_LA_BANDA : (textos.LADOS[s.lado] ?? s.lado);
+    return textos.estadistica(quien, s.metrica, cifra(s.valor), lado, cifra(c.p1), cifra(c.p5), cifra(c.p50), cifra(c.p95), cifra(c.p99));
   }
   return quien;
 }
@@ -251,19 +250,19 @@ export function pintarDesglose(contenedor: HTMLElement, resultado: Resultado, pa
     const seccion = el('section', undefined, 'desglose-paquete');
     seccion.append(el('h3', `${r.paquete} ${cabecera.version}`));
     if (r.banda === null) seccion.append(el('p', cabecera.descripcion, 'descripcion'));
-    seccion.append(el('p', p.total === null ? (p.motivo ?? '') : `Total: ${cifra(p.total)} ${p.unidad}.`));
+    seccion.append(el('p', p.total === null ? (p.motivo ?? '') : textos.total(cifra(p.total), p.unidad)));
     for (const f of p.familias.filter((x) => !x.informativa)) {
       // Las reglas informativas de una familia que puntúa (las de contexto de Estadística) van aparte, abajo.
       const conSenal = f.reglas.filter((x) => x.n > 0 && !x.informativa);
       seccion.append(
         ...apartado(
           `${f.nombre}: ${cifra(f.total)}`,
-          conSenal.map((x) => `${idHumanizado(x.id)} (${x.id}): ${x.n} ${x.n === 1 ? 'señal' : 'señales'}, contribución ${cifra(x.contribucion)}`),
+          conSenal.map((x) => textos.reglaConSenales(`${idHumanizado(x.id)} (${x.id})`, x.n, cifra(x.contribucion))),
         ),
       );
-      if (conSenal.length === 0) seccion.append(el('h4', `${f.nombre}: ${cifra(f.total)}`), el('p', 'Ninguna señal.', 'nada'));
+      if (conSenal.length === 0) seccion.append(el('h4', `${f.nombre}: ${cifra(f.total)}`), el('p', textos.NINGUNA_SENAL, 'nada'));
     }
-    seccion.append(...apartado('Del texto entero', resultado.senalesTexto.filter((s) => s.paquete === r.paquete).map(lineaDeTexto)));
+    seccion.append(...apartado(textos.DEL_TEXTO_ENTERO, resultado.senalesTexto.filter((s) => s.paquete === r.paquete).map(lineaDeTexto)));
     const porRegla = new Map<string, number>();
     const informativasDeTexto: string[] = [];
     for (const s of p.informativas) {
@@ -271,12 +270,12 @@ export function pintarDesglose(contenedor: HTMLElement, resultado: Resultado, pa
       else informativasDeTexto.push(lineaDeTexto(s));
     }
     seccion.append(
-      ...apartado('Informativas: se enseñan, no suman', [
-        ...[...porRegla].map(([id, n]) => `${idHumanizado(id)} (${id}): ${n} ${n === 1 ? 'señal' : 'señales'}`),
+      ...apartado(textos.INFORMATIVAS_EN_EL_DESGLOSE, [
+        ...[...porRegla].map(([id, n]) => textos.reglaInformativa(`${idHumanizado(id)} (${id})`, n)),
         ...informativasDeTexto,
       ]),
-      ...apartado('Sin calibración', resultado.sinCalibracion.filter((s) => s.paquete === r.paquete).map((s) => `${idHumanizado(s.reglaId)} (${s.reglaId}): ${s.motivo}`)),
-      ...apartado('No aplicadas', resultado.noAplicadas.filter((s) => s.paquete === r.paquete).map((s) => `${idHumanizado(s.reglaId)} (${s.reglaId}): ${s.motivo}`)),
+      ...apartado(textos.SIN_CALIBRACION, resultado.sinCalibracion.filter((s) => s.paquete === r.paquete).map((s) => `${idHumanizado(s.reglaId)} (${s.reglaId}): ${s.motivo}`)),
+      ...apartado(textos.NO_APLICADAS, resultado.noAplicadas.filter((s) => s.paquete === r.paquete).map((s) => `${idHumanizado(s.reglaId)} (${s.reglaId}): ${s.motivo}`)),
     );
     contenedor.append(seccion);
   });

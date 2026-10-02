@@ -13,12 +13,15 @@
  *      sustituye lo pintado. Con menos de 100 palabras de prosa, «texto
  *      insuficiente» y nada más: el motor no analiza.
  *
- * Sin red salvo los dos fetch de los paquetes; sin librerías de UI.
+ * Sin red salvo los dos fetch de los paquetes; sin librerías de UI. Las
+ * cadenas de la interfaz, en web/src/textos.ts (encargo 6.3, b); la de
+ * `elemento` no lo es: es un fallo de programación que va a la consola.
  * [DOC] https://docs.astro.build/en/guides/client-side-scripts/ — «All scripts
  *    are TypeScript by default»; los imports se empaquetan y el script queda
  *    como type="module" (de ahí el await de primer nivel).
  */
 import { analizar, validarPaquete, type Paquete } from '@radiografia/motor/navegador';
+import * as textos from '../textos.ts';
 import { cargarPaquetes } from './cargar.ts';
 import { GENERO_POR_DEFECTO, generosDe, nombreDeGenero } from './generos.ts';
 import { indexar, pintarDesglose, pintarLeyenda, pintarMedidor, pintarPanel, pintarProblemas, pintarVista, type Indice } from './pintar.ts';
@@ -63,13 +66,13 @@ function analizarYPintar(paquetes: readonly Paquete[], indice: Indice): void {
     problemas.hidden = true;
     resultado.hidden = false;
   } catch (fallo) {
-    pintarProblemas(problemas, [{ paquete: 'el análisis', mensajes: [(fallo as Error).message] }]);
+    pintarProblemas(problemas, [{ paquete: textos.EL_ANALISIS, mensajes: [(fallo as Error).message] }]);
   }
 }
 
 const carga = await cargarPaquetes(import.meta.env.BASE_URL, (url) => fetch(url), validarPaquete);
 if (carga.paquetes === null) {
-  estado.textContent = 'No se puede analizar: falta algún paquete de reglas.';
+  estado.textContent = textos.SIN_PAQUETES;
   pintarProblemas(problemas, carga.problemas);
 } else {
   const paquetes = carga.paquetes;
@@ -83,7 +86,7 @@ if (carga.paquetes === null) {
   }
   genero.disabled = false;
   boton.disabled = false;
-  estado.textContent = `Paquetes cargados y validados: ${paquetes.map((p) => `${p.cabecera.nombre} ${p.cabecera.version}`).join(' y ')}.`;
+  estado.textContent = textos.paquetesCargados(paquetes.map((p) => `${p.cabecera.nombre} ${p.cabecera.version}`));
   formulario.addEventListener('submit', (e) => {
     e.preventDefault();
     analizarYPintar(paquetes, indice);
