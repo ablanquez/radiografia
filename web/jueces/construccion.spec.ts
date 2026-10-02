@@ -27,6 +27,17 @@
  *   8. dist/index.html lleva los dos botones de los ejemplos, que no envían
  *      el formulario, y la línea que dice de quién es cada texto (encargo 6.3,
  *      a, juez 4).
+ *   9. Cada página HTML de dist/ lleva la CSP en su <meta http-equiv> con
+ *      connect-src 'self' y form-action 'self' (encargo 8.1, b; firmado en la
+ *      parada 1: web/astro.config.mjs, security.csp), y nada que pueda cargar
+ *      algo va antes de ella: ningún script, ningún estilo ni ningún enlace
+ *      que no sea data:.
+ *      [DOC] https://www.w3.org/TR/CSP3/ — «policies in meta elements are
+ *      not applied to content which precedes them».
+ *      [PROPIO] Antes va, y se admite, <link rel="icon" href="data:,"> (6.2:
+ *      sin él Chrome pide /favicon.ico): Astro pone la CSP al final de lo que
+ *      escribimos en el <head>, y una URL data: no sale a la red (en la
+ *      parada 1, CDP ni la registró como petición).
  *
  * El build, memorizado y con la telemetría apagada, y astro preview son los
  * de apoyo.ts (los comparte con textos-web.spec.ts y catalogo.spec.ts).
@@ -38,7 +49,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { EJEMPLOS } from '../src/pantalla/ejemplos.ts';
-import { conPreview, construir, DIST, motorDelNavegador, PAQUETES, PAQUETES_DE_PRUEBA } from './apoyo.ts';
+import { conPreview, construir, decodificar, DIST, motorDelNavegador, PAQUETES, PAQUETES_DE_PRUEBA } from './apoyo.ts';
 
 const PUBLICOS = new URL('../public/ejemplos/', import.meta.url);
 
@@ -140,6 +151,27 @@ describe('la web construida', () => {
       assert.match(html, new RegExp(`<button [^>]*type="button"[^>]*>${etiqueta}</button>`), `sin el botón «${etiqueta}» (type="button")`);
     }
     assert.ok(html.includes(PROCEDENCIA), `sin «${PROCEDENCIA}»`);
+  });
+
+  test("9 · cada página de dist/ lleva la CSP con connect-src 'self' y form-action 'self', antes de cualquier script o estilo", () => {
+    construir();
+    const paginas = readdirSync(DIST, { recursive: true, encoding: 'utf8' })
+      .map((f) => f.replaceAll('\\', '/'))
+      .filter((f) => f.endsWith('.html'));
+    assert.ok(paginas.length > 1, `dist/ tiene ${paginas.length} páginas HTML`);
+    const mal = paginas.flatMap((pagina) => {
+      const html = readFileSync(new URL(pagina, DIST), 'utf8');
+      const meta = /<meta http-equiv="content-security-policy" content="([^"]*)"/i.exec(html);
+      if (meta === null) return [`${pagina}: sin la CSP`];
+      const directivas = decodificar(meta[1]!).split(';').map((d) => d.trim());
+      const faltan = ["connect-src 'self'", "form-action 'self'"].filter((d) => !directivas.includes(d));
+      // Lo que podría cargar algo antes de que la CSP aplique: un script, un estilo o un enlace que no sea data:.
+      const antes = [...html.slice(0, meta.index).matchAll(/<script\b[^>]*>|<style\b[^>]*>|<link\b[^>]*>/gi)]
+        .map((m) => m[0])
+        .filter((etiqueta) => !/^<link\b[^>]*\shref="data:/i.test(etiqueta));
+      return [...faltan.map((d) => `${pagina}: sin «${d}»`), ...antes.map((etiqueta) => `${pagina}: ${etiqueta} va antes de la CSP, y la CSP no le aplica`)];
+    });
+    assert.deepEqual(mal, []);
   });
 
   test('5 · astro preview responde 200 en / y 404 en /no-existe', async () => {
