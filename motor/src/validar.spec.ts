@@ -278,6 +278,13 @@ const INVALIDOS: readonly CasoInvalido[] = [
     campo: 'nombre',
     mensajeIncluye: 'al menos 3 caracteres',
   },
+  {
+    // 81 caracteres (un solo diff de valido-con-nombre.json): el primer maxLength de los esquemas, con su mensaje en castellano.
+    fichero: 'invalido-nombre-largo.json',
+    regla: { indice: 0, id: 'd6-referencia-interna' },
+    campo: 'nombre',
+    mensajeIncluye: 'como máximo 80 caracteres',
+  },
 ];
 
 describe('validarPaquete', () => {
@@ -285,9 +292,9 @@ describe('validarPaquete', () => {
    * Ningún fixture sin juez: si entra uno nuevo en la carpeta y nadie lo añade
    * aquí, esto se pone rojo en vez de dejarlo sin mirar.
    */
-  test('la carpeta de fixtures tiene exactamente los cuarenta y uno que se juzgan', () => {
+  test('la carpeta de fixtures tiene exactamente los cuarenta y dos que se juzgan', () => {
     assert.equal(VALIDOS.length, 10, 'diez válidos');
-    assert.equal(INVALIDOS.length, 31, 'treinta y un inválidos');
+    assert.equal(INVALIDOS.length, 32, 'treinta y dos inválidos');
     const esperados = [...VALIDOS, ...INVALIDOS.map((c) => c.fichero)].sort();
     // Solo los FICHEROS de la raíz: los paquetes. Las subcarpetas (fixtures/referencia/)
     // guardan datos de referencia de otros jueces (encargo 3.3).

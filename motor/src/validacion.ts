@@ -243,6 +243,9 @@ function mensajeEnCastellano(e: ErrorDeEsquema, valor: unknown, alternativas: re
       return `tiene que tener al menos ${p['limit']} ${p['limit'] === 1 ? 'elemento' : 'elementos'}`;
     case 'minLength':
       return p['limit'] === 1 ? 'no puede estar vacío' : `tiene que tener al menos ${p['limit']} caracteres`;
+    case 'maxLength':
+      // Encargo 7.1: el primer maxLength de los esquemas (el nombre de la regla, de 3 a 80 caracteres).
+      return `tiene que tener como máximo ${p['limit']} ${p['limit'] === 1 ? 'carácter' : 'caracteres'}`;
     case 'anyOf':
       if (alternativas.length > 0) return `tiene que llevar al menos uno de estos campos: ${alternativas.map((a) => `"${a}"`).join(', ')}`;
       return e.message ?? e.keyword;
