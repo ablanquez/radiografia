@@ -20,6 +20,10 @@
  *      (el reparto es estable), las familias del propio llevan la marca de
  *      propio, y una familia que se llama como una de otro paquete es otra
  *      entrada, con su clave; analizar da a cada señal su paquete.
+ *   5. El paquete de prueba (web/public/ejemplos/) con los dos incluidos (juez 2
+ *      del encargo): tres resultados y señales de los tres con su origen; con
+ *      Español correcto desmarcado, dos. Y los dos ficheros de prueba por
+ *      leerPaquetePropio: el bueno entra, el inválido no, con su error.
  * Los paquetes sintéticos se hacen aquí a partir de Español correcto: la unión
  * de géneros y las familias homónimas se juzgan con ellos (firmado en la
  * parada 1: el paquete de prueba no trae calibración).
@@ -30,12 +34,13 @@
  */
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import type { Paquete } from '@radiografia/motor/navegador';
 import * as textos from '../src/textos.ts';
 import { activos, LIMITE_EN_BYTES, leerPaquetePropio } from '../src/pantalla/propios.ts';
 import { generosDe } from '../src/pantalla/generos.ts';
 import { indexar } from '../src/pantalla/pintar.ts';
-import { motorDelNavegador, paquetesIncluidos } from './apoyo.ts';
+import { EJEMPLOS_PUBLICOS, motorDelNavegador, PAQUETES_DE_PRUEBA, paqueteDePrueba, paquetesIncluidos, TEXTO_DE_TRES_PAQUETES } from './apoyo.ts';
 
 /** Un paquete válido hecho de Español correcto, con otro nombre. */
 function sintetico(nombre: string): Paquete {
@@ -168,5 +173,43 @@ describe('indexar con un paquete propio', () => {
     const origenes = new Set(r.senales.map((s) => `${s.paquete}::${s.reglaId}`));
     assert.ok(origenes.has('RadiografIA::lex-conector-de-apertura'), [...origenes].join(', '));
     assert.ok(origenes.has('Sintético::gram-pasiva-perifrastica'), [...origenes].join(', '));
+  });
+});
+
+describe('el paquete de prueba con los dos incluidos (juez 2 del encargo)', () => {
+  const PRUEBA = 'Paquete de prueba';
+
+  test('los tres activos: tres resultados en su orden, y señales de los tres con su origen', async () => {
+    const { analizar } = await motorDelNavegador();
+    const todos = activos(paquetesIncluidos(), new Set(['RadiografIA', 'Español correcto']), [paqueteDePrueba()]);
+    const r = analizar(TEXTO_DE_TRES_PAQUETES, todos, { genero: 'general' });
+    assert.notEqual(r.tramo, 'insuficiente', `${r.palabrasProsa} palabras de prosa`);
+    assert.deepEqual(r.paquetes.map((p) => p.paquete), ['RadiografIA', 'Español correcto', PRUEBA]);
+    assert.deepEqual([...new Set(r.senales.map((s) => s.paquete))].sort(), ['Español correcto', PRUEBA, 'RadiografIA']);
+    assert.deepEqual(
+      [...new Set(r.senales.filter((s) => s.paquete === PRUEBA).map((s) => s.reglaId))].sort(),
+      paqueteDePrueba().reglas.map((x) => x.id).sort(),
+      'cada regla del paquete de prueba señala en el texto',
+    );
+  });
+
+  test('con Español correcto desmarcado: dos resultados, y ninguna señal suya', async () => {
+    const { analizar } = await motorDelNavegador();
+    const dos = activos(paquetesIncluidos(), new Set(['RadiografIA']), [paqueteDePrueba()]);
+    const r = analizar(TEXTO_DE_TRES_PAQUETES, dos, { genero: 'general' });
+    assert.deepEqual(r.paquetes.map((p) => p.paquete), ['RadiografIA', PRUEBA]);
+    assert.deepEqual(r.senales.filter((s) => s.paquete === 'Español correcto'), []);
+  });
+
+  test('los ficheros de public/ejemplos/: el de prueba entra; el inválido no, con su error', async () => {
+    const { validarPaquete } = await motorDelNavegador();
+    const fichero = (nombre: string): File => new File([readFileSync(new URL(nombre, EJEMPLOS_PUBLICOS))], nombre);
+    const bueno = await leerPaquetePropio(fichero(PAQUETES_DE_PRUEBA.valido), paquetesIncluidos(), [], validarPaquete);
+    assert.deepEqual(bueno, { paquete: paqueteDePrueba(), problema: null });
+    const malo = await leerPaquetePropio(fichero(PAQUETES_DE_PRUEBA.invalido), paquetesIncluidos(), [], validarPaquete);
+    assert.deepEqual(malo.problema, {
+      titulo: textos.noSeCargaPorEsquema(PAQUETES_DE_PRUEBA.invalido),
+      mensajes: ['regla "prueba-a-nivel-de" (reglas[0]) · campo "peso": tiene que ser número'],
+    });
   });
 });

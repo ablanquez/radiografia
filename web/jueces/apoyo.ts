@@ -2,7 +2,8 @@
  * Lo que comparten los jueces de la web (encargo 6.3): el build, el motor del
  * navegador y los dos paquetes incluidos; y desde el 7.1, astro preview y la
  * lectura de las entidades de HTML (antes, en construccion.spec.ts y en
- * textos-web.spec.ts).
+ * textos-web.spec.ts); desde el 8.1, los paquetes de prueba del cargador y un
+ * texto con señales de los tres paquetes.
  *
  * El build: `npm run build` en web/, una vez por fichero de jueces, desde un
  * dist/ vacío.
@@ -70,6 +71,31 @@ export function motorDelNavegador(): Promise<typeof import('@radiografia/motor/n
 export function paquetesIncluidos(): Paquete[] {
   return FICHEROS.map((f) => JSON.parse(readFileSync(new URL(f, PAQUETES), 'utf8')) as Paquete);
 }
+
+/** Los dos paquetes de prueba del cargador (encargo 8.1, b), en web/public/ejemplos/: ninguno se carga solo. */
+export const PAQUETES_DE_PRUEBA = { valido: 'paquete-prueba.json', invalido: 'paquete-prueba-invalido.json' } as const;
+export const EJEMPLOS_PUBLICOS = new URL('../public/ejemplos/', import.meta.url);
+
+/** El paquete de prueba que valida, leído de web/public/ejemplos/. */
+export function paqueteDePrueba(): Paquete {
+  return JSON.parse(readFileSync(new URL(PAQUETES_DE_PRUEBA.valido, EJEMPLOS_PUBLICOS), 'utf8')) as Paquete;
+}
+
+/**
+ * Un texto con señales de los tres paquetes (encargo 8.1, b, jueces 2 y 3), de
+ * más de 100 palabras de prosa para que el motor lo analice: «Cabe destacar»
+ * al principio de una frase (RadiografIA), «fue aprobado por el» y «Enero»
+ * (Español correcto), y «a nivel de», «okey» y una pregunta sin «¿» (el
+ * paquete de prueba). Lo escribe el juez; no es un texto de Antonio.
+ */
+export const TEXTO_DE_TRES_PAQUETES = [
+  'Cabe destacar que el proyecto fue aprobado por el consejo en la reunión del 5 de Enero.',
+  'A nivel de empresa, el cambio afecta a todos los equipos, y cada responsable tendrá que revisar sus cuentas antes del cierre.',
+  'La directora dijo que todo estaba okey y que no hacía falta esperar más.',
+  'Qué opinas tú de todo esto?',
+  'Algunos compañeros creen que el plan llega tarde, otros piensan que llega justo a tiempo, y casi nadie sabe todavía cómo se va a repartir el trabajo entre las oficinas de la costa y las del interior.',
+  'Habrá que hablarlo con calma la semana que viene, cuando vuelvan los que están de viaje y se pueda reunir a todo el mundo en la misma sala.',
+].join(' ');
 
 /** El ejecutable de astro: el `bin` de su package.json (astro exporta ./package.json). */
 export function binDeAstro(): string {

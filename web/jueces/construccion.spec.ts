@@ -20,7 +20,10 @@
  *      pide que los conserve).
  *   7. dist/ejemplos/ lleva los dos textos de ejemplo, byte a byte los de
  *      public/ejemplos/, y estos están en UTF-8 sin BOM y con saltos \n
- *      (encargo 6.3, a, juez 1).
+ *      (encargo 6.3, a, juez 1). Desde el 8.1 (firmado en la parada 1), también
+ *      los dos paquetes de prueba del cargador: paquete-prueba.json valida, y
+ *      paquete-prueba-invalido.json no, con un solo error: es el mismo paquete
+ *      con un campo mal.
  *   8. dist/index.html lleva los dos botones de los ejemplos, que no envían
  *      el formulario, y la línea que dice de quién es cada texto (encargo 6.3,
  *      a, juez 4).
@@ -35,7 +38,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { EJEMPLOS } from '../src/pantalla/ejemplos.ts';
-import { conPreview, construir, DIST, PAQUETES } from './apoyo.ts';
+import { conPreview, construir, DIST, motorDelNavegador, PAQUETES, PAQUETES_DE_PRUEBA } from './apoyo.ts';
 
 const PUBLICOS = new URL('../public/ejemplos/', import.meta.url);
 
@@ -104,9 +107,9 @@ describe('la web construida', () => {
     for (const { ruta, texto } of conValidador) assert.ok(texto.replace(/\r\n/g, '\n').includes(licencia), `${ruta} no lleva el LICENSE de ajv entero`);
   });
 
-  test('7 · dist/ejemplos/ lleva los dos textos de ejemplo, byte a byte los de public/ejemplos/, en UTF-8 sin BOM y con \\n', () => {
+  test('7 · dist/ejemplos/ lleva los dos textos de ejemplo y los dos paquetes de prueba, byte a byte los de public/ejemplos/, en UTF-8 sin BOM y con \\n', async () => {
     construir();
-    const ficheros = Object.values(EJEMPLOS).sort();
+    const ficheros = [...Object.values(EJEMPLOS), ...Object.values(PAQUETES_DE_PRUEBA)].sort();
     assert.deepEqual(readdirSync(PUBLICOS).sort(), ficheros, 'los ficheros de public/ejemplos/');
     assert.deepEqual(readdirSync(new URL('ejemplos/', DIST)).sort(), ficheros, 'los ficheros de dist/ejemplos/');
     for (const f of ficheros) {
@@ -116,6 +119,18 @@ describe('la web construida', () => {
       assert.ok(!texto.startsWith('\uFEFF'), `public/ejemplos/${f} empieza con BOM`);
       assert.ok(!texto.includes('\r'), `public/ejemplos/${f} lleva \\r`);
     }
+    const { validarPaquete } = await motorDelNavegador();
+    const leer = (f: string): { reglas: { peso: unknown }[] } => JSON.parse(readFileSync(new URL(f, PUBLICOS), 'utf8'));
+    const valido = leer(PAQUETES_DE_PRUEBA.valido);
+    const invalido = leer(PAQUETES_DE_PRUEBA.invalido);
+    assert.deepEqual(validarPaquete(valido).errores, [], `${PAQUETES_DE_PRUEBA.valido} no valida`);
+    assert.deepEqual(
+      validarPaquete(invalido).errores.map((e) => e.texto),
+      ['regla "prueba-a-nivel-de" (reglas[0]) · campo "peso": tiene que ser número'],
+      `${PAQUETES_DE_PRUEBA.invalido}: un solo error, el del peso`,
+    );
+    invalido.reglas[0]!.peso = valido.reglas[0]!.peso;
+    assert.deepEqual(invalido, valido, `${PAQUETES_DE_PRUEBA.invalido} es ${PAQUETES_DE_PRUEBA.valido} con un solo campo cambiado`);
   });
 
   test('8 · dist/index.html lleva los dos botones de los ejemplos y de quién es cada texto', () => {
