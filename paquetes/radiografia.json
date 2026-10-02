@@ -2997,7 +2997,7 @@
         "Diálogos: la raya que abre cada intervención y la de los incisos del narrador son norma en español (RAE). La regla todavía no separa los párrafos de diálogo; la calibración dirá si hace falta.",
         "Incisos: la RAE los encierra entre rayas, que aíslan más que las comas y menos que los paréntesis (DPD).",
         "Solo se cuenta la raya (U+2014), no la semirraya (–) ni el guion doble (--): un estudio de 44 años de actas de CHI mostró que contar solo ese carácter mide cómo se codificó el texto, no cómo se escribió; contando juntas todas las formas de raya, la serie era estable.",
-        "En la validación del 5.6 (textos humanos apartados) dispara en el 92,3 % de los capítulos de narrativa clásica: la raya del diálogo. No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
+        "En la revalidación del 6.1 (02/10/2026, textos humanos apartados) dispara en el 92,3 % de los capítulos de narrativa clásica: la raya del diálogo. No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
       ],
       "fuente": [
         {
@@ -3161,7 +3161,7 @@
         "Frecuencia en wordfreq: «destaca», Zipf 4,44, y «destacar», 4,37: aparecen mucho en textos humanos.",
         "La raíz coge también «destacado», «destacada» o «destacable» como adjetivos («un destacado escritor»); «destacamento» no cuenta.",
         "Juzek avisa de que las señales léxicas cambian de un modelo a otro (GPT frente a Gemini, ρ = 0,46) y de que su trabajo no está pensado para detectar IA.",
-        "En la validación del 5.6 (textos humanos apartados) dispara en el 34,4 % de los textos académicos (78,9 % en los de 600 palabras o más). No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
+        "En la revalidación del 6.1 (02/10/2026, textos humanos apartados) dispara en el 46,5 % de los textos académicos de 300 palabras o más (78,9 % en los de 600 o más). No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
       ],
       "fuente": [
         {
@@ -3208,7 +3208,8 @@
       "excepciones": [
         "Es una palabra corriente en cualquier registro (Zipf 4,96 en wordfreq): el motor no puede distinguir el uso humano normal y la señal cuenta por acumulación.",
         "Textos cuyo tema es la importancia de algo (educación, divulgación).",
-        "Juzek avisa de que las señales léxicas cambian de un modelo a otro (GPT frente a Gemini, ρ = 0,46) y de que su trabajo no está pensado para detectar IA."
+        "Juzek avisa de que las señales léxicas cambian de un modelo a otro (GPT frente a Gemini, ρ = 0,46) y de que su trabajo no está pensado para detectar IA.",
+        "En la revalidación del 6.1 (02/10/2026, textos humanos apartados) dispara en el 30,2 % de los textos académicos de 300 palabras o más (52,6 % en los de 600 o más). No se ajusta en la v1 (respuesta al informe final del 6.1, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
       ],
       "fuente": [
         {
@@ -3567,7 +3568,7 @@
       "excepciones": [
         "Es una construcción normativa y frecuente en cualquier registro: una o dos en un texto largo no dicen nada.",
         "Solo busca «no solo» y «sino» en la misma frase, con menos de 80 caracteres entre los dos.",
-        "En la validación del 5.6 (textos humanos apartados) dispara en el 57,9 % de los textos académicos de 600 palabras o más. No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
+        "En la revalidación del 6.1 (02/10/2026, textos humanos apartados) dispara en el 32,6 % de los textos académicos de 300 palabras o más (57,9 % en los de 600 o más). No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
       ],
       "fuente": [
         {
@@ -3613,7 +3614,7 @@
       "excepciones": [
         "Prosa corporativa, de ONG y administrativa, donde son verbos de oficio.",
         "Falsos positivos que la raíz no evita: «potencia» y «potencias» como nombre («la potencia del motor»), «potencialmente», «impulsor» e «impulsivo».",
-        "En la validación del 5.6 (textos humanos apartados) dispara en el 32,1 % de los capítulos de narrativa clásica. No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
+        "En la revalidación del 6.1 (02/10/2026, textos humanos apartados) dispara en el 32,1 % de los capítulos de narrativa clásica y en el 32,6 % de los textos académicos de 300 palabras o más. No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
       ],
       "fuente": [
         {
@@ -3774,7 +3775,7 @@
         "En los datos de replicación de Herbold, con sus propias regex, 30 de 90 ensayos de estudiantes (de segunda lengua) no tienen ningún marcador epistémico: la ausencia sola también dispara en un tercio de esos humanos. Por eso el peso se queda en 2 y la calibración decide.",
         "Textos impersonales por norma: informes técnicos, dictámenes o revistas que piden no opinar en primera persona.",
         "«creo» también es el verbo crear («creo un archivo») y «pienso», un nombre: si aparecen así, la regla no dispara aunque falten epistémicos.",
-        "En la validación del 5.6 (textos humanos apartados) dispara en el 47,5 % de los textos académicos (83,3 % en los de 300 a 599 palabras) y en el 36,9 % de las críticas de opinión (52,7 % en las de 300 a 599). No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
+        "En la revalidación del 6.1 (02/10/2026, textos humanos apartados) dispara en el 67,4 % de los textos académicos de 300 palabras o más (83,3 % en los de 300 a 599) y en el 36,9 % de las críticas de opinión (52,7 % en las de 300 a 599). No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
       ],
       "fuente": [
         {
@@ -3828,7 +3829,7 @@
         "«me» y «nos» no cuentan: también son reflexivos y recíprocos («se me olvidó», «nos vemos»).",
         "Textos académicos impersonales por norma de la revista, y cualquier texto escrito en tercera persona por convención.",
         "Pham avisa de que su resultado «should be interpreted with caution»: la ausencia depende de lo que se le pida al modelo.",
-        "En la validación del 5.6 (textos humanos apartados) dispara en el 37,7 % de los textos académicos. No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
+        "En la revalidación del 6.1 (02/10/2026, textos humanos apartados) dispara en el 53,5 % de los textos académicos de 300 palabras o más. No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
       ],
       "fuente": [
         {
@@ -4095,7 +4096,7 @@
         "«Le recuerdo que…» es una fórmula de aviso, no un recuerdo: no cuenta detrás de «le», «te», «les» u «os».",
         "«Hace unos años» no cuenta: abre también textos impersonales («Hace unos años, la inteligencia artificial parecía ciencia ficción»).",
         "Un texto generado al que se le pide una anécdota la inventa: la regla no puede saber si es verdad.",
-        "En la validación del 5.6 (textos humanos apartados) aparece, y resta, en el 42,7 % de los capítulos de narrativa clásica. No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
+        "En la revalidación del 6.1 (02/10/2026, textos humanos apartados) aparece, y resta, en el 42,7 % de los capítulos de narrativa clásica. No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
       ],
       "fuente": [
         {
@@ -4141,7 +4142,7 @@
         "La regla no distingue la posterioridad de la simultaneidad, ni la mera sucesión que la norma censura de la consecuencia que admite: cuenta la construcción, como Reinhart.",
         "Palabras en -ando o -iendo que no son gerundios: se excluyen «cuando», «bando», «mando», «comando», «blando», «nefando», «infando» y los nombres «Fernando», «Orlando», «Armando» y «Rolando»; las que no están en la lista («Nando», «remiendo») pueden disparar.",
         "Solo ve coletillas cortas, de hasta nueve palabras, sin cifras ni comas dentro: «…, alcanzando los 300 empleados» no dispara.",
-        "En la validación del 5.6 (textos humanos apartados) dispara en el 63,5 % de los capítulos de narrativa clásica (68,9 % en los de 600 palabras o más). No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
+        "En la revalidación del 6.1 (02/10/2026, textos humanos apartados) dispara en el 63,5 % de los capítulos de narrativa clásica (68,9 % en los de 600 palabras o más) y en el 30,2 % de los textos académicos de 300 palabras o más. No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
       ],
       "fuente": [
         {

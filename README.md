@@ -514,15 +514,13 @@ cortas, pocas comas, poca puntuación y poca puntuación secundaria. En la
 validación del 5.6, siete reglas de otras familias saltaban en más del
 25 % de los textos humanos de algún género, por ejemplo la raya en la
 narrativa (92,3 %) o la falta de marcadores de opinión en lo académico
-(47,5 %). Su ficha lo dice con esas cifras, igual que la de
-`lex-no-solo-sino`, que llegaba al 57,9 % en lo académico de 600 palabras
-o más. En la del 6.1 son nueve. Lo académico se valida ahora solo desde
-300 palabras, donde las ausencias sí se juzgan, y sube: la falta de
+(47,5 %). En la del 6.1 son nueve. Lo académico se valida ahora solo
+desde 300 palabras, donde las ausencias sí se juzgan, y sube: la falta de
 marcadores de opinión llega al 67,4 %. Pasan también del 25 %
 `lex-no-solo-sino` (32,6 %) y `lex-importancia` (30,2 %), las dos en lo
-académico. Las fichas siguen con las cifras del 5.6. En la v1 no se
-ajustan. El detalle, regla a regla y celda a celda, está en
-`validacion.json`.
+académico. Las fichas de esas nueve reglas llevan las cifras de la
+revalidación del 6.1 (02/10/2026), con su fecha. En la v1 no se ajustan.
+El detalle, regla a regla y celda a celda, está en `validacion.json`.
 
 **Límites del método.** Hay una sola validación, con la misma muestra
 medida dos veces: antes de los ajustes y después. Los ajustes se
