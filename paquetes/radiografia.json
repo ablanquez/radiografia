@@ -3776,7 +3776,7 @@
         "En los datos de replicación de Herbold, con sus propias regex, 30 de 90 ensayos de estudiantes (de segunda lengua) no tienen ningún marcador epistémico: la ausencia sola también dispara en un tercio de esos humanos. Por eso el peso se queda en 2 y la calibración decide.",
         "Textos impersonales por norma: informes técnicos, dictámenes o revistas que piden no opinar en primera persona.",
         "«creo» y «creemos» también son del verbo crear («creo un archivo», «que creemos un fondo»), y «pienso», un nombre: si aparecen así, la regla no dispara aunque falten epistémicos.",
-        "En la revalidación del 6.1 (02/10/2026, textos humanos apartados) dispara en el 67,4 % de los textos académicos de 300 palabras o más (83,3 % en los de 300 a 599) y en el 36,9 % de las críticas de opinión (52,7 % en las de 300 a 599). No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total.",
+        "En la revalidación del 6.4 (02/10/2026, textos humanos apartados, con la lista ampliada) dispara en el 58,1 % de los textos académicos de 300 palabras o más (79,2 % en los de 300 a 599) y en el 32,5 % de las críticas de opinión (47,5 % en las de 300 a 599); con la lista del 5.3 eran el 67,4 % y el 36,9 %. No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total.",
         "«parece» solo cuenta con «me» o «nos» delante («me parece», «nos pareció»): «parece que va a llover» no es la opinión de quien escribe. Herbold sí cuenta «It seems» sin nadie que opine; aquí se deja fuera (ampliación 6.4, firmado por Antonio el 02/10/2026).",
         "El imperfecto de primera persona es igual que el de tercera («creía», «pensaba», «suponía», «opinaba», «consideraba que»): «él pensaba que llovería» rompe la ausencia aunque no hable quien escribe. Falso positivo conocido (ampliación 6.4).",
         "«considerar» solo cuenta seguido de «que» («considero que», «consideramos que»), como desde el 5.3: «considero el asunto cerrado» no cuenta.",
@@ -3835,7 +3835,7 @@
         "«nos» cuenta solo como palabra suelta, y los pronombres pegados al verbo no cuentan («dime», «llamarme», «vámonos»): la regla ve palabras, no la persona dentro del verbo.",
         "Textos académicos impersonales por norma de la revista, y cualquier texto escrito en tercera persona por convención.",
         "Pham avisa de que su resultado «should be interpreted with caution»: la ausencia depende de lo que se le pida al modelo.",
-        "En la revalidación del 6.1 (02/10/2026, textos humanos apartados) dispara en el 53,5 % de los textos académicos de 300 palabras o más. No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
+        "En la revalidación del 6.4 (02/10/2026, textos humanos apartados, con «me» y «nos») dispara en el 39,5 % de los textos académicos de 300 palabras o más; sin ellos eran el 53,5 %. No se ajusta en la v1 (parada 2 del 5.6, firmado por Antonio): la escala del medidor compara con los humanos del mismo género y longitud, y esa tasa ya está dentro de su total."
       ],
       "fuente": [
         {
