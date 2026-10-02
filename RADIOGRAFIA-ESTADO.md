@@ -7,16 +7,14 @@ El ejecutor reporta descubrimientos; no toca este fichero.
 
 ## ESTADO ACTUAL — 2 de octubre de 2026
 
-**⭐ PUNTOS 1-6 CERRADOS (29/09-02/10), MÁS LA AMPLIACIÓN 6.4 DEL PAQUETE.
-LA DEMO EXISTE Y ESTÁ VISTA.** `web/` (Astro 7.3.5 estático) sirve la
-pantalla mínima con los dos ejemplos precargados: tras ampliar las listas
-de D3 y D4, el texto de Antonio puntúa 3 (entre la mediana y el p95 de
-opinión) y el de IA, 1 (por debajo de la mediana); se publica así y
-demuestra la nota de la casa: analiza estilo, no demuestra autoría. Al
-navegador viajan 123 KB de JS + 361 KB de JSON (+ 2 KB por ejemplo al
-pulsar). **npm test raíz: motor 867 (860 verde, 2 saltados, 5 todo) + web
-25/25**, tipos limpios. Seis bitácoras, todas cerradas. **Siguiente: punto
-7, catálogo de reglas.**
+**⭐ PUNTOS 1-7 CERRADOS (29/09-02/10). LA DEMO EXISTE, ESTÁ VISTA Y TIENE
+CATÁLOGO.** `web/` sirve el analizador con los dos ejemplos (humano 3 /
+IA 1 con opinión) y el catálogo `/reglas` con 50 fichas con URL propia,
+buscador, tres filtros y enlaces cruzados. Al navegador viajan 123 KB de
+JS + 361 KB de JSON; dist/ entero 890 KB (52 HTML). **npm test raíz: motor
+882 (875 verde, 2 saltados, 5 todo) + web 43/43**, con juez de `astro
+dev`, build y preview; tipos limpios. Seis bitácoras, todas cerradas.
+**Siguiente: punto 8, cargador de paquetes.**
 
 ## 1 · Identidad
 
@@ -34,7 +32,9 @@ pulsar). **npm test raíz: motor 867 (860 verde, 2 saltados, 5 todo) + web
   validadas con esquema. Nada sale del navegador. **Web** (`web/`, desde
   02/10): Astro 7.3.5 fijada exacta, sin integraciones, HTML + TypeScript
   del navegador; repo como npm workspaces (`motor` + `web`, lock en la
-  raíz); el motor entra por `@radiografia/motor/navegador`; los paquetes
+  raíz); el analizador entra al motor por `@radiografia/motor/navegador` y
+  el catálogo (que se genera en build) solo por `./validacion` y
+  `./validador`, para no arrastrar silabea.cjs al SSR de dev; los paquetes
   se sirven desde `public/` y se validan con el standalone al cargar.
 - **Motor** (`motor/`, paquete npm propio, se prueba sin Astro): JSON
   Schema 2020-12; Ajv 8 (`Ajv2020`) en Node para jueces y para generar el
@@ -65,7 +65,7 @@ antes del verde, push = despliegue, bitácora por la skill
 ## 4 · El plan
 
 `PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1, 2 y 3 (29/09), 4 (30/09),
-5 (01/10), 6 (02/10). Abierto: el 7.
+5 (01/10), 6 y 7 (02/10). Abierto: el 8.
 
 ## 5 · Decisiones
 
@@ -331,9 +331,35 @@ antes del verde, push = despliegue, bitácora por la skill
   confirmó (FPR idéntica; administrativo intacto). docs/ejemplos.md guarda
   el 5/2 anterior como historia; la tabla se actualiza en el mismo commit
   que cambia sus cifras (regla «cada commit pasa solo»).
+- 02/10 — **Decisiones del 7.1 (catálogo)**: campo `nombre` en la ficha
+  (opcional en esquema, 3-80; obligatorio por juez en los dos paquetes;
+  50 nombres leídos y firmados por Antonio: «Sin marcadores de opinión ni
+  duda», «Sin primera persona», «Secuencias de tres palabras
+  recurrentes», «Calcos léxicos del inglés», «Muchas nominalizaciones» y
+  los demás como propuso el ejecutor); catálogo estático con
+  getStaticPaths [DOC Astro]; el frontmatter NO importa el motor del
+  navegador (silabea.cjs rompe el SSR de dev): usa `./validacion` y
+  `./validador` (exports nuevos); juez de `astro dev` con --ignore-lock
+  (Astro lo documenta; corrección del ejecutor a su propia afirmación de
+  que no se podía arrancar un segundo dev); orden de presentación
+  alfabético con localeCompare('es') en índice, filtros, leyenda,
+  desglose y selector (General primero) [PROPIO, pedido por Antonio];
+  severidad en escala baja → media → alta; maxLength con mensaje en
+  castellano. Las fichas no pasan por el juez de textos de la web
+  (mención, no uso), sí las cadenas de interfaz del catálogo (527
+  palabras).
 
 ## 6 · Cabos abiertos
 
+- Del 7.1: zona sin juez: ningún juez comprueba que cada palabra clave
+  de los esquemas tenga mensaje en castellano (maxLength se coló; maxItems
+  caería igual); las plantillas .astro no las revisa tsc (sin astro
+  check): lo que pintan lo miran los jueces sobre dist/. Para el punto 8:
+  el enlace del panel a /reglas/<id> supone que la regla tiene ficha; las
+  de un paquete propio cargado no la tendrán (404): decidir qué muestra
+  el panel en ese caso. Comentario de motor/src/validador-standalone.d.ts
+  corto (solo habla de `imports`; ahora también lo usa `./validador`).
+  Las 50 reglas son «baja»: el filtro de severidad no separa nada hoy.
 - Del 6.4: zona sin juez: las tasas que citan las fichas no se comparan
   con validacion.json (se pusieron al día a mano); el aviso de académico
   «43 documentos cambian» compara con el manifiesto del descargador, que
@@ -344,13 +370,12 @@ antes del verde, push = despliegue, bitácora por la skill
   (2.1.286) sí. Zonas sin juez: la tabla de tamaños del README y la cifra
   de palabras de los textos de la web. Disco C: al 98 % tras 46 clones de
   verificación (borrados; ahora se borra cada clon al terminar).
-- Para el punto 7 (catálogo): los nombres humanizados del panel salen del
-  id y pierden tildes («Atribucion vaga», «Mayuscula…»); el nombre real
-  de cada regla lo decide el catálogo (¿campo `nombre` en la ficha?
-  decisión de esquema para entonces).
-- Para el punto 10 (diseño): el panel de la regla se pinta debajo de la
-  vista, no junto al tramo (tooltip/popover es decisión de diseño);
-  Highlight API como mejora; `.gitattributes` para fuentes.
+- Para el punto 7 (catálogo): RESUELTO en 7.1 con el campo `nombre`
+  (los nombres humanizados sin tilde quedan solo como reserva para
+  paquetes de terceros).
+- Para el punto 10 (diseño): los apuntes están escritos en el propio
+  punto 10 del plan (filtros en columnas, panel junto al tramo, Highlight
+  API, `.gitattributes` para fuentes).
 - Para el punto 11: el panel de Hostinger no ejecuta el CLI (Desplázame
   versiona app/dist); con Astro, prever versionar o subir web/dist.
 - Para quien repita la prueba manual: leer un .txt desde PowerShell con

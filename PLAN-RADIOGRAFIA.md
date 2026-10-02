@@ -2,7 +2,7 @@
 
 Estado a 02/10/2026: **FIRMADO por Antonio el 29/09/2026**, publicado en
 `73ef265`. **PUNTOS 1, 2 y 3 CERRADOS el 29/09; 4 el 30/09; 5 el 01/10; 6
-el 02/10.** Se tacha lo hecho y
+y 7 el 02/10.** Se tacha lo hecho y
 lo nuevo se añade en su punto, y solo por decisión de Antonio.
 
 Origen: BRAINSTORMING (1), 28-29/09/2026, y las decisiones de Antonio
@@ -614,11 +614,30 @@ Astro, sin diseño todavía: funciona, no luce.
 
 ## 7 — Catálogo de reglas
 
-- [ ] Página `/reglas` generada del JSON al compilar: buscador y filtros
-      por familia, severidad y detector
-- [ ] Ficha por regla con URL propia (`/reglas/<id>`)
-- [ ] Enlace cruzado desde cada subrayado del analizador a su ficha
-- [ ] Visto en Chrome. **PUNTO 7 CERRADO**
+- [x] **Campo `nombre` en la ficha (firmado por Antonio el 02/10 al lanzar
+      el 7.1; HECHO 02/10)**: opcional en el esquema (3-80 caracteres),
+      obligatorio por juez en RadiografIA y Español correcto (mayúscula
+      inicial, sin id, sin punto final, sin repetidos); los 50 nombres
+      leídos y firmados por Antonio con seis cambios; donde falte, se
+      humaniza el id. maxLength con mensaje en castellano (hallazgo)
+- [x] Página `/reglas` generada del JSON al compilar: buscador y filtros
+      por familia, severidad y detector (7.1, 02/10: getStaticPaths e
+      import de los JSON en el frontmatter; buscador por nombre, id y
+      explicación; recuento en aria-live; «Quitar filtros»; orden
+      alfabético con localeCompare('es'): paquete → familia → nombre;
+      severidad baja → media → alta; hoy las 50 son «baja»)
+- [x] Ficha por regla con URL propia (`/reglas/<id>`) (7.1: 50 páginas con
+      todo el contenido literal de la ficha; ids únicos entre paquetes
+      comprobados en build)
+- [x] Enlace cruzado desde cada subrayado del analizador a su ficha (7.1:
+      panel, desglose y cabecera enlazan; BASE_URL). **Hallazgo y arreglo**:
+      el frontmatter del catálogo importaba el motor del navegador y en
+      `astro dev` (SSR) silabea.cjs daba «module is not defined»; build y
+      preview no lo veían → el catálogo solo importa `./validacion` y
+      `./validador` (exports nuevos del motor) y hay juez de `astro dev`
+      (la zona sin vigilar); selector de género con General primero y el
+      resto alfabético
+- [x] Visto en Chrome por Antonio (02/10). **PUNTO 7 CERRADO (02/10)**
 
 ## 8 — Cargador de paquetes
 
@@ -642,6 +661,13 @@ Astro, sin diseño todavía: funciona, no luce.
 
 Como el punto 15 de Desplázame. Identidad ya fijada: nombre, eslogan,
 botón. Nada se dibuja sin documento rector.
+
+**Apuntes de Antonio recogidos durante los puntos 6 y 7, para el DISEÑO**
+(02/10): (1) los filtros del catálogo en **columnas**, no en cascada
+(familia, detector, severidad); (2) el panel de la regla en el analizador,
+junto al tramo (tooltip/popover) y no debajo de la vista; (3) la CSS
+Custom Highlight API como mejora de los subrayados (Baseline 2026-03);
+(4) `.gitattributes` para fuentes autoalojadas antes de la primera.
 
 - [ ] `DISEÑO-RADIOGRAFIA.md`: investigación con doctrina (accesibilidad,
       legibilidad de texto largo, impresión), el concepto del icono
