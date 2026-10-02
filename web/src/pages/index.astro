@@ -1,9 +1,22 @@
 ---
 /**
- * La única página de la web (encargo 6.2). En b), solo el esqueleto: la
- * pantalla mínima llega en c).
- * [DOC] https://docs.astro.build/en/install/manual/ — «Create a new file in
- *    your directory at src/pages/index.astro».
+ * La única página de la web (encargo 6.2, c): la pantalla mínima. Solo HTML y
+ * el import del script (firmado en la parada 1: sin `astro check`, la lógica
+ * va en .ts revisados con tsc, en src/pantalla/). Funciona, no luce: el
+ * diseño es del punto 10.
+ *
+ * [DOC] https://docs.astro.build/en/install/manual/ — src/pages/index.astro.
+ * [DOC] https://docs.astro.build/en/guides/styling/ — los <style> de un
+ *    componente se aplican «only […] to HTML written inside of that same
+ *    component»; lo que crea el script no lo está, así que el estilo va con
+ *    `is:global`.
+ * [PROPIO] `<link rel="icon" href="data:,">`: sin él, Chrome pide
+ *    /favicon.ico por su cuenta, que da 404 y es una petición de red que no
+ *    son los paquetes (visto el 02/10). El icono llega con el diseño (punto 10).
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/white-space
+ *    — pre-wrap: «Sequences of white space are preserved. Lines are broken at
+ *    newline characters […] and as necessary to fill line boxes»: la vista
+ *    respeta los saltos del texto.
  */
 ---
 
@@ -11,10 +24,123 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
+    <link rel="icon" href="data:," />
     <title>RadiografIA</title>
   </head>
   <body>
-    <h1>RadiografIA</h1>
-    <p>A contraluz se nota todo.</p>
+    <header>
+      <h1>RadiografIA</h1>
+      <p>A contraluz se nota todo.</p>
+    </header>
+    <main>
+      <form id="formulario">
+        <p id="estado" role="status">Cargando los paquetes de reglas…</p>
+        <div id="problemas" class="problemas" role="alert" hidden></div>
+        <label for="texto">Tu texto</label>
+        <textarea id="texto" rows="12" placeholder="Pega aquí un texto en español."></textarea>
+        <label for="genero">Género del texto</label>
+        <select id="genero" disabled></select>
+        <button id="analizar" type="submit" disabled>Pon tu texto a contraluz</button>
+      </form>
+      <section id="resultado" aria-labelledby="titulo-resultado" hidden>
+        <h2 id="titulo-resultado">Resultado</h2>
+        <div id="medidor"></div>
+        <p class="nota">RadiografIA analiza estilo; no demuestra autoría.</p>
+        <div id="leyenda"></div>
+        <div id="vista" class="vista"></div>
+        <aside id="panel" aria-live="polite" hidden></aside>
+        <div id="desglose"></div>
+      </section>
+    </main>
+    <script>
+      import '../pantalla/pantalla.ts';
+    </script>
+    <style is:global>
+      :root {
+        font-family: system-ui, sans-serif;
+        line-height: 1.5;
+        color: #1f2937;
+        background: #ffffff;
+      }
+      body {
+        max-width: 52rem;
+        margin: 0 auto;
+        padding: 1rem;
+      }
+      label {
+        display: block;
+        margin-top: 1rem;
+        font-weight: 600;
+      }
+      textarea {
+        width: 100%;
+        box-sizing: border-box;
+        font: inherit;
+      }
+      select,
+      button {
+        font: inherit;
+      }
+      button {
+        display: block;
+        margin-top: 1rem;
+        padding: 0.5rem 1rem;
+      }
+      .problemas {
+        color: #991b1b;
+      }
+      .problema-paquete,
+      .estado-tramo {
+        font-weight: 600;
+      }
+      .nota {
+        font-style: italic;
+      }
+      .vista {
+        white-space: pre-wrap;
+        line-height: 2.4;
+        border: 1px solid #d1d5db;
+        padding: 1rem;
+      }
+      .tramo {
+        cursor: pointer;
+      }
+      .tramo:focus-visible {
+        outline: 2px solid #111827;
+        outline-offset: 2px;
+      }
+      [class^='familia-'],
+      [class*=' familia-'] {
+        text-decoration-line: underline;
+        text-decoration-thickness: 2px;
+        text-decoration-skip-ink: none;
+      }
+      .muestra {
+        text-underline-offset: 0.15em;
+      }
+      .familia-color-0 { text-decoration-color: #e69f00; }
+      .familia-color-1 { text-decoration-color: #0072b2; }
+      .familia-color-2 { text-decoration-color: #009e73; }
+      .familia-color-3 { text-decoration-color: #d55e00; }
+      .familia-color-4 { text-decoration-color: #cc79a7; }
+      .familia-color-5 { text-decoration-color: #56b4e9; }
+      .familia-color-6 { text-decoration-color: #8a7000; }
+      .familia-informativa {
+        text-decoration-color: #6b7280;
+        text-decoration-style: dotted;
+      }
+      .leyenda {
+        list-style: none;
+        padding-left: 0;
+      }
+      .id-regla {
+        margin-top: 0;
+        font-size: 0.8rem;
+        color: #4b5563;
+      }
+      .ficha {
+        border-top: 1px solid #d1d5db;
+      }
+    </style>
   </body>
 </html>
