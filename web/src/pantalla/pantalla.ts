@@ -1,28 +1,50 @@
 /**
  * La pantalla mínima (encargo 6.2, c): el script de web/src/pages/index.astro.
  *
- *   1. Al arrancar, carga y valida los dos paquetes (cargar.ts, con el
- *      validarPaquete de navegador.ts: el standalone, sin Ajv). Si falla,
+ *   1. Al arrancar, carga y valida los dos paquetes incluidos (cargar.ts, con
+ *      el validarPaquete de navegador.ts: el standalone, sin Ajv). Si falla,
  *      dice qué paquete y por qué, y el botón se queda desactivado.
- *   2. Llena el selector con los géneros de la calibración de RadiografIA
- *      (generos.ts), con «general» por defecto.
+ *   2. Llena el selector con los géneros de la calibración de los paquetes
+ *      activos (generos.ts), con «general» por defecto.
  *   3. Al pulsar «Pon tu texto a contraluz» (no al teclear), analiza el texto
- *      con los dos paquetes, siempre activos en el 6.2 (elegirlos es del punto
- *      8), y pinta el medidor, la leyenda, la vista y el desglose
- *      (pintar.ts). El textarea sigue editable, y volver a pulsar reanaliza y
- *      sustituye lo pintado. Con menos de 100 palabras de prosa, «texto
- *      insuficiente» y nada más: el motor no analiza.
+ *      con los paquetes activos y pinta el medidor, la leyenda, la vista y el
+ *      desglose (pintar.ts). El textarea sigue editable, y volver a pulsar
+ *      reanaliza y sustituye lo pintado. Con menos de 100 palabras de prosa,
+ *      «texto insuficiente» y nada más: el motor no analiza.
  *   4. Los dos botones de los ejemplos (encargo 6.3, a; ejemplos.ts) ponen su
- *      texto en el textarea y el género de los ejemplos en el selector, y no
- *      analizan. Se activan con los paquetes, porque el selector no tiene
- *      géneros hasta entonces [PROPIO].
+ *      texto en el textarea y el género de los ejemplos en el selector, si está
+ *      en él, y no analizan. Se activan con los paquetes, porque el selector no
+ *      tiene géneros hasta entonces [PROPIO].
+ *   5. El cargador (encargo 8.1, b; firmado en la parada 1):
+ *      · una casilla por paquete incluido, marcada al arrancar; desmarcarla lo
+ *        quita de los activos al volver a analizar, y el estado dura hasta
+ *        recargar;
+ *      · un paquete propio desde el <input type="file"> (propios.ts: tamaño,
+ *        JSON, validador, nombre); si entra, va a la lista con su «Quitar» y a
+ *        los activos; si no, sus errores en una lista, con textContent;
+ *      · activos: los incluidos marcados y después los propios
+ *        (propios.ts); el índice de colores, de todos los que conoce la página
+ *        (pintar.ts), para que una familia no cambie de color;
+ *      · al cambiar los paquetes, el selector se recalcula (si el género
+ *        elegido ya no está, vuelve «general»), y un aviso dice que hay que
+ *        volver a analizar si ya había un resultado pintado, o que no se puede
+ *        analizar si no queda ningún paquete activo (y los botones se
+ *        desactivan).
+ *      Nada persiste: sin localStorage ni historial (alcance 29/09); al
+ *      recargar, el paquete propio desaparece, y la página lo dice.
  *
- * Sin red salvo los fetch de los paquetes y de los ejemplos; sin librerías de
- * UI. Las cadenas de la interfaz, en web/src/textos.ts (encargo 6.3, b); la
- * de `elemento` no lo es: es un fallo de programación que va a la consola.
+ * Sin red salvo los fetch de los paquetes incluidos y de los ejemplos: el
+ * paquete propio se lee del fichero, en el navegador (lo demuestra
+ * jueces/navegador.spec.ts). Sin librerías de UI. Las cadenas de la interfaz,
+ * en web/src/textos.ts (encargo 6.3, b); la de `elemento` no lo es: es un
+ * fallo de programación que va a la consola.
  * [DOC] https://docs.astro.build/en/guides/client-side-scripts/ — «All scripts
  *    are TypeScript by default»; los imports se empaquetan y el script queda
  *    como type="module" (de ahí el await de primer nivel).
+ * [DOC] https://html.spec.whatwg.org/multipage/input.html — el value de un
+ *    input de fichero, «On setting, if the new value is the empty string,
+ *    empty the list of selected files»: se vacía tras cada intento, para que
+ *    elegir otra vez el mismo fichero vuelva a dar «change».
  */
 import { analizar, validarPaquete, type Paquete } from '@radiografia/motor/navegador';
 import * as textos from '../textos.ts';
@@ -30,6 +52,7 @@ import { cargarPaquetes } from './cargar.ts';
 import { cargarEjemplo, GENERO_DE_LOS_EJEMPLOS, type Ejemplo } from './ejemplos.ts';
 import { GENERO_POR_DEFECTO, generosDe, nombreDeGenero } from './generos.ts';
 import { indexar, pintarDesglose, pintarLeyenda, pintarMedidor, pintarPanel, pintarProblemas, pintarVista, type Indice } from './pintar.ts';
+import { activos, leerPaquetePropio } from './propios.ts';
 
 function elemento<T extends HTMLElement>(id: string): T {
   const e = document.getElementById(id);
@@ -54,6 +77,15 @@ const botonesDeEjemplo: [HTMLButtonElement, Ejemplo][] = [
   [elemento<HTMLButtonElement>('ejemplo-ia'), 'ia'],
 ];
 const estadoDelEjemplo = elemento<HTMLParagraphElement>('estado-ejemplo');
+const casillasDeIncluidos = elemento<HTMLDivElement>('incluidos');
+const entradaPropia = elemento<HTMLInputElement>('paquete-propio');
+const listaDePropios = elemento<HTMLUListElement>('propios');
+const estadoPropio = elemento<HTMLParagraphElement>('estado-propio');
+const erroresPropio = elemento<HTMLDivElement>('errores-propio');
+const avisoDePaquetes = elemento<HTMLParagraphElement>('aviso-paquetes');
+
+/** true si lo analizado salió bien y está pintado: cambiar los paquetes lo deja atrás. */
+let hayResultado = false;
 
 function analizarYPintar(paquetes: readonly Paquete[], indice: Indice): void {
   const elTexto = texto.value;
@@ -69,14 +101,30 @@ function analizarYPintar(paquetes: readonly Paquete[], indice: Indice): void {
       parte.hidden = !hayAnalisis;
     }
     if (hayAnalisis) {
-      pintarLeyenda(leyenda, indice);
+      pintarLeyenda(leyenda, indice, new Set(paquetes.map((p) => p.cabecera.nombre)));
       pintarVista(vista, elTexto, r.senales, indice, (indices) => pintarPanel(panel, indices.map((i) => r.senales[i]!), indice, import.meta.env.BASE_URL));
       pintarDesglose(desglose, r, paquetes, indice, import.meta.env.BASE_URL);
     }
     problemas.hidden = true;
     resultado.hidden = false;
+    hayResultado = true;
+    avisoDePaquetes.textContent = '';
   } catch (fallo) {
     pintarProblemas(problemas, [{ paquete: textos.EL_ANALISIS, mensajes: [(fallo as Error).message] }]);
+  }
+}
+
+/** Las opciones del selector, de los paquetes activos; conserva el género elegido si sigue en la lista. */
+function rellenarGeneros(paquetes: readonly Paquete[]): void {
+  const elegido = genero.value;
+  const claves = generosDe(paquetes);
+  genero.replaceChildren();
+  for (const clave of claves) {
+    const opcion = document.createElement('option');
+    opcion.value = clave;
+    opcion.textContent = nombreDeGenero(clave);
+    opcion.selected = clave === (claves.includes(elegido) ? elegido : GENERO_POR_DEFECTO);
+    genero.append(opcion);
   }
 }
 
@@ -85,17 +133,97 @@ if (carga.paquetes === null) {
   estado.textContent = textos.SIN_PAQUETES;
   pintarProblemas(problemas, carga.problemas);
 } else {
-  const paquetes = carga.paquetes;
-  const indice = indexar(paquetes);
-  for (const clave of generosDe(paquetes)) {
-    const opcion = document.createElement('option');
-    opcion.value = clave;
-    opcion.textContent = nombreDeGenero(clave);
-    opcion.selected = clave === GENERO_POR_DEFECTO;
-    genero.append(opcion);
+  const incluidos = carga.paquetes;
+  const marcados = new Set(incluidos.map((p) => p.cabecera.nombre));
+  const propios: Paquete[] = [];
+  const losActivos = (): Paquete[] => activos(incluidos, marcados, propios);
+  let indice = indexar(incluidos);
+
+  /** Después de marcar, desmarcar, cargar o quitar: índice, selector, botones y aviso. */
+  const alCambiarLosPaquetes = (): void => {
+    indice = indexar([...incluidos, ...propios], new Set(propios.map((p) => p.cabecera.nombre)));
+    const ahora = losActivos();
+    rellenarGeneros(ahora);
+    const hay = ahora.length > 0;
+    boton.disabled = !hay;
+    for (const [botonDeEjemplo] of botonesDeEjemplo) botonDeEjemplo.disabled = !hay;
+    avisoDePaquetes.textContent = !hay ? textos.SIN_PAQUETES_ACTIVOS : hayResultado ? textos.PAQUETES_CAMBIADOS : '';
+  };
+
+  for (const paquete of incluidos) {
+    const nombre = paquete.cabecera.nombre;
+    const casilla = document.createElement('input');
+    casilla.type = 'checkbox';
+    casilla.value = nombre;
+    casilla.checked = true;
+    casilla.addEventListener('change', () => {
+      if (casilla.checked) marcados.add(nombre);
+      else marcados.delete(nombre);
+      alCambiarLosPaquetes();
+    });
+    const etiqueta = document.createElement('label');
+    etiqueta.className = 'casilla';
+    etiqueta.append(casilla, ` ${nombre} ${paquete.cabecera.version}`);
+    casillasDeIncluidos.append(etiqueta);
   }
+
+  /** La lista de paquetes propios, cada uno con su «Quitar». */
+  const pintarPropios = (): void => {
+    listaDePropios.replaceChildren();
+    for (const paquete of propios) {
+      const { nombre, version } = paquete.cabecera;
+      const quitar = document.createElement('button');
+      quitar.type = 'button';
+      quitar.textContent = textos.QUITAR;
+      quitar.setAttribute('aria-label', textos.quitarPaquete(nombre));
+      quitar.addEventListener('click', () => {
+        propios.splice(propios.indexOf(paquete), 1);
+        estadoPropio.textContent = '';
+        pintarPropios();
+        alCambiarLosPaquetes();
+      });
+      const fila = document.createElement('li');
+      fila.append(`${textos.paquetePropio(nombre, version, paquete.reglas.length)} `, quitar);
+      listaDePropios.append(fila);
+    }
+    listaDePropios.hidden = propios.length === 0;
+  };
+
+  entradaPropia.addEventListener('change', async () => {
+    const fichero = entradaPropia.files?.[0];
+    entradaPropia.value = '';
+    if (fichero === undefined) return;
+    const lectura = await leerPaquetePropio(fichero, incluidos, propios, validarPaquete);
+    if (lectura.problema !== null) {
+      estadoPropio.textContent = '';
+      const titulo = document.createElement('p');
+      titulo.textContent = lectura.problema.titulo;
+      erroresPropio.replaceChildren(titulo);
+      if (lectura.problema.mensajes.length > 0) {
+        const lista = document.createElement('ul');
+        for (const mensaje of lectura.problema.mensajes) {
+          const fila = document.createElement('li');
+          fila.textContent = mensaje;
+          lista.append(fila);
+        }
+        erroresPropio.append(lista);
+      }
+      erroresPropio.hidden = false;
+      return;
+    }
+    const { nombre, version } = lectura.paquete.cabecera;
+    propios.push(lectura.paquete);
+    erroresPropio.replaceChildren();
+    erroresPropio.hidden = true;
+    estadoPropio.textContent = textos.paquetePropioCargado(nombre, version, lectura.paquete.reglas.length);
+    pintarPropios();
+    alCambiarLosPaquetes();
+  });
+
+  rellenarGeneros(losActivos());
   genero.disabled = false;
   boton.disabled = false;
+  entradaPropia.disabled = false;
   for (const [botonDeEjemplo, ejemplo] of botonesDeEjemplo) {
     botonDeEjemplo.disabled = false;
     botonDeEjemplo.addEventListener('click', async () => {
@@ -105,13 +233,14 @@ if (carga.paquetes === null) {
         return;
       }
       texto.value = carga.texto;
-      genero.value = GENERO_DE_LOS_EJEMPLOS;
+      // Sin RadiografIA, el género de los ejemplos puede no estar en el selector: entonces se queda el elegido.
+      if ([...genero.options].some((o) => o.value === GENERO_DE_LOS_EJEMPLOS)) genero.value = GENERO_DE_LOS_EJEMPLOS;
       estadoDelEjemplo.textContent = '';
     });
   }
-  estado.textContent = textos.paquetesCargados(paquetes.map((p) => `${p.cabecera.nombre} ${p.cabecera.version}`));
+  estado.textContent = textos.paquetesCargados(incluidos.map((p) => `${p.cabecera.nombre} ${p.cabecera.version}`));
   formulario.addEventListener('submit', (e) => {
     e.preventDefault();
-    analizarYPintar(paquetes, indice);
+    analizarYPintar(losActivos(), indice);
   });
 }

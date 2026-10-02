@@ -24,6 +24,26 @@
  *    — type «button: The button has no default behavior».
  * El enlace de la cabecera lleva al catálogo de reglas (encargo 7.1, b), con
  *    la base de Astro (catalogo.ts) y el texto de textos.ts.
+ * El bloque «Paquetes» (encargo 8.1, b; firmado en la parada 1), junto al
+ *    selector de género: las casillas de los incluidos (las pone el script al
+ *    cargarlos, como las opciones del selector), el input de un paquete propio
+ *    con su etiqueta, el aviso de que no sale del navegador ni se guarda, la
+ *    lista de propios y sus errores. Agrupado en un <fieldset> con su <legend>.
+ *    [DOC] https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/fieldset
+ *    — «used to group several controls as well as labels».
+ *    [DOC] https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/file
+ *    — el input con su <label for>; accept «provides hints for browsers to
+ *    guide users towards selecting the correct file types» y no valida nada
+ *    (lo hacen JSON.parse y el validador, propios.ts).
+ *    [DOC] https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input
+ *    — «If an input has no name specified, or name is empty, the input's
+ *    value is not submitted with the form!»: el input del paquete propio no
+ *    lleva name, y el fichero no viajaría con el formulario ni sin JavaScript.
+ * Las familias de un paquete propio se subrayan discontinuo (familia-propia,
+ *    pintar.ts) [PROPIO, firmado]; las informativas siguen punteadas, también
+ *    las de un propio, porque su regla va después.
+ *    [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/text-decoration-style
+ *    — dashed: «Draws a dashed line»; Baseline desde enero de 2020.
  */
 import { urlDelCatalogo } from '../catalogo/catalogo.ts';
 import { CATALOGO } from '../textos.ts';
@@ -58,7 +78,18 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
         <p id="estado-ejemplo" role="status"></p>
         <label for="genero">Género del texto</label>
         <select id="genero" disabled></select>
+        <fieldset id="paquetes">
+          <legend>Paquetes</legend>
+          <div id="incluidos"></div>
+          <label for="paquete-propio">Cargar un paquete propio (JSON)</label>
+          <input id="paquete-propio" type="file" accept="application/json,.json" disabled />
+          <p class="aviso-propio">Se queda en tu navegador: no se sube a ningún sitio. No se guarda: al recargar la página, desaparece.</p>
+          <ul id="propios" hidden></ul>
+          <p id="estado-propio" role="status"></p>
+          <div id="errores-propio" class="problemas" role="alert" hidden></div>
+        </fieldset>
         <button id="analizar" type="submit" disabled>Pon tu texto a contraluz</button>
+        <p id="aviso-paquetes" role="status"></p>
       </form>
       <section id="resultado" aria-labelledby="titulo-resultado" hidden>
         <h2 id="titulo-resultado">Resultado</h2>
@@ -98,6 +129,25 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
       select,
       button {
         font: inherit;
+      }
+      fieldset {
+        margin-top: 1rem;
+      }
+      label.casilla {
+        display: inline-block;
+        margin: 0 1rem 0 0;
+        font-weight: normal;
+      }
+      #propios button {
+        display: inline-block;
+        margin-top: 0;
+        padding: 0 0.5rem;
+      }
+      .aviso-propio {
+        font-size: 0.9rem;
+      }
+      pre.ejemplo {
+        white-space: pre-wrap;
       }
       button {
         display: block;
@@ -151,6 +201,9 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
       .familia-color-4 { text-decoration-color: #cc79a7; }
       .familia-color-5 { text-decoration-color: #56b4e9; }
       .familia-color-6 { text-decoration-color: #8a7000; }
+      .familia-propia {
+        text-decoration-style: dashed;
+      }
       .familia-informativa {
         text-decoration-color: #6b7280;
         text-decoration-style: dotted;

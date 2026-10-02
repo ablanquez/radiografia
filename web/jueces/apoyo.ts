@@ -129,6 +129,16 @@ export function puertoLibre(): Promise<number> {
  *    — con el puerto 0, el sistema elige uno libre.
  */
 export async function conPreview(pedir: (url: string) => Promise<void>): Promise<void> {
+  const preview = await abrirPreview();
+  try {
+    await pedir(preview.url);
+  } finally {
+    preview.cerrar();
+  }
+}
+
+/** astro preview en un puerto libre, ya respondiendo: su URL y cómo cerrarlo (desde el 8.1, para los jueces de Chrome, que lo usan entre tests). */
+export async function abrirPreview(): Promise<{ url: string; cerrar: () => void }> {
   const puerto = await puertoLibre();
   const hijo = spawn(process.execPath, [binDeAstro(), 'preview', '--port', String(puerto), '--host', '127.0.0.1'], {
     cwd: WEB,
@@ -139,20 +149,18 @@ export async function conPreview(pedir: (url: string) => Promise<void>): Promise
   hijo.stdout.on('data', (d) => (registro += d));
   hijo.stderr.on('data', (d) => (registro += d));
   const url = `http://127.0.0.1:${puerto}/`;
-  try {
-    const limite = Date.now() + 30_000;
-    for (;;) {
-      try {
-        await fetch(url);
-        break;
-      } catch {
-        if (Date.now() > limite || hijo.exitCode !== null) throw new Error(`astro preview no responde en ${url}:\n${registro}`);
-        await new Promise((r) => setTimeout(r, 250));
+  const limite = Date.now() + 30_000;
+  for (;;) {
+    try {
+      await fetch(url);
+      return { url, cerrar: () => hijo.kill() };
+    } catch {
+      if (Date.now() > limite || hijo.exitCode !== null) {
+        hijo.kill();
+        throw new Error(`astro preview no responde en ${url}:\n${registro}`);
       }
+      await new Promise((r) => setTimeout(r, 250));
     }
-    await pedir(url);
-  } finally {
-    hijo.kill();
   }
 }
 

@@ -44,11 +44,22 @@
  * índice del catálogo: paquetes como se cargan, familias alfabéticas por su
  * nombre, reglas alfabéticas por el suyo. El panel de un tramo, no: enseña las
  * reglas en el orden de sus señales.
+ *
+ * Los paquetes propios (encargo 8.1, b; firmado en la parada 1): sus reglas no
+ * tienen página en /reglas/, así que su nombre va sin enlace, y su ficha
+ * completa (fichaCompleta) va en el panel y, en el desglose, dentro de un
+ * <details> cuyo resumen es la línea de la regla. La leyenda enseña solo las
+ * familias de los paquetes activos, y el medidor avisa si ninguno trae escala.
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details
+ *    — «creates a disclosure widget in which information is visible only when
+ *    the widget is toggled into an open state»; «The contents of the <summary>
+ *    element are used as the label for the disclosure widget». Baseline desde
+ *    enero de 2020.
  */
 import type { Paquete, Resultado } from '@radiografia/motor/navegador';
 import * as textos from '../textos.ts';
 import type { ProblemaDeCarga } from './cargar.ts';
-import { urlDeRegla } from '../catalogo/catalogo.ts';
+import { parametrosEnLlano, urlDeRegla } from '../catalogo/catalogo.ts';
 import { enOrden, type ClaveDeOrden } from '../orden.ts';
 import { nombreDeRegla } from './humanizar.ts';
 import { partirEnTramos } from './tramos.ts';
@@ -78,6 +89,7 @@ function campo(nombre: string, valor: string): HTMLParagraphElement {
 
 const formato = new Intl.NumberFormat('es', { maximumFractionDigits: 2 });
 const cifra = (x: number): string => formato.format(x);
+const pesoEnCifra = new Intl.NumberFormat('es');
 
 /**
  * Lo que se busca por clave: las reglas y las familias de los paquetes, con su
@@ -102,6 +114,8 @@ export interface Indice {
   claseDeFamilia: Map<string, string>;
   /** Los nombres de los paquetes propios: sus reglas no tienen ficha en /reglas/. */
   propios: ReadonlySet<string>;
+  /** paquete → su cabecera: lo que pide la ficha completa de una regla propia. */
+  cabeceras: Map<string, Paquete['cabecera']>;
 }
 
 const clave = (paquete: string, id: string): string => `${paquete}::${id}`;
@@ -118,13 +132,76 @@ function enlaceARegla(indice: Indice, base: string, paquete: string, id: string)
   return enlace;
 }
 
+/**
+ * La ficha completa de una regla de un paquete propio (encargo 8.1; firmado en
+ * la parada 1): el mismo orden y las mismas etiquetas que su página del
+ * catálogo (src/pages/reglas/[id].astro), sin el título, que pone quien la
+ * llama. Todo con textContent. Los únicos href son las fuentes, que el esquema
+ * limita a «^https?://\S+$» (regla.schema.json, fuente.url): no puede colarse
+ * un «javascript:».
+ */
+export function fichaCompleta(regla: Regla, cabecera: Paquete['cabecera']): HTMLElement[] {
+  const familia = cabecera.familias.find((f) => f.id === regla.familia);
+  const partes: HTMLElement[] = [el('p', `${regla.id} · ${cabecera.nombre}`, 'id-regla')];
+  if (regla.informativa || familia?.informativa) partes.push(el('p', textos.INFORMATIVA));
+  const datos = el('dl');
+  for (const [nombre, valor] of [
+    [textos.PAQUETE, textos.paqueteConVersion(cabecera.nombre, cabecera.version, cabecera.descripcion)],
+    [textos.FAMILIA, familia?.nombre ?? regla.familia],
+    [textos.DETECTOR, regla.detector],
+    [textos.PESO, pesoEnCifra.format(regla.peso)],
+    [textos.SEVERIDAD, regla.severidad],
+    [textos.NIVEL_DE_EVIDENCIA, regla.nivelEvidencia],
+  ] as const) {
+    datos.append(el('dt', nombre), el('dd', valor));
+  }
+  const comoBusca = el('dl');
+  for (const p of parametrosEnLlano(regla)) {
+    const valor = el('dd');
+    valor.append(p.codigo ? el('code', p.valor) : p.valor);
+    comoBusca.append(el('dt', p.etiqueta), valor);
+  }
+  const excepciones = el('ul');
+  for (const e of regla.excepciones) excepciones.append(el('li', e));
+  const fuentes = el('ul');
+  for (const fuente of regla.fuente) {
+    const enlace = el('a', fuente.titulo);
+    enlace.href = fuente.url;
+    const elemento = el('li');
+    elemento.append(enlace);
+    fuentes.append(elemento);
+  }
+  partes.push(
+    datos,
+    el('h5', textos.COMO_BUSCA),
+    comoBusca,
+    el('h5', textos.EXPLICACION),
+    el('p', regla.explicacion),
+    el('h5', textos.SUGERENCIA),
+    el('p', regla.sugerencia),
+    el('h5', textos.EXCEPCIONES),
+    regla.excepciones.length === 0 ? el('p', textos.NINGUNA) : excepciones,
+    el('h5', textos.ORIGEN_DE_LA_LISTA),
+    el('p', regla.origenLista ?? textos.SIN_DATO),
+    el('h5', textos.FUENTES),
+    fuentes,
+    el('h5', textos.DONDE_DISPARA),
+    ...regla.ejemplos.positivos.map((e) => el('pre', e, 'ejemplo')),
+    el('h5', textos.DONDE_NO_DISPARA),
+    ...regla.ejemplos.negativos.map((e) => el('pre', e, 'ejemplo')),
+  );
+  return partes;
+}
+
 export function indexar(paquetes: readonly Paquete[], propios: ReadonlySet<string> = new Set()): Indice {
   const reglas = new Map<string, Regla>();
   const familias: { posicion: number; familia: Indice['familias'][number] }[] = [];
   const claseDeFamilia = new Map<string, string>();
+  const cabeceras = new Map<string, Paquete['cabecera']>();
   let color = 0;
   paquetes.forEach((paquete, posicion) => {
     const nombre = paquete.cabecera.nombre;
+    cabeceras.set(nombre, paquete.cabecera);
     for (const regla of paquete.reglas) reglas.set(clave(nombre, regla.id), regla);
     for (const familia of paquete.cabecera.familias) {
       const deColor = familia.informativa ? 'familia-informativa' : `familia-color-${color++ % COLORES}`;
@@ -134,7 +211,7 @@ export function indexar(paquetes: readonly Paquete[], propios: ReadonlySet<strin
     }
   });
   // Los colores se reparten en el orden de declaración, como desde el 6.2; la lista va en el de presentación (orden.ts).
-  return { reglas, familias: enOrden(familias, (x) => [x.posicion, x.familia.nombre]).map((x) => x.familia), claseDeFamilia, propios };
+  return { reglas, familias: enOrden(familias, (x) => [x.posicion, x.familia.nombre]).map((x) => x.familia), claseDeFamilia, propios, cabeceras };
 }
 
 export function pintarProblemas(contenedor: HTMLElement, problemas: readonly ProblemaDeCarga[]): void {
@@ -147,10 +224,11 @@ export function pintarProblemas(contenedor: HTMLElement, problemas: readonly Pro
   contenedor.hidden = false;
 }
 
-export function pintarLeyenda(contenedor: HTMLElement, indice: Indice): void {
+/** La leyenda de las familias de los paquetes activos (desde el 8.1, el índice lleva también las de los que no lo están). */
+export function pintarLeyenda(contenedor: HTMLElement, indice: Indice, activos: ReadonlySet<string>): void {
   const puntuan = el('ul', undefined, 'leyenda');
   const informativas = el('ul', undefined, 'leyenda');
-  for (const f of indice.familias) {
+  for (const f of indice.familias.filter((x) => activos.has(x.paquete))) {
     const elemento = el('li');
     elemento.append(el('span', textos.MUESTRA_DE_SUBRAYADO, `muestra ${f.clase}`), ` ${f.nombre} (${f.paquete})`);
     (f.informativa ? informativas : puntuan).append(elemento);
@@ -212,6 +290,13 @@ export function pintarPanel(contenedor: HTMLElement, senales: readonly SenalCali
     vistas.add(k);
     const ficha = el('article', undefined, 'ficha');
     const regla = indice.reglas.get(k);
+    const cabecera = indice.cabeceras.get(senal.paquete);
+    // La de un paquete propio: el nombre sin enlace y la ficha completa (firmado en la parada 1 del 8.1).
+    if (indice.propios.has(senal.paquete) && regla !== undefined && cabecera !== undefined) {
+      ficha.append(el('h4', nombreDeRegla(senal.reglaId, regla)), ...fichaCompleta(regla, cabecera));
+      contenedor.append(ficha);
+      continue;
+    }
     const titulo = el('h4');
     titulo.append(enlaceARegla(indice, base, senal.paquete, senal.reglaId));
     ficha.append(titulo, el('p', `${senal.reglaId} · ${senal.paquete}`, 'id-regla'));
@@ -256,9 +341,12 @@ export function pintarMedidor(contenedor: HTMLElement, resultado: Resultado, nom
   }
   if (resultado.tramo === 'poco-fiable') contenedor.append(el('p', textos.POCO_FIABLE, 'estado-tramo'), el('p', primero?.aviso ?? ''));
   // Solo los paquetes con escala (clave `_total-*`); Español correcto no la tiene y va aparte, en su desglose.
-  for (const r of resultado.paquetes.filter((x) => x.banda !== null)) {
+  const conEscala = resultado.paquetes.filter((x) => x.banda !== null);
+  for (const r of conEscala) {
     contenedor.append(el('h3', r.paquete), ...lineasDeBanda(r, nombreDelGenero, resultado.tramoDeCalibracion));
   }
+  // Ninguno la trae (por ejemplo, RadiografIA desmarcado): sin banda, y se dice (firmado en la parada 1 del 8.1).
+  if (conEscala.length === 0) contenedor.append(el('p', textos.SIN_ESCALA, 'banda'));
   contenedor.append(datos);
 }
 
@@ -289,8 +377,20 @@ function apartado(titulo: string, lineas: readonly Linea[]): HTMLElement[] {
 }
 
 export function pintarDesglose(contenedor: HTMLElement, resultado: Resultado, paquetes: readonly Paquete[], indice: Indice, base: string): void {
-  /** «Nombre (id): lo que se dice», con el nombre enlazado a su ficha. */
-  const deRegla = (paquete: string, id: string, dice: string | null): Linea => [enlaceARegla(indice, base, paquete, id), dice === null ? ` (${id})` : ` (${id}): ${dice}`];
+  /**
+   * «Nombre (id): lo que se dice», con el nombre enlazado a su ficha. La de un
+   * paquete propio no tiene ficha en /reglas/: la línea entera es el resumen de
+   * un <details> con su ficha completa (firmado en la parada 1 del 8.1).
+   */
+  const deRegla = (paquete: string, id: string, dice: string | null): Linea => {
+    const resto = dice === null ? ` (${id})` : ` (${id}): ${dice}`;
+    const regla = indice.reglas.get(clave(paquete, id));
+    const cabecera = indice.cabeceras.get(paquete);
+    if (!indice.propios.has(paquete) || regla === undefined || cabecera === undefined) return [enlaceARegla(indice, base, paquete, id), resto];
+    const desplegable = el('details');
+    desplegable.append(el('summary', `${nombreDeRegla(id, regla)}${resto}`), ...fichaCompleta(regla, cabecera));
+    return [desplegable];
+  };
   /** El orden de una regla en el desglose, el del catálogo: el nombre de su familia y el suyo (orden.ts). */
   const nombresDeFamilia = new Map(indice.familias.map((f) => [f.clave, f.nombre]));
   const ordenDeRegla = (paquete: string, id: string): ClaveDeOrden => {
