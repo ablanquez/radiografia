@@ -262,10 +262,14 @@ describe('el cargador en Chrome, sobre astro preview', () => {
     await esperar(1000);
     assert.ok(preview, 'astro preview no llegó a abrirse');
     const origen = new URL(preview.url).origin;
-    t.diagnostic(`carga inicial (${carga.length}): ${carga.map((x) => `${x.tipo} ${x.url}`).join(' · ')}`);
+    const violaciones = await p().evaluar<string[]>('window.__violaciones');
+    const enLinea = (lista: readonly string[]): string => (lista.length === 0 ? 'ninguna' : lista.join(' · '));
+    t.diagnostic(`carga inicial (${carga.length}): ${enLinea(carga.map((x) => `${x.tipo} ${x.url}`))}`);
+    t.diagnostic(`después de la marca (${despues.length}): ${enLinea(despues.map((x) => `${x.tipo} ${x.url}`))}`);
+    t.diagnostic(`intentos bloqueados por la CSP (${violaciones.length}): ${enLinea(violaciones)}`);
     assert.ok(carga.length > 0, 'el juez no vio ni la carga inicial');
     assert.deepEqual(carga.filter((x) => new URL(x.url).origin !== origen), [], 'peticiones de la carga inicial a otro origen');
     assert.deepEqual(despues, [], 'peticiones después de la carga inicial');
-    assert.deepEqual(await p().evaluar('window.__violaciones'), [], 'intentos bloqueados por la CSP');
+    assert.deepEqual(violaciones, [], 'intentos bloqueados por la CSP');
   });
 });
