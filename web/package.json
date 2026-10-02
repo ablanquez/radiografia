@@ -12,7 +12,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "test": "node --test \"jueces/**/*.spec.ts\"",
+    "test": "node --test --test-concurrency=1 \"jueces/**/*.spec.ts\"",
     "tipos": "tsc --noEmit"
   },
   "engines": {
