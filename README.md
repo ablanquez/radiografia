@@ -187,9 +187,16 @@ npm run dev                    # http://localhost:4321/ y el catálogo en http:/
 - **La versión construida:** `npm run build` y `npm run preview`, en la
   misma dirección.
 - **Las pruebas:** `npm test` en la raíz corre los jueces del motor y los de
-  la web, que construyen la página y la sirven con `astro preview`. `npm run
-  tipos` revisa los tipos de los dos workspaces con `tsc`. No se usa `astro
-  check`: añadiría 77 paquetes al árbol y 67 MB para revisar los `.astro`.
+  la web, que construyen la página y la sirven con `astro preview`.
+  - Un juez arranca además `astro dev` y pide el analizador, el catálogo y
+    una ficha: 200 y ningún error en su salida. Lo arranca con
+    `--ignore-lock` en un puerto libre, así que no choca con un `npm run
+    dev` abierto.
+  - Hasta el 02/10/2026 solo se probaba lo construido, y el catálogo rompió
+    `npm run dev` sin que nada se pusiera rojo.
+- **Los tipos:** `npm run tipos` revisa los de los dos workspaces con `tsc`.
+  No se usa `astro check`: añadiría 77 paquetes al árbol y 67 MB para
+  revisar los `.astro`.
   Aquí los `.astro` llevan HTML, el import del script y, en el catálogo, la
   plantilla de cada página. La lógica va en `.ts`, que revisa `tsc`, y lo
   que pintan las plantillas lo miran los jueces sobre `dist/`.
@@ -346,8 +353,11 @@ botones), que están en [`web/src/textos.ts`](web/src/textos.ts).
 - que todo enlace interno de `dist/` llega a una página;
 - que el índice lleva sus controles con sus etiquetas y la región que
   anuncia el recuento;
-- y, con `astro preview`, que el índice y una ficha dan 200 y
-  `/reglas/no-existe/`, 404.
+- con `astro preview`, que el índice y una ficha dan 200 y
+  `/reglas/no-existe/`, 404;
+- y, con `astro dev`
+  ([`web/jueces/desarrollo.spec.ts`](web/jueces/desarrollo.spec.ts)), que el
+  índice y una ficha también se sirven, sin errores.
 
 ## Paquetes
 

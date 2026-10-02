@@ -72,13 +72,14 @@ export function paquetesIncluidos(): Paquete[] {
 }
 
 /** El ejecutable de astro: el `bin` de su package.json (astro exporta ./package.json). */
-function binDeAstro(): string {
+export function binDeAstro(): string {
   const paquete = createRequire(import.meta.url).resolve('astro/package.json');
   const { bin } = JSON.parse(readFileSync(paquete, 'utf8')) as { bin: { astro: string } };
   return join(dirname(paquete), bin.astro);
 }
 
-function puertoLibre(): Promise<number> {
+/** Un puerto libre en 127.0.0.1, que elige el sistema. */
+export function puertoLibre(): Promise<number> {
   return new Promise((resolver, rechazar) => {
     const servidor = createServer();
     servidor.once('error', rechazar);
