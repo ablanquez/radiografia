@@ -9,6 +9,7 @@
     "web"
   ],
   "scripts": {
+    "test": "npm test --workspaces",
     "tipos": "npm run tipos --workspaces"
   },
   "engines": {
