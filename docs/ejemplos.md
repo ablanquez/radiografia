@@ -24,7 +24,7 @@ calibración o un texto, el juez falla.
 |---|---|---|
 | Palabras de prosa | 314 | 336 |
 | Tramo | 300-599 | 300-599 |
-| RadiografIA: total | 5 | 2 |
+| RadiografIA: total | 3 | 1 |
 | RadiografIA: banda | entre la mediana y el p95 | por debajo de la mediana |
 | Español correcto: total | 0 | 0 |
 | Español correcto: banda | sin escala | sin escala |
