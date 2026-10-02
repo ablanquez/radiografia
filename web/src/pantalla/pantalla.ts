@@ -32,6 +32,14 @@
  *        desactivan).
  *      Nada persiste: sin localStorage ni historial (alcance 29/09); al
  *      recargar, el paquete propio desaparece, y la página lo dice.
+ *   6. El informe para imprimir (encargo 9.1, b; firmado en la parada 1): al
+ *      analizar se pintan también, del mismo resultado, la cabecera del
+ *      informe (con la fecha y la hora del análisis) y la lista de señales,
+ *      que la hoja de impresión de index.astro enseña solo en papel. Imprime
+ *      el último análisis pintado, y su cabecera dice cuál.
+ *      [DOC] https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat
+ *      — dateStyle y timeStyle, «long» y «short»; la zona horaria, «the
+ *      runtime's time zone».
  *
  * Sin red salvo los fetch de los paquetes incluidos y de los ejemplos: el
  * paquete propio se lee del fichero, en el navegador (lo demuestra
@@ -51,7 +59,18 @@ import * as textos from '../textos.ts';
 import { cargarPaquetes } from './cargar.ts';
 import { cargarEjemplo, GENERO_DE_LOS_EJEMPLOS, type Ejemplo } from './ejemplos.ts';
 import { GENERO_POR_DEFECTO, generosDe, nombreDeGenero } from './generos.ts';
-import { indexar, pintarDesglose, pintarLeyenda, pintarMedidor, pintarPanel, pintarProblemas, pintarVista, type Indice } from './pintar.ts';
+import {
+  indexar,
+  pintarCabeceraDelInforme,
+  pintarDesglose,
+  pintarLeyenda,
+  pintarMedidor,
+  pintarPanel,
+  pintarProblemas,
+  pintarSenalesDelInforme,
+  pintarVista,
+  type Indice,
+} from './pintar.ts';
 import { activos, leerPaquetePropio } from './propios.ts';
 
 function elemento<T extends HTMLElement>(id: string): T {
@@ -83,6 +102,9 @@ const listaDePropios = elemento<HTMLUListElement>('propios');
 const estadoPropio = elemento<HTMLParagraphElement>('estado-propio');
 const erroresPropio = elemento<HTMLDivElement>('errores-propio');
 const avisoDePaquetes = elemento<HTMLParagraphElement>('aviso-paquetes');
+const cabeceraDelInforme = elemento<HTMLDivElement>('cabecera-informe');
+const senalesDelInforme = elemento<HTMLDivElement>('senales-informe');
+const fechaDelAnalisis = new Intl.DateTimeFormat('es', { dateStyle: 'long', timeStyle: 'short' });
 
 /** true si lo analizado salió bien y está pintado: cambiar los paquetes lo deja atrás. */
 let hayResultado = false;
@@ -92,7 +114,9 @@ function analizarYPintar(paquetes: readonly Paquete[], indice: Indice): void {
   const elGenero = genero.value;
   try {
     const r = analizar(elTexto, paquetes, { genero: elGenero });
+    pintarCabeceraDelInforme(cabeceraDelInforme, r, paquetes, indice, fechaDelAnalisis.format(new Date()), nombreDeGenero(elGenero));
     pintarMedidor(medidor, r, nombreDeGenero(elGenero));
+    pintarSenalesDelInforme(senalesDelInforme, r, elTexto, indice, import.meta.env.BASE_URL, location.href);
     panel.replaceChildren();
     panel.hidden = true;
     const hayAnalisis = r.tramo !== 'insuficiente';

@@ -55,6 +55,16 @@
  *    the widget is toggled into an open state»; «The contents of the <summary>
  *    element are used as the label for the disclosure widget». Baseline desde
  *    enero de 2020.
+ *
+ * El informe para imprimir (encargo 9.1, b; firmado en la parada 1): la
+ * cabecera (pintarCabeceraDelInforme) y la lista de señales por regla
+ * (pintarSenalesDelInforme, con las entradas de informe.ts) se pintan al
+ * analizar, del mismo resultado, en bloques que la hoja de index.astro enseña
+ * solo en papel; las siglas de familia van en data-siglas de cada tramo y en
+ * data-sigla de cada línea de la leyenda, y la hoja las escribe en papel con
+ * ::after y ::before. En la lista, el nombre de una regla incluida enlaza a su
+ * ficha con la dirección absoluta, porque en papel se escribe el href tal cual
+ * (attr(href)); en el desglose, no.
  */
 import type { Paquete, Resultado } from '@radiografia/motor/navegador';
 import * as textos from '../textos.ts';
@@ -62,6 +72,7 @@ import type { ProblemaDeCarga } from './cargar.ts';
 import { parametrosEnLlano, urlDeRegla } from '../catalogo/catalogo.ts';
 import { enOrden, type ClaveDeOrden } from '../orden.ts';
 import { nombreDeRegla } from './humanizar.ts';
+import { entradasDelInforme, repartirSiglas } from './informe.ts';
 import { partirEnTramos } from './tramos.ts';
 
 type Regla = Paquete['reglas'][number];
@@ -116,6 +127,8 @@ export interface Indice {
   propios: ReadonlySet<string>;
   /** paquete → su cabecera: lo que pide la ficha completa de una regla propia. */
   cabeceras: Map<string, Paquete['cabecera']>;
+  /** «paquete::familiaId» → su sigla, para el papel (encargo 9.1; informe.ts). */
+  siglaDeFamilia: Map<string, string>;
 }
 
 const clave = (paquete: string, id: string): string => `${paquete}::${id}`;
@@ -211,7 +224,9 @@ export function indexar(paquetes: readonly Paquete[], propios: ReadonlySet<strin
     }
   });
   // Los colores se reparten en el orden de declaración, como desde el 6.2; la lista va en el de presentación (orden.ts).
-  return { reglas, familias: enOrden(familias, (x) => [x.posicion, x.familia.nombre]).map((x) => x.familia), claseDeFamilia, propios, cabeceras };
+  const enPresentacion = enOrden(familias, (x) => [x.posicion, x.familia.nombre]).map((x) => x.familia);
+  // Las siglas, en el de presentación: el de la leyenda, que en papel es su clave (9.1).
+  return { reglas, familias: enPresentacion, claseDeFamilia, propios, cabeceras, siglaDeFamilia: repartirSiglas(enPresentacion) };
 }
 
 export function pintarProblemas(contenedor: HTMLElement, problemas: readonly ProblemaDeCarga[]): void {
@@ -230,10 +245,11 @@ export function pintarLeyenda(contenedor: HTMLElement, indice: Indice, activos: 
   const informativas = el('ul', undefined, 'leyenda');
   for (const f of indice.familias.filter((x) => activos.has(x.paquete))) {
     const elemento = el('li');
+    elemento.dataset['sigla'] = indice.siglaDeFamilia.get(f.clave) ?? '';
     elemento.append(el('span', textos.MUESTRA_DE_SUBRAYADO, `muestra ${f.clase}`), ` ${f.nombre} (${f.paquete})`);
     (f.informativa ? informativas : puntuan).append(elemento);
   }
-  contenedor.replaceChildren(el('h3', textos.FAMILIAS), puntuan);
+  contenedor.replaceChildren(el('h3', textos.FAMILIAS), el('p', textos.CLAVE_DE_SIGLAS, 'solo-impresion'), puntuan);
   if (informativas.childElementCount > 0) contenedor.append(el('p', textos.INFORMATIVAS_EN_LA_LEYENDA), informativas);
 }
 
@@ -260,6 +276,7 @@ export function pintarVista(
     boton.setAttribute('role', 'button');
     boton.tabIndex = 0;
     boton.dataset['familias'] = familias.join('|');
+    boton.dataset['siglas'] = familias.map((familia) => indice.siglaDeFamilia.get(familia) ?? '').join('·');
     boton.dataset['senales'] = tramo.senales.join(' ');
     let dentro: HTMLElement = boton;
     familias.forEach((familia, nivel) => {
@@ -348,6 +365,59 @@ export function pintarMedidor(contenedor: HTMLElement, resultado: Resultado, nom
   // Ninguno la trae (por ejemplo, RadiografIA desmarcado): sin banda, y se dice (firmado en la parada 1 del 8.1).
   if (conEscala.length === 0) contenedor.append(el('p', textos.SIN_ESCALA, 'banda'));
   contenedor.append(datos);
+}
+
+/** La cabecera del informe, solo para el papel (9.1): título, fecha y hora del análisis, género, palabras y tramo, y los paquetes con su versión. */
+export function pintarCabeceraDelInforme(
+  contenedor: HTMLElement,
+  resultado: Resultado,
+  paquetes: readonly Paquete[],
+  indice: Indice,
+  fecha: string,
+  nombreDelGenero: string,
+): void {
+  const delInforme = paquetes.map(({ cabecera }) => textos.paqueteDelInforme(cabecera.nombre, cabecera.version, indice.propios.has(cabecera.nombre)));
+  contenedor.replaceChildren(
+    el('p', textos.INFORME_DE_RADIOGRAFIA, 'titulo-informe'),
+    el('p', textos.analisisDel(fecha)),
+    el('p', textos.datosDelTexto(resultado.palabrasProsa, resultado.tramoDeCalibracion ?? textos.MENOS_DE_100, nombreDelGenero)),
+    el('p', textos.paquetesDelInforme(delInforme)),
+  );
+}
+
+/**
+ * La lista de señales del informe, solo para el papel (9.1): una entrada por
+ * regla (informe.ts) con su nombre, su familia y su paquete, sus señales, su
+ * explicación y su sugerencia. Con «texto insuficiente» no hay señales, y la
+ * lista no se pinta. `direccion` es la de la página (location.href): con ella
+ * se escribe absoluto el enlace a la ficha.
+ */
+export function pintarSenalesDelInforme(contenedor: HTMLElement, resultado: Resultado, texto: string, indice: Indice, base: string, direccion: string): void {
+  const entradas = resultado.tramo === 'insuficiente' ? [] : entradasDelInforme(resultado, texto, indice);
+  contenedor.replaceChildren();
+  contenedor.hidden = entradas.length === 0;
+  if (entradas.length === 0) return;
+  contenedor.append(el('h3', textos.SENALES_DEL_INFORME));
+  for (const e of entradas) {
+    const propia = indice.propios.has(e.paquete);
+    const titulo = el('h4');
+    if (propia) {
+      titulo.append(e.nombre);
+    } else {
+      const enlace = el('a', e.nombre);
+      enlace.href = new URL(urlDeRegla(base, e.reglaId), direccion).href;
+      titulo.append(enlace);
+    }
+    titulo.append(` (${e.reglaId})`);
+    const entrada = el('article', undefined, 'entrada-informe');
+    entrada.append(titulo, el('p', `${e.familia} · ${e.paquete}`, 'id-regla'));
+    if (e.informativa) entrada.append(el('p', textos.INFORMATIVA));
+    if (e.n > 0) entrada.append(el('p', textos.senalesDeLaRegla(e.n, e.fragmentos, e.resto)));
+    for (const s of e.delTextoEntero) entrada.append(el('p', textos.senalDelTextoEntero(deLaSenalDeTexto(s))));
+    if (e.regla !== undefined) entrada.append(campo(textos.EXPLICACION, e.regla.explicacion), campo(textos.SUGERENCIA, e.regla.sugerencia));
+    if (propia) entrada.append(el('p', textos.REGLA_PROPIA_SIN_FICHA));
+    contenedor.append(entrada);
+  }
 }
 
 /** Lo que se dice de una señal del texto entero, detrás de su regla: la estadística con su valor y su banda; la ausencia con sus cuentas. */
