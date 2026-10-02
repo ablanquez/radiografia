@@ -14,6 +14,27 @@
 
 ---
 
+## [2026-10-02] 🔴 ABIERTA — El aviso MIT de Ajv no viaja en el build de Astro: Vite 8 tira los comentarios legales al minificar
+
+**Categoría:** licencias de terceros (empaquetado del navegador)
+**Síntoma:** en un proyecto Astro 7.3.5 de prueba (scratchpad, encargo 6.2, parada 1), con el motor del repo tal cual importado por `@radiografia/motor/navegador`, `astro build` (Vite 8.3.2, Rolldown 1.2.12, minificador Oxc) deja un único JS sin el aviso: ni el copyright ni el texto de la licencia. THIRD-PARTY-NOTICES § 1.1 (`10c8da7`) y el plan dicen que el aviso viaja en el bundle.
+**⭐ Qué dio verde mientras el fallo estaba vivo:** el juez 3 de `motor/src/navegador.spec.ts` (`5c0b6a9`), que empaqueta con esbuild. Ejecutado el 02/10, antes de tocar nada:
+```
+$ node --test --test-name-pattern="aviso MIT" src/navegador.spec.ts
+✔ 3 · el bundle, sin minificar y minificado, lleva entero el aviso MIT de Ajv (370.0611ms)
+ℹ tests 1
+ℹ pass 1
+ℹ fail 0
+```
+Y el build de prueba, el mismo día:
+`dist/_astro/index.astro_astro_type_script_index_0_lang.CjrtYGur.js: 113291 bytes · «Evgeny Poberezkin»: 0 · «Permission is hereby granted»: 0`
+**Cómo se cazó:** instrumento (al buscar el banner en el JS del build de prueba de la parada 1 del 6.2)
+**Causa raíz:** ⏳ PENDIENTE
+**Arreglo aplicado:** ⏳ PENDIENTE
+**Commit:** ⏳ PENDIENTE
+**Ley que sale de aquí:** SIN LEY TODAVÍA
+**Traza:** `motor/src/navegador.spec.ts` (juez 3, `empaquetar` con esbuild); `motor/src/generar-validador.ts` (banner `/*!`); `node_modules/vite/dist/node/chunks/node.js:34428` (`comments: { legal: !options.minify, … }`); THIRD-PARTY-NOTICES.md § 1.1.
+
 ## [2026-09-30] ✅ CERRADA — El filtro «fiction» de Gutenberg deja pasar la crítica literaria («Spanish fiction -- History and criticism»)
 
 **Categoría:** herramienta de calibración (extracción de corpus)
