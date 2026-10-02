@@ -1,0 +1,117 @@
+/**
+ * Los jueces de la lógica de la pantalla que no necesita navegador (encargo
+ * 6.2, c): los tramos de la vista, el id humanizado, los géneros del selector
+ * y la carga de los paquetes. Lo que pinta en el DOM se ve en Chrome (parada 3)
+ * y en los jueces de la web construida (construccion.spec.ts).
+ *
+ * [DOC] https://nodejs.org/api/test.html — node:test.
+ */
+import { test, describe } from 'node:test';
+import assert from 'node:assert/strict';
+import { partirEnTramos } from '../src/pantalla/tramos.ts';
+import { idHumanizado } from '../src/pantalla/humanizar.ts';
+import { GENERO_POR_DEFECTO, generosDe, nombreDeGenero } from '../src/pantalla/generos.ts';
+import { cargarPaquetes, conBarraFinal, FICHEROS } from '../src/pantalla/cargar.ts';
+import type { Paquete, ResultadoDeValidacion } from '@radiografia/motor/navegador';
+
+describe('partirEnTramos: la vista partida por todos los límites de señal', () => {
+  test('sin señales, un solo tramo sin señales', () => {
+    assert.deepEqual(partirEnTramos(10, []), [{ inicio: 0, fin: 10, senales: [] }]);
+  });
+
+  test('dos señales que se solapan: cada trozo lleva las que lo cubren enteras', () => {
+    // «0123456789»: la señal 0 cubre [2, 6) y la 1 cubre [4, 8).
+    assert.deepEqual(partirEnTramos(10, [{ inicio: 2, fin: 6 }, { inicio: 4, fin: 8 }]), [
+      { inicio: 0, fin: 2, senales: [] },
+      { inicio: 2, fin: 4, senales: [0] },
+      { inicio: 4, fin: 6, senales: [0, 1] },
+      { inicio: 6, fin: 8, senales: [1] },
+      { inicio: 8, fin: 10, senales: [] },
+    ]);
+  });
+
+  test('una señal dentro de otra, y dos con los mismos límites', () => {
+    assert.deepEqual(partirEnTramos(6, [{ inicio: 0, fin: 6 }, { inicio: 2, fin: 3 }, { inicio: 2, fin: 3 }]), [
+      { inicio: 0, fin: 2, senales: [0] },
+      { inicio: 2, fin: 3, senales: [0, 1, 2] },
+      { inicio: 3, fin: 6, senales: [0] },
+    ]);
+  });
+
+  test('una señal vacía no parte nada, y los tramos cubren el texto entero sin huecos', () => {
+    const tramos = partirEnTramos(7, [{ inicio: 3, fin: 3 }, { inicio: 1, fin: 5 }]);
+    assert.deepEqual(tramos, [
+      { inicio: 0, fin: 1, senales: [] },
+      { inicio: 1, fin: 5, senales: [1] },
+      { inicio: 5, fin: 7, senales: [] },
+    ]);
+  });
+});
+
+describe('idHumanizado (firmado en la parada 1 del 6.2, punto 10)', () => {
+  test('sin el prefijo de familia, guiones a espacios y la primera letra en mayúscula', () => {
+    assert.equal(idHumanizado('est-frases-cortas'), 'Frases cortas');
+    assert.equal(idHumanizado('canal-espacio-estrecho-u202f'), 'Espacio estrecho u202f');
+    assert.equal(idHumanizado('orto-moneda-antepuesta'), 'Moneda antepuesta');
+    assert.equal(idHumanizado('singuion'), 'Singuion');
+  });
+});
+
+describe('los géneros del selector', () => {
+  const paquete = {
+    cabecera: { calibracion: { ttr: { noticia: {}, general: {} }, mtld: { general: {}, opinion: {} } } },
+  } as unknown as Paquete;
+
+  test('las claves de la calibración, sin repetir, con «general» primero', () => {
+    assert.equal(GENERO_POR_DEFECTO, 'general');
+    assert.deepEqual(generosDe(paquete), ['general', 'noticia', 'opinion']);
+  });
+
+  test('el nombre visible de cada género; si no lo tiene, la clave', () => {
+    assert.deepEqual(
+      ['general', 'noticia', 'administrativo', 'narrativa-clasica', 'academico', 'opinion', 'corporativo'].map(nombreDeGenero),
+      ['General', 'Noticia', 'Administrativo', 'Narrativa clásica', 'Académico', 'Opinión', 'corporativo'],
+    );
+  });
+});
+
+describe('la carga de los paquetes', () => {
+  test('conBarraFinal: la base de Astro siempre acaba en «/»', () => {
+    assert.equal(conBarraFinal('/'), '/');
+    assert.equal(conBarraFinal('/radiografia'), '/radiografia/');
+    assert.equal(conBarraFinal('/radiografia/'), '/radiografia/');
+  });
+
+  const valido: ResultadoDeValidacion = { valido: true, errores: [] };
+  const respuesta = (cuerpo: unknown, estado = 200) => new Response(JSON.stringify(cuerpo), { status: estado });
+
+  test('pide cada paquete con la base delante y los devuelve si validan', async () => {
+    const pedidas: string[] = [];
+    const carga = await cargarPaquetes('/base', async (url) => (pedidas.push(url), respuesta({ url })), () => valido);
+    assert.deepEqual(pedidas, FICHEROS.map((f) => `/base/paquetes/${f}`));
+    assert.deepEqual(carga, { paquetes: FICHEROS.map((f) => ({ url: `/base/paquetes/${f}` })), problemas: [] });
+  });
+
+  test('un paquete que no valida: su nombre y los mensajes del validador, y ningún paquete', async () => {
+    const invalido: ResultadoDeValidacion = {
+      valido: false,
+      errores: [{ regla: null, campo: 'cabecera.version', mensaje: 'falta este campo obligatorio', texto: 'campo "cabecera.version": falta este campo obligatorio' }],
+    };
+    const carga = await cargarPaquetes('/', async (url) => respuesta({ url }), (p) => ((p as { url: string }).url.endsWith(FICHEROS[1]) ? invalido : valido));
+    assert.deepEqual(carga, { paquetes: null, problemas: [{ paquete: FICHEROS[1], mensajes: ['campo "cabecera.version": falta este campo obligatorio'] }] });
+  });
+
+  test('un fetch que falla o un 404: el paquete y por qué', async () => {
+    const carga = await cargarPaquetes('/', async (url) => {
+      if (url.endsWith(FICHEROS[0])) throw new TypeError('Failed to fetch');
+      return respuesta({}, 404);
+    }, () => valido);
+    assert.deepEqual(carga, {
+      paquetes: null,
+      problemas: [
+        { paquete: FICHEROS[0], mensajes: [`no se pudo cargar /paquetes/${FICHEROS[0]}: Failed to fetch`] },
+        { paquete: FICHEROS[1], mensajes: [`no se pudo cargar /paquetes/${FICHEROS[1]}: HTTP 404`] },
+      ],
+    });
+  });
+});
