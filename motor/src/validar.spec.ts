@@ -42,7 +42,8 @@ function cargar(fichero: string): unknown {
  * `valido-total-de-paquete.json` (encargo 5.5): el válido estadístico con el
  * total de un paquete, «_total-radiografia», entre las claves de la calibración.
  * Y `valido-con-nombre.json` (encargo 7.1): el válido con el campo opcional
- * «nombre» en la primera regla y sin él en la segunda.
+ * «nombre» en la primera regla y sin él en la segunda. Y
+ * `valido-con-en-claro.json` (encargo 9.2): lo mismo con «enClaro».
  */
 const VALIDOS = [
   'valido.json',
@@ -55,6 +56,7 @@ const VALIDOS = [
   'valido-recuento-y-generos.json',
   'valido-total-de-paquete.json',
   'valido-con-nombre.json',
+  'valido-con-en-claro.json',
 ] as const;
 
 /**
@@ -285,6 +287,14 @@ const INVALIDOS: readonly CasoInvalido[] = [
     campo: 'nombre',
     mensajeIncluye: 'como máximo 80 caracteres',
   },
+  // ── Encargo 9.2: la frase en claro de la regla ──
+  {
+    // enClaro vacío (un solo diff de valido-con-en-claro.json): de 3 a 140 caracteres.
+    fichero: 'invalido-en-claro-vacio.json',
+    regla: { indice: 0, id: 'd6-referencia-interna' },
+    campo: 'enClaro',
+    mensajeIncluye: 'al menos 3 caracteres',
+  },
 ];
 
 describe('validarPaquete', () => {
@@ -292,9 +302,9 @@ describe('validarPaquete', () => {
    * Ningún fixture sin juez: si entra uno nuevo en la carpeta y nadie lo añade
    * aquí, esto se pone rojo en vez de dejarlo sin mirar.
    */
-  test('la carpeta de fixtures tiene exactamente los cuarenta y dos que se juzgan', () => {
-    assert.equal(VALIDOS.length, 10, 'diez válidos');
-    assert.equal(INVALIDOS.length, 32, 'treinta y dos inválidos');
+  test('la carpeta de fixtures tiene exactamente los cuarenta y cuatro que se juzgan', () => {
+    assert.equal(VALIDOS.length, 11, 'once válidos');
+    assert.equal(INVALIDOS.length, 33, 'treinta y tres inválidos');
     const esperados = [...VALIDOS, ...INVALIDOS.map((c) => c.fichero)].sort();
     // Solo los FICHEROS de la raíz: los paquetes. Las subcarpetas (fixtures/referencia/)
     // guardan datos de referencia de otros jueces (encargo 3.3).

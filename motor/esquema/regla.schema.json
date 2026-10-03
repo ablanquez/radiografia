@@ -34,6 +34,12 @@
       "maxLength": 80,
       "$comment": "[PROPIO] Encargo 7.1 (02/10/2026, firmado por Antonio): el título visible de la regla, el que enseñan el panel del analizador y el catálogo («Atribución vaga»), con sus tildes. Opcional, por los paquetes de terceros: donde falta, la web humaniza el id. Que RadiografIA y Español correcto lo lleven en todas sus reglas lo exigen sus jueces (radiografia.spec.ts y espanol-correcto.spec.ts), no este esquema."
     },
+    "enClaro": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 140,
+      "$comment": "[PROPIO] Encargo 9.2 (03/10/2026, firmado por Antonio): la frase llana de la regla, con un ejemplo cuando ayuda, la primera que enseña el panel del analizador y la que va bajo el nombre en el catálogo y en el informe («Opiniones atribuidas a alguien sin nombre, como «los expertos coinciden».»). Opcional, por los paquetes de terceros: donde falta, no se enseña. Que RadiografIA y Español correcto la lleven en todas sus reglas, sin tecnicismos y con la misma puntuación final, lo exigen sus jueces (radiografia.spec.ts y espanol-correcto.spec.ts), no este esquema."
+    },
     "familia": {
       "type": "string",
       "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",

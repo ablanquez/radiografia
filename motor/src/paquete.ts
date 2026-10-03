@@ -57,6 +57,8 @@ interface ReglaComun {
   id: string;
   /** Encargo 7.1: el título visible de la regla. Opcional en el esquema, por los paquetes de terceros. */
   nombre?: string;
+  /** Encargo 9.2: la frase llana de la regla, con un ejemplo cuando ayuda. Opcional en el esquema, por los paquetes de terceros. */
+  enClaro?: string;
   familia: string;
   peso: number;
   severidad: 'baja' | 'media' | 'alta';
