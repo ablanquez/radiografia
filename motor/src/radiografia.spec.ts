@@ -59,6 +59,13 @@
  *      opcional, por los paquetes de terceros), que empieza por mayúscula, no
  *      contiene el id, no termina en punto y no lo lleva otra regla del
  *      paquete. Lo que dice cada nombre lo firmó Antonio en la parada 1 del 7.1.
+ *  12. enClaro (encargo 9.2) — toda regla lleva su frase en claro (el
+ *      esquema la deja opcional y la limita a 3-140 caracteres), que empieza
+ *      por mayúscula, termina en punto, como todas, y no usa las palabras
+ *      vetadas en la firma: ni percentil, densidad, regex, lema ni n-grama,
+ *      ni «IA», «generado» o «detectado» (se dice «rasgos de estilo de
+ *      asistente»). Lo que dice cada frase lo firmó Antonio en la parada 1 del
+ *      9.2.
  *
  * Cada condición tiene al menos un caso que la rompe sobre una copia del
  * paquete real, y el juez tiene que nombrar esa condición y ninguna otra
@@ -102,7 +109,14 @@ const MAXIMO: Readonly<Partial<Record<Regla['nivelEvidencia'], number>>> = {
   norma: 0,
 };
 
-type Condicion = 'valida' | 'sin-fuente' | 'fuente-https' | 'seis-familias' | 'canal-informativa' | 'ids' | 'peso' | 'regex-ascii' | 'regex-u' | 'estadistica' | 'nombre';
+type Condicion = 'valida' | 'sin-fuente' | 'fuente-https' | 'seis-familias' | 'canal-informativa' | 'ids' | 'peso' | 'regex-ascii' | 'regex-u' | 'estadistica' | 'nombre' | 'en-claro';
+
+/**
+ * Las palabras vetadas en enClaro (firmado en la parada 1 del 9.2), como
+ * palabra entera: «lema» no casa dentro de «problema». «IA», en mayúsculas.
+ */
+const VETADAS = /(?<!\p{L})(percentil(es)?|densidad(es)?|regex|lemas?|n-gramas?|generad[oa]s?|detectad[oa]s?)(?!\p{L})/iu;
+const IA = /(?<!\p{L})IA(?!\p{L})/u;
 
 /** Las palabras de prosa de un ejemplo (umbral.ts): lo que decide si llega al tramo completo. */
 const palabras = (ejemplo: string): number => evaluarLongitud(analizarTexto(ejemplo)).palabrasProsa;
@@ -183,6 +197,14 @@ function comprobar(paquete: Paquete): Problema[] {
       nombres.add(r.nombre);
     }
 
+    if (r.enClaro === undefined) mal('en-claro', `regla "${r.id}": no tiene enClaro`);
+    else {
+      if (!/^\p{Lu}/u.test(r.enClaro)) mal('en-claro', `regla "${r.id}": enClaro no empieza por mayúscula`);
+      if (!r.enClaro.endsWith('.')) mal('en-claro', `regla "${r.id}": enClaro no termina en punto, como todas`);
+      const vetada = VETADAS.exec(r.enClaro) ?? IA.exec(r.enClaro);
+      if (vetada !== null) mal('en-claro', `regla "${r.id}": enClaro dice «${vetada[0]}»`);
+    }
+
     if (vistos.has(r.id)) mal('ids', `regla "${r.id}": id repetido`);
     vistos.add(r.id);
     const prefijo = PREFIJOS[r.familia];
@@ -205,7 +227,7 @@ function comprobar(paquete: Paquete): Problema[] {
 }
 
 describe('el paquete RadiografIA (paquetes/radiografia.json)', () => {
-  test('cumple las once condiciones', () => {
+  test('cumple las doce condiciones', () => {
     assert.deepEqual(comprobar(leer()), []);
   });
 });
@@ -383,11 +405,19 @@ describe('el juez de RadiografIA caza cada condición rota', () => {
     ['un nombre que contiene el id', ['nombre'], (p) => (regla(p, 'pf-raya-densidad').nombre = 'Regla pf-raya-densidad')],
     ['un nombre que termina en punto', ['nombre'], (p) => (regla(p, 'pf-raya-densidad').nombre = 'Nombre con punto.')],
     ['dos reglas con el mismo nombre', ['nombre'], (p) => (regla(p, 'pf-raya-espaciada').nombre = regla(p, 'pf-raya-densidad').nombre)],
+    // Encargo 9.2: la frase en claro.
+    ['una regla sin enClaro', ['en-claro'], (p) => delete regla(p, 'pf-raya-densidad').enClaro],
+    // El esquema también lo caza (minLength 3).
+    ['un enClaro vacío', ['valida', 'en-claro'], (p) => (regla(p, 'pf-raya-densidad').enClaro = '')],
+    ['un enClaro que empieza por minúscula', ['en-claro'], (p) => (regla(p, 'pf-raya-densidad').enClaro = 'cada raya del texto cuenta.')],
+    ['un enClaro sin punto final', ['en-claro'], (p) => (regla(p, 'pf-raya-densidad').enClaro = 'Cada raya del texto cuenta')],
+    ['un enClaro con «percentil»', ['en-claro'], (p) => (regla(p, 'pf-raya-densidad').enClaro = 'Por encima del percentil 95.')],
+    ['un enClaro con «IA»', ['en-claro'], (p) => (regla(p, 'pf-raya-densidad').enClaro = 'Rayas de la IA.')],
   ];
 
   test('hay al menos un caso por condición', () => {
     const cubiertas = new Set(casos.flatMap(([, condiciones]) => condiciones));
-    assert.deepEqual([...cubiertas].sort(), ['canal-informativa', 'estadistica', 'fuente-https', 'ids', 'nombre', 'peso', 'regex-ascii', 'regex-u', 'seis-familias', 'sin-fuente', 'valida']);
+    assert.deepEqual([...cubiertas].sort(), ['canal-informativa', 'en-claro', 'estadistica', 'fuente-https', 'ids', 'nombre', 'peso', 'regex-ascii', 'regex-u', 'seis-familias', 'sin-fuente', 'valida']);
   });
 
   for (const [nombre, esperadas, romper] of casos) {

@@ -2706,6 +2706,7 @@
     {
       "id": "canal-negrita-markdown",
       "nombre": "Negrita de Markdown",
+      "enClaro": "Asteriscos dobles como **así**, pegados tal cual: el formato del chat sin convertir. Solo avisa.",
       "familia": "canal",
       "detector": "patrón",
       "parametros": {
@@ -2759,6 +2760,7 @@
     {
       "id": "canal-encabezado-markdown",
       "nombre": "Encabezado de Markdown",
+      "enClaro": "Una línea que empieza por almohadillas, como «## Título»: un título del chat sin convertir. Solo avisa.",
       "familia": "canal",
       "detector": "estructural",
       "parametros": {
@@ -2803,6 +2805,7 @@
     {
       "id": "canal-vineta-con-negrita-inicial",
       "nombre": "Viñeta con rótulo en negrita",
+      "enClaro": "Una lista con el rótulo de cada punto entre asteriscos, como «- **Plazos:**»: la plantilla del chat. Solo avisa.",
       "familia": "canal",
       "detector": "estructural",
       "parametros": {
@@ -2845,6 +2848,7 @@
     {
       "id": "canal-separador-o-tabla",
       "nombre": "Separador o tabla de Markdown",
+      "enClaro": "Líneas de guiones (---) o filas entre barras (| Mes | Ventas |): separadores y tablas del chat sin convertir. Solo avisa.",
       "familia": "canal",
       "detector": "estructural",
       "parametros": {
@@ -2888,6 +2892,7 @@
     {
       "id": "canal-espacio-estrecho-u202f",
       "nombre": "Espacio estrecho de no separación",
+      "enClaro": "Un espacio invisible distinto del normal, que algunos asistentes escriben donde iría un espacio. Solo avisa.",
       "familia": "canal",
       "detector": "patrón",
       "parametros": {
@@ -2935,6 +2940,7 @@
     {
       "id": "canal-invisibles-unicode",
       "nombre": "Caracteres de ancho cero",
+      "enClaro": "Caracteres que no se ven pero están en el texto, como el espacio de ancho cero. Solo avisa.",
       "familia": "canal",
       "detector": "patrón",
       "parametros": {
@@ -2985,6 +2991,7 @@
     {
       "id": "pf-raya-densidad",
       "nombre": "Densidad de rayas",
+      "enClaro": "Cada raya (—) del texto cuenta: los asistentes las usan mucho para hacer pausas.",
       "familia": "puntuacion-formato",
       "detector": "patrón",
       "parametros": {
@@ -3048,6 +3055,7 @@
     {
       "id": "pf-raya-espaciada",
       "nombre": "Raya entre espacios",
+      "enClaro": "Una raya con un espacio a cada lado, como «palabra — palabra»; en español va pegada al inciso.",
       "familia": "puntuacion-formato",
       "detector": "patrón",
       "parametros": {
@@ -3106,6 +3114,7 @@
     {
       "id": "lex-frases-de-chatbot",
       "nombre": "Fórmulas de asistente de chat",
+      "enClaro": "Frases del chat que le hablan a quien pidió el texto, como «Espero que esto te ayude».",
       "familia": "lexico",
       "detector": "patrón",
       "parametros": {
@@ -3150,6 +3159,7 @@
     {
       "id": "lex-verbos-de-enfasis",
       "nombre": "Verbos de énfasis",
+      "enClaro": "Verbos que ponen algo de relieve en vez de contarlo, como «destaca», «subraya» o «enfatiza».",
       "familia": "lexico",
       "detector": "patrón",
       "parametros": {
@@ -3200,6 +3210,7 @@
     {
       "id": "lex-importancia",
       "nombre": "Sustantivo «importancia»",
+      "enClaro": "La palabra «importancia»: decir que algo importa en lugar de contar por qué.",
       "familia": "lexico",
       "detector": "patrón",
       "parametros": {
@@ -3249,6 +3260,7 @@
     {
       "id": "lex-es-importante-mas-verbo",
       "nombre": "Fórmula «es importante + verbo»",
+      "enClaro": "Anunciar que algo es importante antes de decirlo, como «es importante destacar que…».",
       "familia": "lexico",
       "detector": "patrón",
       "parametros": {
@@ -3295,6 +3307,7 @@
     {
       "id": "lex-innovador",
       "nombre": "Adjetivo «innovador»",
+      "enClaro": "El adjetivo «innovador», que califica sin decir qué es lo nuevo.",
       "familia": "lexico",
       "detector": "patrón",
       "parametros": {
@@ -3346,6 +3359,7 @@
     {
       "id": "lex-imborrable-multidisciplinario-impecable",
       "nombre": "Imborrable, multidisciplinario, impecable",
+      "enClaro": "Tres adjetivos que los asistentes usan mucho y las personas casi nunca: «imborrable», «multidisciplinario», «impecable».",
       "familia": "lexico",
       "detector": "patrón",
       "parametros": {
@@ -3402,6 +3416,7 @@
     {
       "id": "lex-conector-de-apertura",
       "nombre": "Conector de apertura",
+      "enClaro": "Frases que arrancan con «Adicionalmente», «Cabe destacar» o «Cabe señalar».",
       "familia": "lexico",
       "detector": "estructural",
       "parametros": {
@@ -3452,6 +3467,7 @@
     {
       "id": "lex-trigramas-sobreusados",
       "nombre": "Secuencias de tres palabras recurrentes",
+      "enClaro": "Fórmulas de tres palabras que los asistentes repiten mucho, como «consideraciones éticas».",
       "familia": "lexico",
       "detector": "patrón",
       "parametros": {
@@ -3495,6 +3511,7 @@
     {
       "id": "lex-traslados-del-ingles",
       "nombre": "Calcos léxicos del inglés",
+      "enClaro": "Palabras que suenan a traducción del inglés, como «profundizar», «intrincado» o «meticuloso».",
       "familia": "lexico",
       "detector": "patrón",
       "parametros": {
@@ -3572,6 +3589,7 @@
     {
       "id": "lex-no-solo-sino",
       "nombre": "No solo… sino",
+      "enClaro": "La construcción «no solo… sino también», que suma una idea a otra con énfasis.",
       "familia": "lexico",
       "detector": "estructural",
       "parametros": {
@@ -3615,6 +3633,7 @@
     {
       "id": "lex-verbos-corporativos",
       "nombre": "Verbos corporativos",
+      "enClaro": "Verbos de empresa que no dicen qué se hace, como «potenciar», «fomentar» o «aprovechar».",
       "familia": "lexico",
       "detector": "patrón",
       "parametros": {
@@ -3668,6 +3687,7 @@
     {
       "id": "disc-cierre-de-plantilla",
       "nombre": "Cierre de plantilla",
+      "enClaro": "El último párrafo empieza anunciando el final, con «En conclusión» o «En resumen».",
       "familia": "discurso",
       "detector": "estructural",
       "parametros": {
@@ -3721,6 +3741,7 @@
     {
       "id": "disc-marcador-repetido",
       "nombre": "Conector repetido",
+      "enClaro": "El mismo conector al principio de tres frases o más, como «Además» una y otra vez.",
       "familia": "discurso",
       "detector": "estructural",
       "parametros": {
@@ -3773,6 +3794,7 @@
     {
       "id": "disc-sin-marcadores-epistemicos",
       "nombre": "Sin marcadores de opinión ni duda",
+      "enClaro": "Un texto de opinión o académico sin un solo «creo», «quizá» o «me parece»: todo suena igual de seguro.",
       "familia": "discurso",
       "generos": [
         "opinion",
@@ -3830,6 +3852,7 @@
     {
       "id": "disc-sin-automenciones",
       "nombre": "Sin primera persona",
+      "enClaro": "Un texto de opinión o académico sin una sola primera persona: ni «yo», ni «mi», ni «nosotros».",
       "familia": "discurso",
       "generos": [
         "opinion",
@@ -3890,6 +3913,7 @@
     {
       "id": "disc-encuadre-ordinal",
       "nombre": "Marcadores de orden",
+      "enClaro": "El texto avanza numerado: «En primer lugar», «En segundo lugar», «Por último».",
       "familia": "discurso",
       "detector": "estructural",
       "parametros": {
@@ -3935,6 +3959,7 @@
     {
       "id": "disc-referencia-interna-concreta",
       "nombre": "Referencia interna concreta",
+      "enClaro": "Rasgo humano que resta: remitir a otra parte del texto con su número, como «véase la tabla 2».",
       "familia": "discurso",
       "detector": "patrón",
       "parametros": {
@@ -3981,6 +4006,7 @@
     {
       "id": "disc-puffery-de-significancia",
       "nombre": "Importancia inflada",
+      "enClaro": "Frases que inflan la importancia del asunto, como «un papel crucial» o «marca un hito».",
       "familia": "discurso",
       "detector": "patrón",
       "parametros": {
@@ -4024,6 +4050,7 @@
     {
       "id": "disc-atribucion-vaga",
       "nombre": "Atribución vaga",
+      "enClaro": "Opiniones atribuidas a alguien sin nombre, como «los expertos coinciden».",
       "familia": "discurso",
       "detector": "patrón",
       "parametros": {
@@ -4072,6 +4099,7 @@
     {
       "id": "disc-retos-y-futuro",
       "nombre": "Fórmula de retos y futuro",
+      "enClaro": "La vuelta optimista de retos y futuro, como «a pesar de estos desafíos» o «de cara al futuro».",
       "familia": "discurso",
       "detector": "patrón",
       "parametros": {
@@ -4115,6 +4143,7 @@
     {
       "id": "disc-anecdota-en-primera-persona",
       "nombre": "Anécdota en primera persona",
+      "enClaro": "Rasgo humano que resta: una anécdota propia, como «recuerdo que» o «mi abuela».",
       "familia": "discurso",
       "detector": "patrón",
       "parametros": {
@@ -4164,6 +4193,7 @@
     {
       "id": "sint-gerundio-adjunto-final",
       "nombre": "Coletilla de gerundio final",
+      "enClaro": "Frases que acaban en una coletilla con gerundio tras una coma, como «…, logrando un récord».",
       "familia": "sintaxis",
       "detector": "estructural",
       "parametros": {
@@ -4221,6 +4251,7 @@
     {
       "id": "est-frases-cortas",
       "nombre": "Frases cortas",
+      "enClaro": "Muchas frases para tan pocas palabras, comparado con textos de personas del mismo tipo y longitud.",
       "familia": "estadistica",
       "detector": "estadístico",
       "parametros": {
@@ -4267,6 +4298,7 @@
     {
       "id": "est-ritmo-uniforme",
       "nombre": "Frases de longitud pareja",
+      "enClaro": "Frases casi todas de la misma longitud, comparado con textos de personas del mismo tipo y longitud.",
       "familia": "estadistica",
       "detector": "estadístico",
       "parametros": {
@@ -4322,6 +4354,7 @@
     {
       "id": "est-pocas-comas",
       "nombre": "Pocas comas",
+      "enClaro": "Pocas comas para tantos puntos, comparado con textos de personas del mismo tipo y longitud.",
       "familia": "estadistica",
       "detector": "estadístico",
       "parametros": {
@@ -4369,6 +4402,7 @@
     {
       "id": "est-poca-puntuacion-secundaria",
       "nombre": "Poca puntuación secundaria",
+      "enClaro": "Casi ningún paréntesis, comilla, dos puntos o raya, comparado con textos de personas del mismo tipo y longitud.",
       "familia": "estadistica",
       "detector": "estadístico",
       "parametros": {
@@ -4415,6 +4449,7 @@
     {
       "id": "est-poca-puntuacion",
       "nombre": "Poca puntuación",
+      "enClaro": "Pocos signos de puntuación en total, comparado con textos de personas del mismo tipo y longitud.",
       "familia": "estadistica",
       "detector": "estadístico",
       "parametros": {
@@ -4465,6 +4500,7 @@
     {
       "id": "est-nominalizacion",
       "nombre": "Muchas nominalizaciones",
+      "enClaro": "Muchos sustantivos en -ción, -miento o -dad, comparado con textos de personas del mismo tipo y longitud.",
       "familia": "estadistica",
       "detector": "estadístico",
       "parametros": {
@@ -4515,6 +4551,7 @@
     {
       "id": "est-repeticion-de-secuencias",
       "nombre": "Secuencias de cuatro palabras repetidas",
+      "enClaro": "Grupos de cuatro palabras que se repiten, más que en textos de personas del mismo tipo y longitud.",
       "familia": "estadistica",
       "detector": "estadístico",
       "parametros": {
@@ -4561,6 +4598,7 @@
     {
       "id": "est-diversidad-mattr",
       "nombre": "Diversidad del vocabulario (MATTR)",
+      "enClaro": "Cuántas palabras distintas usas en cada trozo de 50, frente a textos de personas del mismo tipo y longitud. Solo avisa.",
       "familia": "estadistica",
       "detector": "estadístico",
       "parametros": {
@@ -4612,6 +4650,7 @@
     {
       "id": "est-diversidad-mtld",
       "nombre": "Diversidad del vocabulario (MTLD)",
+      "enClaro": "Cuántas palabras escribes antes de repetir vocabulario, frente a textos de personas del mismo tipo y longitud. Solo avisa.",
       "familia": "estadistica",
       "detector": "estadístico",
       "parametros": {
@@ -4667,6 +4706,7 @@
     {
       "id": "est-diversidad-hdd",
       "nombre": "Diversidad del vocabulario (HD-D)",
+      "enClaro": "Lo variado de tu vocabulario en 42 palabras al azar, frente a textos de personas del mismo tipo y longitud. Solo avisa.",
       "familia": "estadistica",
       "detector": "estadístico",
       "parametros": {
@@ -4722,6 +4762,7 @@
     {
       "id": "est-legibilidad-ifsz",
       "nombre": "Legibilidad (INFLESZ)",
+      "enClaro": "Lo fácil de leer por el largo de palabras y frases, frente a textos de personas del mismo tipo y longitud. Solo avisa.",
       "familia": "estadistica",
       "detector": "estadístico",
       "parametros": {
@@ -4769,6 +4810,7 @@
     {
       "id": "est-ttr",
       "nombre": "Proporción de palabras distintas (TTR)",
+      "enClaro": "Qué parte de tus palabras son distintas, frente a textos de personas del mismo tipo y longitud. Solo avisa.",
       "familia": "estadistica",
       "detector": "estadístico",
       "parametros": {
@@ -4816,6 +4858,7 @@
     {
       "id": "est-pronombres-anaforicos",
       "nombre": "Pronombres anafóricos",
+      "enClaro": "Cuántos pronombres remiten a lo ya dicho («él», «este», «lo»), frente a textos de personas del mismo tipo y longitud. Solo avisa.",
       "familia": "estadistica",
       "detector": "estadístico",
       "parametros": {

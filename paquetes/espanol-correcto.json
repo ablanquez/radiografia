@@ -24,6 +24,7 @@
     {
       "id": "gram-pasiva-perifrastica",
       "nombre": "Pasiva perifrástica con agente",
+      "enClaro": "Pasiva con «ser» y quien lo hace, como «fue redactado por el comité», donde suena mejor la activa.",
       "familia": "gramatica",
       "detector": "patrón",
       "parametros": {
@@ -73,6 +74,7 @@
     {
       "id": "gram-posesivo-por-articulo",
       "nombre": "Posesivo en lugar de artículo",
+      "enClaro": "Posesivo donde va el artículo, como «levantó su mano» en vez de «levantó la mano».",
       "familia": "gramatica",
       "detector": "patrón",
       "parametros": {
@@ -123,6 +125,7 @@
     {
       "id": "orto-punto-dentro-de-comillas",
       "nombre": "Puntuación dentro de las comillas",
+      "enClaro": "El punto o la coma dentro de las comillas de cierre, a la inglesa: «hola.» en vez de «hola».",
       "familia": "ortotipografia",
       "detector": "patrón",
       "parametros": {
@@ -167,6 +170,7 @@
     {
       "id": "orto-mayuscula-en-cada-palabra-de-titulo",
       "nombre": "Mayúscula en cada palabra del título",
+      "enClaro": "Títulos con mayúscula en cada palabra, a la inglesa, como «Guía Completa Para Empezar».",
       "familia": "ortotipografia",
       "detector": "estructural",
       "parametros": {
@@ -210,6 +214,7 @@
     {
       "id": "orto-mes-o-dia-con-mayuscula",
       "nombre": "Mes o día con mayúscula",
+      "enClaro": "Meses y días de la semana con mayúscula dentro de la frase, como «el Lunes 3 de Marzo».",
       "familia": "ortotipografia",
       "detector": "patrón",
       "parametros": {
@@ -254,6 +259,7 @@
     {
       "id": "orto-cifras-a-la-inglesa",
       "nombre": "Millares separados con coma",
+      "enClaro": "Una coma para separar los millares, como «1,500», que en español se lee como decimal.",
       "familia": "ortotipografia",
       "detector": "patrón",
       "parametros": {
@@ -305,6 +311,7 @@
     {
       "id": "orto-moneda-antepuesta",
       "nombre": "Símbolo de moneda antepuesto",
+      "enClaro": "El símbolo de la moneda delante de la cifra, como «$100», en vez de detrás: «100 $».",
       "familia": "ortotipografia",
       "detector": "patrón",
       "parametros": {

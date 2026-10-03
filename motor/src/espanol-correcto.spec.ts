@@ -20,6 +20,13 @@
  *      opcional, por los paquetes de terceros), que empieza por mayúscula, no
  *      contiene el id, no termina en punto y no lo lleva otra regla del
  *      paquete. Lo que dice cada nombre lo firmó Antonio en la parada 1 del 7.1.
+ *  9. enClaro (encargo 9.2) — toda regla lleva su frase en claro (el
+ *      esquema la deja opcional y la limita a 3-140 caracteres), que empieza
+ *      por mayúscula, termina en punto, como todas, y no usa las palabras
+ *      vetadas en la firma: ni percentil, densidad, regex, lema ni n-grama,
+ *      ni «IA», «generado» o «detectado» (se dice «rasgos de estilo de
+ *      asistente»). Lo que dice cada frase lo firmó Antonio en la parada 1 del
+ *      9.2.
  *
  * Cada condición tiene al menos un caso que la rompe sobre una copia del
  * paquete, y el juez tiene que nombrar esa condición y ninguna otra (salvo
@@ -50,7 +57,14 @@ const PREFIJOS: Readonly<Record<string, string>> = { gramatica: 'gram-', ortotip
 const REGLAS = 7;
 const RAE = 'https://www.rae.es/';
 
-type Condicion = 'valida' | 'siete-reglas' | 'norma' | 'peso-1' | 'fuente-rae' | 'ninguna-informativa' | 'prefijos' | 'nombre';
+type Condicion = 'valida' | 'siete-reglas' | 'norma' | 'peso-1' | 'fuente-rae' | 'ninguna-informativa' | 'prefijos' | 'nombre' | 'en-claro';
+
+/**
+ * Las palabras vetadas en enClaro (firmado en la parada 1 del 9.2), como
+ * palabra entera: «lema» no casa dentro de «problema». «IA», en mayúsculas.
+ */
+const VETADAS = /(?<!\p{L})(percentil(es)?|densidad(es)?|regex|lemas?|n-gramas?|generad[oa]s?|detectad[oa]s?)(?!\p{L})/iu;
+const IA = /(?<!\p{L})IA(?!\p{L})/u;
 
 interface Problema {
   condicion: Condicion;
@@ -84,6 +98,14 @@ function comprobar(paquete: Paquete): Problema[] {
       if (nombres.has(r.nombre)) mal('nombre', `regla "${r.id}": el nombre «${r.nombre}» ya lo lleva otra regla del paquete`);
       nombres.add(r.nombre);
     }
+
+    if (r.enClaro === undefined) mal('en-claro', `regla "${r.id}": no tiene enClaro`);
+    else {
+      if (!/^\p{Lu}/u.test(r.enClaro)) mal('en-claro', `regla "${r.id}": enClaro no empieza por mayúscula`);
+      if (!r.enClaro.endsWith('.')) mal('en-claro', `regla "${r.id}": enClaro no termina en punto, como todas`);
+      const vetada = VETADAS.exec(r.enClaro) ?? IA.exec(r.enClaro);
+      if (vetada !== null) mal('en-claro', `regla "${r.id}": enClaro dice «${vetada[0]}»`);
+    }
     const prefijo = PREFIJOS[r.familia];
     if (prefijo === undefined) mal('prefijos', `regla "${r.id}": la familia "${r.familia}" no es de este paquete`);
     else if (!r.id.startsWith(prefijo)) mal('prefijos', `regla "${r.id}": no empieza por "${prefijo}", el prefijo de "${r.familia}"`);
@@ -92,7 +114,7 @@ function comprobar(paquete: Paquete): Problema[] {
 }
 
 describe('el paquete «Español correcto» (paquetes/espanol-correcto.json)', () => {
-  test('cumple las ocho condiciones', () => {
+  test('cumple las nueve condiciones', () => {
     assert.deepEqual(comprobar(leer()), []);
   });
 });
@@ -135,11 +157,19 @@ describe('el juez de «Español correcto» caza cada condición rota', () => {
     ['un nombre que contiene el id', ['nombre'], (p) => (regla(p, 'orto-moneda-antepuesta').nombre = 'Regla orto-moneda-antepuesta')],
     ['un nombre que termina en punto', ['nombre'], (p) => (regla(p, 'orto-moneda-antepuesta').nombre = 'Nombre con punto.')],
     ['dos reglas con el mismo nombre', ['nombre'], (p) => (regla(p, 'orto-cifras-a-la-inglesa').nombre = regla(p, 'orto-moneda-antepuesta').nombre)],
+    // Encargo 9.2: la frase en claro.
+    ['una regla sin enClaro', ['en-claro'], (p) => delete regla(p, 'orto-moneda-antepuesta').enClaro],
+    // El esquema también lo caza (minLength 3).
+    ['un enClaro vacío', ['valida', 'en-claro'], (p) => (regla(p, 'orto-moneda-antepuesta').enClaro = '')],
+    ['un enClaro que empieza por minúscula', ['en-claro'], (p) => (regla(p, 'orto-moneda-antepuesta').enClaro = 'el símbolo delante.')],
+    ['un enClaro sin punto final', ['en-claro'], (p) => (regla(p, 'orto-moneda-antepuesta').enClaro = 'El símbolo delante')],
+    ['un enClaro con «regex»', ['en-claro'], (p) => (regla(p, 'orto-moneda-antepuesta').enClaro = 'Lo que busca la regex.')],
+    ['un enClaro con «generado»', ['en-claro'], (p) => (regla(p, 'orto-moneda-antepuesta').enClaro = 'Texto generado.')],
   ];
 
   test('hay al menos un caso por condición', () => {
     const cubiertas = new Set(casos.flatMap(([, condiciones]) => condiciones));
-    assert.deepEqual([...cubiertas].sort(), ['fuente-rae', 'ninguna-informativa', 'nombre', 'norma', 'peso-1', 'prefijos', 'siete-reglas', 'valida']);
+    assert.deepEqual([...cubiertas].sort(), ['en-claro', 'fuente-rae', 'ninguna-informativa', 'nombre', 'norma', 'peso-1', 'prefijos', 'siete-reglas', 'valida']);
   });
 
   for (const [nombre, esperadas, romper] of casos) {
