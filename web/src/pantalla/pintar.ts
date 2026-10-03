@@ -431,7 +431,10 @@ export function pintarSenalesDelInforme(contenedor: HTMLElement, resultado: Resu
     }
     titulo.append(` (${e.reglaId})`);
     const entrada = el('article', undefined, 'entrada-informe');
-    entrada.append(titulo, el('p', `${e.familia} · ${e.paquete}`, 'id-regla'));
+    entrada.append(titulo);
+    // La frase en claro, primera línea de la entrada (9.2).
+    if (e.regla?.enClaro !== undefined) entrada.append(el('p', e.regla.enClaro, 'en-claro'));
+    entrada.append(el('p', `${e.familia} · ${e.paquete}`, 'id-regla'));
     if (e.informativa) entrada.append(el('p', textos.INFORMATIVA));
     if (e.n > 0) entrada.append(el('p', textos.senalesDeLaRegla(e.n, e.fragmentos, e.resto)));
     const genero = generoEnCalle(resultado.genero).conArticulo;

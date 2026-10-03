@@ -15,6 +15,8 @@
  *    URL; props «aren't limited to only strings»: la entrada entera del
  *    catálogo va por props.
  * Arriba y abajo, «Volver al catálogo» y «Probar en el analizador».
+ * Bajo el nombre, la frase en claro de la regla (encargo 9.2, b; firmada por
+ *    Antonio en la parada 1), si la trae.
  * Los ejemplos van en <pre> (con white-space: pre-wrap en el layout): se ven
  *    tal cual, con sus saltos, sus asteriscos y sus almohadillas, que son lo
  *    que las reglas de canal buscan.
@@ -44,6 +46,7 @@ const peso = new Intl.NumberFormat('es').format(regla.peso);
     <a href={urlDelCatalogo(base)}>{textos.VOLVER_AL_CATALOGO}</a> · <a href={urlDelAnalizador(base)}>{textos.PROBAR_EN_EL_ANALIZADOR}</a>
   </nav>
   <h1>{nombre}</h1>
+  {regla.enClaro !== undefined && <p class="en-claro">{regla.enClaro}</p>}
   <p class="id-regla">{regla.id} · {paquete.nombre}</p>
   {(regla.informativa || familia.informativa) && <p>{textos.INFORMATIVA}</p>}
   <dl>

@@ -5,7 +5,8 @@
  * tres filtros (familia, severidad, detector). Funciona, no luce: el diseño es
  * del punto 10.
  *
- * Por regla: su nombre, que enlaza a su ficha; id y paquete; familia,
+ * Por regla: su nombre, que enlaza a su ficha, y debajo su frase en claro
+ * (encargo 9.2, b; firmada por Antonio en la parada 1); id y paquete; familia,
  * detector, severidad, nivel de evidencia y peso; y la primera frase de su
  * explicación. Cada fila lleva en data-* lo que miran el buscador (nombre, id
  * y explicación entera, ya pasados por paraBuscar) y los filtros.
@@ -82,6 +83,7 @@ const filas = enOrden(
       filas.map(({ regla, paquete, familia, nombre, texto }) => (
         <li data-texto={texto} data-familia={`${paquete.nombre}::${familia.id}`} data-severidad={regla.severidad} data-detector={regla.detector}>
           <h2><a href={urlDeRegla(base, regla.id)}>{nombre}</a></h2>
+          {regla.enClaro !== undefined && <p class="en-claro">{regla.enClaro}</p>}
           <p class="id-regla">{regla.id} · {paquete.nombre}</p>
           <p class="datos">
             {textos.FAMILIA}: {familia.nombre} · {textos.DETECTOR}: {regla.detector} · {textos.SEVERIDAD}: {regla.severidad} ·{' '}

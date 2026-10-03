@@ -6,7 +6,8 @@
  *      más ni una menos; y el índice, dist/reglas/index.html, con un enlace a
  *      cada una.
  *   2. Cada ficha lleva su id, su nombre, al menos una de sus fuentes como
- *      enlace y sus ejemplos tal cual, cada uno en su <pre>.
+ *      enlace y sus ejemplos tal cual, cada uno en su <pre>. Desde el 9.2, la
+ *      frase en claro de la regla justo bajo el nombre (el <h1>).
  *   3. Los enlaces internos llegan: todo href que empieza por «/» en las
  *      páginas de dist/ (analizador, índice y fichas) apunta a un fichero de
  *      dist/; el analizador enlaza el catálogo en su cabecera; y la URL de
@@ -26,6 +27,8 @@
  *      su nombre (localeCompare con «es»). Las casillas de familia, igual; las
  *      de detector, alfabéticas; las de severidad, baja → media → alta, que es
  *      una escala.
+ *   8. El índice lleva la frase en claro de cada regla justo bajo su nombre
+ *      (encargo 9.2, b; firmado en la parada 1).
  * El juez 4 del encargo (ningún JS de dist/ con Ajv ni node:) es el 3 de
  * construccion.spec.ts, que mira todo dist/ y sigue valiendo con las páginas
  * nuevas.
@@ -70,13 +73,15 @@ describe('el catálogo construido', () => {
     assert.deepEqual(ids.filter((id) => !enlaces.includes(urlDeRegla('/', id))), [], 'reglas sin enlace en el índice');
   });
 
-  test('2 · cada ficha lleva su id, su nombre, una de sus fuentes enlazada y sus ejemplos tal cual', () => {
+  test('2 · cada ficha lleva su id, su nombre con su frase en claro debajo, una de sus fuentes enlazada y sus ejemplos tal cual', () => {
     construir();
     for (const r of reglas()) {
       const html = ficha(r.id);
       const texto = textoVisible(html);
       assert.ok(texto.includes(r.id), `${r.id}: la ficha no lleva su id`);
       assert.ok(r.nombre !== undefined && texto.includes(r.nombre), `${r.id}: la ficha no lleva su nombre «${r.nombre}»`);
+      const bajoElNombre = /<h1>[^<]*<\/h1>\s*<p class="en-claro">([^<]*)<\/p>/.exec(html);
+      assert.equal(bajoElNombre ? decodificar(bajoElNombre[1]!) : null, r.enClaro, `${r.id}: la frase en claro, bajo el nombre`);
       const enlaces = hrefs(html);
       assert.ok(r.fuente.some((f) => enlaces.includes(f.url)), `${r.id}: ninguna de sus fuentes va enlazada`);
       const ejemplos = [...html.matchAll(/<pre class="ejemplo">([\s\S]*?)<\/pre>/g)].map((m) => decodificar(m[1]!));
@@ -147,6 +152,17 @@ describe('el catálogo construido', () => {
     assert.deepEqual(casillas('familia'), familias.map(({ p, f }) => `${p.cabecera.nombre}::${f.id}`), 'las casillas de familia');
     assert.deepEqual(casillas('detector'), [...DETECTORES].sort(es), 'las casillas de detector, alfabéticas');
     assert.deepEqual(casillas('severidad'), ['baja', 'media', 'alta'], 'las casillas de severidad, como escala');
+  });
+
+  test('8 · el índice lleva la frase en claro de cada regla bajo su nombre', () => {
+    construir();
+    const html = readFileSync(new URL('index.html', REGLAS), 'utf8');
+    const filas = new Map([...html.matchAll(/<h2><a href="([^"]+)">[^<]*<\/a><\/h2>\s*<p class="en-claro">([^<]*)<\/p>/g)].map((m) => [decodificar(m[1]!), decodificar(m[2]!)]));
+    assert.deepEqual(
+      reglas().filter((r) => filas.get(urlDeRegla('/', r.id)) !== r.enClaro).map((r) => r.id),
+      [],
+      'reglas del índice sin su frase en claro bajo el nombre',
+    );
   });
 
   test('6 · astro preview sirve el índice y una ficha (200) y da 404 en /reglas/no-existe/', async () => {

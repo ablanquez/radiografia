@@ -16,7 +16,8 @@
  *      paquetes con versión, género), el medidor, el texto con la sigla de
  *      cada tramo, la clave, el desglose, una entrada de la lista por regla
  *      con señales (con la dirección absoluta de su ficha y break-inside:
- *      avoid) y la nota del pie.
+ *      avoid; desde el 9.2, con la frase en claro de la regla como primera
+ *      línea, bajo el nombre) y la nota del pie.
  *   2. Page.printToPDF (preferCSSPageSize, sin fondos, como el navegador por
  *      defecto): empieza por %PDF-, tiene de 2 a 20 páginas por /Type /Page
  *      (las mismas que /Count) y su MediaBox es A4.
@@ -179,16 +180,18 @@ describe('el informe en Chrome, sobre astro preview', () => {
       assert.ok(clave.length > 0, 'la clave, vacía');
       assert.deepEqual(clave.filter((x) => x.sigla === '' || x.antes !== `"[${x.sigla}] "`), [], 'líneas de la clave sin su sigla');
 
-      const entradas = await p().evaluar<{ id: string; corte: string; ficha: string | null; tras: string | null; texto: string }[]>(`[...document.querySelectorAll('#senales-informe .entrada-informe')].map((e) => {
+      const entradas = await p().evaluar<{ id: string; corte: string; ficha: string | null; tras: string | null; texto: string; claro: string | null }[]>(`[...document.querySelectorAll('#senales-informe .entrada-informe')].map((e) => {
         const a = e.querySelector('h4 a');
-        return { id: /\\(([^()]+)\\)$/.exec(e.querySelector('h4').textContent)?.[1] ?? '', corte: getComputedStyle(e).breakInside, ficha: a?.getAttribute('href') ?? null, tras: a ? getComputedStyle(a, '::after').content : null, texto: e.textContent };
+        return { id: /\\(([^()]+)\\)$/.exec(e.querySelector('h4').textContent)?.[1] ?? '', corte: getComputedStyle(e).breakInside, ficha: a?.getAttribute('href') ?? null, tras: a ? getComputedStyle(a, '::after').content : null, texto: e.textContent, claro: e.querySelector('h4 + p.en-claro')?.textContent ?? null };
       })`);
       const { analizar: analizarEnNode } = await motorDelNavegador();
       const r = analizarEnNode(TEXTO_DE_COMBINACION_REAL, paquetesIncluidos(), { genero: 'general' });
       const conSenal = [...new Set([...r.senales, ...r.senalesTexto, ...r.contexto].map((s) => s.reglaId))].sort();
       assert.deepEqual(entradas.map((e) => e.id).sort(), conSenal, 'una entrada por regla con señales');
       const url = sesion!.url;
+      const claros = new Map(paquetesIncluidos().flatMap((x) => x.reglas).map((x) => [x.id, x.enClaro]));
       for (const e of entradas) {
+        assert.equal(e.claro, claros.get(e.id), `${e.id}: la frase en claro, primera línea de su entrada`);
         assert.equal(e.corte, 'avoid', `${e.id}: break-inside`);
         assert.equal(e.ficha, `${url}reglas/${e.id}/`, `${e.id}: la dirección absoluta de su ficha`);
         assert.equal(e.tras, `" (${url}reglas/${e.id}/)"`, `${e.id}: la dirección, escrita en papel`);
