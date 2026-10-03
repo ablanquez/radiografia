@@ -5,18 +5,17 @@ El ejecutor reporta descubrimientos; no toca este fichero.
 
 ---
 
-## ESTADO ACTUAL — 2 de octubre de 2026
+## ESTADO ACTUAL — 3 de octubre de 2026
 
-**⭐ PUNTOS 1-8 CERRADOS (29/09-02/10).** La demo tiene analizador con
-ejemplos, catálogo de 50 fichas y **cargador de paquetes propios**:
-casillas para los incluidos, JSON desde el ordenador validado y combinado
-con origen visible, cero peticiones de red demostradas por un juez con
-Chrome headless (5 en la carga inicial, 0 después) y CSP `connect-src
-'self'` en la página publicada. dist/ 940 KB (52 HTML, 61 ficheros).
-**npm test raíz: motor 895 (888 verde, 2 saltados, 5 todo) + web 64/64**
-(las pruebas de web necesitan Chrome o la variable CHROME); tipos
-limpios. Seis bitácoras, todas cerradas. **Siguiente: punto 9, informe
-PDF.**
+**⭐ PUNTOS 1-9 CERRADOS (29/09-03/10). LA V1 FUNCIONA ENTERA, SIN
+ESTÉTICA.** Analizador con ejemplos, catálogo de 50 fichas, cargador de
+paquetes propios con cero peticiones demostradas y CSP, e **informe PDF**
+por hoja de impresión y window.print() (siglas de familia para no depender
+del color; A4; juez con Page.printToPDF). dist/ 945 KB. **npm test raíz:
+motor 895 (888 verde, 2 saltados, 5 todo) + web 75/75** (Chrome
+necesario); tipos limpios. Seis bitácoras, todas cerradas. **Siguiente:
+punto 10, estética (DISEÑO → Figma → calco), con seis apuntes ya
+recogidos en el plan.**
 
 ## 1 · Identidad
 
@@ -67,7 +66,7 @@ antes del verde, push = despliegue, bitácora por la skill
 ## 4 · El plan
 
 `PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1, 2 y 3 (29/09), 4 (30/09),
-5 (01/10), 6, 7 y 8 (02/10). Abierto: el 9.
+5 (01/10), 6, 7 y 8 (02/10), 9 (03/10). Abierto: el 10.
 
 ## 5 · Decisiones
 
@@ -369,9 +368,31 @@ antes del verde, push = despliegue, bitácora por la skill
   arranque de Chrome en before(), sin Chrome salía «fail 0» con cinco
   «cancelled» (código 1): el arranque va dentro de los tests y el script
   de clones filtra cancelled.
+- 02-03/10 — **Decisiones del 9.1 (informe)**: sin librerías: @media
+  print + window.print() [DOC MDN]; @page A4 2 cm (sin @page Chrome
+  imprime en carta aunque se pida preferCSSPageSize: probado); sin
+  beforeprint/afterprint (setEmulatedMedia no los dispara y el juez vería
+  distinto que el PDF: probado); siglas de familia por tramo por CSS
+  (data-siglas + ::after), reparto estable, leyenda como clave [WCAG
+  1.4.1]; lista de señales por regla (5 fragmentos de 80 caracteres y «y
+  N más» [PROPIO]); URL absoluta solo en la lista; cabecera con fecha y
+  hora del análisis (Intl.DateTimeFormat); párrafo «No hay análisis que
+  imprimir»; print-color-adjust solo donde ayuda; orphans/widows no
+  Baseline (mejora declarada); juez con CDP (setEmulatedMedia print,
+  printToPDF, %PDF-, páginas en la raíz de /Pages según ISO 32000-1
+  §7.7.3.2, MediaBox A4, red 0, CSP 0); el texto de combinacion-real
+  copiado a web/jueces/apoyo.ts con guarda; nombre del PDF por <title>.
+  README con etiquetas oficiales de Chrome, Firefox (printUI.ftl es-ES) y
+  Edge (Microsoft Learn; página de ayuda oficial NO CONSTA).
 
 ## 6 · Cabos abiertos
 
+- Del 9.1: el corte de reglas entre páginas no lo ve un juez (sin
+  rasterizar); lo vieron Antonio y PyMuPDF en el scratchpad. Un cuelgue
+  de 400 s del juez de impresión al solaparlo con la verificación de
+  clones: NO CONSTA la causa; no se solapan baterías. «subrayado» dispara
+  ahora dos veces en los textos de la web (la clave de siglas también lo
+  dice): declarado.
 - Del 8.1: npm test necesita Chrome (o CHROME); sin él falla, no se
   salta. El juez de ejemplos del motor lee un fichero de web/
   (acoplamiento declarado). El meta CSP va detrás del <link rel=icon

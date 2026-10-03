@@ -1,8 +1,8 @@
 # PLAN — 005 RadiografIA
 
-Estado a 02/10/2026: **FIRMADO por Antonio el 29/09/2026**, publicado en
+Estado a 03/10/2026: **FIRMADO por Antonio el 29/09/2026**, publicado en
 `73ef265`. **PUNTOS 1, 2 y 3 CERRADOS el 29/09; 4 el 30/09; 5 el 01/10; 6,
-7 y 8 el 02/10.** Se tacha lo hecho y
+7 y 8 el 02/10; 9 el 03/10.** Se tacha lo hecho y
 lo nuevo se añade en su punto, y solo por decisión de Antonio.
 
 Origen: BRAINSTORMING (1), 28-29/09/2026, y las decisiones de Antonio
@@ -677,11 +677,28 @@ Astro, sin diseño todavía: funciona, no luce.
 
 ## 9 — Informe PDF
 
-- [ ] Hoja `@media print`: puntuación, desglose, texto con subrayados,
+- [x] Hoja `@media print`: puntuación, desglose, texto con subrayados,
       lista de señales con explicación y sugerencia, fecha, y la nota
-      «analiza estilo, no demuestra autoría»
-- [ ] Botón «Descargar informe» → `window.print()`
-- [ ] PDF generado y abierto por Antonio. **PUNTO 9 CERRADO**
+      «analiza estilo, no demuestra autoría» (9.1, 02-03/10: en el
+      <style is:global> de index.astro; @page A4 2 cm; break-inside: avoid
+      por regla, señal y medidor; cabecera del informe con fecha y hora
+      del análisis, género, palabras, tramo y paquetes con versión;
+      **siglas de familia por tramo** (data-siglas + ::after, reparto
+      estable; la leyenda hace de clave) para no depender del color [WCAG
+      1.4.1]; lista de señales por regla con hasta 5 fragmentos, explicación,
+      sugerencia y URL absoluta de la ficha; párrafo «No hay análisis que
+      imprimir» para Ctrl+P sin resultado; sin beforeprint/afterprint
+      (setEmulatedMedia no los dispara: el juez y el PDF verían cosas
+      distintas); orphans/widows como mejora no Baseline)
+- [x] Botón «Descargar informe» → `window.print()` (9.1: desactivado
+      hasta que hay resultado; imprime el último análisis pintado, con su
+      fecha en la cabecera)
+- [x] PDF generado y abierto por Antonio (03/10: cabecera, banda, texto con
+      siglas y clave, señales regla a regla, nota al pie, sin botones ni
+      textarea, ninguna regla cortada). Juez con CDP: Page.printToPDF con
+      preferCSSPageSize da A4 (sin @page, Chrome imprime en carta), %PDF-,
+      páginas contadas en la raíz del árbol /Pages [ISO 32000-1 §7.7.3.2],
+      red 0 y CSP 0 al imprimir. **PUNTO 9 CERRADO (03/10)**
 
 ## 10 — Estética (DISEÑO → Figma Make → calco)
 
@@ -696,7 +713,10 @@ Custom Highlight API como mejora de los subrayados (Baseline 2026-03);
 (4) `.gitattributes` para fuentes autoalojadas antes de la primera;
 (5) contraste: sobre blanco, los colores de familia #e69f00 (2,25:1) y
 #56b4e9 (2,31:1) no llegan al 3:1 de WCAG 1.4.11 para objetos gráficos; los
-demás dan de 3,06 a 5,19. La paleta del DISEÑO debe resolverlo.
+demás dan de 3,06 a 5,19. La paleta del DISEÑO debe resolverlo; (6) el
+informe impreso es largo (10-16 páginas A4 sin estilo): las seis reglas de
+contexto de Estadística con sus explicaciones, huecos por break-inside y
+la nota sola en la última página; su maqueta es del DISEÑO.
 
 - [ ] `DISEÑO-RADIOGRAFIA.md`: investigación con doctrina (accesibilidad,
       legibilidad de texto largo, impresión), el concepto del icono
