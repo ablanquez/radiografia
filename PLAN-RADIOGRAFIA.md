@@ -2,7 +2,7 @@
 
 Estado a 03/10/2026: **FIRMADO por Antonio el 29/09/2026**, publicado en
 `73ef265`. **PUNTOS 1, 2 y 3 CERRADOS el 29/09; 4 el 30/09; 5 el 01/10; 6,
-7 y 8 el 02/10; 9 el 03/10.** Se tacha lo hecho y
+7 y 8 el 02/10; 9 y la ampliación 9.2 el 03/10.** Se tacha lo hecho y
 lo nuevo se añade en su punto, y solo por decisión de Antonio.
 
 Origen: BRAINSTORMING (1), 28-29/09/2026, y las decisiones de Antonio
@@ -49,7 +49,11 @@ La v1 entrega, y solo entrega, esto:
    calibración del paquete; «general» por defecto) → subrayados por
    familia, medidor de estilo IA cuya escala es la **banda respecto a los
    textos humanos del mismo género y longitud** (decisión 01/10; sin tope
-   ni veredicto), explicación y sugerencia por señal.
+   ni veredicto de autoría), expresada desde la 9.2 (03/10) como una
+   **etiqueta de estilo y una frase en claro** («Texto con bastantes
+   rasgos de Asistente IA»…) con las cifras plegadas, un resumen de dos
+   líneas, y por cada señal una frase llana (`enClaro`), la sugerencia y
+   la explicación plegada.
 5. **Catálogo público de reglas**: página por regla con URL propia,
    buscador y filtros; enlace cruzado desde cada subrayado.
 6. **Cargador de paquetes**: paquetes incluidos en casillas (firmado
@@ -550,7 +554,8 @@ Astro, sin diseño todavía: funciona, no luce.
 - [x] Medidor global con desglose por familia: la **banda humana**
       (`bandaHumana()`), con «sin señales» cuando el total es 0 (en cinco
       celdas la mediana es 0 y un texto limpio caería «entre la mediana y
-      el p95»), y «sin calibración» cuando no hay celda (6.2: además
+      el p95»; desde la 9.2 ese caso dice «Texto sin indicios de Asistente
+      IA»), y «sin calibración» cuando no hay celda (6.2: además
       palabras de prosa, tramo y género; «texto insuficiente» y «poco
       fiable»; desglose paquete → familia → regla, señales de texto,
       informativas, noAplicadas; Español correcto aparte sin banda)
@@ -699,6 +704,36 @@ Astro, sin diseño todavía: funciona, no luce.
       preferCSSPageSize da A4 (sin @page, Chrome imprime en carta), %PDF-,
       páginas contadas en la raíz del árbol /Pages [ISO 32000-1 §7.7.3.2],
       red 0 y CSP 0 al imprimir. **PUNTO 9 CERRADO (03/10)**
+- [x] **9.2 — Lenguaje de calle (firmado por Antonio el 03/10 tras probar
+      la demo: «le falta lenguaje de calle»; HECHA el 03/10 como primera
+      prueba; texto y presentación, sin tocar motor ni reglas)**. Referente: la barra lateral de
+      Hemingway (titular de una línea, recuentos con meta, ánimo cuando
+      está bien, una frase por subrayado, detalle aparte), con la
+      honestidad de la calibración: la meta es lo que hacen los textos
+      humanos del mismo tipo, nunca una afirmación de autoría (GPTZero es
+      el contraejemplo). Cuatro piezas: (1) titular del medidor en claro,
+      cifras plegadas en «Ver el detalle»; (2) resumen con recuentos y meta
+      de las tres reglas que más pesan y «Empieza por: [sugerencia]»;
+      (3) campo `enClaro` en la ficha (una frase llana con ejemplo, 50
+      líneas que lee y firma Antonio), primero en el panel, explicación
+      larga plegada en «¿Por qué lo miramos?»; (4) vocabulario del motor
+      fuera de la pantalla (informativa, atenuante, noAplicadas, tramo,
+      p95) en textos.ts. Primera prueba: se retoca después con el ojo de
+      Antonio. **Resultado**: el titular se sustituyó por ETIQUETA + FRASE
+      con los textos literales de Antonio («Texto sin indicios de Asistente
+      IA», «Texto con muy pocos rasgos que indiquen que tiene Asistente
+      IA», «Dentro de lo normal», «Texto con bastantes rasgos de Asistente
+      IA», «Texto con muchos rasgos de Asistente IA», «No podemos
+      comparar»; frases con «suena a» y «de cada 100 … solo 5/1»; aviso de
+      texto corto; caso de paquete propio con escala); el género `opinion`
+      se muestra como «Opinión (críticas de cine)» por honestidad con el
+      corpus; `enClaro` en las 50 reglas (esquema 3-140, juez); resumen de
+      dos líneas con meta solo en estadísticas (percentil de la regla y
+      unidad por métrica); panel nombre → enClaro → «Qué hacer» → «¿Por qué
+      lo miramos?» plegado; etiquetas de pantalla sin vocabulario del motor
+      (juez de Chrome lo vigila); catálogo e informe con la frase en
+      claro. Visto por Antonio con los tres textos (03/10). Pendiente para
+      el DISEÑO: dónde y cómo destaca la etiqueta; pestañas
 
 ## 10 — Estética (DISEÑO → Figma Make → calco)
 
@@ -716,7 +751,13 @@ Custom Highlight API como mejora de los subrayados (Baseline 2026-03);
 demás dan de 3,06 a 5,19. La paleta del DISEÑO debe resolverlo; (6) el
 informe impreso es largo (10-16 páginas A4 sin estilo): las seis reglas de
 contexto de Estadística con sus explicaciones, huecos por break-inside y
-la nota sola en la última página; su maqueta es del DISEÑO.
+la nota sola en la última página; su maqueta es del DISEÑO; (7) **la
+estructura de la pantalla de resultado**: resultado fijo arriba (etiqueta,
+frase, lo que más pesa, empieza por) y debajo pestañas Texto subrayado /
+Reglas / Datos; acordeón solo dentro de una pestaña; en el informe,
+secciones numeradas con salto de página antes de las largas (Antonio,
+03/10); (8) la etiqueta del resultado debe destacar a la vista (tamaño,
+posición) y el panel de regla, junto al tramo.
 
 - [ ] `DISEÑO-RADIOGRAFIA.md`: investigación con doctrina (accesibilidad,
       legibilidad de texto largo, impresión), el concepto del icono

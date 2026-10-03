@@ -7,15 +7,14 @@ El ejecutor reporta descubrimientos; no toca este fichero.
 
 ## ESTADO ACTUAL — 3 de octubre de 2026
 
-**⭐ PUNTOS 1-9 CERRADOS (29/09-03/10). LA V1 FUNCIONA ENTERA, SIN
-ESTÉTICA.** Analizador con ejemplos, catálogo de 50 fichas, cargador de
-paquetes propios con cero peticiones demostradas y CSP, e **informe PDF**
-por hoja de impresión y window.print() (siglas de familia para no depender
-del color; A4; juez con Page.printToPDF). dist/ 945 KB. **npm test raíz:
-motor 895 (888 verde, 2 saltados, 5 todo) + web 75/75** (Chrome
+**⭐ PUNTOS 1-9 CERRADOS (29/09-03/10) Y 9.2 «LENGUAJE DE CALLE» HECHA.
+LA V1 FUNCIONA ENTERA Y SE ENTIENDE, SIN ESTÉTICA.** Analizador con
+etiqueta y frase en claro (textos de Antonio), resumen de dos líneas,
+`enClaro` en las 50 reglas, panel reordenado y sin vocabulario del motor;
+catálogo, cargador e informe PDF al día. dist/ 973 KB. **npm test raíz:
+motor 909 (902 verde, 2 saltados, 5 todo) + web 99/99** (Chrome
 necesario); tipos limpios. Seis bitácoras, todas cerradas. **Siguiente:
-punto 10, estética (DISEÑO → Figma → calco), con seis apuntes ya
-recogidos en el plan.**
+punto 10, estética, con ocho apuntes de Antonio ya en el plan.**
 
 ## 1 · Identidad
 
@@ -66,7 +65,7 @@ antes del verde, push = despliegue, bitácora por la skill
 ## 4 · El plan
 
 `PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1, 2 y 3 (29/09), 4 (30/09),
-5 (01/10), 6, 7 y 8 (02/10), 9 (03/10). Abierto: el 10.
+5 (01/10), 6, 7 y 8 (02/10), 9 y 9.2 (03/10). Abierto: el 10.
 
 ## 5 · Decisiones
 
@@ -384,9 +383,31 @@ antes del verde, push = despliegue, bitácora por la skill
   copiado a web/jueces/apoyo.ts con guarda; nombre del PDF por <title>.
   README con etiquetas oficiales de Chrome, Firefox (printUI.ftl es-ES) y
   Edge (Microsoft Learn; página de ayuda oficial NO CONSTA).
+- 03/10 — **Decisiones de la 9.2 (lenguaje de calle)**: referente
+  Hemingway (ayuda leída: una frase por subrayado; «Grade 6. Good.» NO
+  CONSTA en fuente propia), contraejemplo GPTZero (afirma autoría);
+  titular sustituido por etiqueta + frase con los textos de Antonio, verbo
+  «suena a», «de cada 100 … solo 5/1», concordancia por género gramatical
+  de la palabra del género; «de esta longitud» al detalle; aviso de texto
+  corto; caso 8 para paquetes propios con escala; «Opinión (críticas de
+  cine)» como nombre visible (honestidad con MuchoCine); `enClaro`
+  opcional en esquema (3-140), obligatorio por juez en los dos paquetes,
+  50 frases leídas y firmadas (una corregida: Juzek compara con humanos,
+  no con prensa); resumen compacto de dos líneas, meta solo en
+  estadísticas (percentil que usa la regla, unidad por métrica [PROPIO]);
+  las metas para reglas de patrón exigirían tasas humanas por regla en el
+  paquete (no entra; nevera); ids solo dentro de «¿Por qué lo miramos?» y
+  en el catálogo; «Ver el detalle» plegado en pantalla y sus cifras en la
+  cabecera del informe.
 
 ## 6 · Cabos abiertos
 
+- De la 9.2: motor/src cambió también en validar.spec.ts y
+  standalone.spec.ts (recuento exacto de fixtures, 42 → 44): inevitable;
+  las reglas propias sin `enClaro` no la enseñan (el paquete de prueba no
+  la trae); «No se puede medir» depende de que el motivo del motor empiece
+  por «no calculable» (declarado en lectura.ts); errata «1 puntos» cazada a
+  ojo y con juez.
 - Del 9.1: el corte de reglas entre páginas no lo ve un juez (sin
   rasterizar); lo vieron Antonio y PyMuPDF en el scratchpad. Un cuelgue
   de 400 s del juez de impresión al solaparlo con la verificación de
@@ -526,6 +547,10 @@ antes del verde, push = despliegue, bitácora por la skill
 
 ## Nevera
 
+- **Metas humanas para reglas de patrón** (v1.1): el resumen solo da
+  «lo normal en X es…» para las estadísticas; para conectores, puffery,
+  etc. haría falta llevar al paquete las tasas por regla en humanos
+  (género × tramo), que hoy viven en `disparos` de data/calibracion/.
 - **Paquetes propios, protecciones que no tiene la v1**: una regex con
   retroceso catastrófico puede colgar la pestaña (sin Worker con tiempo
   límite); un JSON que no sea UTF-8 se lee con caracteres de sustitución
