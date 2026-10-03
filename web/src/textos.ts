@@ -88,42 +88,23 @@ export const FAMILIAS = 'Familias';
 export const MUESTRA_DE_SUBRAYADO = 'subrayado';
 export const INFORMATIVAS_EN_LA_LEYENDA = 'Solo avisos: no suman.';
 
-// El panel de un tramo.
-export const TITULO_DEL_PANEL = 'Lo que señala este tramo';
+// El panel de un subrayado.
+/** Sin «tramo», que es palabra del motor (encargo 9.2): lo que se toca es un subrayado. */
+export const TITULO_DEL_PANEL = 'Lo que señala este subrayado';
 export const EXPLICACION = 'Explicación';
 export const SUGERENCIA = 'Sugerencia';
 export const NIVEL_DE_EVIDENCIA = 'Nivel de evidencia';
 export const ORIGEN_DE_LA_LISTA = 'Origen de la lista';
 export const SIN_DATO = 'sin dato';
 
-// El medidor.
+// El medidor, con texto insuficiente; el resto, en el lenguaje de calle (abajo). Los tramos, en palabras.
 export const TEXTO_INSUFICIENTE = 'Texto insuficiente';
-export const POCO_FIABLE = 'Resultado poco fiable';
 export const MENOS_DE_100 = 'menos de 100';
 export const TRAMOS_EN_PALABRAS: Readonly<Record<string, string>> = { '100-299': '100 a 299', '300-599': '300 a 599', '600+': '600 o más' };
-export const sinSenales = (paquete: string): string => `Sin señales: ${paquete} no ha encontrado nada que puntúe en este texto.`;
-export const sinCalibracion = (motivo: string): string => `Sin calibración: ${motivo}.`;
-export const tuBanda = (banda: string, genero: string, tramo: string): string =>
-  `Tu texto queda ${banda} de los textos humanos del género «${genero}» de ${tramo} palabras.`;
-export const tusPercentiles = (total: string, n: number, p50: string, p95: string, p99: string): string =>
-  `Tu total: ${total}. En esos textos humanos (n = ${n}): mediana ${p50} · p95 ${p95} · p99 ${p99}.`;
-export const datosDelTexto = (palabras: number, tramo: string, genero: string): string => `Palabras de prosa: ${palabras} · Tramo: ${tramo} · Género: ${genero}`;
 
-// El desglose. Lo de cada regla va detrás de su nombre (enlazado a su ficha desde el 7.1) y su id: «Nombre (id): …».
-export const total = (cifra: string, unidad: string): string => `Total: ${cifra} ${unidad}.`;
-export const reglaConSenales = (n: number, contribucion: string): string => `${n} ${n === 1 ? 'señal' : 'señales'}, contribución ${contribucion}`;
-export const reglaInformativa = (n: number): string => `${n} ${n === 1 ? 'señal' : 'señales'}`;
+// El desglose. Lo de cada regla va detrás de su nombre (enlazado a su ficha desde el 7.1), sin su id desde el 9.2: «Nombre: …».
 export const NINGUNA_SENAL = 'Ninguna señal.';
-export const DEL_TEXTO_ENTERO = 'Del texto entero';
 export const INFORMATIVAS_EN_EL_DESGLOSE = 'Solo avisos: no suman';
-export const SIN_CALIBRACION = 'Sin calibración';
-export const NO_APLICADAS = 'No aplicadas';
-export const LADOS: Readonly<Record<string, string>> = { arriba: 'por encima de la banda humana', abajo: 'por debajo de la banda humana' };
-export const DENTRO_DE_LA_BANDA = 'dentro de la banda humana';
-export const ausencia = (coincidencias: number, minimo: number): string =>
-  `ausencia: ${coincidencias} ${coincidencias === 1 ? 'aparición' : 'apariciones'}; señala por debajo de ${minimo}`;
-export const estadistica = (metrica: string, valor: string, lado: string, p1: string, p5: string, p50: string, p95: string, p99: string): string =>
-  `${metrica} = ${valor}, ${lado}; en los textos humanos: p1 ${p1} · p5 ${p5} · mediana ${p50} · p95 ${p95} · p99 ${p99}`;
 
 // El catálogo de reglas (encargo 7.1, b): src/pages/reglas/, src/layouts/Catalogo.astro y src/catalogo/.
 // Solo la interfaz: el contenido de las fichas (nombre, explicación, ejemplos…) viene de los paquetes y menciona

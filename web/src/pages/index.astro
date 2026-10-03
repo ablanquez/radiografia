@@ -64,6 +64,8 @@
  *    · En papel no van el formulario, la navegación, el panel (lo sustituye la
  *      lista de señales) ni la línea de datos del medidor (la repite la
  *      cabecera del informe). Los <details> de las reglas propias, plegados.
+ *      Desde el 9.2, tampoco «Ver el detalle» del medidor: plegado no se ve, y
+ *      sus cifras van en la cabecera del informe.
  *    · Si no hay resultado, el párrafo «No hay análisis que imprimir».
  *    [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/@page — size: a4 y
  *    margin; Baseline 2024. Sin él, Chrome imprime en carta (visto en la
@@ -272,6 +274,13 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
       .ficha {
         border-top: 1px solid #d1d5db;
       }
+      .titular {
+        font-size: 1.15rem;
+        font-weight: 600;
+      }
+      .en-claro {
+        font-weight: 600;
+      }
       .solo-impresion {
         display: none;
       }
@@ -290,7 +299,8 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
         header nav,
         #formulario,
         #panel,
-        #medidor .datos {
+        #medidor .datos,
+        #medidor details {
           display: none !important;
         }
         .solo-impresion:not([hidden]) {

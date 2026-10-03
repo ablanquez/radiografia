@@ -131,7 +131,7 @@ describe('el informe en Chrome, sobre astro preview', () => {
       '#informe',
       'header nav',
       '#panel',
-      '#medidor .datos',
+      '#medidor details',
       '#cabecera-informe',
       '#medidor',
       '#leyenda',
@@ -148,7 +148,7 @@ describe('el informe en Chrome, sobre astro preview', () => {
       '#informe': false,
       'header nav': false,
       '#panel': false,
-      '#medidor .datos': false,
+      '#medidor details': false,
       '#cabecera-informe': true,
       '#medidor': true,
       '#leyenda': true,
@@ -162,7 +162,7 @@ describe('el informe en Chrome, sobre astro preview', () => {
     const versiones = paquetesIncluidos().map((x) => textos.paqueteDelInforme(x.cabecera.nombre, x.cabecera.version, false));
     assert.equal(cabecera[0], textos.INFORME_DE_RADIOGRAFIA);
     assert.match(cabecera[1] ?? '', /^Análisis del \d{1,2} de [a-z]+ de \d{4} a las \d{1,2}:\d{2}$/, 'la fecha y la hora del análisis');
-    assert.ok(cabecera[2]?.endsWith('Género: General'), cabecera[2]);
+    assert.ok(cabecera[2]?.endsWith('género: General'), cabecera[2]);
     assert.equal(cabecera[3], textos.paquetesDelInforme(versiones));
     assert.equal(await p().evaluar(`document.querySelector('.pie-informe').textContent`), textos.NOTA_DE_AUTORIA);
 

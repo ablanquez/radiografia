@@ -162,7 +162,8 @@ describe('el cargador en Chrome, sobre astro preview', () => {
       const tramo = [...document.querySelectorAll('#vista .tramo')].find((t) => t.dataset.familias.split('|').some((f) => f.startsWith('RadiografIA::')));
       tramo.click();
       const a = [...document.querySelectorAll('#panel article')].find((x) => x.querySelector('.id-regla')?.textContent.endsWith(' · RadiografIA'));
-      return { id: a.querySelector('.id-regla').textContent.split(' · ')[0], href: a.querySelector('h4 a')?.getAttribute('href') ?? null };
+      // Desde el 9.2 el enlace a la ficha va dentro de «¿Por qué lo miramos?», no en el título.
+      return { id: a.querySelector('.id-regla').textContent.split(' · ')[0], href: a.querySelector('details a')?.getAttribute('href') ?? null };
     })()`);
     assert.equal(incluida.href, urlDeRegla('/', incluida.id), 'una regla de RadiografIA enlaza a su ficha');
 
@@ -172,7 +173,8 @@ describe('el cargador en Chrome, sobre astro preview', () => {
       return { resumenes: detalles.map((d) => d.querySelector('summary').textContent), todosConFicha: detalles.every((d) => d.querySelectorAll('pre.ejemplo').length > 0), aReglas: [...s.querySelectorAll('a')].filter((x) => x.getAttribute('href').includes('/reglas/')).length };
     })()`);
     assert.deepEqual(
-      prueba.reglas.map((r) => r.nombre).filter((n) => !desglose.resumenes.some((x) => x.startsWith(`${n} (`))),
+      // Desde el 9.2 la línea es «Nombre: …», sin el id (los ids, solo en «¿Por qué lo miramos?» y en el catálogo).
+      prueba.reglas.map((r) => r.nombre).filter((n) => !desglose.resumenes.some((x) => x.startsWith(`${n}: `))),
       [],
       `cada regla del paquete de prueba, en un <details> del desglose: ${desglose.resumenes.join(' | ')}`,
     );

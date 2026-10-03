@@ -78,6 +78,7 @@ import {
   type Indice,
 } from './pintar.ts';
 import { activos, leerPaquetePropio } from './propios.ts';
+import type { Voz } from './lectura.ts';
 
 function elemento<T extends HTMLElement>(id: string): T {
   const e = document.getElementById(id);
@@ -117,13 +118,13 @@ botonDelInforme.addEventListener('click', () => window.print());
 /** true si lo analizado salió bien y está pintado: cambiar los paquetes lo deja atrás. */
 let hayResultado = false;
 
-function analizarYPintar(paquetes: readonly Paquete[], indice: Indice): void {
+function analizarYPintar(paquetes: readonly Paquete[], indice: Indice, vozDe: (paquete: string) => Voz): void {
   const elTexto = texto.value;
   const elGenero = genero.value;
   try {
     const r = analizar(elTexto, paquetes, { genero: elGenero });
     pintarCabeceraDelInforme(cabeceraDelInforme, r, paquetes, indice, fechaDelAnalisis.format(new Date()), nombreDeGenero(elGenero));
-    pintarMedidor(medidor, r, nombreDeGenero(elGenero));
+    pintarMedidor(medidor, r, vozDe, indice, nombreDeGenero(elGenero));
     pintarSenalesDelInforme(senalesDelInforme, r, elTexto, indice, import.meta.env.BASE_URL, location.href);
     panel.replaceChildren();
     panel.hidden = true;
@@ -167,6 +168,8 @@ if (carga.paquetes === null) {
   pintarProblemas(problemas, carga.problemas);
 } else {
   const incluidos = carga.paquetes;
+  // Quién habla en el medidor (9.2): RadiografIA, el primero de FICHEROS, de estilo de asistente; Español correcto, de norma; los propios, de sus señales.
+  const vozDe = (paquete: string): Voz => (paquete === incluidos[0]?.cabecera.nombre ? 'asistente' : incluidos.some((p) => p.cabecera.nombre === paquete) ? 'norma' : 'propio');
   const marcados = new Set(incluidos.map((p) => p.cabecera.nombre));
   const propios: Paquete[] = [];
   const losActivos = (): Paquete[] => activos(incluidos, marcados, propios);
@@ -274,6 +277,6 @@ if (carga.paquetes === null) {
   estado.textContent = textos.paquetesCargados(incluidos.map((p) => `${p.cabecera.nombre} ${p.cabecera.version}`));
   formulario.addEventListener('submit', (e) => {
     e.preventDefault();
-    analizarYPintar(losActivos(), indice);
+    analizarYPintar(losActivos(), indice, vozDe);
   });
 }
