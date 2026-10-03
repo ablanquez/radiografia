@@ -204,7 +204,9 @@ export const titular = (frase: string, corto: boolean): string => `${frase}${cor
 
 // «Ver el detalle»: las cifras, plegadas.
 export const VER_EL_DETALLE = 'Ver el detalle';
-export const tuTotal = (cifra: string): string => `Tu total: ${cifra} puntos por cada 1.000 palabras.`;
+/** «1 punto» y «-1 punto»; cualquier otra cifra, «puntos» («0 puntos», «8,06 puntos»). */
+export const puntos = (cifra: string): string => `${cifra} ${cifra === '1' || cifra === '-1' ? 'punto' : 'puntos'}`;
+export const tuTotal = (cifra: string): string => `Tu total: ${puntos(cifra)} por cada 1.000 palabras.`;
 export const comparadoCon = (n: string, genero: string, tramo: string, escritos: string, p50: string, p95: string, p99: string): string =>
   `Comparado con ${n} ${genero} de ${tramo} palabras ${escritos} por personas: mediana ${p50} · p95 ${p95} · p99 ${p99}.`;
 export const palabrasQueCuentan = (palabras: number, tramo: string, genero: string): string =>
@@ -260,8 +262,8 @@ export const LO_QUE_SE_NOTA = 'Lo que se nota en el conjunto';
 export const SIN_TEXTOS_PARA_COMPARAR = 'Sin textos de personas con los que comparar';
 export const PARA_ESTE_TIPO = 'para este tipo de texto y esta longitud';
 export const NO_SE_PUEDE_MEDIR = 'no se puede medir en este texto';
-export const vecesYPuntos = (n: number, puntos: string): string => `${veces(n)} · ${puntos} puntos`;
-export const totalEnClaro = (cifra: string): string => `Total: ${cifra} puntos por cada 1.000 palabras.`;
+export const vecesYPuntos = (n: number, cifra: string): string => `${veces(n)} · ${puntos(cifra)}`;
+export const totalEnClaro = (cifra: string): string => `Total: ${puntos(cifra)} por cada 1.000 palabras.`;
 /** Una métrica de contexto: su valor, dónde queda respecto a lo habitual y los bordes de lo habitual. */
 export const estadisticaDeContexto = (valor: string, unidad: string, posicion: string, genero: string, abajo: string, arriba: string): string =>
   `${valor} ${unidad}: ${posicion} lo habitual en ${genero} (de ${abajo} a ${arriba})`;

@@ -104,6 +104,7 @@ const MUESTRAS: Readonly<Record<string, readonly unknown[]>> = {
   ningunaSenalDe: ['Mi paquete'],
   soloSeMiranEn: [['las críticas de cine', 'los textos académicos']],
   vecesYPuntos: [2, '3'],
+  puntos: ['1'],
   totalEnClaro: ['5'],
   estadisticaDeContexto: ['0,58', 'de palabras distintas sobre el total (de 0 a 1)', 'dentro de', 'las noticias', '0,5', '0,62'],
 };

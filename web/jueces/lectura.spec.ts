@@ -26,6 +26,7 @@
  */
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
+import * as textos from '../src/textos.ts';
 import type { Paquete, Resultado } from '@radiografia/motor/navegador';
 import { detalleDelPaquete, generoEnCalle, lineaDelTextoEntero, motivoNoMirada, motivoSinComparar, resumenDelPaquete, titularDelPaquete } from '../src/pantalla/lectura.ts';
 import { indexar } from '../src/pantalla/pintar.ts';
@@ -96,6 +97,16 @@ describe('el titular del medidor', () => {
     const [resultado, r] = conBanda('por encima del p95', 'general');
     assert.equal(titularDelPaquete(resultado, { ...r, banda: null }, 'norma'), null);
     assert.equal(titularDelPaquete({ ...resultado, tramo: 'insuficiente' }, r, 'asistente'), null);
+  });
+
+  test('«1 punto», en singular; «8,06 puntos» y «0 puntos», en plural', () => {
+    const [resultado, r] = conBanda('por debajo de la mediana', 'opinion', { total: 1 });
+    assert.equal(detalleDelPaquete(resultado, r, 'Opinión (críticas de cine)')[0], 'Tu total: 1 punto por cada 1.000 palabras.');
+    assert.equal(textos.totalEnClaro('1'), 'Total: 1 punto por cada 1.000 palabras.');
+    assert.equal(textos.totalEnClaro('8,06'), 'Total: 8,06 puntos por cada 1.000 palabras.');
+    assert.equal(textos.vecesYPuntos(1, '1'), '1 vez · 1 punto');
+    assert.equal(textos.vecesYPuntos(1, '-1'), '1 vez · -1 punto');
+    assert.equal(textos.vecesYPuntos(2, '0'), '2 veces · 0 puntos');
   });
 
   test('el detalle: el total, con quién se compara y las palabras, sin «tramo»', () => {
