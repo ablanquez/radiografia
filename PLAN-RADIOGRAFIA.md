@@ -769,12 +769,22 @@ Copyleaks, Grammarly, LanguageTool, Readable, y una española si la hay) con
 checklist fija, en escritorio y a 390 px, sin capturas (derechos), en
 `docs/investigacion/ux-benchmark.md`.
 
-- [ ] `DISEÑO-RADIOGRAFIA.md`: investigación con doctrina (accesibilidad,
+- [x] `DISEÑO-RADIOGRAFIA.md`: investigación con doctrina (accesibilidad,
       legibilidad de texto largo, impresión), el concepto del icono
       «documento en negativo» con sus variantes, y resumen ejecutivo con
-      las decisiones VALIDADAS por Antonio antes de abrir Figma
-- [ ] Fuentes **autoalojadas** y con subsetting (Múnich 2022, RGPD): la
-      serif editorial y la sans se eligen sabiendo esto
+      las decisiones VALIDADAS por Antonio antes de abrir Figma (03/10:
+      informe del módulo en `docs/investigacion/informes/diseno-modulo.md`;
+      prospección `ux-benchmark.md`; DISEÑO en la raíz firmado como punto
+      de partida: Hemingway como molde, pastilla del resultado, tarjetas
+      por regla y por familia con ojo, subrayado fino con estilo de línea y
+      sigla, paleta de 8 ≥ 3,4:1 recalculada, Literata + Atkinson
+      Hyperlegible Next autoalojadas, 60-66 cpl, tarjeta anclada /
+      hoja inferior, informe por secciones, tres variantes de icono; lo que
+      no guste se ajusta en Figma y se reescribe aquí antes del calco)
+- [x] Fuentes **autoalojadas** y con subsetting (Múnich 2022, RGPD): la
+      serif editorial y la sans se eligen sabiendo esto (03/10: Literata y
+      Atkinson Hyperlegible Next, OFL 1.1; el autoalojado y el subsetting se
+      hacen en el calco)
 - [ ] Brief a Figma Make escrito desde el DISEÑO (layout, hex, fuentes,
       estados honestos, restricciones al modelo). Antonio modela; Claude
       lee por MCP
