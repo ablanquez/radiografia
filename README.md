@@ -114,8 +114,8 @@ familias, calibrado y validado) está hecho.
 Los textos de la propia web también pasan por los dos paquetes, en un juez
 ([`web/jueces/textos-web.spec.ts`](web/jueces/textos-web.spec.ts)). Entran el
 texto visible de la página del analizador y todas las cadenas de la interfaz,
-también las del catálogo, las del cargador y las del informe: 858 palabras
-de prosa, analizadas con «general». No entra el contenido de las fichas de las reglas,
+también las del catálogo, las del cargador, las del informe y las del
+lenguaje de calle: 1.324 palabras de prosa, analizadas con «general». No entra el contenido de las fichas de las reglas,
 porque menciona las formas que las reglas buscan (abajo,
 [«Catálogo»](#catálogo)).
 
@@ -147,9 +147,12 @@ de los dos ejemplos (abajo, [«Ejemplos»](#ejemplos)), eliges el género y, al
 pulsar el botón, ves:
 
 - los subrayados por familia;
-- el medidor con la banda;
-- la explicación y la sugerencia de cada regla, al tocar un subrayado, con su
-  nombre, que lleva a su ficha del catálogo;
+- arriba, una frase con dónde queda tu texto respecto a los textos de
+  personas del mismo tipo y longitud; debajo, lo que más pesa y por dónde
+  empezar; las cifras, plegadas (abajo, [«Cómo leer el
+  resultado»](#cómo-leer-el-resultado));
+- al tocar un subrayado, la regla en una frase llana, qué hacer y, plegado,
+  por qué se mira, con el enlace a su ficha del catálogo;
 - el desglose de cada paquete, con un enlace a la ficha de cada regla.
 
 Y antes de analizar eliges los paquetes: los dos incluidos, con sus
@@ -173,12 +176,18 @@ y no sale de él, la combinación con el origen de cada señal y los errores
 de validación con su regla y su campo (abajo, [«Paquetes
 propios»](#paquetes-propios)). Antonio lo vio en Chrome el 02/10/2026.
 
-El **informe** (punto 9) está hecho desde el 02/10/2026: la misma página,
-preparada para imprimirse o guardarse en PDF desde el navegador, con la
-cabecera del análisis, la puntuación, el texto con sus subrayados y la sigla
-de cada familia, el desglose y la lista de señales con su explicación y su
-sugerencia (abajo, [«Informe»](#informe)). Falta que Antonio abra el PDF
-para cerrar el punto.
+El **informe** (punto 9) está cerrado: la misma página, preparada para
+imprimirse o guardarse en PDF desde el navegador, con la cabecera del
+análisis, la puntuación, el texto con sus subrayados y la sigla de cada
+familia, el desglose y la lista de señales con su explicación y su
+sugerencia (abajo, [«Informe»](#informe)). Antonio abrió el PDF el
+03/10/2026.
+
+La **ampliación 9.2, lenguaje de calle**, está hecha desde el 03/10/2026:
+el resultado se lee en frases llanas (un titular, un resumen de dos líneas
+y la frase en claro de cada regla), con las cifras plegadas y sin las
+palabras del motor (abajo, [«Cómo leer el
+resultado»](#cómo-leer-el-resultado)). Falta que Antonio la vea en Chrome.
 
 Falta después, en el orden de la [hoja de ruta](#hoja-de-ruta): el diseño
 (punto 10) y el despliegue (11).
@@ -213,9 +222,10 @@ npm run dev                    # http://localhost:4321/ y el catálogo en http:/
     dev` abierto.
   - Hasta el 02/10/2026 solo se probaba lo construido, y el catálogo rompió
     `npm run dev` sin que nada se pusiera rojo.
-  - Los jueces del cargador y los del informe
-    ([`web/jueces/navegador.spec.ts`](web/jueces/navegador.spec.ts) e
-    [`impresion.spec.ts`](web/jueces/impresion.spec.ts)) abren la página en
+  - Los jueces del cargador, los del informe y los del lenguaje de calle
+    ([`web/jueces/navegador.spec.ts`](web/jueces/navegador.spec.ts),
+    [`impresion.spec.ts`](web/jueces/impresion.spec.ts) y
+    [`pantalla.spec.ts`](web/jueces/pantalla.spec.ts)) abren la página en
     **Chrome**, sin ventana, y la manejan por su protocolo de depuración. Hace falta Chrome instalado. Si no está en su ruta de
     siempre, se le da con la variable `CHROME`. Sin Chrome, esos jueces
     fallan; no se saltan.
@@ -271,15 +281,16 @@ Nada sale del navegador. La página pide su JS y los dos paquetes incluidos,
 que se validan al arrancar, y un texto de ejemplo cuando se pulsa su botón.
 Un paquete propio no se pide: se lee del fichero, en el navegador (abajo,
 [«Paquetes propios»](#paquetes-propios)). Medido en el build de la web el
-02/10/2026, con el catálogo, el cargador, la CSP y el informe:
+03/10/2026, con el catálogo, el cargador, la CSP, el informe y el lenguaje
+de calle:
 
 | fichero | bytes |
 |---|---|
-| el JS del analizador (motor, validador, cargador, informe y aviso MIT de Ajv; minificado por Vite) | 132.153 |
-| las cadenas de la interfaz que comparten el analizador y el catálogo (un JS aparte) | 5.445 |
-| `paquetes/radiografia.json` (con su calibración y los nombres de las reglas) | 342.163 |
-| `paquetes/espanol-correcto.json` | 20.822 |
-| `index.html` (con la CSP, 507 bytes, y la hoja de impresión) | 5.522 |
+| el JS del analizador (motor, validador, cargador, informe, lenguaje de calle y aviso MIT de Ajv; minificado por Vite) | 136.924 |
+| las cadenas de la interfaz que comparten el analizador y el catálogo (un JS aparte) | 8.277 |
+| `paquetes/radiografia.json` (con su calibración, los nombres y las frases en claro de las reglas) | 347.340 |
+| `paquetes/espanol-correcto.json` | 21.618 |
+| `index.html` (con la CSP, 507 bytes, y la hoja de impresión) | 5.608 |
 | `ejemplos/antonio.txt`, al pulsar su botón | 1.777 |
 | `ejemplos/ia.txt`, al pulsar su botón | 1.957 |
 
@@ -296,19 +307,19 @@ Además de cada página, pide el JS del buscador y el de las cadenas.
 
 | fichero | bytes |
 |---|---|
-| `reglas/index.html`, el índice | 67.648 |
+| `reglas/index.html`, el índice | 73.781 |
 | el JS del buscador y los filtros | 1.131 |
-| cada ficha, `reglas/<id>/index.html` | de 4.078 a 16.107 |
-| las 50 fichas juntas | 352.220 |
+| cada ficha, `reglas/<id>/index.html` | de 4.179 a 16.272 |
+| las 50 fichas juntas | 358.643 |
 
 `dist/` entero: 52 páginas HTML (el analizador, el índice y 50 fichas), 61
-ficheros y 944.642 bytes. Cada página lleva la CSP.
+ficheros y 970.860 bytes. Cada página lleva la CSP.
 
 ## Ejemplos
 
 Dos botones junto al cuadro de texto cargan dos textos sobre el mismo tema,
-por qué gustan los cómics, y seleccionan el género «Opinión». El análisis
-empieza al pulsar «Pon tu texto a contraluz».
+por qué gustan los cómics, y seleccionan el género «Opinión (críticas de
+cine)». El análisis empieza al pulsar «Pon tu texto a contraluz».
 
 - **El texto humano**
   ([`web/public/ejemplos/antonio.txt`](web/public/ejemplos/antonio.txt)) lo
@@ -330,6 +341,76 @@ primera generación que se descartó. Un juez comprueba que sus cifras siguen
 siendo las que da el motor. Su apartado «Historia» cuenta por qué cambiaron
 con la ampliación 6.4: antes, el de Antonio sumaba 5 y el de IA 2.
 
+## Cómo leer el resultado
+
+El resultado se lee de arriba abajo: una frase, dos líneas y, si quieres,
+las cifras. La forma la da la barra lateral de
+[Hemingway](https://hemingwayapp.com/help/docs/highlighted-issues), una frase
+por subrayado («These are words like 'maybe' or 'I think' that make your
+writing sound less confident»), pero sin afirmar nunca quién escribió el
+texto.
+
+**El titular** dice dónde queda tu texto respecto a textos escritos por
+personas del mismo tipo (el género que eliges) y de su misma longitud. Es la
+banda de la [«Escala»](#escala) traducida, no una probabilidad:
+- «Menos rasgos de estilo de asistente que la mitad de…»: por debajo de la
+  mediana de esos textos;
+- «Dentro de lo habitual en…»: entre la mediana y el p95;
+- «Más rasgos de estilo de asistente que el 95 % de…» o «…que el 99 %…»: por
+  encima del p95 o del p99;
+- «Ni un rasgo de estilo de asistente que sume en tu texto»: ninguna regla
+  suma (si unas suman y otras restan hasta cero, va el de la banda);
+- con 100 a 299 palabras, «(texto corto: resultado orientativo)».
+
+Con los ejemplos: el texto de IA, con «Opinión (críticas de cine)», queda
+«Menos rasgos de estilo de asistente que la mitad de las críticas de cine de
+esta longitud escritas por personas»; el de Antonio, «Dentro de lo habitual
+en las críticas de cine…».
+
+**«Rasgos de estilo de asistente»** son lo que miden las reglas de
+RadiografIA: fórmulas, formato pegado, puntuación, vocabulario y ritmo que,
+según sus fuentes, los asistentes de chat dejan más que las personas. Una
+persona puede tenerlos, y un texto de asistente puede no tenerlos. Por eso
+el titular no dice «IA» ni «generado».
+
+**El resumen**, debajo:
+- «Lo que más pesa:», con las tres reglas que más suman y, entre paréntesis,
+  cuántas veces aparecen o, en las que se comparan con textos de personas
+  (las estadísticas), su valor y lo normal: «Pocas comas (0,38 comas por
+  punto; lo normal en las críticas de cine es más de 0,49)». **La meta solo
+  existe donde hay textos de personas medidos**: el resto de las reglas dice
+  cuántas veces, sin meta.
+- «Empieza por:», con la sugerencia de la primera.
+- Español correcto, en una línea: «9 avisos de norma: …».
+
+**«Ver el detalle»**, plegado, guarda las cifras: tu total en puntos por
+cada 1.000 palabras, la mediana, el p95 y el p99 de los textos de personas
+con los que se compara, y cuántos son.
+
+**Al tocar un subrayado**, cada regla dice su nombre, su frase en claro, qué
+hacer y, plegado, «¿Por qué lo miramos?»: la explicación con sus fuentes,
+el nivel de evidencia, el origen de la lista y el enlace a su ficha.
+
+**El desglose** cuenta por paquete y familia las veces y los puntos de cada
+regla. Las que restan dicen «rasgo humano: resta»; las de solo aviso, que no
+suman; «Lo que se nota en el conjunto» son las que miran el texto entero, y
+«No miradas en este texto», las que no tocaban, con su porqué («solo se
+miran en las críticas de cine y los textos académicos»).
+
+**«Opinión (críticas de cine)».** Lo que hay calibrado en ese género son
+críticas de cine de MuchoCine (abajo, [«Los seis géneros»](#los-seis-géneros)),
+y el selector lo dice para no prometer otra cosa.
+
+**Los jueces**
+([`web/jueces/lectura.spec.ts`](web/jueces/lectura.spec.ts) y, en Chrome,
+[`pantalla.spec.ts`](web/jueces/pantalla.spec.ts)) comprueban:
+- cada titular, por banda y por género;
+- el resumen: sus tres reglas, sus empates y sus metas, con el borde que usa
+  cada regla en la celda de su género y longitud;
+- que «Ver el detalle» y «¿Por qué lo miramos?» salen plegados;
+- que en la pantalla no se ven las palabras del motor: ni «informativa», ni
+  «atenuante», ni «tramo», ni los percentiles fuera del detalle.
+
 ## Catálogo
 
 En `/reglas/` están todas las reglas de los dos paquetes incluidos, y cada
@@ -340,9 +421,9 @@ http://localhost:4321/reglas/. Desde el analizador se llega por el enlace de
 la cabecera y por el nombre de cada regla, en el panel de un subrayado y en
 el desglose.
 
-- **El índice** lista las 50 reglas: nombre, id, paquete, familia,
-  detector, severidad, nivel de evidencia, peso y la primera frase de la
-  explicación.
+- **El índice** lista las 50 reglas: nombre y, debajo, su frase en claro;
+  id, paquete, familia, detector, severidad, nivel de evidencia, peso y la
+  primera frase de la explicación.
   - El buscador mira el nombre, el id y la explicación entera, sin
     distinguir mayúsculas ni tildes.
   - Los filtros son tres: familia, severidad y detector. Dentro de un
@@ -352,6 +433,7 @@ el desglose.
   - Hoy las 50 reglas tienen severidad «baja», así que el filtro de
     severidad todavía no separa nada.
 - **La ficha** enseña la regla entera y literal:
+  - bajo el nombre, su frase en claro;
   - paquete, familia y detector, y cómo busca, dicho en palabras;
   - peso, severidad y nivel de evidencia;
   - explicación, sugerencia, excepciones y origen de la lista;
@@ -361,6 +443,13 @@ el desglose.
   - En el esquema es opcional, porque un paquete de terceros puede no
     traerlo. Entonces la web enseña el id sin su prefijo.
   - En RadiografIA y Español correcto lo exige un juez.
+- **La frase en claro** de cada regla es un campo de la ficha desde el
+  03/10/2026 (`enClaro`, de 3 a 140 caracteres): una frase llana, con un
+  ejemplo cuando ayuda. Las 50 las firmó Antonio.
+  - En el esquema es opcional; donde falta, no se enseña.
+  - En RadiografIA y Español correcto la exige un juez: que empiece por
+    mayúscula, que acabe en punto y que no diga percentil, densidad, regex,
+    lema, n-grama, «IA», «generado» ni «detectado».
 
 **Cómo se genera.** Al construir, Astro lee los dos JSON de `paquetes/` y
 escribe una página por regla con `getStaticPaths`
@@ -764,6 +853,7 @@ con las 14 de 100-299 omitidas. En total van al paquete 224 celdas.
   Corpus](https://doi.org/10.5281/zenodo.7313126), artículos de las revistas
   del CSIC, leído por rangos de bytes sin bajarlo entero.
 - **`opinion`**: críticas de cine de usuarios de MuchoCine (hacia 2005-2008).
+  Por eso en el selector se llama «Opinión (críticas de cine)».
 - **`general`**, el género por defecto: por tramo, los géneros que tienen ese
   tramo calibrado y el mismo número de documentos de cada uno, elegidos por
   huella. En 100-299 entran noticia, administrativo y opinión, 155 de cada
@@ -1060,7 +1150,8 @@ género “Noticia” de 300 a 599 palabras», con su total y los percentiles.
   casilla; y los **paquetes propios** que cargue cada uno, que se combinan
   con ellos sin salir del navegador.
 - **Tres tipos de detector**: patrón, estructural, estadístico.
-- **Ficha por regla**: id, nombre (opcional en el esquema), familia,
+- **Ficha por regla**: id, nombre y frase en claro (opcionales en el
+  esquema), familia,
   detector y sus parámetros, peso (que puede ser **negativo**: un atenuante
   humano resta), severidad, si es **informativa**, explicación, sugerencia,
   excepciones, **fuentes**, **origen de la lista** («inventario propio…»
