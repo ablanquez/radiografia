@@ -65,7 +65,13 @@ antes del verde, push = despliegue, bitácora por la skill
 ## 4 · El plan
 
 `PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1, 2 y 3 (29/09), 4 (30/09),
-5 (01/10), 6, 7 y 8 (02/10), 9 y 9.2 (03/10). Abierto: el 10.
+5 (01/10), 6, 7 y 8 (02/10), 9 y 9.2 (03/10). Abierto: el 10 (03/10:
+prospección `ux-benchmark.md`, informe del módulo, `DISEÑO-RADIOGRAFIA.md`
+firmado como punto de partida, `docs/figma/guidelines.md` y
+`docs/figma/prompts.md` listos). **Siguiente paso (04/10)**: Antonio abre
+Figma Make, pega guidelines.md, Claude Opus 5.5 + Plan mode, Prompt 0 y
+después 1→6 pantalla a pantalla; Claude lee las capas por MCP; retoques con
+Gemini 3.8 Flash; Prompt 7 tokens; Prompt 8 logo opcional.
 
 ## 5 · Decisiones
 
@@ -399,6 +405,20 @@ antes del verde, push = despliegue, bitácora por la skill
   paquete (no entra; nevera); ids solo dentro de «¿Por qué lo miramos?» y
   en el catálogo; «Ver el detalle» plegado en pantalla y sus cifras en la
   cabecera del informe.
+- 03/10 — **Decisiones del 10 (arranque)**: prospección en Chrome de
+  Hemingway (referente de forma), GPTZero, LanguageTool, QuillBot y Lorca;
+  Copyleaks/Grammarly/Readable fuera (piden cuenta). DISEÑO firmado como
+  punto de partida (se ajusta en Figma y se reescribe antes del calco):
+  pastilla del resultado, tarjetas por regla y por familia con ojo,
+  subrayado fino con estilo de línea y sigla, paleta de 8 (Okabe-Ito +
+  Tol muted, todas ≥ 3,4:1 sobre blanco, recalculadas; pendiente
+  simulador de daltonismo), Literata + Atkinson Hyperlegible Next (OFL,
+  autoalojadas), 60-66 cpl / 18 px / 1,5, tarjeta anclada en escritorio y
+  hoja inferior en móvil, pestañas Texto/Reglas/Datos en móvil, informe
+  por secciones, icono en tres variantes. Figma Make: Claude Opus 5.5 para
+  construir, Gemini 3.8 Flash para retocar (doctrina de Figma: modelo por
+  tarea; guidelines.md leído en cada prompt; plan mode; escritorio antes
+  que móvil; copiar como capas; nada de código de Make al repo).
 
 ## 6 · Cabos abiertos
 
