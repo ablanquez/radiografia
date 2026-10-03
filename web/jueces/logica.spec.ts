@@ -84,7 +84,7 @@ describe('los géneros del selector', () => {
   test('el nombre visible de cada género; si no lo tiene, la clave', () => {
     assert.deepEqual(
       ['general', 'noticia', 'administrativo', 'narrativa-clasica', 'academico', 'opinion', 'corporativo'].map(nombreDeGenero),
-      ['General', 'Noticia', 'Administrativo', 'Narrativa clásica', 'Académico', 'Opinión', 'corporativo'],
+      ['General', 'Noticia', 'Administrativo', 'Narrativa clásica', 'Académico', 'Opinión (críticas de cine)', 'corporativo'],
     );
   });
 });
@@ -231,7 +231,7 @@ describe('el catálogo de reglas (encargo 7.1, b)', () => {
       `Expresión regular: ${regex('disc-sin-automenciones')} [código]`,
       'Banderas: iu [código]',
       'Cuándo señala: si no aparece ninguna en el texto entero, y solo con 300 palabras de prosa o más',
-      'Géneros: solo en Opinión y Académico',
+      'Géneros: solo en Opinión (críticas de cine) y Académico',
     ]);
     assert.deepEqual(llano('disc-marcador-repetido'), [
       'Dónde mira: al principio de cada frase',

@@ -47,7 +47,7 @@ export const QUITAR = 'Quitar';
 export const quitarPaquete = (nombre: string): string => `Quitar «${nombre}»`;
 export const SIN_PAQUETES_ACTIVOS = 'Marca al menos un paquete o carga uno propio para analizar.';
 export const PAQUETES_CAMBIADOS = 'Los paquetes han cambiado: vuelve a pulsar «Pon tu texto a contraluz».';
-export const SIN_ESCALA = 'Ningún paquete activo trae escala respecto a textos humanos: el resultado está en el desglose.';
+export const SIN_ESCALA = 'Ningún paquete activo se compara con textos de personas: mira el resumen y el desglose.';
 
 // El informe para imprimir (encargo 9.1, b; firmado en la parada 1): el botón, la cabecera, la lista de señales, la
 // clave de siglas, el pie y el párrafo de cuando no hay análisis. Lo del usuario y de las fichas entra con textContent.
@@ -79,13 +79,14 @@ export const NOMBRES_DE_GENERO: Readonly<Record<string, string>> = {
   administrativo: 'Administrativo',
   'narrativa-clasica': 'Narrativa clásica',
   academico: 'Académico',
-  opinion: 'Opinión',
+  // Encargo 9.2 (firmado): lo calibrado en «opinion» son críticas de cine de MuchoCine, y el selector no promete otra cosa.
+  opinion: 'Opinión (críticas de cine)',
 };
 
 // La leyenda.
 export const FAMILIAS = 'Familias';
 export const MUESTRA_DE_SUBRAYADO = 'subrayado';
-export const INFORMATIVAS_EN_LA_LEYENDA = 'Informativas: se señalan y no suman.';
+export const INFORMATIVAS_EN_LA_LEYENDA = 'Solo avisos: no suman.';
 
 // El panel de un tramo.
 export const TITULO_DEL_PANEL = 'Lo que señala este tramo';
@@ -114,7 +115,7 @@ export const reglaConSenales = (n: number, contribucion: string): string => `${n
 export const reglaInformativa = (n: number): string => `${n} ${n === 1 ? 'señal' : 'señales'}`;
 export const NINGUNA_SENAL = 'Ninguna señal.';
 export const DEL_TEXTO_ENTERO = 'Del texto entero';
-export const INFORMATIVAS_EN_EL_DESGLOSE = 'Informativas: se enseñan, no suman';
+export const INFORMATIVAS_EN_EL_DESGLOSE = 'Solo avisos: no suman';
 export const SIN_CALIBRACION = 'Sin calibración';
 export const NO_APLICADAS = 'No aplicadas';
 export const LADOS: Readonly<Record<string, string>> = { arriba: 'por encima de la banda humana', abajo: 'por debajo de la banda humana' };
@@ -130,7 +131,7 @@ export const estadistica = (metrica: string, valor: string, lado: string, p1: st
 export const CATALOGO = 'Catálogo de reglas';
 export const VOLVER_AL_CATALOGO = 'Volver al catálogo';
 export const PROBAR_EN_EL_ANALIZADOR = 'Probar en el analizador';
-export const INFORMATIVA = 'Regla informativa: se señala y no suma.';
+export const INFORMATIVA = 'Solo aviso: no suma.';
 export const PAQUETE = 'Paquete';
 export const FAMILIA = 'Familia';
 export const DETECTOR = 'Detector';
@@ -188,3 +189,102 @@ export const PRESENTACION_DEL_CATALOGO =
 export const BUSCAR = 'Buscar por nombre, id o explicación';
 export const QUITAR_FILTROS = 'Quitar filtros';
 export const recuentoDeReglas = (n: number): string => `${n} ${n === 1 ? 'regla' : 'reglas'}`;
+
+// El lenguaje de calle (encargo 9.2, b; firmado por Antonio en la parada 1): el titular del medidor, su detalle plegado,
+// el resumen, las unidades de cada métrica y las etiquetas que sustituyen el vocabulario del motor. Nunca «IA»: «rasgos
+// de estilo de asistente», y el titular es la banda respecto a los textos de personas, no una probabilidad.
+
+/** Cada género en palabras de la calle, con su artículo, que da la concordancia («escritos», «escritas»). */
+export const GENEROS_EN_CALLE: Readonly<Record<string, string>> = {
+  general: 'los textos',
+  noticia: 'las noticias',
+  opinion: 'las críticas de cine',
+  academico: 'los textos académicos',
+  administrativo: 'los textos administrativos',
+  'narrativa-clasica': 'los textos de narrativa clásica',
+};
+/** Un género que no está en la tabla (el de un paquete propio). */
+export const generoDesconocido = (clave: string): string => `los textos del género «${clave}»`;
+/** «las noticias de esta longitud escritas por personas»: con quién se compara. */
+export const quienEscribe = (genero: string, escritos: string): string => `${genero} de esta longitud ${escritos} por personas`;
+
+// El titular, por banda; sin punto final: lo pone titular().
+export const menosRasgosQueLaMitad = (quien: string): string => `Menos rasgos de estilo de asistente que la mitad de ${quien}`;
+export const dentroDeLoHabitual = (quien: string): string => `Dentro de lo habitual en ${quien}`;
+export const masRasgosQue = (porcentaje: string, quien: string): string => `Más rasgos de estilo de asistente que el ${porcentaje} % de ${quien}`;
+export const NI_UN_RASGO = 'Ni un rasgo de estilo de asistente que sume en tu texto';
+// Los de un paquete propio con escala: no mide estilo de asistente, sino sus señales.
+export const menosSenalesQueLaMitad = (paquete: string, quien: string): string => `Menos señales de «${paquete}» que la mitad de ${quien}`;
+export const masSenalesQue = (paquete: string, porcentaje: string, quien: string): string => `Más señales de «${paquete}» que el ${porcentaje} % de ${quien}`;
+export const niUnaSenalDe = (paquete: string): string => `Ni una señal de «${paquete}» que sume en tu texto`;
+export const SIN_REFERENCIA = 'Sin referencia humana para este tipo de texto y esta longitud: mira el detalle';
+/** El titular entero: con texto de 100 a 299 palabras, la advertencia; y el punto final. */
+export const titular = (frase: string, corto: boolean): string => `${frase}${corto ? ' (texto corto: resultado orientativo)' : ''}.`;
+
+// «Ver el detalle»: las cifras, plegadas.
+export const VER_EL_DETALLE = 'Ver el detalle';
+export const tuTotal = (cifra: string): string => `Tu total: ${cifra} puntos por cada 1.000 palabras.`;
+export const comparadoCon = (n: string, genero: string, tramo: string, escritos: string, p50: string, p95: string, p99: string): string =>
+  `Comparado con ${n} ${genero} de ${tramo} palabras ${escritos} por personas: mediana ${p50} · p95 ${p95} · p99 ${p99}.`;
+export const palabrasQueCuentan = (palabras: number, tramo: string, genero: string): string =>
+  `${palabras} palabras que cuentan (sin listas, títulos, tablas ni código) · textos de ${tramo} palabras · género: ${genero}`;
+export const textoCortoEnClaro = (palabras: number): string => `Con ${palabras} palabras, el resultado es orientativo: el análisis es completo desde 300.`;
+export const sinTextosDePersonas = (genero: string, tramo: string, escritos: string): string =>
+  `No hay ${genero} de ${tramo} palabras ${escritos} por personas para comparar.`;
+
+// El resumen: lo que más pesa y por dónde empezar.
+export const loQueMasPesa = (partes: readonly string[]): string => `Lo que más pesa: ${partes.join(' · ')}.`;
+export const parteDelResumen = (nombre: string, cola: string): string => `${nombre} (${cola})`;
+export const veces = (n: number): string => `${n} ${n === 1 ? 'vez' : 'veces'}`;
+export const NI_UNA_VEZ = 'ni una vez en el texto';
+/** Una ausencia que no llega al mínimo sin ser cero. */
+export const soloVeces = (n: number, minimo: number): string => `solo ${veces(n)}; lo esperable es al menos ${minimo}`;
+/** El valor de una métrica con su unidad y lo que hacen los textos de personas (el borde que usa la regla). */
+export const conMeta = (valor: string, unidad: string, genero: string, comparacion: string, cifra: string): string =>
+  `${valor} ${unidad}; lo normal en ${genero} es ${comparacion} de ${cifra}`;
+export const empiezaPor = (sugerencia: string): string => `Empieza por: ${sugerencia}`;
+export const NINGUNA_PUNTUABLE = 'Ninguna regla puntuable ha saltado: bien.';
+// Español correcto y los paquetes propios: una línea.
+export const avisosDeNorma = (n: number, reglas: readonly string[]): string => `${n} ${n === 1 ? 'aviso' : 'avisos'} de norma: ${reglas.join(' y ')}.`;
+export const NINGUN_AVISO = 'Ningún aviso de norma.';
+export const reglaConCuenta = (nombre: string, n: number): string => `${nombre} (${n})`;
+export const senalesDe = (n: number, paquete: string, reglas: readonly string[]): string =>
+  `${n} ${n === 1 ? 'señal' : 'señales'} de «${paquete}»: ${reglas.join(' y ')}.`;
+export const ningunaSenalDe = (paquete: string): string => `Ninguna señal de «${paquete}».`;
+
+/** [PROPIO, firmado] La unidad de cada métrica del motor, detrás de su valor. */
+export const UNIDADES_DE_METRICA: Readonly<Record<string, string>> = {
+  'frases-por-100-palabras': 'frases por cada 100 palabras',
+  'cv-longitud-frase': 'de variación en la longitud de las frases',
+  'ratio-comas-puntos': 'comas por punto',
+  'puntuacion-por-1000': 'signos de puntuación por cada 1.000 palabras',
+  'puntuacion-secundaria-por-1000': 'paréntesis, comillas, dos puntos y similares por cada 1.000 palabras',
+  'nominalizaciones-por-1000': 'sustantivos en -ción, -miento, -dad… por cada 1.000 palabras',
+  'seq-rep-4': 'de los grupos de cuatro palabras, repetidos (de 0 a 1)',
+  ttr: 'de palabras distintas sobre el total (de 0 a 1)',
+  'mattr-50': 'de palabras distintas en cada trozo de 50 (de 0 a 1)',
+  mtld: 'palabras seguidas, de media, antes de repetir vocabulario',
+  'hdd-42': 'de variedad en 42 palabras al azar (de 0 a 1)',
+  ifsz: 'de legibilidad (más alto, más fácil)',
+  'pronombres-anaforicos-por-1000': 'pronombres que remiten a lo ya dicho por cada 1.000 palabras',
+};
+
+// Las etiquetas que sustituyen el vocabulario del motor en el desglose y en el panel.
+export const RASGO_HUMANO = 'rasgo humano: resta';
+export const NO_MIRADAS = 'No miradas en este texto';
+export const soloSeMiranEn = (generos: readonly string[]): string =>
+  `solo se miran en ${generos.length > 1 ? `${generos.slice(0, -1).join(', ')} y ${generos.at(-1)}` : generos.join('')}`;
+export const SOLO_TEXTOS_LARGOS = 'solo se miran en textos de 300 palabras o más';
+export const LO_QUE_SE_NOTA = 'Lo que se nota en el conjunto';
+export const SIN_TEXTOS_PARA_COMPARAR = 'Sin textos de personas con los que comparar';
+export const PARA_ESTE_TIPO = 'para este tipo de texto y esta longitud';
+export const NO_SE_PUEDE_MEDIR = 'no se puede medir en este texto';
+export const vecesYPuntos = (n: number, puntos: string): string => `${veces(n)} · ${puntos} puntos`;
+export const totalEnClaro = (cifra: string): string => `Total: ${cifra} puntos por cada 1.000 palabras.`;
+/** Una métrica de contexto: su valor, dónde queda respecto a lo habitual y los bordes de lo habitual. */
+export const estadisticaDeContexto = (valor: string, unidad: string, posicion: string, genero: string, abajo: string, arriba: string): string =>
+  `${valor} ${unidad}: ${posicion} lo habitual en ${genero} (de ${abajo} a ${arriba})`;
+export const POSICIONES_RESPECTO_A_LO_HABITUAL: Readonly<Record<string, string>> = { dentro: 'dentro de', arriba: 'por encima de', abajo: 'por debajo de' };
+export const QUE_HACER = 'Qué hacer';
+export const POR_QUE_LO_MIRAMOS = '¿Por qué lo miramos?';
+export const VER_SU_FICHA = 'Ver su ficha en el catálogo';
