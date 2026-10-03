@@ -171,36 +171,60 @@ export const BUSCAR = 'Buscar por nombre, id o explicación';
 export const QUITAR_FILTROS = 'Quitar filtros';
 export const recuentoDeReglas = (n: number): string => `${n} ${n === 1 ? 'regla' : 'reglas'}`;
 
-// El lenguaje de calle (encargo 9.2, b; firmado por Antonio en la parada 1): el titular del medidor, su detalle plegado,
-// el resumen, las unidades de cada métrica y las etiquetas que sustituyen el vocabulario del motor. Nunca «IA»: «rasgos
-// de estilo de asistente», y el titular es la banda respecto a los textos de personas, no una probabilidad.
+// El lenguaje de calle (encargo 9.2, b; firmado por Antonio en la parada 1): la etiqueta y la frase del medidor, su
+// detalle plegado, el resumen, las unidades de cada métrica y las etiquetas que sustituyen el vocabulario del motor.
 
-/** Cada género en palabras de la calle, con su artículo, que da la concordancia («escritos», «escritas»). */
-export const GENEROS_EN_CALLE: Readonly<Record<string, string>> = {
-  general: 'los textos',
-  noticia: 'las noticias',
-  opinion: 'las críticas de cine',
-  academico: 'los textos académicos',
-  administrativo: 'los textos administrativos',
-  'narrativa-clasica': 'los textos de narrativa clásica',
+/** Un género en palabras de la calle: en singular, en plural y si la palabra es femenina, que da la concordancia. */
+export interface GeneroEnPalabras {
+  readonly singular: string;
+  readonly plural: string;
+  readonly femenino: boolean;
+}
+/** Cada género en palabras de la calle, con el género gramatical de la palabra (retoque del 9.2). */
+export const GENEROS_EN_CALLE: Readonly<Record<string, GeneroEnPalabras>> = {
+  general: { singular: 'texto', plural: 'textos', femenino: false },
+  noticia: { singular: 'noticia', plural: 'noticias', femenino: true },
+  opinion: { singular: 'crítica de cine', plural: 'críticas de cine', femenino: true },
+  academico: { singular: 'texto académico', plural: 'textos académicos', femenino: false },
+  administrativo: { singular: 'texto administrativo', plural: 'textos administrativos', femenino: false },
+  'narrativa-clasica': { singular: 'texto de narrativa clásica', plural: 'textos de narrativa clásica', femenino: false },
 };
 /** Un género que no está en la tabla (el de un paquete propio). */
-export const generoDesconocido = (clave: string): string => `los textos del género «${clave}»`;
-/** «las noticias de esta longitud escritas por personas»: con quién se compara. */
-export const quienEscribe = (genero: string, escritos: string): string => `${genero} de esta longitud ${escritos} por personas`;
+export const generoDesconocido = (clave: string): GeneroEnPalabras => ({ singular: `texto del género «${clave}»`, plural: `textos del género «${clave}»`, femenino: false });
+/** Las palabras que conciertan con el género: «una crítica… escrita», «las críticas… escritas», «con las que»; y en masculino. */
+export const CONCORDANCIA: Readonly<Record<'femenino' | 'masculino', { readonly un: string; readonly los: string; readonly escrito: string; readonly escritos: string }>> = {
+  femenino: { un: 'una', los: 'las', escrito: 'escrita', escritos: 'escritas' },
+  masculino: { un: 'un', los: 'los', escrito: 'escrito', escritos: 'escritos' },
+};
 
-// El titular, por banda; sin punto final: lo pone titular().
-export const menosRasgosQueLaMitad = (quien: string): string => `Menos rasgos de estilo de asistente que la mitad de ${quien}`;
-export const dentroDeLoHabitual = (quien: string): string => `Dentro de lo habitual en ${quien}`;
-export const masRasgosQue = (porcentaje: string, quien: string): string => `Más rasgos de estilo de asistente que el ${porcentaje} % de ${quien}`;
-export const NI_UN_RASGO = 'Ni un rasgo de estilo de asistente que sume en tu texto';
+// La etiqueta y la frase del resultado, por banda (retoque del 9.2, firmado por Antonio el 03/10/2026 al ver la
+// pantalla): sus textos literales, con las mayúsculas de «Asistente IA» como las escribió. Nunca afirman autoría: el
+// verbo es «suena a». El género va en singular dentro de la frase, con su concordancia.
+export const ETIQUETA_SIN_INDICIOS = 'Texto sin indicios de Asistente IA';
+export const NADA_QUE_SUENE = 'Aquí no hay nada que suene a asistente (IA).';
+export const ETIQUETA_MUY_POCOS = 'Texto con muy pocos rasgos que indiquen que tiene Asistente IA';
+export const suenaMenos = (un: string, genero: string, escrito: string): string =>
+  `Tu texto suena menos a asistente (IA) que ${un} ${genero} normal ${escrito} por una persona.`;
+export const ETIQUETA_DENTRO = 'Dentro de lo normal';
+export const suenaComoCualquier = (genero: string, escrito: string): string => `Suena como cualquier ${genero} ${escrito} por una persona. Nada raro.`;
+export const ETIQUETA_BASTANTES = 'Texto con bastantes rasgos de Asistente IA';
+export const suenaBastante = (generos: string, escritos: string): string =>
+  `Tu texto suena bastante a asistente (IA): de cada 100 ${generos} ${escritos} por personas, solo 5 suenan tanto.`;
+export const ETIQUETA_MUCHOS = 'Texto con muchos rasgos de Asistente IA';
+export const suenaMucho = (generos: string, escritos: string): string =>
+  `Tu texto suena mucho a asistente (IA): de cada 100 ${generos} ${escritos} por personas, solo 1 suena tanto.`;
+export const ETIQUETA_SIN_COMPARAR = 'No podemos comparar';
+export const sinConQueComparar = (generos: string, escritos: string, los: string): string =>
+  `No tenemos ${generos} de este tamaño ${escritos} por personas con ${los} que comparar. Mira el detalle.`;
+/** Debajo de la frase, con 100 a 299 palabras de prosa. */
+export const AVISO_TEXTO_CORTO = 'Ojo: tu texto es corto (menos de 300 palabras). Tómate el resultado como orientativo.';
 // Los de un paquete propio con escala: no mide estilo de asistente, sino sus señales.
-export const menosSenalesQueLaMitad = (paquete: string, quien: string): string => `Menos señales de «${paquete}» que la mitad de ${quien}`;
-export const masSenalesQue = (paquete: string, porcentaje: string, quien: string): string => `Más señales de «${paquete}» que el ${porcentaje} % de ${quien}`;
-export const niUnaSenalDe = (paquete: string): string => `Ni una señal de «${paquete}» que sume en tu texto`;
-export const SIN_REFERENCIA = 'Sin referencia humana para este tipo de texto y esta longitud: mira el detalle';
-/** El titular entero: con texto de 100 a 299 palabras, la advertencia; y el punto final. */
-export const titular = (frase: string, corto: boolean): string => `${frase}${corto ? ' (texto corto: resultado orientativo)' : ''}.`;
+export const pocasSenalesDe = (paquete: string): string => `Texto con pocas señales del paquete «${paquete}»`;
+export const bastantesSenalesDe = (paquete: string): string => `Texto con bastantes señales del paquete «${paquete}»`;
+export const muchasSenalesDe = (paquete: string): string => `Texto con muchas señales del paquete «${paquete}»`;
+export const deCadaCienDe = (paquete: string, cuantos: number): string =>
+  `De cada 100 textos de referencia de «${paquete}», solo ${cuantos} ${cuantos === 1 ? 'tiene' : 'tienen'} tantas señales como el tuyo.`;
+export const sinConQueCompararDe = (paquete: string): string => `No tenemos textos de referencia de «${paquete}» de este tamaño con los que comparar. Mira el detalle.`;
 
 // «Ver el detalle»: las cifras, plegadas.
 export const VER_EL_DETALLE = 'Ver el detalle';

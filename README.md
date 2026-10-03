@@ -115,7 +115,7 @@ Los textos de la propia web también pasan por los dos paquetes, en un juez
 ([`web/jueces/textos-web.spec.ts`](web/jueces/textos-web.spec.ts)). Entran el
 texto visible de la página del analizador y todas las cadenas de la interfaz,
 también las del catálogo, las del cargador, las del informe y las del
-lenguaje de calle: 1.324 palabras de prosa, analizadas con «general». No entra el contenido de las fichas de las reglas,
+lenguaje de calle: 1.395 palabras de prosa, analizadas con «general». No entra el contenido de las fichas de las reglas,
 porque menciona las formas que las reglas buscan (abajo,
 [«Catálogo»](#catálogo)).
 
@@ -147,8 +147,8 @@ de los dos ejemplos (abajo, [«Ejemplos»](#ejemplos)), eliges el género y, al
 pulsar el botón, ves:
 
 - los subrayados por familia;
-- arriba, una frase con dónde queda tu texto respecto a los textos de
-  personas del mismo tipo y longitud; debajo, lo que más pesa y por dónde
+- arriba, una etiqueta y una frase con cómo suena tu texto al lado de los
+  textos de personas del mismo tipo; debajo, lo que más pesa y por dónde
   empezar; las cifras, plegadas (abajo, [«Cómo leer el
   resultado»](#cómo-leer-el-resultado));
 - al tocar un subrayado, la regla en una frase llana, qué hacer y, plegado,
@@ -184,10 +184,12 @@ sugerencia (abajo, [«Informe»](#informe)). Antonio abrió el PDF el
 03/10/2026.
 
 La **ampliación 9.2, lenguaje de calle**, está hecha desde el 03/10/2026:
-el resultado se lee en frases llanas (un titular, un resumen de dos líneas
-y la frase en claro de cada regla), con las cifras plegadas y sin las
-palabras del motor (abajo, [«Cómo leer el
-resultado»](#cómo-leer-el-resultado)). Falta que Antonio la vea en Chrome.
+el resultado se lee en frases llanas (una etiqueta con su frase, un resumen
+de dos líneas y la frase en claro de cada regla), con las cifras plegadas y
+sin las palabras del motor (abajo, [«Cómo leer el
+resultado»](#cómo-leer-el-resultado)). Antonio la vio en Chrome el mismo
+día y cambió el titular por la etiqueta y la frase; falta que vea ese
+retoque.
 
 Falta después, en el orden de la [hoja de ruta](#hoja-de-ruta): el diseño
 (punto 10) y el despliegue (11).
@@ -286,11 +288,11 @@ de calle:
 
 | fichero | bytes |
 |---|---|
-| el JS del analizador (motor, validador, cargador, informe, lenguaje de calle y aviso MIT de Ajv; minificado por Vite) | 136.924 |
-| las cadenas de la interfaz que comparten el analizador y el catálogo (un JS aparte) | 8.277 |
+| el JS del analizador (motor, validador, cargador, informe, lenguaje de calle y aviso MIT de Ajv; minificado por Vite) | 137.354 |
+| las cadenas de la interfaz que comparten el analizador y el catálogo (un JS aparte) | 9.490 |
 | `paquetes/radiografia.json` (con su calibración, los nombres y las frases en claro de las reglas) | 347.340 |
 | `paquetes/espanol-correcto.json` | 21.618 |
-| `index.html` (con la CSP, 507 bytes, y la hoja de impresión) | 5.608 |
+| `index.html` (con la CSP, 507 bytes, y la hoja de impresión) | 5.565 |
 | `ejemplos/antonio.txt`, al pulsar su botón | 1.777 |
 | `ejemplos/ia.txt`, al pulsar su botón | 1.957 |
 
@@ -313,7 +315,7 @@ Además de cada página, pide el JS del buscador y el de las cadenas.
 | las 50 fichas juntas | 358.643 |
 
 `dist/` entero: 52 páginas HTML (el analizador, el índice y 50 fichas), 61
-ficheros y 970.860 bytes. Cada página lleva la CSP.
+ficheros y 972.460 bytes. Cada página lleva la CSP.
 
 ## Ejemplos
 
@@ -343,35 +345,63 @@ con la ampliación 6.4: antes, el de Antonio sumaba 5 y el de IA 2.
 
 ## Cómo leer el resultado
 
-El resultado se lee de arriba abajo: una frase, dos líneas y, si quieres,
-las cifras. La forma la da la barra lateral de
+El resultado se lee de arriba abajo: una etiqueta y una frase, dos líneas
+y, si quieres, las cifras. La forma la da la barra lateral de
 [Hemingway](https://hemingwayapp.com/help/docs/highlighted-issues), una frase
 por subrayado («These are words like 'maybe' or 'I think' that make your
 writing sound less confident»), pero sin afirmar nunca quién escribió el
 texto.
 
-**El titular** dice dónde queda tu texto respecto a textos escritos por
-personas del mismo tipo (el género que eliges) y de su misma longitud. Es la
-banda de la [«Escala»](#escala) traducida, no una probabilidad:
-- «Menos rasgos de estilo de asistente que la mitad de…»: por debajo de la
-  mediana de esos textos;
-- «Dentro de lo habitual en…»: entre la mediana y el p95;
-- «Más rasgos de estilo de asistente que el 95 % de…» o «…que el 99 %…»: por
-  encima del p95 o del p99;
-- «Ni un rasgo de estilo de asistente que sume en tu texto»: ninguna regla
-  suma (si unas suman y otras restan hasta cero, va el de la banda);
-- con 100 a 299 palabras, «(texto corto: resultado orientativo)».
+**La etiqueta y la frase** dicen cómo suena tu texto al lado de textos
+escritos por personas del mismo tipo (el género que eliges) y de su misma
+longitud. Son la banda de la [«Escala»](#escala) traducida, no una
+probabilidad, y nunca afirman autoría: el verbo es «suena a». Las escribió
+Antonio el 03/10/2026, al ver la pantalla. La etiqueta es el título del
+bloque de resultado y la frase va debajo, con el género en singular y su
+concordancia («una crítica de cine… escrita», «un texto… escrito»). Los ocho
+casos, con «Opinión (críticas de cine)»:
 
-Con los ejemplos: el texto de IA, con «Opinión (críticas de cine)», queda
-«Menos rasgos de estilo de asistente que la mitad de las críticas de cine de
-esta longitud escritas por personas»; el de Antonio, «Dentro de lo habitual
-en las críticas de cine…».
+1. Ninguna regla suma: «Texto sin indicios de Asistente IA» y «Aquí no hay
+   nada que suene a asistente (IA).» Si unas suman y otras restan hasta
+   cero, va la de la banda.
+2. Por debajo de la mediana: «Texto con muy pocos rasgos que indiquen que
+   tiene Asistente IA» y «Tu texto suena menos a asistente (IA) que una
+   crítica de cine normal escrita por una persona.»
+3. Entre la mediana y el p95: «Dentro de lo normal» y «Suena como cualquier
+   crítica de cine escrita por una persona. Nada raro.»
+4. Por encima del p95: «Texto con bastantes rasgos de Asistente IA» y «Tu
+   texto suena bastante a asistente (IA): de cada 100 críticas de cine
+   escritas por personas, solo 5 suenan tanto.»
+5. Por encima del p99: «Texto con muchos rasgos de Asistente IA» y «Tu
+   texto suena mucho a asistente (IA): de cada 100 críticas de cine
+   escritas por personas, solo 1 suena tanto.»
+6. Sin textos de personas de ese género y longitud con los que comparar:
+   «No podemos comparar» y «No tenemos críticas de cine de este tamaño
+   escritas por personas con las que comparar. Mira el detalle.»
+7. Con 100 a 299 palabras de prosa, la etiqueta y la frase de su banda y,
+   debajo, «Ojo: tu texto es corto (menos de 300 palabras). Tómate el
+   resultado como orientativo.»
+8. Un paquete propio con escala: «Texto con pocas señales del paquete “X”»
+   (por debajo de la mediana o dentro de lo normal), «…bastantes…» (por
+   encima del p95) o «…muchas…» (por encima del p99), y «De cada 100 textos
+   de referencia de “X”, solo 5 tienen tantas señales como el tuyo.» (o
+   «solo 1 tiene»); sin calibración, la 6 con «textos de referencia de
+   “X”». Con «pocas» va la etiqueta sola: no tiene frase firmada.
 
-**«Rasgos de estilo de asistente»** son lo que miden las reglas de
-RadiografIA: fórmulas, formato pegado, puntuación, vocabulario y ritmo que,
-según sus fuentes, los asistentes de chat dejan más que las personas. Una
-persona puede tenerlos, y un texto de asistente puede no tenerlos. Por eso
-el titular no dice «IA» ni «generado».
+«De esta longitud» no va en la frase: se queda en «Ver el detalle». En un
+paquete con escala, la etiqueta ocupa el sitio del nombre del paquete como
+título del bloque; Español correcto, sin escala, sigue con su nombre.
+
+Con los ejemplos y «Opinión (críticas de cine)», el texto de IA queda en
+«Texto con muy pocos rasgos que indiquen que tiene Asistente IA»; el de
+Antonio, en «Dentro de lo normal».
+
+**Los «rasgos de Asistente IA»** de la etiqueta son lo que miden las reglas
+de RadiografIA: fórmulas, formato pegado, puntuación, vocabulario y ritmo
+que, según sus fuentes, los asistentes de chat dejan más que las personas.
+Una persona puede tenerlos, y un texto de asistente puede no tenerlos. Por
+eso la frase dice a qué suena tu texto, y nunca quién lo escribió ni que
+sea «generado».
 
 **El resumen**, debajo:
 - «Lo que más pesa:», con las tres reglas que más suman y, entre paréntesis,
@@ -404,7 +434,11 @@ y el selector lo dice para no prometer otra cosa.
 **Los jueces**
 ([`web/jueces/lectura.spec.ts`](web/jueces/lectura.spec.ts) y, en Chrome,
 [`pantalla.spec.ts`](web/jueces/pantalla.spec.ts)) comprueban:
-- cada titular, por banda y por género;
+- la etiqueta de cada banda y la frase de cada banda y género, con su
+  concordancia, y los casos sin indicios, sin calibración, de texto corto y
+  de paquete propio;
+- en Chrome, que la etiqueta es lo primero del bloque de resultado y que el
+  aviso de texto corto sale con 150 palabras;
 - el resumen: sus tres reglas, sus empates y sus metas, con el borde que usa
   cada regla en la celda de su género y longitud;
 - que «Ver el detalle» y «¿Por qué lo miramos?» salen plegados;
@@ -491,9 +525,10 @@ ese diálogo.
 
 **Qué incluye**, en una hoja A4 con márgenes de 2 cm:
 - la cabecera: la fecha y la hora del análisis, el género, las palabras de
-  prosa y el tramo, y los paquetes con su versión (los propios, marcados
-  «(propio)»);
-- la puntuación y la banda de cada paquete que la tiene;
+  prosa y el tramo, los paquetes con su versión (los propios, marcados
+  «(propio)») y, de cada paquete con escala, su total y con qué textos de
+  personas se compara (en pantalla van plegados en «Ver el detalle»);
+- de cada paquete, la etiqueta y la frase, si tiene escala, y el resumen;
 - la clave de las familias, con su sigla;
 - el texto con sus subrayados y, detrás de cada uno, entre corchetes, la
   sigla de su familia: [L] léxico, [D] discurso…;

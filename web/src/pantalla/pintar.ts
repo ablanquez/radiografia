@@ -67,13 +67,13 @@
  * (attr(href)); en el desglose, no.
  *
  * El lenguaje de calle (encargo 9.2, b; firmado por Antonio en la parada 1),
- * con las frases de lectura.ts: el medidor da por paquete el titular, el
- * resumen y, plegadas en «Ver el detalle», las cifras; el panel, el nombre, la
- * frase en claro, qué hacer y, plegado, «¿Por qué lo miramos?» (la
- * explicación, la evidencia, el origen de la lista, el paquete y el enlace a
- * la ficha; la de un paquete propio, entera); el desglose, sin el id de cada
- * regla y con sus etiquetas en claro. Los ids solo quedan dentro de «¿Por qué
- * lo miramos?» y en el catálogo.
+ * con las frases de lectura.ts: el medidor da por paquete la etiqueta y la
+ * frase (retoque del 9.2), el resumen y, plegadas en «Ver el detalle», las
+ * cifras; el panel, el nombre, la frase en claro, qué hacer y, plegado, «¿Por
+ * qué lo miramos?» (la explicación, la evidencia, el origen de la lista, el
+ * paquete y el enlace a la ficha; la de un paquete propio, entera); el
+ * desglose, sin el id de cada regla y con sus etiquetas en claro. Los ids
+ * solo quedan dentro de «¿Por qué lo miramos?» y en el catálogo.
  */
 import type { Paquete, Resultado } from '@radiografia/motor/navegador';
 import * as textos from '../textos.ts';
@@ -82,7 +82,7 @@ import { parametrosEnLlano, urlDeRegla } from '../catalogo/catalogo.ts';
 import { enOrden, type ClaveDeOrden } from '../orden.ts';
 import { nombreDeRegla } from './humanizar.ts';
 import { entradasDelInforme, repartirSiglas } from './informe.ts';
-import { cifrasDelPaquete, detalleDelPaquete, generoEnCalle, lineaDelTextoEntero, motivoNoMirada, motivoSinComparar, palabrasDelTexto, resumenDelPaquete, titularDelPaquete, type Voz } from './lectura.ts';
+import { cifrasDelPaquete, detalleDelPaquete, etiquetaDelPaquete, generoEnCalle, lineaDelTextoEntero, motivoNoMirada, motivoSinComparar, palabrasDelTexto, resumenDelPaquete, type Voz } from './lectura.ts';
 import { partirEnTramos } from './tramos.ts';
 
 type Regla = Paquete['reglas'][number];
@@ -353,9 +353,11 @@ export function pintarPanel(contenedor: HTMLElement, senales: readonly SenalCali
 }
 
 /**
- * El medidor en claro (firmado en la parada 1 del 9.2): por paquete, su
- * titular (si tiene escala), su resumen y, plegadas en «Ver el detalle», sus
- * cifras. Con texto insuficiente, como antes: el aviso y el motivo.
+ * El medidor en claro (firmado en la parada 1 del 9.2): por paquete con
+ * escala, la etiqueta como título del bloque, la frase debajo y, con texto
+ * corto, el aviso (retoque del 9.2); su resumen y, plegadas en «Ver el
+ * detalle», sus cifras. Sin escala, el nombre del paquete y su resumen. Con
+ * texto insuficiente, como antes: el aviso y el motivo.
  * [DOC] https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details
  *    — plegado por defecto: la información se ve «only when the widget is
  *    toggled into an open state».
@@ -370,9 +372,14 @@ export function pintarMedidor(contenedor: HTMLElement, resultado: Resultado, voz
   for (const r of resultado.paquetes) {
     const voz = vozDe(r.paquete);
     const bloque = el('section', undefined, 'lectura');
-    bloque.append(el('h3', r.paquete));
-    const titular = titularDelPaquete(resultado, r, voz);
-    if (titular !== null) bloque.append(el('p', titular, 'titular'));
+    const cabeza = etiquetaDelPaquete(resultado, r, voz);
+    // Con escala, la etiqueta es el título del bloque (retoque del 9.2) y la de RadiografIA dice ya qué mide; sin escala, el nombre del paquete.
+    if (cabeza === null) bloque.append(el('h3', r.paquete));
+    else {
+      bloque.append(el('h3', cabeza.etiqueta, 'etiqueta'));
+      if (cabeza.frase !== null) bloque.append(el('p', cabeza.frase, 'frase'));
+      if (cabeza.aviso !== null) bloque.append(el('p', cabeza.aviso, 'aviso-corto'));
+    }
     for (const linea of resumenDelPaquete(resultado, r, voz, indice)) bloque.append(el('p', linea, 'resumen'));
     if (r.banda !== null) {
       const detalle = el('details', undefined, 'detalle');
@@ -381,7 +388,7 @@ export function pintarMedidor(contenedor: HTMLElement, resultado: Resultado, voz
     }
     contenedor.append(bloque);
   }
-  // Ninguno trae escala (por ejemplo, RadiografIA desmarcado): sin titular, y se dice (firmado en la parada 1 del 8.1).
+  // Ninguno trae escala (por ejemplo, RadiografIA desmarcado): sin etiqueta, y se dice (firmado en la parada 1 del 8.1).
   if (resultado.paquetes.every((x) => x.banda === null)) contenedor.append(el('p', textos.SIN_ESCALA, 'banda'));
 }
 

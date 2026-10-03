@@ -2,15 +2,17 @@
  * El lenguaje de calle del resultado (encargo 9.2, b; firmado por Antonio en
  * la parada 1), sin DOM: lo pintan pintar.ts y el informe.
  *
- *   · titularDelPaquete: la banda del total traducida a una frase, con el
- *     género en palabras de la calle y «de esta longitud escritos por
- *     personas». No es una probabilidad ni dice quién escribió el texto: dice
- *     dónde queda respecto a los textos de personas del mismo tipo y
- *     longitud. Nunca «IA»: «rasgos de estilo de asistente», y en un paquete
- *     propio, sus señales. Las bandas son trozos de la distribución humana:
- *     «entre la mediana y el p95» no es «la mayoría», y se dice «dentro de lo
- *     habitual». «Ni un rasgo… que sume» solo si no suma ninguna regla; si
- *     suman y restan hasta 0, va el de la banda (firmado, D).
+ *   · etiquetaDelPaquete: la banda del total traducida a una etiqueta y una
+ *     frase (retoque del 9.2, firmado por Antonio el 03/10/2026 al ver la
+ *     pantalla), con el género en singular dentro de la frase y su
+ *     concordancia; «de esta longitud» se queda en el detalle. No es una
+ *     probabilidad ni dice quién escribió el texto: el verbo es «suena a».
+ *     «Texto sin indicios…» solo si no suma ninguna regla; si suman y restan
+ *     hasta 0, va la de la banda (firmado, D). Con texto corto, la de su
+ *     banda y el aviso debajo. Un paquete propio con escala habla de sus
+ *     señales: pocas (por debajo de la mediana o dentro de lo normal),
+ *     bastantes o muchas; para «pocas» no hay frase firmada, y va la
+ *     etiqueta sola.
  *   · detalleDelPaquete: las cifras, para el «Ver el detalle» plegado.
  *   · resumenDelPaquete: «Lo que más pesa:» con las tres reglas que más suman
  *     (los empates, en el orden del desglose: orden.ts) y su cola, y «Empieza
@@ -46,17 +48,14 @@ const formato = new Intl.NumberFormat('es', { maximumFractionDigits: 2 });
 const cifra = (x: number): string => formato.format(x);
 const entero = new Intl.NumberFormat('es');
 
-export interface GeneroEnCalle {
-  conArticulo: string;
-  sinArticulo: string;
-  /** La concordancia del participio: «escritos» o «escritas». */
-  escritos: string;
-}
+/** Un género en palabras de la calle con su concordancia («una»/«un», «las»/«los», «escrita»/«escrito») y en plural con artículo. */
+export type GeneroEnCalle = textos.GeneroEnPalabras & (typeof textos.CONCORDANCIA)['femenino'] & { conArticulo: string };
 
-/** El género en palabras de la calle (textos.ts); el artículo da la forma sin él y la concordancia. */
+/** El género en palabras de la calle (textos.ts); su género gramatical da la concordancia. */
 export function generoEnCalle(clave: string): GeneroEnCalle {
-  const conArticulo = Object.hasOwn(textos.GENEROS_EN_CALLE, clave) ? textos.GENEROS_EN_CALLE[clave]! : textos.generoDesconocido(clave);
-  return { conArticulo, sinArticulo: conArticulo.replace(/^(los|las) /, ''), escritos: conArticulo.startsWith('las ') ? 'escritas' : 'escritos' };
+  const palabras = Object.hasOwn(textos.GENEROS_EN_CALLE, clave) ? textos.GENEROS_EN_CALLE[clave]! : textos.generoDesconocido(clave);
+  const concordancia = textos.CONCORDANCIA[palabras.femenino ? 'femenino' : 'masculino'];
+  return { ...palabras, ...concordancia, conArticulo: `${concordancia.los} ${palabras.plural}` };
 }
 
 const tramoEnPalabras = (resultado: Resultado): string => textos.TRAMOS_EN_PALABRAS[resultado.tramoDeCalibracion ?? ''] ?? textos.MENOS_DE_100;
@@ -64,21 +63,43 @@ const tramoEnPalabras = (resultado: Resultado): string => textos.TRAMOS_EN_PALAB
 /** Las reglas que suman en este texto: con señales, que no son solo aviso y con contribución positiva. */
 const queSuman = (r: ResultadoDePaquete): PuntosDeRegla[] => r.puntuacion.familias.flatMap((f) => f.reglas).filter((x) => !x.informativa && x.n > 0 && x.contribucion > 0);
 
-export function titularDelPaquete(resultado: Resultado, r: ResultadoDePaquete, voz: Voz): string | null {
+/** Lo que encabeza el bloque de un paquete con escala: la etiqueta (su título), la frase y, con texto corto, el aviso. */
+export interface EtiquetaYFrase {
+  etiqueta: string;
+  frase: string | null;
+  aviso: string | null;
+}
+
+/** La etiqueta y la frase de cada banda (y de «sin calibración»). */
+type PorBanda = Readonly<Record<NonNullable<ResultadoDePaquete['banda']>['banda'], readonly [string, string | null]>>;
+
+export function etiquetaDelPaquete(resultado: Resultado, r: ResultadoDePaquete, voz: Voz): EtiquetaYFrase | null {
   if (resultado.tramo === 'insuficiente' || r.banda === null) return null;
-  const corto = resultado.tramo === 'poco-fiable';
-  const propio = voz !== 'asistente';
-  if (r.puntuacion.total === 0 && queSuman(r).length === 0) return textos.titular(propio ? textos.niUnaSenalDe(r.paquete) : textos.NI_UN_RASGO, corto);
-  if (r.banda.banda === 'sin calibración') return textos.titular(textos.SIN_REFERENCIA, corto);
+  const aviso = resultado.tramo === 'poco-fiable' ? textos.AVISO_TEXTO_CORTO : null;
+  const banda = r.banda.banda;
+  if (voz !== 'asistente') {
+    const p = r.paquete;
+    const propio: PorBanda = {
+      'sin calibración': [textos.ETIQUETA_SIN_COMPARAR, textos.sinConQueCompararDe(p)],
+      'por debajo de la mediana': [textos.pocasSenalesDe(p), null],
+      'entre la mediana y el p95': [textos.pocasSenalesDe(p), null],
+      'por encima del p95': [textos.bastantesSenalesDe(p), textos.deCadaCienDe(p, 5)],
+      'por encima del p99': [textos.muchasSenalesDe(p), textos.deCadaCienDe(p, 1)],
+    };
+    const [etiqueta, frase] = propio[banda];
+    return { etiqueta, frase, aviso };
+  }
+  if (r.puntuacion.total === 0 && queSuman(r).length === 0) return { etiqueta: textos.ETIQUETA_SIN_INDICIOS, frase: textos.NADA_QUE_SUENE, aviso };
   const g = generoEnCalle(resultado.genero);
-  const quien = textos.quienEscribe(g.conArticulo, g.escritos);
-  const frase = {
-    'por debajo de la mediana': propio ? textos.menosSenalesQueLaMitad(r.paquete, quien) : textos.menosRasgosQueLaMitad(quien),
-    'entre la mediana y el p95': textos.dentroDeLoHabitual(quien),
-    'por encima del p95': propio ? textos.masSenalesQue(r.paquete, '95', quien) : textos.masRasgosQue('95', quien),
-    'por encima del p99': propio ? textos.masSenalesQue(r.paquete, '99', quien) : textos.masRasgosQue('99', quien),
-  }[r.banda.banda];
-  return textos.titular(frase, corto);
+  const asistente: PorBanda = {
+    'sin calibración': [textos.ETIQUETA_SIN_COMPARAR, textos.sinConQueComparar(g.plural, g.escritos, g.los)],
+    'por debajo de la mediana': [textos.ETIQUETA_MUY_POCOS, textos.suenaMenos(g.un, g.singular, g.escrito)],
+    'entre la mediana y el p95': [textos.ETIQUETA_DENTRO, textos.suenaComoCualquier(g.singular, g.escrito)],
+    'por encima del p95': [textos.ETIQUETA_BASTANTES, textos.suenaBastante(g.plural, g.escritos)],
+    'por encima del p99': [textos.ETIQUETA_MUCHOS, textos.suenaMucho(g.plural, g.escritos)],
+  };
+  const [etiqueta, frase] = asistente[banda];
+  return { etiqueta, frase, aviso };
 }
 
 /** Las cifras de un paquete con escala: su total y con qué textos de personas se compara (también van en la cabecera del informe). */
@@ -89,9 +110,9 @@ export function cifrasDelPaquete(resultado: Resultado, r: ResultadoDePaquete): s
   if (r.puntuacion.total !== null) lineas.push(textos.tuTotal(cifra(r.puntuacion.total)));
   if (r.banda !== null && r.banda.banda !== 'sin calibración') {
     const b = r.banda;
-    lineas.push(textos.comparadoCon(entero.format(b.n), g.sinArticulo, tramo, g.escritos, cifra(b.p50), cifra(b.p95), cifra(b.p99)));
+    lineas.push(textos.comparadoCon(entero.format(b.n), g.plural, tramo, g.escritos, cifra(b.p50), cifra(b.p95), cifra(b.p99)));
   } else if (r.banda !== null) {
-    lineas.push(textos.sinTextosDePersonas(g.sinArticulo, tramo, g.escritos));
+    lineas.push(textos.sinTextosDePersonas(g.plural, tramo, g.escritos));
   }
   return lineas;
 }

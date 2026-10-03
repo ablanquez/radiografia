@@ -13,11 +13,12 @@
  *   1. Con el texto de combinacion-real y los dos paquetes, bajo media print:
  *      no se ven el cuadro de texto, el selector, el cargador, los botones,
  *      la navegación ni el panel; sí la cabecera (fecha del análisis,
- *      paquetes con versión, género), el medidor, el texto con la sigla de
- *      cada tramo, la clave, el desglose, una entrada de la lista por regla
- *      con señales (con la dirección absoluta de su ficha y break-inside:
- *      avoid; desde el 9.2, con la frase en claro de la regla como primera
- *      línea, bajo el nombre) y la nota del pie.
+ *      paquetes con versión, género), el medidor (desde el retoque del 9.2,
+ *      con la etiqueta y la frase en lugar del titular), el texto con la
+ *      sigla de cada tramo, la clave, el desglose, una entrada de la lista
+ *      por regla con señales (con la dirección absoluta de su ficha y
+ *      break-inside: avoid; desde el 9.2, con la frase en claro de la regla
+ *      como primera línea, bajo el nombre) y la nota del pie.
  *   2. Page.printToPDF (preferCSSPageSize, sin fondos, como el navegador por
  *      defecto): empieza por %PDF-, tiene de 2 a 20 páginas por /Type /Page
  *      (las mismas que /Count) y su MediaBox es A4.
@@ -135,6 +136,8 @@ describe('el informe en Chrome, sobre astro preview', () => {
       '#medidor details',
       '#cabecera-informe',
       '#medidor',
+      '#medidor .etiqueta',
+      '#medidor .frase',
       '#leyenda',
       '#vista',
       '#desglose',
@@ -152,6 +155,8 @@ describe('el informe en Chrome, sobre astro preview', () => {
       '#medidor details': false,
       '#cabecera-informe': true,
       '#medidor': true,
+      '#medidor .etiqueta': true,
+      '#medidor .frase': true,
       '#leyenda': true,
       '#vista': true,
       '#desglose': true,

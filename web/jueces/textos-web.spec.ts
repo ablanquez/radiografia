@@ -79,14 +79,17 @@ const MUESTRAS: Readonly<Record<string, readonly unknown[]>> = {
   senalDelTextoEntero: ['ausencia: 0 apariciones; señala por debajo de 1'],
   // El lenguaje de calle (encargo 9.2, b): las muestras con los géneros y las cifras que pinta la página.
   generoDesconocido: ['carta'],
-  quienEscribe: ['las críticas de cine', 'escritas'],
-  menosRasgosQueLaMitad: ['las críticas de cine de esta longitud escritas por personas'],
-  dentroDeLoHabitual: ['las noticias de esta longitud escritas por personas'],
-  masRasgosQue: ['95', 'los textos de esta longitud escritos por personas'],
-  menosSenalesQueLaMitad: ['Mi paquete', 'los textos de esta longitud escritos por personas'],
-  masSenalesQue: ['Mi paquete', '99', 'los textos de esta longitud escritos por personas'],
-  niUnaSenalDe: ['Mi paquete'],
-  titular: ['Dentro de lo habitual en las noticias de esta longitud escritas por personas', true],
+  // La etiqueta y la frase (retoque del 9.2): el género en singular y en plural, con su concordancia.
+  suenaMenos: ['una', 'crítica de cine', 'escrita'],
+  suenaComoCualquier: ['texto académico', 'escrito'],
+  suenaBastante: ['noticias', 'escritas'],
+  suenaMucho: ['textos', 'escritos'],
+  sinConQueComparar: ['críticas de cine', 'escritas', 'las'],
+  pocasSenalesDe: ['Mi paquete'],
+  bastantesSenalesDe: ['Mi paquete'],
+  muchasSenalesDe: ['Mi paquete'],
+  deCadaCienDe: ['Mi paquete', 5],
+  sinConQueCompararDe: ['Mi paquete'],
   tuTotal: ['3'],
   comparadoCon: ['1.663', 'críticas de cine', '300 a 599', 'escritas', '2', '15,14', '23,6'],
   palabrasQueCuentan: [314, '300 a 599', 'Opinión (críticas de cine)'],
@@ -120,16 +123,19 @@ function textosDelHtml(html: string): string[] {
   return [...visibles, ...placeholders];
 }
 
+/** Las cadenas de un valor: él mismo, o las de sus campos, también anidados (la tabla de géneros y la concordancia); ni claves ni booleanos. */
+function cadenas(valor: unknown): string[] {
+  if (typeof valor === 'string') return [valor];
+  if (typeof valor === 'object' && valor !== null) return Object.values(valor).flatMap(cadenas);
+  return [];
+}
+
 /** Todas las cadenas de textos.ts, con las funciones llamadas con sus muestras. */
 function textosDelScript(): string[] {
   const exportadas = Object.entries(textos);
   const funciones = exportadas.filter(([, valor]) => typeof valor === 'function').map(([nombre]) => nombre);
   assert.deepEqual(funciones.sort(), Object.keys(MUESTRAS).sort(), 'cada función de textos.ts con su muestra, y ninguna muestra de más');
-  return exportadas.flatMap(([nombre, valor]) => {
-    if (typeof valor === 'string') return [valor];
-    if (typeof valor === 'function') return [(valor as (...datos: readonly unknown[]) => string)(...MUESTRAS[nombre]!)];
-    return Object.values(valor as Record<string, string>);
-  });
+  return exportadas.flatMap(([nombre, valor]) => cadenas(typeof valor === 'function' ? (valor as (...datos: readonly unknown[]) => unknown)(...MUESTRAS[nombre]!) : valor));
 }
 
 describe('los textos de la web, por los dos paquetes', () => {

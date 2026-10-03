@@ -4,16 +4,20 @@
  * headless con el arranque y los testigos de red de chrome.ts. Los tests van
  * en orden y comparten la pestaña.
  *
- *   1. Con el texto de combinacion-real y «General»: el titular se ve y es el
- *      que da lectura.ts; el resumen se ve y es el suyo (el de RadiografIA y
- *      la línea de Español correcto); «Ver el detalle» está plegado por
- *      defecto, sus cifras no se ven, y al abrirlo sí.
+ *   1. Con el texto de combinacion-real y «General»: la etiqueta es lo
+ *      primero del bloque de resultado, como su título, y la frase va
+ *      debajo, las dos las que da lectura.ts (retoque del 9.2, firmado el
+ *      03/10); el resumen se ve y es el suyo (el de RadiografIA y la línea de
+ *      Español correcto); «Ver el detalle» está plegado por defecto, sus
+ *      cifras no se ven, y al abrirlo sí.
  *   2. El panel de un subrayado, en el orden firmado: el nombre, la frase en
  *      claro de la regla, «Qué hacer» y «¿Por qué lo miramos?», plegado.
  *   3. Ninguna palabra del motor en el texto visible del analizador: ni
  *      informativa, ni atenuante, ni no aplicadas, ni tramo, ni p95, p99 o
  *      percentil, que solo quedan dentro de «Ver el detalle», plegado.
- *   4. La red, en cero después de la carga inicial.
+ *   4. Con 150 palabras (las primeras del ejemplo humano, cortado por
+ *      palabras), el aviso de texto corto debajo de la etiqueta y la frase.
+ *   5. La red, en cero después de la carga inicial.
  *
  * [DOC] https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/innerText
  *    — «represents the rendered text content of a node and its descendants»;
@@ -24,10 +28,11 @@
  */
 import { after, describe, test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import * as textos from '../src/textos.ts';
-import { resumenDelPaquete, titularDelPaquete } from '../src/pantalla/lectura.ts';
+import { etiquetaDelPaquete, resumenDelPaquete } from '../src/pantalla/lectura.ts';
 import { indexar } from '../src/pantalla/pintar.ts';
-import { motorDelNavegador, paquetesIncluidos, TEXTO_DE_COMBINACION_REAL } from './apoyo.ts';
+import { EJEMPLOS_PUBLICOS, motorDelNavegador, paquetesIncluidos, TEXTO_DE_COMBINACION_REAL } from './apoyo.ts';
 import { abrirAnalizadorConTestigos, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
 
 /** Las palabras del motor que no pueden verse en el analizador (firmado en la parada 1 del 9.2). */
@@ -48,7 +53,11 @@ describe('el lenguaje de calle en Chrome, sobre astro preview', () => {
     await sesion?.cerrar();
   });
 
-  test('1 · el titular y el resumen se ven, y «Ver el detalle» está plegado hasta que se abre', async () => {
+  /** Las tres primeras piezas del primer bloque de resultado: etiqueta y clase, texto y si se ve. */
+  const cabezaDelBloque = (): Promise<[string, string, boolean][]> =>
+    p().evaluar(`[...document.querySelector('#medidor .lectura').children].slice(0, 3).map((x) => [x.tagName.toLowerCase() + (x.className ? '.' + x.className : ''), x.textContent, x.checkVisibility()])`);
+
+  test('1 · la etiqueta, primero del bloque, la frase y el resumen se ven, y «Ver el detalle» está plegado hasta que se abre', async () => {
     await arrancar();
     await p().evaluar(`(() => {
       document.getElementById('texto').value = ${JSON.stringify(TEXTO_DE_COMBINACION_REAL)};
@@ -61,11 +70,13 @@ describe('el lenguaje de calle en Chrome, sobre astro preview', () => {
     const paquetes = paquetesIncluidos();
     const r = analizar(TEXTO_DE_COMBINACION_REAL, paquetes, { genero: 'general' });
     const indice = indexar(paquetes);
-    const titular = titularDelPaquete(r, r.paquetes[0]!, 'asistente');
-    assert.ok(titular, 'el motor da un titular');
+    const lectura = etiquetaDelPaquete(r, r.paquetes[0]!, 'asistente');
+    assert.ok(lectura && lectura.frase !== null, 'el motor da etiqueta y frase');
     const resumen = [...resumenDelPaquete(r, r.paquetes[0]!, 'asistente', indice), ...resumenDelPaquete(r, r.paquetes[1]!, 'norma', indice)];
 
-    assert.deepEqual(await p().evaluar(`(() => { const t = document.querySelector('#medidor .titular'); return [t?.textContent ?? null, t?.checkVisibility() ?? null]; })()`), [titular, true]);
+    const [etiqueta, frase] = await cabezaDelBloque();
+    assert.deepEqual(etiqueta, ['h3.etiqueta', lectura.etiqueta, true], 'la etiqueta, lo primero del bloque de resultado y su título');
+    assert.deepEqual(frase, ['p.frase', lectura.frase, true], 'la frase, debajo');
     assert.deepEqual(await p().evaluar(`[...document.querySelectorAll('#medidor .resumen')].map((x) => x.textContent)`), resumen);
     assert.deepEqual(
       await p().evaluar(`(() => { const d = document.querySelector('#medidor details.detalle'); return [d.open, d.querySelector('summary').textContent, [...d.querySelectorAll('p')].some((x) => x.checkVisibility())]; })()`),
@@ -111,7 +122,30 @@ describe('el lenguaje de calle en Chrome, sobre astro preview', () => {
     assert.match(enElDetalle, /p95/, 'las cifras siguen dentro de «Ver el detalle»');
   });
 
-  test('4 · cero peticiones de red después de la carga inicial', async (t) => {
+  test('4 · con 150 palabras, el aviso de texto corto debajo de la etiqueta y la frase', async () => {
+    await arrancar();
+    const corto = /^\s*(?:\S+\s+){149}\S+/u.exec(readFileSync(new URL('antonio.txt', EJEMPLOS_PUBLICOS), 'utf8'))![0];
+    const { analizar } = await motorDelNavegador();
+    const r = analizar(corto, paquetesIncluidos(), { genero: 'opinion' });
+    assert.deepEqual([r.palabrasProsa, r.tramo], [150, 'poco-fiable'], 'el motor cuenta 150 palabras de prosa: texto corto');
+    const lectura = etiquetaDelPaquete(r, r.paquetes[0]!, 'asistente');
+    assert.ok(lectura && lectura.frase !== null, 'el motor da etiqueta y frase');
+
+    await p().evaluar(`(() => {
+      document.getElementById('resultado').hidden = true;
+      document.getElementById('texto').value = ${JSON.stringify(corto)};
+      document.getElementById('genero').value = 'opinion';
+      document.getElementById('analizar').click();
+    })()`);
+    await p().hasta(`!document.getElementById('resultado').hidden`, 'el resultado');
+    assert.deepEqual(await cabezaDelBloque(), [
+      ['h3.etiqueta', lectura.etiqueta, true],
+      ['p.frase', lectura.frase, true],
+      ['p.aviso-corto', textos.AVISO_TEXTO_CORTO, true],
+    ]);
+  });
+
+  test('5 · cero peticiones de red después de la carga inicial', async (t) => {
     await arrancar();
     const { despues } = sesion!;
     t.diagnostic(`después de la marca (${despues.length}): ${despues.length === 0 ? 'ninguna' : despues.map((x) => `${x.tipo} ${x.url}`).join(' · ')}`);
