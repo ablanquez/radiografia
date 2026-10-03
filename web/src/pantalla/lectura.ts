@@ -11,8 +11,7 @@
  *     hasta 0, va la de la banda (firmado, D). Con texto corto, la de su
  *     banda y el aviso debajo. Un paquete propio con escala habla de sus
  *     señales: pocas (por debajo de la mediana o dentro de lo normal),
- *     bastantes o muchas; para «pocas» no hay frase firmada, y va la
- *     etiqueta sola.
+ *     bastantes o muchas.
  *   · detalleDelPaquete: las cifras, para el «Ver el detalle» plegado.
  *   · resumenDelPaquete: «Lo que más pesa:» con las tres reglas que más suman
  *     (los empates, en el orden del desglose: orden.ts) y su cola, y «Empieza
@@ -66,12 +65,12 @@ const queSuman = (r: ResultadoDePaquete): PuntosDeRegla[] => r.puntuacion.famili
 /** Lo que encabeza el bloque de un paquete con escala: la etiqueta (su título), la frase y, con texto corto, el aviso. */
 export interface EtiquetaYFrase {
   etiqueta: string;
-  frase: string | null;
+  frase: string;
   aviso: string | null;
 }
 
 /** La etiqueta y la frase de cada banda (y de «sin calibración»). */
-type PorBanda = Readonly<Record<NonNullable<ResultadoDePaquete['banda']>['banda'], readonly [string, string | null]>>;
+type PorBanda = Readonly<Record<NonNullable<ResultadoDePaquete['banda']>['banda'], readonly [string, string]>>;
 
 export function etiquetaDelPaquete(resultado: Resultado, r: ResultadoDePaquete, voz: Voz): EtiquetaYFrase | null {
   if (resultado.tramo === 'insuficiente' || r.banda === null) return null;
@@ -81,8 +80,8 @@ export function etiquetaDelPaquete(resultado: Resultado, r: ResultadoDePaquete, 
     const p = r.paquete;
     const propio: PorBanda = {
       'sin calibración': [textos.ETIQUETA_SIN_COMPARAR, textos.sinConQueCompararDe(p)],
-      'por debajo de la mediana': [textos.pocasSenalesDe(p), null],
-      'entre la mediana y el p95': [textos.pocasSenalesDe(p), null],
+      'por debajo de la mediana': [textos.pocasSenalesDe(p), textos.menosSenalesDe(p)],
+      'entre la mediana y el p95': [textos.pocasSenalesDe(p), textos.menosSenalesDe(p)],
       'por encima del p95': [textos.bastantesSenalesDe(p), textos.deCadaCienDe(p, 5)],
       'por encima del p99': [textos.muchasSenalesDe(p), textos.deCadaCienDe(p, 1)],
     };

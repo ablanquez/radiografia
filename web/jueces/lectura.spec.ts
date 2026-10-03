@@ -153,7 +153,7 @@ describe('la etiqueta y la frase del medidor', () => {
       lectura('entre la mediana y el p95', 'general', { total: 0, suma: false }),
     ];
     for (const x of todas) {
-      assert.ok(x !== null && x.frase !== null, 'con escala, etiqueta y frase');
+      assert.ok(x !== null, 'con escala, etiqueta y frase');
       const junto = `${x.etiqueta} · ${x.frase}`;
       assert.doesNotMatch(junto, /p\d\d|percentil|mediana|generad|detectad|escrit[oa]s? por (una )?IA/iu);
       assert.match(x.frase, /suen[ae]/iu, x.frase);
@@ -198,9 +198,10 @@ describe('la etiqueta y la frase del medidor', () => {
 
   test('8 · un paquete propio con escala: pocas, bastantes o muchas señales; sin calibración, la 6 con sus textos de referencia', () => {
     const propio = (banda: string, opciones: Parameters<typeof conBanda>[2] = {}) => lectura(banda, 'general', { paquete: 'Mi paquete', ...opciones }, 'propio');
-    // Para «pocas» no hay frase firmada: la etiqueta sola.
-    assert.deepEqual(propio('por debajo de la mediana'), { etiqueta: 'Texto con pocas señales del paquete «Mi paquete»', frase: null, aviso: null });
-    assert.deepEqual(propio('entre la mediana y el p95'), { etiqueta: 'Texto con pocas señales del paquete «Mi paquete»', frase: null, aviso: null });
+    // La frase de «pocas», firmada por Antonio el 03/10 al aprobar las seis decisiones del retoque.
+    const pocas = { etiqueta: 'Texto con pocas señales del paquete «Mi paquete»', frase: 'Tu texto tiene menos señales de «Mi paquete» que un texto de referencia normal.', aviso: null };
+    assert.deepEqual(propio('por debajo de la mediana'), pocas);
+    assert.deepEqual(propio('entre la mediana y el p95'), pocas);
     assert.deepEqual(propio('por encima del p95'), {
       etiqueta: 'Texto con bastantes señales del paquete «Mi paquete»',
       frase: 'De cada 100 textos de referencia de «Mi paquete», solo 5 tienen tantas señales como el tuyo.',
@@ -217,7 +218,7 @@ describe('la etiqueta y la frase del medidor', () => {
       aviso: null,
     });
     // «Sin indicios de Asistente IA» es de RadiografIA: un propio sin nada que sume va por su banda.
-    assert.equal(propio('por debajo de la mediana', { total: 0, suma: false })?.etiqueta, 'Texto con pocas señales del paquete «Mi paquete»');
+    assert.deepEqual(propio('por debajo de la mediana', { total: 0, suma: false }), pocas);
     assert.equal(propio('por encima del p95', { tramo: 'poco-fiable' })?.aviso, 'Ojo: tu texto es corto (menos de 300 palabras). Tómate el resultado como orientativo.');
   });
 

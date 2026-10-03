@@ -86,6 +86,7 @@ const MUESTRAS: Readonly<Record<string, readonly unknown[]>> = {
   suenaMucho: ['textos', 'escritos'],
   sinConQueComparar: ['críticas de cine', 'escritas', 'las'],
   pocasSenalesDe: ['Mi paquete'],
+  menosSenalesDe: ['Mi paquete'],
   bastantesSenalesDe: ['Mi paquete'],
   muchasSenalesDe: ['Mi paquete'],
   deCadaCienDe: ['Mi paquete', 5],

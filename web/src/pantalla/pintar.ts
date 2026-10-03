@@ -376,8 +376,7 @@ export function pintarMedidor(contenedor: HTMLElement, resultado: Resultado, voz
     // Con escala, la etiqueta es el título del bloque (retoque del 9.2) y la de RadiografIA dice ya qué mide; sin escala, el nombre del paquete.
     if (cabeza === null) bloque.append(el('h3', r.paquete));
     else {
-      bloque.append(el('h3', cabeza.etiqueta, 'etiqueta'));
-      if (cabeza.frase !== null) bloque.append(el('p', cabeza.frase, 'frase'));
+      bloque.append(el('h3', cabeza.etiqueta, 'etiqueta'), el('p', cabeza.frase, 'frase'));
       if (cabeza.aviso !== null) bloque.append(el('p', cabeza.aviso, 'aviso-corto'));
     }
     for (const linea of resumenDelPaquete(resultado, r, voz, indice)) bloque.append(el('p', linea, 'resumen'));

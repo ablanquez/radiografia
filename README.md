@@ -115,7 +115,7 @@ Los textos de la propia web también pasan por los dos paquetes, en un juez
 ([`web/jueces/textos-web.spec.ts`](web/jueces/textos-web.spec.ts)). Entran el
 texto visible de la página del analizador y todas las cadenas de la interfaz,
 también las del catálogo, las del cargador, las del informe y las del
-lenguaje de calle: 1.395 palabras de prosa, analizadas con «general». No entra el contenido de las fichas de las reglas,
+lenguaje de calle: 1.409 palabras de prosa, analizadas con «general». No entra el contenido de las fichas de las reglas,
 porque menciona las formas que las reglas buscan (abajo,
 [«Catálogo»](#catálogo)).
 
@@ -288,8 +288,8 @@ de calle:
 
 | fichero | bytes |
 |---|---|
-| el JS del analizador (motor, validador, cargador, informe, lenguaje de calle y aviso MIT de Ajv; minificado por Vite) | 137.354 |
-| las cadenas de la interfaz que comparten el analizador y el catálogo (un JS aparte) | 9.490 |
+| el JS del analizador (motor, validador, cargador, informe, lenguaje de calle y aviso MIT de Ajv; minificado por Vite) | 137.352 |
+| las cadenas de la interfaz que comparten el analizador y el catálogo (un JS aparte) | 9.584 |
 | `paquetes/radiografia.json` (con su calibración, los nombres y las frases en claro de las reglas) | 347.340 |
 | `paquetes/espanol-correcto.json` | 21.618 |
 | `index.html` (con la CSP, 507 bytes, y la hoja de impresión) | 5.565 |
@@ -315,7 +315,7 @@ Además de cada página, pide el JS del buscador y el de las cadenas.
 | las 50 fichas juntas | 358.643 |
 
 `dist/` entero: 52 páginas HTML (el analizador, el índice y 50 fichas), 61
-ficheros y 972.460 bytes. Cada página lleva la CSP.
+ficheros y 972.552 bytes. Cada página lleva la CSP.
 
 ## Ejemplos
 
@@ -382,11 +382,12 @@ casos, con «Opinión (críticas de cine)»:
    debajo, «Ojo: tu texto es corto (menos de 300 palabras). Tómate el
    resultado como orientativo.»
 8. Un paquete propio con escala: «Texto con pocas señales del paquete “X”»
-   (por debajo de la mediana o dentro de lo normal), «…bastantes…» (por
-   encima del p95) o «…muchas…» (por encima del p99), y «De cada 100 textos
-   de referencia de “X”, solo 5 tienen tantas señales como el tuyo.» (o
-   «solo 1 tiene»); sin calibración, la 6 con «textos de referencia de
-   “X”». Con «pocas» va la etiqueta sola: no tiene frase firmada.
+   y «Tu texto tiene menos señales de “X” que un texto de referencia
+   normal.» (por debajo de la mediana o dentro de lo normal); «…bastantes…»
+   (por encima del p95) o «…muchas…» (por encima del p99), y «De cada 100
+   textos de referencia de “X”, solo 5 tienen tantas señales como el tuyo.»
+   (o «solo 1 tiene»); sin calibración, la 6 con «textos de referencia de
+   “X”».
 
 «De esta longitud» no va en la frase: se queda en «Ver el detalle». En un
 paquete con escala, la etiqueta ocupa el sitio del nombre del paquete como

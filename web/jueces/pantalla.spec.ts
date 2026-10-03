@@ -71,7 +71,7 @@ describe('el lenguaje de calle en Chrome, sobre astro preview', () => {
     const r = analizar(TEXTO_DE_COMBINACION_REAL, paquetes, { genero: 'general' });
     const indice = indexar(paquetes);
     const lectura = etiquetaDelPaquete(r, r.paquetes[0]!, 'asistente');
-    assert.ok(lectura && lectura.frase !== null, 'el motor da etiqueta y frase');
+    assert.ok(lectura, 'el motor da etiqueta y frase');
     const resumen = [...resumenDelPaquete(r, r.paquetes[0]!, 'asistente', indice), ...resumenDelPaquete(r, r.paquetes[1]!, 'norma', indice)];
 
     const [etiqueta, frase] = await cabezaDelBloque();
@@ -129,7 +129,7 @@ describe('el lenguaje de calle en Chrome, sobre astro preview', () => {
     const r = analizar(corto, paquetesIncluidos(), { genero: 'opinion' });
     assert.deepEqual([r.palabrasProsa, r.tramo], [150, 'poco-fiable'], 'el motor cuenta 150 palabras de prosa: texto corto');
     const lectura = etiquetaDelPaquete(r, r.paquetes[0]!, 'asistente');
-    assert.ok(lectura && lectura.frase !== null, 'el motor da etiqueta y frase');
+    assert.ok(lectura, 'el motor da etiqueta y frase');
 
     await p().evaluar(`(() => {
       document.getElementById('resultado').hidden = true;

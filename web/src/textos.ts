@@ -222,6 +222,8 @@ export const AVISO_TEXTO_CORTO = 'Ojo: tu texto es corto (menos de 300 palabras)
 export const pocasSenalesDe = (paquete: string): string => `Texto con pocas señales del paquete «${paquete}»`;
 export const bastantesSenalesDe = (paquete: string): string => `Texto con bastantes señales del paquete «${paquete}»`;
 export const muchasSenalesDe = (paquete: string): string => `Texto con muchas señales del paquete «${paquete}»`;
+/** La frase de «pocas» (por debajo de la mediana o dentro de lo normal), firmada aparte el 03/10/2026. */
+export const menosSenalesDe = (paquete: string): string => `Tu texto tiene menos señales de «${paquete}» que un texto de referencia normal.`;
 export const deCadaCienDe = (paquete: string, cuantos: number): string =>
   `De cada 100 textos de referencia de «${paquete}», solo ${cuantos} ${cuantos === 1 ? 'tiene' : 'tienen'} tantas señales como el tuyo.`;
 export const sinConQueCompararDe = (paquete: string): string => `No tenemos textos de referencia de «${paquete}» de este tamaño con los que comparar. Mira el detalle.`;
