@@ -757,7 +757,17 @@ frase, lo que más pesa, empieza por) y debajo pestañas Texto subrayado /
 Reglas / Datos; acordeón solo dentro de una pestaña; en el informe,
 secciones numeradas con salto de página antes de las largas (Antonio,
 03/10); (8) la etiqueta del resultado debe destacar a la vista (tamaño,
-posición) y el panel de regla, junto al tramo.
+posición) y el panel de regla, junto al tramo; (9) **móvil como
+requisito** (Antonio, 03/10): cada pantalla con maqueta móvil y escritorio;
+tramos tocables con tamaño de pulsación suficiente (WCAG 2.5.8); panel de
+regla como hoja inferior en móvil; pestañas en vez de columnas; cargador y
+selector apilados; filtros del catálogo plegados; frames móvil y escritorio
+en Figma; calco visto en Chrome a 390 px y en el móvil real de Antonio;
+juez sin scroll horizontal a 360 px. **Antes del DISEÑO: prospección en
+Chrome** (03/10) de analizadores comparables (Hemingway, GPTZero,
+Copyleaks, Grammarly, LanguageTool, Readable, y una española si la hay) con
+checklist fija, en escritorio y a 390 px, sin capturas (derechos), en
+`docs/investigacion/ux-benchmark.md`.
 
 - [ ] `DISEÑO-RADIOGRAFIA.md`: investigación con doctrina (accesibilidad,
       legibilidad de texto largo, impresión), el concepto del icono
