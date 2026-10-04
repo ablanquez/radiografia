@@ -164,6 +164,8 @@ describe('la fidelidad al modelo, sobre astro preview', () => {
   });
 
   test('4 · a 820 y a 390, lo que cambia con el tamaño', async () => {
+    // Tras analizar (3), el cuadro está plegado (10.4): «Editar el texto» lo despliega con sus botones.
+    await (await p()).evaluar(`document.getElementById('editar').click()`);
     await anchoDe(820);
     const tableta = await juzgar(TABLETA);
     await anchoDe(390);

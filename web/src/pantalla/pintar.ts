@@ -76,6 +76,13 @@
  * paquete y el enlace a la ficha; la de un paquete propio, entera); el
  * desglose, sin el id de cada regla y con sus etiquetas en claro. Los ids
  * solo quedan dentro de «¿Por qué lo miramos?» y en el catálogo.
+ *
+ * El resultado como el modelo (encargo 10.4, Tanda 2; DISEÑO §6.1 y §7): el
+ * medidor es la pastilla del primer paquete con escala y, si es el de estilo
+ * de asistente, «Lo que más pesa» en tarjetas; la leyenda, una tarjeta por
+ * familia con su muestra y su recuento; el desglose, plegado en «Ver el
+ * detalle» con las cifras delante, y cada otro paquete en su tarjeta. Las
+ * palabras son las de la 9.2: solo cambia dónde y cómo se enseñan.
  */
 import type { Paquete, Resultado } from '@radiografia/motor/navegador';
 import * as textos from '../textos.ts';
@@ -84,7 +91,7 @@ import { parametrosEnLlano, urlDeRegla } from '../catalogo/catalogo.ts';
 import { enOrden, type ClaveDeOrden } from '../orden.ts';
 import { nombreDeRegla } from './humanizar.ts';
 import { entradasDelInforme, repartirSiglas } from './informe.ts';
-import { cifrasDelPaquete, detalleDelPaquete, etiquetaDelPaquete, generoEnCalle, lineaDelTextoEntero, motivoNoMirada, motivoSinComparar, palabrasDelTexto, resumenDelPaquete, type Voz } from './lectura.ts';
+import { cifrasDelPaquete, detalleDelPaquete, etiquetaDelPaquete, generoEnCalle, lineaDelTextoEntero, loQueMasPesa, motivoNoMirada, motivoSinComparar, palabrasDelTexto, resumenDelPaquete, type Voz } from './lectura.ts';
 import { partirEnTramos } from './tramos.ts';
 import { claseDeFamilia } from './familias.ts';
 
@@ -243,18 +250,39 @@ export function pintarProblemas(contenedor: HTMLElement, problemas: readonly Pro
   contenedor.hidden = false;
 }
 
-/** La leyenda de las familias de los paquetes activos (desde el 8.1, el índice lleva también las de los que no lo están). */
-export function pintarLeyenda(contenedor: HTMLElement, indice: Indice, activos: ReadonlySet<string>): void {
-  const puntuan = el('ul', undefined, 'leyenda');
-  const informativas = el('ul', undefined, 'leyenda');
-  for (const f of indice.familias.filter((x) => activos.has(x.paquete))) {
-    const elemento = el('li');
-    elemento.dataset['sigla'] = indice.siglaDeFamilia.get(f.clave) ?? '';
-    elemento.append(el('span', textos.MUESTRA_DE_SUBRAYADO, `muestra capa ${f.clase}`), ` ${f.nombre} (${f.paquete})`);
-    (f.informativa ? informativas : puntuan).append(elemento);
+/**
+ * Las familias (desde el 10.4, Tanda 2; DISEÑO §6.1 y §7, TarjetaFamilia del
+ * modelo): una tarjeta por familia de los paquetes activos (desde el 8.1, el
+ * índice lleva también las de los que no lo están), con la muestra («Abc» con
+ * su tinte y su línea, aria-hidden), su nombre y su recuento; las informativas
+ * (Canal), en su propia lista y con «solo avisos»; una familia sin señales,
+ * atenuada. [PROPIO] Agrupadas por paquete bajo su nombre: el paquete se dice
+ * siempre en texto (8.1), y el modelo, que solo enseña los incluidos, no lo
+ * necesitaba. En papel es la clave: la sigla delante de cada una (data-sigla).
+ */
+export function pintarLeyenda(contenedor: HTMLElement, indice: Indice, activos: ReadonlySet<string>, recuento: ReadonlyMap<string, number>): void {
+  const titulo = el('h2', textos.FAMILIAS);
+  titulo.id = 't-familias';
+  contenedor.setAttribute('aria-labelledby', titulo.id);
+  contenedor.replaceChildren(titulo, el('p', textos.CLAVE_DE_SIGLAS, 'solo-impresion'));
+  for (const paquete of [...new Set(indice.familias.map((f) => f.paquete))].filter((p) => activos.has(p))) {
+    const grupo = el('div', undefined, 'grupo-familias');
+    const puntuan = el('ul', undefined, 'leyenda');
+    const informativas = el('ul', undefined, 'leyenda');
+    for (const f of indice.familias.filter((x) => x.paquete === paquete)) {
+      const n = recuento.get(f.clave) ?? 0;
+      const tarjeta = el('li', undefined, `tarjeta-familia ${f.clase}${n === 0 ? ' atenuada' : ''}`);
+      tarjeta.dataset['sigla'] = indice.siglaDeFamilia.get(f.clave) ?? '';
+      tarjeta.dataset['familia'] = f.clave;
+      const muestra = el('span', textos.MUESTRA_DE_SUBRAYADO, `muestra capa ${f.clase}`);
+      muestra.setAttribute('aria-hidden', 'true');
+      tarjeta.append(muestra, el('span', f.informativa ? textos.familiaInformativa(f.nombre, n) : textos.familiaConRecuento(f.nombre, n), 'etiqueta-familia'));
+      (f.informativa ? informativas : puntuan).append(tarjeta);
+    }
+    grupo.append(el('h3', paquete), puntuan);
+    if (informativas.childElementCount > 0) grupo.append(informativas);
+    contenedor.append(grupo);
   }
-  contenedor.replaceChildren(el('h3', textos.FAMILIAS), el('p', textos.CLAVE_DE_SIGLAS, 'solo-impresion'), puntuan);
-  if (informativas.childElementCount > 0) contenedor.append(el('p', textos.INFORMATIVAS_EN_LA_LEYENDA), informativas);
 }
 
 function familiaDe(senal: SenalCalificada, indice: Indice): string {
@@ -355,15 +383,65 @@ export function pintarPanel(contenedor: HTMLElement, senales: readonly SenalCali
   contenedor.hidden = false;
 }
 
+/** La sigla de una familia en su círculo, con el color de la clase de familia de quien la contiene (aria-hidden: el nombre ya es texto). */
+function sigla(letras: string): HTMLSpanElement {
+  const s = el('span', letras, 'sigla');
+  s.setAttribute('aria-hidden', 'true');
+  return s;
+}
+
 /**
- * El medidor en claro (firmado en la parada 1 del 9.2): por paquete con
- * escala, la etiqueta como título del bloque, la frase debajo y, con texto
- * corto, el aviso (retoque del 9.2); su resumen y, plegadas en «Ver el
- * detalle», sus cifras. Sin escala, el nombre del paquete y su resumen. Con
- * texto insuficiente, como antes: el aviso y el motivo.
- * [DOC] https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details
- *    — plegado por defecto: la información se ve «only when the widget is
- *    toggled into an open state».
+ * La lectura de un paquete con escala: la etiqueta (título, en el nivel que se
+ * pide), la frase y, con texto corto, el aviso (retoque del 9.2).
+ */
+function lecturaDe(resultado: Resultado, r: ResultadoDePaquete, voz: Voz, nivel: 'h2' | 'h3', clase: string): HTMLElement {
+  const cabeza = etiquetaDelPaquete(resultado, r, voz);
+  const bloque = el('div', undefined, clase);
+  if (cabeza === null) return bloque;
+  bloque.append(el(nivel, cabeza.etiqueta, 'etiqueta'), el('p', cabeza.frase, 'frase'));
+  if (cabeza.aviso !== null) bloque.append(el('p', cabeza.aviso, 'aviso-corto'));
+  return bloque;
+}
+
+/**
+ * «Lo que más pesa» (10.4, Tanda 2; DISEÑO §6.1 y §7): una tarjeta por regla,
+ * con la barra y la sigla de su familia, su nombre y su cola; «Empieza por:»
+ * debajo de la primera. Sin ninguna que sume, «bien».
+ */
+function tarjetasQueMasPesan(resultado: Resultado, r: ResultadoDePaquete, indice: Indice): HTMLElement {
+  const seccion = el('section', undefined, 'lo-que-mas-pesa');
+  const titulo = el('h2', textos.LO_QUE_MAS_PESA);
+  titulo.id = 't-pesa';
+  seccion.setAttribute('aria-labelledby', titulo.id);
+  seccion.append(titulo);
+  const pesa = loQueMasPesa(resultado, r, indice);
+  if (pesa.reglas.length === 0) {
+    seccion.append(el('p', textos.NINGUNA_PUNTUABLE, 'resumen'));
+    return seccion;
+  }
+  const lista = el('ol');
+  pesa.reglas.forEach((x, i) => {
+    const motivo = el('li', undefined, 'motivo');
+    const tarjeta = el('div', undefined, `tarjeta-motivo ${indice.claseDeFamilia.get(x.familia) ?? 'fam-propia'}`);
+    tarjeta.append(sigla(indice.siglaDeFamilia.get(x.familia) ?? ''), el('span', x.nombre, 'nombre-motivo'), el('span', x.cola, 'cola'));
+    motivo.append(tarjeta);
+    if (i === 0 && pesa.empiezaPor !== null) motivo.append(el('p', textos.empiezaPor(pesa.empiezaPor), 'empieza-por'));
+    lista.append(motivo);
+  });
+  seccion.append(lista);
+  return seccion;
+}
+
+/**
+ * La cabeza del resultado (desde el 10.4, Tanda 2; DISEÑO §6.1, pastilla y
+ * «Lo que más pesa» del modelo): la pastilla del primer paquete con escala (en
+ * tinta sobre card; su etiqueta, la de la 9.2, es el título del resultado y
+ * recibe el foco al analizar) y, si es el de estilo de asistente, las tarjetas
+ * de lo que más pesa; si es un propio, su línea. Los demás paquetes van en
+ * su tarjeta del desglose (pintarDesglose). Sin ningún paquete con escala, la
+ * pastilla lo dice (firmado en la parada 1 del 8.1). Con texto insuficiente,
+ * como antes, el aviso y el motivo: en pantalla lo dice el cuadro (pantalla.ts)
+ * y este bloque es para el papel.
  */
 export function pintarMedidor(contenedor: HTMLElement, resultado: Resultado, vozDe: (paquete: string) => Voz, indice: Indice, nombreDelGenero: string): void {
   contenedor.replaceChildren();
@@ -372,26 +450,20 @@ export function pintarMedidor(contenedor: HTMLElement, resultado: Resultado, voz
     contenedor.append(el('p', textos.TEXTO_INSUFICIENTE, 'estado-tramo'), el('p', primero?.motivo ?? ''), el('p', palabrasDelTexto(resultado, nombreDelGenero), 'datos'));
     return;
   }
-  for (const r of resultado.paquetes) {
-    const voz = vozDe(r.paquete);
-    const bloque = el('section', undefined, 'lectura');
-    const cabeza = etiquetaDelPaquete(resultado, r, voz);
-    // Con escala, la etiqueta es el título del bloque (retoque del 9.2) y la de RadiografIA dice ya qué mide; sin escala, el nombre del paquete.
-    if (cabeza === null) bloque.append(el('h3', r.paquete));
-    else {
-      bloque.append(el('h3', cabeza.etiqueta, 'etiqueta'), el('p', cabeza.frase, 'frase'));
-      if (cabeza.aviso !== null) bloque.append(el('p', cabeza.aviso, 'aviso-corto'));
-    }
-    for (const linea of resumenDelPaquete(resultado, r, voz, indice)) bloque.append(el('p', linea, 'resumen'));
-    if (r.banda !== null) {
-      const detalle = el('details', undefined, 'detalle');
-      detalle.append(el('summary', textos.VER_EL_DETALLE), ...detalleDelPaquete(resultado, r, nombreDelGenero).map((linea) => el('p', linea)));
-      bloque.append(detalle);
-    }
-    contenedor.append(bloque);
+  const principal = resultado.paquetes.find((x) => x.banda !== null);
+  if (principal === undefined) {
+    const pastilla = el('div', undefined, 'pastilla');
+    pastilla.append(el('p', textos.SIN_ESCALA, 'frase banda'));
+    pastilla.firstElementChild!.setAttribute('tabindex', '-1');
+    contenedor.append(pastilla);
+    return;
   }
-  // Ninguno trae escala (por ejemplo, RadiografIA desmarcado): sin etiqueta, y se dice (firmado en la parada 1 del 8.1).
-  if (resultado.paquetes.every((x) => x.banda === null)) contenedor.append(el('p', textos.SIN_ESCALA, 'banda'));
+  const voz = vozDe(principal.paquete);
+  const pastilla = lecturaDe(resultado, principal, voz, 'h2', 'pastilla');
+  pastilla.firstElementChild?.setAttribute('tabindex', '-1');
+  contenedor.append(pastilla);
+  if (voz === 'asistente') contenedor.append(tarjetasQueMasPesan(resultado, principal, indice));
+  else for (const linea of resumenDelPaquete(resultado, principal, voz, indice)) contenedor.append(el('p', linea, 'resumen'));
 }
 
 /** La cabecera del informe, solo para el papel (9.1): título, fecha y hora del análisis, género, palabras y tramo, y los paquetes con su versión. */
@@ -469,7 +541,27 @@ function apartado(titulo: string, lineas: readonly Linea[]): HTMLElement[] {
   return [el('h4', titulo), lista];
 }
 
-export function pintarDesglose(contenedor: HTMLElement, resultado: Resultado, paquetes: readonly Paquete[], indice: Indice, base: string): void {
+/**
+ * El desglose (desde el 10.4, Tanda 2; DISEÑO §6.1, puntos 4 y 5, y el
+ * modelo): el del paquete de la pastilla va plegado en «Ver el detalle», con
+ * sus cifras delante; cada uno de los demás (Español correcto, los propios),
+ * en su tarjeta, con su nombre, su línea de resumen (y su etiqueta y su frase
+ * si tiene escala) y su desglose plegado, también en «Ver el detalle». Sin
+ * ningún paquete con escala, todos en tarjeta. En el orden de los paquetes,
+ * el de la pastilla primero.
+ * Cada desglose, como desde el 9.2: el paquete con su versión, el total y las
+ * familias con sus reglas, lo que se nota en el conjunto, solo avisos, sin
+ * textos con los que comparar y no miradas.
+ */
+export function pintarDesglose(
+  contenedor: HTMLElement,
+  resultado: Resultado,
+  paquetes: readonly Paquete[],
+  indice: Indice,
+  base: string,
+  vozDe: (paquete: string) => Voz,
+  nombreDelGenero: string,
+): void {
   /**
    * «Nombre: lo que se dice», con el nombre enlazado a su ficha, y sin el id
    * (9.2: los ids, solo en «¿Por qué lo miramos?» y en el catálogo). La de un
@@ -493,9 +585,8 @@ export function pintarDesglose(contenedor: HTMLElement, resultado: Resultado, pa
   };
   const genero = generoEnCalle(resultado.genero).conArticulo;
   const reglaDe = (paquete: string, id: string) => indice.reglas.get(clave(paquete, id));
-  contenedor.replaceChildren();
-  resultado.paquetes.forEach((r, i) => {
-    const cabecera = paquetes[i]!.cabecera;
+  /** El desglose de un paquete. */
+  const desgloseDe = (r: ResultadoDePaquete, cabecera: Paquete['cabecera']): HTMLElement => {
     const p = r.puntuacion;
     const seccion = el('section', undefined, 'desglose-paquete');
     seccion.append(el('h3', `${r.paquete} ${cabecera.version}`));
@@ -545,6 +636,35 @@ export function pintarDesglose(contenedor: HTMLElement, resultado: Resultado, pa
         ),
       ),
     );
-    contenedor.append(seccion);
-  });
+    return seccion;
+  };
+  /** «Ver el detalle», plegado: las cifras (si hay escala) y el desglose. */
+  const detalleDe = (r: ResultadoDePaquete, cabecera: Paquete['cabecera']): HTMLDetailsElement => {
+    const detalle = el('details', undefined, 'detalle');
+    detalle.append(el('summary', textos.VER_EL_DETALLE));
+    if (r.banda !== null) {
+      const cifras = el('div', undefined, 'cifras');
+      cifras.append(...detalleDelPaquete(resultado, r, nombreDelGenero).map((linea) => el('p', linea)));
+      detalle.append(cifras);
+    }
+    detalle.append(desgloseDe(r, cabecera));
+    return detalle;
+  };
+  contenedor.replaceChildren();
+  const principal = resultado.paquetes.find((x) => x.banda !== null);
+  for (const r of principal === undefined ? resultado.paquetes : [principal, ...resultado.paquetes.filter((x) => x !== principal)]) {
+    const cabecera = paquetes[resultado.paquetes.indexOf(r)]!.cabecera;
+    if (r === principal) {
+      contenedor.append(detalleDe(r, cabecera));
+      continue;
+    }
+    const voz = vozDe(r.paquete);
+    const tarjeta = el('section', undefined, 'otro-paquete');
+    const titulo = el('h2', r.paquete);
+    tarjeta.append(titulo);
+    if (r.banda !== null) tarjeta.append(lecturaDe(resultado, r, voz, 'h3', 'lectura'));
+    for (const linea of resumenDelPaquete(resultado, r, voz, indice)) tarjeta.append(el('p', linea, 'resumen'));
+    tarjeta.append(detalleDe(r, cabecera));
+    contenedor.append(tarjeta);
+  }
 }

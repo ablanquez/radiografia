@@ -113,6 +113,10 @@ const MUESTRAS: Readonly<Record<string, readonly unknown[]>> = {
   estadisticaDeContexto: ['0,58', 'de palabras distintas sobre el total (de 0 a 1)', 'dentro de', 'las noticias', '0,5', '0,62'],
   // El nombre accesible de un subrayado (10.4, Tanda 2): el de sus reglas y su texto, que es del usuario (aquí, de muestra).
   nombreDelTramo: [['Conector repetido', 'Mes o día con mayúscula'], 'Además'],
+  // El resultado (10.4, Tanda 2): el aviso de texto insuficiente y las tarjetas de familia, con los números del modelo.
+  textoInsuficiente: [99],
+  familiaConRecuento: ['Discurso', 7],
+  familiaInformativa: ['Canal', 1],
 };
 
 /** El texto visible de la página construida y su placeholder. */

@@ -85,8 +85,6 @@ describe('la base de la interfaz en Chrome, sobre astro preview', () => {
     assert.deepEqual([cuerpo.familia, cuerpo.tam, cuerpo.alto, cuerpo.color], ['Atkinson Hyperlegible Next', '16px', '24px', TINTA], 'la interfaz');
     const cuadro = await estilo('#texto');
     assert.deepEqual([cuadro.familia, cuadro.tam, cuadro.alto, cuadro.color, cuadro.borde, cuadro.radio, cuadro.relleno], ['Literata', '18px', '27px', TINTA, `1px solid ${TINTA_2}`, '8px', '16px'], 'el cuadro de texto');
-    const titulo = await estilo('#titulo-resultado');
-    assert.deepEqual([titulo.familia, titulo.tam, titulo.alto, titulo.peso], ['Atkinson Hyperlegible Next', '20px', '26px', '700'], 'un título de sección');
     const secundario = await estilo('.procedencia');
     assert.deepEqual([secundario.tam, secundario.alto, secundario.color], ['15px', '21.75px', TINTA_2], 'lo secundario');
   });
@@ -143,6 +141,9 @@ describe('la base de la interfaz en Chrome, sobre astro preview', () => {
       document.getElementById('analizar').click();
     })()`);
     await pestana.hasta(`!document.getElementById('resultado').hidden`, 'el resultado');
+    // Un título de sección (desde el 10.4 los títulos los pinta el resultado: «Lo que más pesa»).
+    const titulo = await estilo('#t-pesa');
+    assert.deepEqual([titulo.familia, titulo.tam, titulo.alto, titulo.peso], ['Atkinson Hyperlegible Next', '20px', '26px', '700'], 'un título de sección');
     // Cada carácter de la vista, agrupado por la línea en que cae; la última línea de cada párrafo no cuenta.
     const llenas = await pestana.evaluar<number[]>(`(() => {
       const recorrido = document.createTreeWalker(document.getElementById('vista'), NodeFilter.SHOW_TEXT);
@@ -150,6 +151,8 @@ describe('la base de la interfaz en Chrome, sobre astro preview', () => {
       const lineas = [];
       let actual = null;
       for (let n = recorrido.nextNode(); n !== null; n = recorrido.nextNode()) {
+        // La sigla voladita de un tramo (10.4) no es texto del usuario.
+        if (n.parentElement.closest('[aria-hidden="true"]')) continue;
         for (let i = 0; i < n.data.length; i++) {
           if (n.data[i] === '\\n') {
             if (actual !== null) lineas.push({ ...actual, ultima: true });
@@ -177,6 +180,8 @@ describe('la base de la interfaz en Chrome, sobre astro preview', () => {
 
   test('6 · en móvil (390), el botón principal mide 48 de alto y ocupa el ancho de la columna', async () => {
     await anchoDe(390);
+    // Tras analizar, el cuadro está plegado (10.4): «Editar el texto» lo despliega con sus botones.
+    await (await p()).evaluar(`document.getElementById('editar').click()`);
     const principal = await estilo('#analizar');
     const columna = await estilo('#formulario');
     assert.equal(principal.altura, 48, 'alto del principal');

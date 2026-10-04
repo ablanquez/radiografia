@@ -52,6 +52,22 @@
  * etiqueta como botón (estilos/formulario.css). La línea de paquetes cargados
  * se queda para el lector de pantalla (.solo-lector); si la carga falla, se ve.
  *
+ * Y el resultado, como el modelo (10.4, Tanda 2; DISEÑO §6.1 y §7):
+ *   · al analizar, el cuadro se pliega a tres líneas con «Editar el texto»
+ *     (que lo despliega y lo enfoca), la vista ocupa la columna del texto y
+ *     el foco va a la etiqueta del resultado (la pantalla salta a él; sin
+ *     eso, el foco se quedaría en el botón, que se pliega con el cuadro);
+ *   · con texto insuficiente no se pliega: el aviso va debajo del cuadro,
+ *     unido a él con aria-describedby, y el bloque del resultado queda para
+ *     el papel (el informe del 9.1 lo imprime);
+ *   · «Analizar otro texto» vacía el cuadro, quita el resultado y enfoca el
+ *     cuadro; «Descargar informe» del formulario se queda para cuando no hay
+ *     resultado, y con resultado va entre los botones del final.
+ *   [DOC] https://www.w3.org/TR/wai-aria-1.2/#aria-describedby — «Identifies
+ *   the element (or elements) that describes the object».
+ *   [DOC] https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus
+ *   — por defecto, «the browser will scroll the element into view».
+ *
  * Sin red salvo los fetch de los paquetes incluidos y de los ejemplos: el
  * paquete propio se lee del fichero, en el navegador (lo demuestra
  * jueces/navegador.spec.ts). Sin librerías de UI. Las cadenas de la interfaz,
@@ -83,7 +99,7 @@ import {
   type Indice,
 } from './pintar.ts';
 import { activos, leerPaquetePropio } from './propios.ts';
-import type { Voz } from './lectura.ts';
+import { recuentoDeFamilias, type Voz } from './lectura.ts';
 
 function elemento<T extends HTMLElement>(id: string): T {
   const e = document.getElementById(id);
@@ -119,6 +135,49 @@ const senalesDelInforme = elemento<HTMLDivElement>('senales-informe');
 const fechaDelAnalisis = new Intl.DateTimeFormat('es', { dateStyle: 'long', timeStyle: 'short' });
 const botonDelInforme = elemento<HTMLButtonElement>('informe');
 botonDelInforme.addEventListener('click', () => window.print());
+const descargar = elemento<HTMLButtonElement>('descargar');
+descargar.addEventListener('click', () => window.print());
+const plegado = elemento<HTMLDivElement>('plegado');
+const textoPlegado = elemento<HTMLParagraphElement>('texto-plegado');
+const hueco = elemento<HTMLParagraphElement>('hueco-resultado');
+const avisoInsuficiente = elemento<HTMLParagraphElement>('aviso-insuficiente');
+
+/** El cuadro desplegado (y el formulario entero) o plegado a tres líneas con su texto. */
+function desplegar(): void {
+  formulario.hidden = false;
+  plegado.hidden = true;
+}
+function plegar(): void {
+  textoPlegado.textContent = texto.value;
+  formulario.hidden = true;
+  plegado.hidden = false;
+}
+
+elemento<HTMLButtonElement>('editar').addEventListener('click', () => {
+  desplegar();
+  texto.focus();
+});
+
+/** El aviso de texto insuficiente debajo del cuadro, o ninguno. */
+function avisarInsuficiente(palabras: number | null): void {
+  avisoInsuficiente.hidden = palabras === null;
+  avisoInsuficiente.querySelector('span')!.textContent = palabras === null ? '' : textos.textoInsuficiente(palabras);
+  if (palabras === null) texto.removeAttribute('aria-describedby');
+  else texto.setAttribute('aria-describedby', avisoInsuficiente.id);
+}
+
+elemento<HTMLButtonElement>('otro').addEventListener('click', () => {
+  texto.value = '';
+  for (const parte of [resultado, vista, panel]) parte.hidden = true;
+  hueco.hidden = false;
+  avisarInsuficiente(null);
+  hayResultado = false;
+  botonDelInforme.hidden = false;
+  botonDelInforme.disabled = true;
+  avisoDePaquetes.textContent = '';
+  desplegar();
+  texto.focus();
+});
 
 /** true si lo analizado salió bien y está pintado: cambiar los paquetes lo deja atrás. */
 let hayResultado = false;
@@ -139,15 +198,23 @@ function analizarYPintar(paquetes: readonly Paquete[], indice: Indice, vozDe: (p
       parte.hidden = !hayAnalisis;
     }
     if (hayAnalisis) {
-      pintarLeyenda(leyenda, indice, new Set(paquetes.map((p) => p.cabecera.nombre)));
+      pintarLeyenda(leyenda, indice, new Set(paquetes.map((p) => p.cabecera.nombre)), recuentoDeFamilias(r));
       pintarVista(vista, elTexto, r.senales, indice, (indices) => pintarPanel(panel, indices.map((i) => r.senales[i]!), indice, import.meta.env.BASE_URL));
-      pintarDesglose(desglose, r, paquetes, indice, import.meta.env.BASE_URL);
+      pintarDesglose(desglose, r, paquetes, indice, import.meta.env.BASE_URL, vozDe, nombreDeGenero(elGenero));
     }
     problemas.hidden = true;
     resultado.hidden = false;
+    resultado.classList.toggle('insuficiente', !hayAnalisis);
+    hueco.hidden = hayAnalisis;
+    avisarInsuficiente(hayAnalisis ? null : r.palabrasProsa);
     hayResultado = true;
     botonDelInforme.disabled = false;
+    botonDelInforme.hidden = hayAnalisis;
     avisoDePaquetes.textContent = '';
+    if (hayAnalisis) {
+      plegar();
+      medidor.querySelector<HTMLElement>('.pastilla > [tabindex]')?.focus();
+    }
   } catch (fallo) {
     pintarProblemas(problemas, [{ paquete: textos.EL_ANALISIS, mensajes: [(fallo as Error).message] }]);
   }

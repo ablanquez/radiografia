@@ -156,6 +156,18 @@ input[type='checkbox'] {
 }
 
 /*
+ * hidden oculta siempre (10.4, Tanda 2): el display: none de hidden es un
+ * estilo del navegador, y cualquier display de una hoja de la página le gana
+ * (el formulario, que es flex, no se plegaba).
+ * [DOC] https://html.spec.whatwg.org/multipage/rendering.html#hidden-elements
+ *    — la hoja del navegador (15.3.1):
+ *    «[hidden]:not([hidden=until-found i]):not(embed) { display: none; }».
+ */
+[hidden]:not([hidden='until-found' i]) {
+  display: none !important;
+}
+
+/*
  * Lo que solo es para el lector de pantalla (10.4, Tanda 2): fuera de la vista,
  * pero en el árbol de accesibilidad.
  * [DOC] https://webaim.org/techniques/css/invisiblecontent/ — la clase

@@ -9,7 +9,11 @@
  *      debajo, las dos las que da lectura.ts (retoque del 9.2, firmado el
  *      03/10); el resumen se ve y es el suyo (el de RadiografIA y la línea de
  *      Español correcto); «Ver el detalle» está plegado por defecto, sus
- *      cifras no se ven, y al abrirlo sí.
+ *      cifras no se ven, y al abrirlo sí. Desde el 10.4 (Tanda 2), el bloque
+ *      es la pastilla, y lo que más pesa va en tarjetas: cada una, la regla y
+ *      su cola, en el orden del resumen, y «Empieza por» debajo de la primera;
+ *      la línea de Español correcto, en su tarjeta; y «Ver el detalle», en el
+ *      desglose.
  *   2. El panel de un subrayado, en el orden firmado: el nombre, la frase en
  *      claro de la regla, «Qué hacer» y «¿Por qué lo miramos?», plegado.
  *   3. Ninguna palabra del motor en el texto visible del analizador: ni
@@ -30,7 +34,7 @@ import { after, describe, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import * as textos from '../src/textos.ts';
-import { etiquetaDelPaquete, resumenDelPaquete } from '../src/pantalla/lectura.ts';
+import { etiquetaDelPaquete, loQueMasPesa, resumenDelPaquete } from '../src/pantalla/lectura.ts';
 import { indexar } from '../src/pantalla/pintar.ts';
 import { EJEMPLOS_PUBLICOS, motorDelNavegador, paquetesIncluidos, TEXTO_DE_COMBINACION_REAL } from './apoyo.ts';
 import { abrirAnalizadorConTestigos, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
@@ -53,9 +57,9 @@ describe('el lenguaje de calle en Chrome, sobre astro preview', () => {
     await sesion?.cerrar();
   });
 
-  /** Las tres primeras piezas del primer bloque de resultado: etiqueta y clase, texto y si se ve. */
+  /** Las tres primeras piezas del primer bloque de resultado (desde el 10.4, la pastilla): etiqueta y clase, texto y si se ve. */
   const cabezaDelBloque = (): Promise<[string, string, boolean][]> =>
-    p().evaluar(`[...document.querySelector('#medidor .lectura').children].slice(0, 3).map((x) => [x.tagName.toLowerCase() + (x.className ? '.' + x.className : ''), x.textContent, x.checkVisibility()])`);
+    p().evaluar(`[...document.querySelector('#medidor .pastilla').children].slice(0, 3).map((x) => [x.tagName.toLowerCase() + (x.className ? '.' + x.className : ''), x.textContent, x.checkVisibility()])`);
 
   test('1 · la etiqueta, primero del bloque, la frase y el resumen se ven, y «Ver el detalle» está plegado hasta que se abre', async () => {
     await arrancar();
@@ -72,19 +76,28 @@ describe('el lenguaje de calle en Chrome, sobre astro preview', () => {
     const indice = indexar(paquetes);
     const lectura = etiquetaDelPaquete(r, r.paquetes[0]!, 'asistente');
     assert.ok(lectura, 'el motor da etiqueta y frase');
-    const resumen = [...resumenDelPaquete(r, r.paquetes[0]!, 'asistente', indice), ...resumenDelPaquete(r, r.paquetes[1]!, 'norma', indice)];
+    const pesa = loQueMasPesa(r, r.paquetes[0]!, indice);
 
     const [etiqueta, frase] = await cabezaDelBloque();
-    assert.deepEqual(etiqueta, ['h3.etiqueta', lectura.etiqueta, true], 'la etiqueta, lo primero del bloque de resultado y su título');
+    assert.deepEqual(etiqueta, ['h2.etiqueta', lectura.etiqueta, true], 'la etiqueta, lo primero del bloque de resultado y su título');
     assert.deepEqual(frase, ['p.frase', lectura.frase, true], 'la frase, debajo');
-    assert.deepEqual(await p().evaluar(`[...document.querySelectorAll('#medidor .resumen')].map((x) => x.textContent)`), resumen);
+    // El resumen de RadiografIA, en tarjetas (10.4): las mismas reglas y colas que su línea de la 9.2, y «Empieza por».
+    const tarjetas = await p().evaluar<[string, string, boolean][]>(`[...document.querySelectorAll('#medidor .tarjeta-motivo')].map((t) => [t.querySelector('.nombre-motivo').textContent, t.querySelector('.cola').textContent, t.checkVisibility()])`);
+    assert.deepEqual(tarjetas, pesa.reglas.map((x) => [x.nombre, x.cola, true]), 'lo que más pesa, en tarjetas');
+    assert.deepEqual(resumenDelPaquete(r, r.paquetes[0]!, 'asistente', indice), [textos.loQueMasPesa(tarjetas.map(([n, c]) => textos.parteDelResumen(n, c))), textos.empiezaPor(pesa.empiezaPor!)], 'las tarjetas dicen lo mismo que la línea de la 9.2');
     assert.deepEqual(
-      await p().evaluar(`(() => { const d = document.querySelector('#medidor details.detalle'); return [d.open, d.querySelector('summary').textContent, [...d.querySelectorAll('p')].some((x) => x.checkVisibility())]; })()`),
+      await p().evaluar(`[...document.querySelectorAll('#medidor .motivo')].map((m) => m.querySelector('.empieza-por')?.textContent ?? null)`),
+      [textos.empiezaPor(pesa.empiezaPor!), null, null],
+      '«Empieza por», debajo de la primera',
+    );
+    assert.deepEqual(await p().evaluar(`[...document.querySelectorAll('.otro-paquete .resumen')].map((x) => [x.textContent, x.checkVisibility()])`), resumenDelPaquete(r, r.paquetes[1]!, 'norma', indice).map((x) => [x, true]), 'la línea de Español correcto, en su tarjeta');
+    assert.deepEqual(
+      await p().evaluar(`(() => { const d = document.querySelector('#desglose details.detalle'); return [d.open, d.querySelector('summary').textContent, [...d.querySelectorAll('.cifras p')].some((x) => x.checkVisibility())]; })()`),
       [false, textos.VER_EL_DETALLE, false],
       '«Ver el detalle», plegado: sus cifras no se ven',
     );
     assert.equal(
-      await p().evaluar(`(() => { const d = document.querySelector('#medidor details.detalle'); d.open = true; const visibles = [...d.querySelectorAll('p')].every((x) => x.checkVisibility()); d.open = false; return visibles; })()`),
+      await p().evaluar(`(() => { const d = document.querySelector('#desglose details.detalle'); d.open = true; const visibles = [...d.querySelectorAll('.cifras p')].every((x) => x.checkVisibility()); d.open = false; return visibles; })()`),
       true,
       'abierto, sus cifras se ven',
     );
@@ -118,7 +131,7 @@ describe('el lenguaje de calle en Chrome, sobre astro preview', () => {
     const halladas = [...visible.matchAll(DEL_MOTOR)].map((m) => `«${m[0]}» en «${visible.slice(Math.max(0, m.index - 30), m.index + 30).replace(/\s+/g, ' ')}»`);
     t.diagnostic(`texto visible: ${visible.length} caracteres; palabras del motor: ${halladas.length}`);
     assert.deepEqual(halladas, []);
-    const enElDetalle = await p().evaluar<string>(`document.querySelector('#medidor details.detalle').textContent`);
+    const enElDetalle = await p().evaluar<string>(`document.querySelector('#desglose details.detalle').textContent`);
     assert.match(enElDetalle, /p95/, 'las cifras siguen dentro de «Ver el detalle»');
   });
 
@@ -139,7 +152,7 @@ describe('el lenguaje de calle en Chrome, sobre astro preview', () => {
     })()`);
     await p().hasta(`!document.getElementById('resultado').hidden`, 'el resultado');
     assert.deepEqual(await cabezaDelBloque(), [
-      ['h3.etiqueta', lectura.etiqueta, true],
+      ['h2.etiqueta', lectura.etiqueta, true],
       ['p.frase', lectura.frase, true],
       ['p.aviso-corto', textos.AVISO_TEXTO_CORTO, true],
     ]);

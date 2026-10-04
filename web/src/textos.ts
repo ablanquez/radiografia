@@ -79,6 +79,21 @@ export const PLACEHOLDER_DEL_TEXTO = 'Pega aquí tu texto: a partir de 100 palab
 export const TEXTO_HUMANO = 'Texto humano';
 export const TEXTO_DE_IA = 'Texto de IA';
 export const TIPO_DE_TEXTO = 'Tipo de texto';
+/** Debajo del cuadro, con menos de 100 palabras que cuentan (DISEÑO §7, estado «insuficiente» del cuadro; el del modelo). */
+export const textoInsuficiente = (palabras: number): string => `Texto insuficiente: ${palabras} palabras que cuentan; se puntúa desde 100`;
+
+// El resultado como el modelo (encargo 10.4, Tanda 2; DISEÑO §6.1): la columna de la derecha antes de analizar, el
+// cuadro plegado con «Editar el texto», la vista, los títulos de los bloques, el recuento de cada familia y los
+// botones del final.
+export const AQUI_VERAS_EL_RESULTADO = 'Aquí verás el resultado.';
+export const RESULTADO = 'Resultado';
+export const TU_TEXTO_ANALIZADO = 'Tu texto analizado';
+export const EDITAR_EL_TEXTO = 'Editar el texto';
+export const LO_QUE_MAS_PESA = 'Lo que más pesa';
+export const familiaConRecuento = (nombre: string, n: number): string => `${nombre} (${n})`;
+/** Una familia informativa (Canal): se señala y no suma. */
+export const familiaInformativa = (nombre: string, n: number): string => `${nombre}: solo avisos (${n})`;
+export const ANALIZAR_OTRO_TEXTO = 'Analizar otro texto';
 
 // Los géneros del selector (generos.ts). [PROPIO, firmado en el encargo 6.2]
 export const NOMBRES_DE_GENERO: Readonly<Record<string, string>> = {
@@ -91,10 +106,10 @@ export const NOMBRES_DE_GENERO: Readonly<Record<string, string>> = {
   opinion: 'Opinión (críticas de cine)',
 };
 
-// La leyenda.
+// La leyenda: desde el 10.4 (Tanda 2), las tarjetas de familia del modelo, con «Abc» de muestra (aria-hidden) y la
+// informativa con «solo avisos» en su propia tarjeta (familiaInformativa).
 export const FAMILIAS = 'Familias';
-export const MUESTRA_DE_SUBRAYADO = 'subrayado';
-export const INFORMATIVAS_EN_LA_LEYENDA = 'Solo avisos: no suman.';
+export const MUESTRA_DE_SUBRAYADO = 'Abc';
 
 // El nombre accesible de cada subrayado (encargo 10.4, Tanda 2; DISEÑO §6.1): sus reglas y su texto, «Conector repetido:
 // “Además”». Las reglas, en lista con «y» (Intl.ListFormat de «es», conjunción).

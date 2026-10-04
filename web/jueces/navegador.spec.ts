@@ -94,7 +94,8 @@ describe('el cargador en Chrome, sobre astro preview', () => {
     await p().hasta(`document.querySelectorAll('#vista .tramo').length > 0`, 'los subrayados');
   }
 
-  const bloques = (): Promise<string[]> => p().evaluar(`[...document.querySelectorAll('#desglose > section > h3')].map((h) => h.textContent)`);
+  // Desde el 10.4 (Tanda 2), cada desglose va en «Ver el detalle»: el del paquete de la pastilla y el de cada tarjeta de paquete.
+  const bloques = (): Promise<string[]> => p().evaluar(`[...document.querySelectorAll('#desglose .desglose-paquete > h3')].map((h) => h.textContent)`);
   const aviso = (): Promise<string> => p().evaluar(`document.getElementById('aviso-paquetes').textContent`);
   const casilla = (nombre: string): Promise<void> => p().evaluar(`document.querySelector('#incluidos input[value="${nombre}"]').click()`);
 
@@ -132,8 +133,9 @@ describe('el cargador en Chrome, sobre astro preview', () => {
     await p().evaluar(`document.getElementById('texto').value = ${JSON.stringify(TEXTO_DE_TRES_PAQUETES)}`);
     await analizar();
 
-    const leyenda = await p().evaluar<string[]>(`[...document.querySelectorAll('#leyenda li')].map((li) => li.textContent.trim() + ' | ' + li.querySelector('.muestra').className)`);
-    assert.ok(leyenda.includes(`${textos.MUESTRA_DE_SUBRAYADO} Pruebas (${PRUEBA}) | muestra capa fam-propia`), leyenda.join('\n'));
+    // Desde el 10.4 (Tanda 2), las tarjetas de familia, agrupadas bajo el nombre de su paquete.
+    const leyenda = await p().evaluar<string[]>(`[...document.querySelectorAll('#leyenda .grupo-familias')].flatMap((g) => [...g.querySelectorAll('li')].map((li) => g.querySelector('h3').textContent + ' | ' + li.querySelector('.etiqueta-familia').textContent + ' | ' + li.querySelector('.muestra').className))`);
+    assert.ok(leyenda.some((x) => new RegExp(`^${PRUEBA} \\| Pruebas \\(\\d+\\) \\| muestra capa fam-propia$`).test(x)), leyenda.join('\n'));
 
     const propia = await p().evaluar<{ titulo: string; enlacesEnTitulo: number; texto: string; hrefs: string[]; ejemplos: string[] }>(`(() => {
       const tramo = [...document.querySelectorAll('#vista .tramo')].find((t) => t.dataset.familias.split('|').includes('${PRUEBA}::pruebas'));
@@ -175,7 +177,7 @@ describe('el cargador en Chrome, sobre astro preview', () => {
     assert.equal(incluida.href, urlDeRegla('/', incluida.id), 'una regla de RadiografIA enlaza a su ficha');
 
     const desglose = await p().evaluar<{ resumenes: string[]; todosConFicha: boolean; aReglas: number }>(`(() => {
-      const s = [...document.querySelectorAll('#desglose > section')].find((x) => x.querySelector('h3').textContent.startsWith('${PRUEBA} '));
+      const s = [...document.querySelectorAll('#desglose .desglose-paquete')].find((x) => x.querySelector('h3').textContent.startsWith('${PRUEBA} '));
       const detalles = [...s.querySelectorAll('details')];
       return { resumenes: detalles.map((d) => d.querySelector('summary').textContent), todosConFicha: detalles.every((d) => d.querySelectorAll('pre.ejemplo').length > 0), aReglas: [...s.querySelectorAll('a')].filter((x) => x.getAttribute('href').includes('/reglas/')).length };
     })()`);

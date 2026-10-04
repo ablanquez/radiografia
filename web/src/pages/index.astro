@@ -112,7 +112,22 @@
  *    «there isn't any guarantee that print-color-adjust will do anything».
  */
 import { urlDelCatalogo } from '../catalogo/catalogo.ts';
-import { CATALOGO, CATALOGO_CORTO, DESCARGAR_INFORME, NOTA_DE_AUTORIA, PLACEHOLDER_DEL_TEXTO, SIN_INFORME, TEXTO_DE_IA, TEXTO_HUMANO, TIPO_DE_TEXTO } from '../textos.ts';
+import {
+  ANALIZAR_OTRO_TEXTO,
+  AQUI_VERAS_EL_RESULTADO,
+  CATALOGO,
+  CATALOGO_CORTO,
+  DESCARGAR_INFORME,
+  EDITAR_EL_TEXTO,
+  NOTA_DE_AUTORIA,
+  PLACEHOLDER_DEL_TEXTO,
+  RESULTADO,
+  SIN_INFORME,
+  TEXTO_DE_IA,
+  TEXTO_HUMANO,
+  TIPO_DE_TEXTO,
+  TU_TEXTO_ANALIZADO,
+} from '../textos.ts';
 import Cabecera from '../componentes/Cabecera.astro';
 import Pie from '../componentes/Pie.astro';
 import Recursos from '../componentes/Recursos.astro';
@@ -122,6 +137,7 @@ import '../estilos/base.css';
 import '../estilos/marco.css';
 import '../estilos/familias.css';
 import '../estilos/formulario.css';
+import '../estilos/resultado.css';
 
 const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
 ---
@@ -135,69 +151,83 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
   </head>
   <body>
     <Cabecera enlace={{ href: catalogo, texto: CATALOGO, corto: CATALOGO_CORTO }} nombreEnH1 />
-    <main>
-      <form id="formulario" class="formulario">
-        <p id="estado" class="secundario" role="status">Cargando los paquetes de reglas…</p>
-        <div id="problemas" class="problemas" role="alert" hidden></div>
-        <div class="campo">
-          <label for="texto">Tu texto</label>
-          <textarea id="texto" rows="12" placeholder={PLACEHOLDER_DEL_TEXTO}></textarea>
-        </div>
-        <div class="ejemplos">
-          <div class="chips">
-            <button id="ejemplo-humano" class="chip" type="button" disabled>{TEXTO_HUMANO}</button>
-            <button id="ejemplo-ia" class="chip" type="button" disabled>{TEXTO_DE_IA}</button>
+    <main class="analizador">
+      <section id="columna-texto" class="columna-texto" aria-label="Tu texto">
+        <form id="formulario" class="formulario">
+          <p id="estado" class="secundario" role="status">Cargando los paquetes de reglas…</p>
+          <div id="problemas" class="problemas" role="alert" hidden></div>
+          <div class="campo">
+            <label for="texto">Tu texto</label>
+            <textarea id="texto" rows="12" placeholder={PLACEHOLDER_DEL_TEXTO}></textarea>
+            <p id="aviso-insuficiente" class="aviso-insuficiente" hidden>
+              <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 7v6M12 16.5v.5" stroke-linecap="round"></path></svg>
+              <span></span>
+            </p>
           </div>
-          <p class="procedencia secundario">El texto humano lo escribió Antonio; el de IA lo generó Claude Opus 5.5, sin instrucciones de estilo.</p>
-          <p id="estado-ejemplo" role="status"></p>
-        </div>
-        <div class="campo">
-          <label for="genero">{TIPO_DE_TEXTO}</label>
-          <select id="genero" disabled></select>
-        </div>
-        <details id="paquetes" class="paquetes">
-          <summary id="resumen-paquetes">Paquetes</summary>
-          <fieldset aria-labelledby="resumen-paquetes">
-            <div id="incluidos"></div>
-            <div class="cargador">
-              <input id="paquete-propio" class="fichero" type="file" accept="application/json,.json" disabled />
-              <label for="paquete-propio" class="boton-fichero">Cargar un paquete propio (JSON)</label>
+          <div class="ejemplos">
+            <div class="chips">
+              <button id="ejemplo-humano" class="chip" type="button" disabled>{TEXTO_HUMANO}</button>
+              <button id="ejemplo-ia" class="chip" type="button" disabled>{TEXTO_DE_IA}</button>
             </div>
-            <ul id="propios" hidden></ul>
-            <p id="estado-propio" role="status"></p>
-            <div id="errores-propio" class="problemas" role="alert" hidden></div>
-            <p class="aviso-propio secundario">Se queda en tu navegador: no se sube a ningún sitio. No se guarda: al recargar la página, desaparece.</p>
-          </fieldset>
-        </details>
-        <div class="acciones-formulario">
-          <button id="analizar" class="boton-principal" type="submit" disabled>Pon tu texto a contraluz</button>
-          <button id="informe" type="button" disabled>{DESCARGAR_INFORME}</button>
+            <p class="procedencia secundario">El texto humano lo escribió Antonio; el de IA lo generó Claude Opus 5.5, sin instrucciones de estilo.</p>
+            <p id="estado-ejemplo" role="status"></p>
+          </div>
+          <div class="campo">
+            <label for="genero">{TIPO_DE_TEXTO}</label>
+            <select id="genero" disabled></select>
+          </div>
+          <details id="paquetes" class="paquetes">
+            <summary id="resumen-paquetes">Paquetes</summary>
+            <fieldset aria-labelledby="resumen-paquetes">
+              <div id="incluidos"></div>
+              <div class="cargador">
+                <input id="paquete-propio" class="fichero" type="file" accept="application/json,.json" disabled />
+                <label for="paquete-propio" class="boton-fichero">Cargar un paquete propio (JSON)</label>
+              </div>
+              <ul id="propios" hidden></ul>
+              <p id="estado-propio" role="status"></p>
+              <div id="errores-propio" class="problemas" role="alert" hidden></div>
+              <p class="aviso-propio secundario">Se queda en tu navegador: no se sube a ningún sitio. No se guarda: al recargar la página, desaparece.</p>
+            </fieldset>
+          </details>
+          <div class="acciones-formulario">
+            <button id="analizar" class="boton-principal" type="submit" disabled>Pon tu texto a contraluz</button>
+            <button id="informe" type="button" disabled>{DESCARGAR_INFORME}</button>
+          </div>
+          <p id="aviso-paquetes" role="status"></p>
+        </form>
+        <div id="plegado" class="plegado" hidden>
+          <div class="plegado-cabeza">
+            <span class="plegado-etiqueta">Tu texto</span>
+            <button id="editar" class="boton-enlace" type="button">{EDITAR_EL_TEXTO}</button>
+          </div>
+          <div class="texto-plegado"><p id="texto-plegado"></p></div>
         </div>
-        <p id="aviso-paquetes" role="status"></p>
-      </form>
-      <section id="resultado" aria-labelledby="titulo-resultado" hidden>
-        <h2 id="titulo-resultado">Resultado</h2>
-        <div id="cabecera-informe" class="solo-impresion"></div>
-        <div id="medidor"></div>
-        <div id="leyenda"></div>
-        <div id="vista" class="vista texto-largo"></div>
+        <article id="vista" class="vista texto-largo" aria-label={TU_TEXTO_ANALIZADO} hidden></article>
         <aside id="panel" aria-live="polite" hidden></aside>
-        <div id="desglose"></div>
-        <div id="senales-informe" class="solo-impresion" hidden></div>
-        <p class="solo-impresion pie-informe">{NOTA_DE_AUTORIA}</p>
       </section>
-      <p class="solo-impresion sin-informe">{SIN_INFORME}</p>
+      <div id="columna-resultado" class="columna-resultado">
+        <p id="hueco-resultado" class="hueco-resultado">{AQUI_VERAS_EL_RESULTADO}</p>
+        <section id="resultado" class="resultado" aria-label={RESULTADO} hidden>
+          <div id="cabecera-informe" class="solo-impresion"></div>
+          <div id="medidor" class="medidor"></div>
+          <section id="leyenda" class="familias"></section>
+          <div id="desglose" class="desglose"></div>
+          <div class="acciones-resultado">
+            <button id="descargar" class="boton-principal" type="button">{DESCARGAR_INFORME}</button>
+            <button id="otro" type="button">{ANALIZAR_OTRO_TEXTO}</button>
+          </div>
+          <div id="senales-informe" class="solo-impresion" hidden></div>
+          <p class="solo-impresion pie-informe">{NOTA_DE_AUTORIA}</p>
+        </section>
+        <p class="solo-impresion sin-informe">{SIN_INFORME}</p>
+      </div>
     </main>
     <Pie />
     <script>
       import '../pantalla/pantalla.ts';
     </script>
     <style is:global>
-      /* La columna de texto (DISEÑO §5): 34em sobre la letra de 16 px de la interfaz, como el modelo. */
-      #formulario,
-      #resultado {
-        max-width: var(--medida-columna-texto);
-      }
       pre.ejemplo {
         white-space: pre-wrap;
       }
@@ -211,18 +241,6 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
       .problema-paquete,
       .estado-tramo {
         font-weight: 600;
-      }
-      /*
-       * Sin caja, como en el modelo: con la columna de 34em, Literata a 18 px da
-       * de 60 a 61 caracteres por línea con los tres textos de prueba (DISEÑO
-       * §5: 60-66); con el margen interior de antes, 56 a 58.
-       */
-      .vista {
-        white-space: pre-wrap;
-      }
-      .leyenda {
-        list-style: none;
-        padding-left: 0;
       }
       .id-regla {
         margin-top: 0;
@@ -254,10 +272,61 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
         header nav,
         .pie,
         #formulario,
+        #plegado,
+        #hueco-resultado,
+        .acciones-resultado,
         #panel,
         #medidor .datos,
-        #medidor details {
+        .detalle > summary,
+        .detalle > .cifras {
           display: none !important;
+        }
+        /*
+         * El informe en el orden del 9.1 (cabecera, resultado, clave, texto,
+         * desglose, señales y pie) aunque en pantalla el texto vaya en la
+         * columna de la izquierda: en papel las columnas no cuentan (display:
+         * contents) y cada bloque lleva su orden. El desglose va plegado en
+         * «Ver el detalle»: en papel se enseña sin abrirlo.
+         * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Selectors/::details-content
+         *    — «represents the expandable/collapsible contents of a <details>
+         *    element»; cerrado, lleva content-visibility: hidden, que se puede
+         *    cambiar. Baseline 2025.
+         */
+        .analizador {
+          display: flex;
+          flex-direction: column;
+        }
+        .columna-texto,
+        .columna-resultado,
+        #resultado:not([hidden]) {
+          display: contents;
+        }
+        #cabecera-informe {
+          order: 1;
+        }
+        #medidor {
+          order: 2;
+        }
+        #leyenda {
+          order: 3;
+        }
+        #vista {
+          order: 4;
+        }
+        #desglose {
+          order: 5;
+        }
+        #senales-informe {
+          order: 6;
+        }
+        .pie-informe {
+          order: 7;
+        }
+        .sin-informe {
+          order: 8;
+        }
+        .detalle::details-content {
+          content-visibility: visible;
         }
         .solo-impresion:not([hidden]) {
           display: block;

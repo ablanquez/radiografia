@@ -22,6 +22,12 @@
  *     Español correcto y los paquetes propios, una línea con sus recuentos.
  *   · Las líneas del conjunto (ausencias y estadísticas) y los motivos en
  *     claro de las no miradas, sacados de la regla y no del texto del motor.
+ *   · Desde el 10.4 (Tanda 2), lo que más pesa también como datos
+ *     (loQueMasPesa: cada regla con su familia y su cola, y la sugerencia de
+ *     la primera), para las tarjetas del modelo; resumenDelPaquete lo escribe
+ *     en una línea con las mismas palabras de antes. Y el recuento de cada
+ *     familia para sus tarjetas (recuentoDeFamilias): sus señales, sin las de
+ *     las reglas de contexto de una familia que puntúa.
  *
  * [DOC] https://hemingwayapp.com/help/docs/highlighted-issues — el molde de la
  *    frase por subrayado: «These are words like 'maybe' or 'I think' that make
@@ -155,6 +161,54 @@ export function lineaDelTextoEntero(s: SenalDelTextoEntero, genero: string, deCo
   return textos.conMeta(cifra(s.valor), unidad(s.metrica), genero, porArriba ? 'menos' : 'más', cifra(s.referencia[porArriba ? arriba : abajo]));
 }
 
+/** Una regla de las que más pesan: su id, su nombre, la clave de su familia («paquete::familia») y su cola (veces o meta). */
+export interface ReglaQuePesa {
+  id: string;
+  nombre: string;
+  familia: string;
+  cola: string;
+}
+
+/**
+ * Lo que más pesa de un paquete de estilo de asistente (firmado, E): las tres
+ * reglas que más suman, con los empates en el orden del desglose, cada una con
+ * su cola; y la sugerencia de la primera. Sin ninguna que sume, la lista vacía
+ * y sin sugerencia.
+ */
+export function loQueMasPesa(resultado: Resultado, r: ResultadoDePaquete, indice: Indice): { reglas: ReglaQuePesa[]; empiezaPor: string | null } {
+  if (resultado.tramo === 'insuficiente') return { reglas: [], empiezaPor: null };
+  const nombresDeFamilia = new Map(indice.familias.map((f) => [f.clave, f.nombre]));
+  const regla = (id: string): Regla | undefined => indice.reglas.get(`${r.paquete}::${id}`);
+  const claveDeFamilia = (id: string): string => `${r.paquete}::${regla(id)?.familia ?? ''}`;
+  const nombre = (id: string): string => nombreDeRegla(id, regla(id));
+  const tres = enOrden(queSuman(r), (x) => [-x.contribucion, nombresDeFamilia.get(claveDeFamilia(x.id)) ?? '', nombre(x.id)]).slice(0, 3);
+  const genero = generoEnCalle(resultado.genero).conArticulo;
+  const cola = (x: PuntosDeRegla): string => {
+    const s = resultado.senalesTexto.find((y) => y.paquete === r.paquete && y.reglaId === x.id);
+    return s === undefined ? textos.veces(x.n) : lineaDelTextoEntero(s, genero, false, regla(x.id));
+  };
+  return {
+    reglas: tres.map((x) => ({ id: x.id, nombre: nombre(x.id), familia: claveDeFamilia(x.id), cola: cola(x) })),
+    empiezaPor: tres.length === 0 ? null : (regla(tres[0]!.id)?.sugerencia ?? ''),
+  };
+}
+
+/**
+ * Cuántas señales tiene cada familia de los paquetes del resultado, por su
+ * clave «paquete::familia»: las de sus reglas; en una familia que puntúa, sin
+ * las de sus reglas informativas (las de contexto de Estadística, que van en
+ * «Solo avisos»). Con texto insuficiente, ninguna.
+ */
+export function recuentoDeFamilias(resultado: Resultado): Map<string, number> {
+  const recuento = new Map<string, number>();
+  for (const r of resultado.paquetes) {
+    for (const f of r.puntuacion.familias) {
+      recuento.set(`${r.paquete}::${f.id}`, f.reglas.filter((x) => f.informativa || !x.informativa).reduce((suma, x) => suma + x.n, 0));
+    }
+  }
+  return recuento;
+}
+
 export function resumenDelPaquete(resultado: Resultado, r: ResultadoDePaquete, voz: Voz, indice: Indice): string[] {
   if (resultado.tramo === 'insuficiente') return [];
   const nombresDeFamilia = new Map(indice.familias.map((f) => [f.clave, f.nombre]));
@@ -170,14 +224,9 @@ export function resumenDelPaquete(resultado: Resultado, r: ResultadoDePaquete, v
     if (voz === 'norma') return [n === 0 ? textos.NINGUN_AVISO : textos.avisosDeNorma(n, dos)];
     return [n === 0 ? textos.ningunaSenalDe(r.paquete) : textos.senalesDe(n, r.paquete, dos)];
   }
-  const tres = enOrden(queSuman(r), (x) => [-x.contribucion, familia(x.id), nombre(x.id)]).slice(0, 3);
-  if (tres.length === 0) return [textos.NINGUNA_PUNTUABLE];
-  const genero = generoEnCalle(resultado.genero).conArticulo;
-  const cola = (x: PuntosDeRegla): string => {
-    const s = resultado.senalesTexto.find((y) => y.paquete === r.paquete && y.reglaId === x.id);
-    return s === undefined ? textos.veces(x.n) : lineaDelTextoEntero(s, genero, false, regla(x.id));
-  };
-  return [textos.loQueMasPesa(tres.map((x) => textos.parteDelResumen(nombre(x.id), cola(x)))), textos.empiezaPor(regla(tres[0]!.id)?.sugerencia ?? '')];
+  const pesa = loQueMasPesa(resultado, r, indice);
+  if (pesa.reglas.length === 0) return [textos.NINGUNA_PUNTUABLE];
+  return [textos.loQueMasPesa(pesa.reglas.map((x) => textos.parteDelResumen(x.nombre, x.cola))), textos.empiezaPor(pesa.empiezaPor ?? '')];
 }
 
 /** Por qué no se miró una regla, en claro y de la propia regla: sus géneros, o que es una ausencia en un texto corto. */

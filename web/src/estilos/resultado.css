@@ -1,0 +1,485 @@
+/*
+ * El analizador en sus tres tamaños y los bloques del resultado (encargo
+ * 10.4, Tanda 2; DISEÑO §6.1 y §7), como en el modelo (AnalizadorVacio,
+ * AnalizadorResultado y BloquesResultado, medidos por CDP el 04/10).
+ *
+ * Escritorio (desde 1024 px): dos columnas a 64 px, la del texto de 34em (el
+ * cuadro o, tras analizar, el cuadro plegado y la vista) y la del resultado
+ * de 360, fija al hacer scroll (sticky a 32 px del borde de arriba, como el
+ * modelo); antes de analizar, la del resultado es un recuadro con «Aquí
+ * verás el resultado.». Tableta (769-1023): una columna con los mismos
+ * bloques y en el orden del modelo (cuadro plegado, pastilla y lo que más
+ * pesa, vista, familias, detalle, Español correcto y botones): las columnas
+ * no cuentan (display: contents) y cada bloque lleva su orden. Móvil (hasta
+ * 768): como la tableta hasta que lleguen las pestañas.
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/position
+ *    — sticky: «positioned according to the normal flow of the document, and
+ *    then offset relative to its nearest scrolling ancestor».
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/display
+ *    — contents: «These elements don't produce a specific box by
+ *    themselves. They are replaced by their pseudo-box and their child
+ *    boxes».
+ *
+ * Los bloques: la pastilla, en tinta sobre card, con radio 8 y 24 de margen
+ * interior (20 en el móvil), la etiqueta a 28 (24 en el móvil) y la frase en
+ * Literata 18; lo que más pesa, tarjetas blancas con borde line, la barra de
+ * 4 px y la sigla (círculo de 24 con borde de 2) del color de su familia, el
+ * nombre en negrita y la cola a 15 en ink-2, y «Empieza por» en Literata 15
+ * itálica; las familias, tarjetas de borde line con la muestra, el nombre a
+ * 15 y el recuento; «Ver el detalle», plegado, con borde line; Español
+ * correcto, una tarjeta de borde line con su título a 16; los botones, a 12.
+ * El cuadro plegado: «Tu texto» en negrita, «Editar el texto» como enlace
+ * (índigo, subrayado, 44 de alto) y el texto en Literata 18 en ink-2, con
+ * borde ink-2, a tres líneas.
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/line-clamp
+ *    — el prefijado «-webkit-line-clamp property only works in combination
+ *    with the display property set to -webkit-box […] and the
+ *    -webkit-box-orient property set to vertical»; el sin prefijo no es
+ *    Baseline (Chrome no lo tiene), y no se pone.
+ * Solo variables de tokens.css.
+ */
+
+.analizador {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--espacio-64);
+}
+
+.columna-texto {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-32);
+  width: var(--medida-columna-texto);
+  max-width: 100%;
+}
+
+.columna-resultado {
+  position: sticky;
+  top: var(--espacio-32);
+  flex-shrink: 0;
+  width: var(--medida-columna-resultado);
+}
+
+.hueco-resultado {
+  margin: 0;
+  padding: var(--espacio-24);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radio-tarjeta);
+  color: var(--color-ink-2);
+}
+
+.resultado {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-32);
+}
+
+/* Con texto insuficiente, en pantalla lo dice el cuadro: el bloque es para el papel. */
+@media screen {
+  #resultado.insuficiente {
+    display: none;
+  }
+}
+
+.resultado p,
+.resultado ul,
+.resultado ol,
+.resultado h2,
+.resultado h3,
+.resultado h4 {
+  margin: 0;
+}
+
+/* El aviso de texto insuficiente, debajo del cuadro (DISEÑO §7). */
+.aviso-insuficiente {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-8);
+  font-size: var(--tipografia-tamano-secundario);
+  line-height: var(--tipografia-interlineado-secundario);
+}
+
+.aviso-insuficiente svg {
+  flex-shrink: 0;
+}
+
+/* El cuadro plegado. */
+.plegado {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-8);
+}
+
+.plegado-cabeza {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--espacio-16);
+}
+
+.plegado-etiqueta {
+  font-weight: 700;
+}
+
+.boton-enlace {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: var(--espacio-4);
+}
+
+/* El recorte a tres líneas, dentro del margen interior: si no, la cuarta asoma en él. */
+.texto-plegado {
+  padding: var(--espacio-16);
+  border: 1px solid var(--color-ink-2);
+  border-radius: var(--radio-tarjeta);
+  color: var(--color-ink-2);
+  font-family: var(--tipografia-font-family-texto);
+  font-size: var(--tipografia-tamano-cuerpo);
+  line-height: var(--tipografia-interlineado-cuerpo);
+}
+
+.texto-plegado > p {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/*
+ * La vista: sin caja, como en el modelo; con la columna de 34em, Literata a 18
+ * px da de 60 a 61 caracteres por línea con los tres textos de prueba (DISEÑO
+ * §5: 60-66). Respeta los saltos del texto (pre-wrap). Cuando ocupa todo el
+ * ancho (tableta), no pasa de 34em de su propia letra, como la del modelo.
+ */
+.vista {
+  max-width: var(--medida-columna-texto);
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+/* La pastilla. */
+.pastilla {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-12);
+  padding: var(--espacio-24);
+  border-radius: var(--radio-tarjeta);
+  background: var(--color-card);
+}
+
+.pastilla .etiqueta {
+  font-size: var(--tipografia-tamano-titulo-pantalla);
+  line-height: var(--tipografia-interlineado-titulo-pantalla);
+}
+
+.pastilla .frase,
+.lectura .frase {
+  font-family: var(--tipografia-font-family-texto);
+  font-size: var(--tipografia-tamano-cuerpo);
+  line-height: var(--tipografia-interlineado-cuerpo);
+}
+
+.aviso-corto {
+  padding-top: var(--espacio-12);
+  border-top: 1px solid var(--color-ink-2-40);
+  font-size: var(--tipografia-tamano-secundario);
+  line-height: var(--tipografia-interlineado-secundario);
+}
+
+.medidor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-32);
+}
+
+/* Lo que más pesa. */
+.lo-que-mas-pesa,
+.familias {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-12);
+}
+
+.lo-que-mas-pesa ol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-12);
+  padding: 0;
+  list-style: none;
+}
+
+.motivo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-8);
+}
+
+.tarjeta-motivo {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-12);
+  padding: var(--espacio-12) var(--espacio-16) var(--espacio-12) var(--espacio-12);
+  border: 1px solid var(--color-line);
+  border-left: 4px solid var(--c);
+  border-radius: var(--radio-tarjeta);
+  background: var(--color-bg);
+}
+
+.sigla {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: var(--sigla-tarjeta-circulo);
+  height: var(--sigla-tarjeta-circulo);
+  border: var(--sigla-tarjeta-borde) solid var(--c);
+  border-radius: var(--radio-redondo);
+  background: var(--color-bg);
+  font-size: var(--sigla-tarjeta-tamano);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.nombre-motivo {
+  flex: 1;
+  font-weight: 700;
+}
+
+.cola {
+  font-size: var(--tipografia-tamano-secundario);
+  line-height: var(--tipografia-interlineado-secundario);
+  color: var(--color-ink-2);
+}
+
+.empieza-por {
+  font-family: var(--tipografia-font-family-texto);
+  font-size: var(--tipografia-tamano-secundario);
+  font-style: italic;
+  line-height: var(--tipografia-interlineado-secundario);
+}
+
+/* Las familias. */
+.grupo-familias {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-8);
+}
+
+.grupo-familias h3 {
+  font-size: var(--tipografia-tamano-secundario);
+  line-height: var(--tipografia-interlineado-secundario);
+  color: var(--color-ink-2);
+}
+
+.leyenda {
+  display: grid;
+  gap: var(--espacio-8);
+  padding: 0;
+  list-style: none;
+}
+
+.tarjeta-familia {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-8);
+  min-height: var(--medida-toque);
+  padding: var(--espacio-4) 0 var(--espacio-4) var(--espacio-12);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radio-tarjeta);
+  background: var(--color-bg);
+}
+
+.tarjeta-familia .muestra {
+  font-family: var(--tipografia-font-family-texto);
+  font-size: var(--tipografia-tamano-cuerpo);
+  line-height: var(--tipografia-interlineado-cuerpo);
+}
+
+.etiqueta-familia {
+  flex: 1;
+  font-size: var(--tipografia-tamano-secundario);
+  line-height: var(--tipografia-interlineado-secundario);
+}
+
+.atenuada .etiqueta-familia {
+  color: var(--color-ink-2);
+}
+
+/* «Ver el detalle» y los desgloses. */
+.desglose {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-32);
+}
+
+.detalle {
+  padding: 0 var(--espacio-16);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radio-tarjeta);
+  font-size: var(--tipografia-tamano-secundario);
+  line-height: var(--tipografia-interlineado-secundario);
+}
+
+.detalle > summary {
+  display: flex;
+  align-items: center;
+  min-height: var(--medida-toque);
+  font-size: var(--tipografia-tamano-base);
+  line-height: var(--tipografia-interlineado-base);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.detalle > .cifras,
+.desglose-paquete {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-8);
+  padding-bottom: var(--espacio-16);
+}
+
+.desglose-paquete h3,
+.desglose-paquete h4 {
+  font-size: var(--tipografia-tamano-secundario);
+  line-height: var(--tipografia-interlineado-secundario);
+}
+
+.desglose-paquete ul {
+  padding-left: var(--espacio-20);
+  color: var(--color-ink-2);
+}
+
+.otro-paquete {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-8);
+  padding: var(--espacio-16);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radio-tarjeta);
+}
+
+.otro-paquete > h2 {
+  font-size: var(--tipografia-tamano-base);
+  line-height: var(--tipografia-interlineado-base);
+}
+
+.otro-paquete .resumen,
+.otro-paquete .lectura {
+  font-size: var(--tipografia-tamano-secundario);
+  line-height: var(--tipografia-interlineado-secundario);
+}
+
+.otro-paquete .lectura {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-8);
+}
+
+.otro-paquete .detalle {
+  padding: 0;
+  border: 0;
+}
+
+.acciones-resultado {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-12);
+}
+
+.acciones-resultado button:not(.boton-principal):hover {
+  background: var(--color-card);
+}
+
+/* Tableta y móvil: una columna, los bloques en el orden del modelo (solo en pantalla: el papel tiene su orden, en index.astro). */
+@media screen and (max-width: 1023px) {
+  .analizador {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--espacio-32);
+  }
+
+  .columna-texto,
+  .columna-resultado,
+  #resultado:not([hidden], .insuficiente),
+  .medidor {
+    display: contents;
+  }
+
+  .columna-resultado {
+    position: static;
+  }
+
+  .formulario {
+    order: 0;
+    max-width: var(--medida-columna-texto);
+  }
+
+  .hueco-resultado {
+    order: 1;
+    max-width: var(--medida-columna-texto);
+    box-sizing: border-box;
+    padding: 0;
+    border: 0;
+  }
+
+  .plegado {
+    order: 2;
+  }
+
+  .pastilla {
+    order: 3;
+  }
+
+  .medidor > .resumen,
+  .lo-que-mas-pesa {
+    order: 4;
+  }
+
+  .vista {
+    order: 5;
+  }
+
+  #panel {
+    order: 6;
+  }
+
+  .familias {
+    order: 7;
+  }
+
+  .desglose {
+    order: 8;
+  }
+
+  .acciones-resultado {
+    order: 9;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .pastilla {
+    padding: var(--espacio-20);
+  }
+
+  .pastilla .etiqueta {
+    font-size: var(--tipografia-tamano-pastilla-compacta);
+    line-height: var(--tipografia-interlineado-pastilla-compacta);
+  }
+
+  .acciones-resultado {
+    flex-direction: column;
+  }
+
+  .acciones-resultado button {
+    width: 100%;
+  }
+}
