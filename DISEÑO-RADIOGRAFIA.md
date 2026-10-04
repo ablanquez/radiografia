@@ -82,11 +82,15 @@ siempre la comparación con textos humanos del mismo tipo.
 
 ## 4 · Color
 
-**Neutros** [PROPIO]: fondo #FFFFFF; tinta #1A1A1A (≈ 16,9:1); tinta
+**Neutros** [PROPIO]: fondo #FFFFFF; tinta #1A1A1A (17,40:1); tinta
 secundaria #4A4A4A (≈ 8,9:1); bordes y separadores #D9D9D9; fondo de
 tarjeta #F5F5F5 (los colores de familia se recalculan sobre él antes del
-calco). Acento de marca: el índigo de la paleta (#332288), que también es
-color de familia; el botón principal lo usa con texto blanco (12,2:1).
+calco); fondo del aviso de error #FDECEA (tinta encima: 15,2:1); velo de
+las hojas negro al 40 %. Acento de marca: el índigo de la paleta
+(#332288), que también es color de familia; el botón principal lo usa con
+texto blanco (12,2:1). **Botón desactivado** (04/10, tras el modelo): fondo
+card, borde line discontinuo, texto ink-2 (8,1:1), cursor not-allowed; el
+principal desactivado pierde el índigo.
 
 **Ocho familias**, una tinta cada una, todas ≥ 3,4:1 sobre blanco (ratios
 recalculados el 03/10 con la fórmula WCAG; fuente de los hex: Okabe-Ito y
@@ -130,9 +134,10 @@ Pendiente antes de fijar: pasar la paleta por un simulador de daltonismo
   caracteres** con Literata [EVIDENCIA 55 cpl; CONVENCIÓN 45-90].
   Interlineado **1,5** [CONVENCIÓN + 1.4.12]; deja sitio a subrayados de
   2-3 px con `text-underline-offset`.
-- Escala [PROPIO]: cuatro tamaños: cuerpo (18), secundario (15), título de
-  tarjeta (20), título de pantalla (28); la pastilla del resultado usa el
-  título de pantalla.
+- Escala [PROPIO]: siete tamaños, los de tokens.json: 28 (título de
+  pantalla), 24 (etiqueta del resultado en móvil), 20 (título de tarjeta),
+  18 (cuerpo), 16 (interfaz), 15 (secundario), 11 (sigla voladita); la
+  pastilla del resultado usa 28 en escritorio y 24 en móvil.
 - **Autoalojadas** en `web/public/fuentes/`, woff2 con subsetting latin +
   latin-ext (tildes, ñ, ¿¡, «», —, …), `font-display: swap` en la interfaz
   y `fallback` en el texto analizado [CONVENCIÓN del informe]; pila de
@@ -158,9 +163,10 @@ Dos columnas [CONVENCIÓN: Hemingway, GPTZero, LanguageTool]:
   Literata a 60-66 cpl; el cuadro queda editable arriba, plegado a tres
   líneas con «Editar».
 - **Derecha (resultado)**, columna de ~360 px, fija al hacer scroll:
-  1. **Pastilla del resultado**: la etiqueta de la 9.2 en grande, con el
-     color del acento sobre fondo claro (no semáforo rojo/verde: no es un
-     veredicto de autoría); debajo la frase de calle.
+  1. **Pastilla del resultado**: la etiqueta de la 9.2 en grande (28 px;
+     24 en móvil), en tinta sobre fondo card (como el modelo; no en el
+     color del acento ni semáforo: no es un veredicto de autoría); debajo
+     la frase de calle.
   2. **Lo que más pesa**: hasta tres **tarjetas**, una por regla, con el
      color y la sigla de su familia, el nombre, la cola («3 veces» o la
      meta) y, en la primera, «Empieza por: …». [CONVENCIÓN Hemingway].
@@ -173,7 +179,7 @@ Dos columnas [CONVENCIÓN: Hemingway, GPTZero, LanguageTool]:
   5. **Español correcto**: su línea de resumen y su desglose plegado.
   6. **Botones**: «Descargar informe» y «Analizar otro texto».
   7. **Nota** «RadiografIA analiza estilo; no demuestra autoría», visible,
-     al pie de la columna [CONVENCIÓN QuillBot].
+     en el pie de página (como el modelo) [CONVENCIÓN QuillBot].
 - **Al tocar un tramo**: **tarjeta anclada** bajo el tramo (no tooltip:
   lleva botones) [CONVENCIÓN APG: diálogo no modal]: nombre, frase en
   claro, «Qué hacer», «¿Por qué lo miramos?» plegado, enlace a la ficha,
@@ -229,7 +235,9 @@ de línea + nombre, en tinta); 4 texto completo con subrayados y siglas
 nombre, frase en claro, fragmentos, sugerencia, URL de la ficha; la
 explicación larga y las seis reglas de contexto al final, en cuerpo menor);
 7 nota de autoría, que cierra la última sección en vez de ir sola. A4,
-márgenes 20 mm · 18 mm, Literata 11 pt, interlineado 1,4, orphans/widows
+márgenes 20 mm · 18 mm, Literata 11 pt en el cuerpo, títulos de sección en
+Atkinson 14 pt, etiqueta del resultado 16 pt, pie 10 pt, URL 9,5 pt,
+siglas 9 pt (tamaños del modelo, 04/10), interlineado 1,4, orphans/widows
 2, `break-inside: avoid` por regla [CONVENCIÓN del informe]. Sin color
 imprescindible.
 
@@ -261,6 +269,11 @@ apple-touch; la variante **(c)** (círculo #332288 con la hoja en negativo,
 líneas en índigo y la central en #D55E00) para la cabecera y la portada;
 la (b) descartada (se funde en fondo oscuro). Los SVG, limpios, están en
 `docs/figma/icono/`; la zona segura maskable (círculo de 409) se respeta.
+**En la cabecera** [PROPIO, 04/10; tamaño corregido por Antonio al ver la
+tanda 1]: el icono (c) como círculo de **56 px** en escritorio (la altura
+del bloque nombre + eslogan) a 12 px del nombre; **48 px** en la cabecera
+compacta del móvil (Antonio lo vio pequeño a 32 en su iPhone); `alt=""` porque el nombre ya es texto. El icono (a) no
+necesita modo oscuro: se ve bien sobre claro y sobre oscuro.
 
 **Documento en negativo** [PROPIO], el concepto del que salieron las tres
 variantes (elección arriba): una hoja con esquina doblada, invertida
@@ -269,7 +282,7 @@ central va subrayada: a contraluz se nota todo. Una o dos formas planas;
 nada que desaparezca a 16 px. Variantes para que Antonio elija: (a) hoja
 clara sobre cuadrado oscuro; (b) hoja oscura con líneas claras y una
 subrayada en el acento; (c) la hoja como silueta recortada en el índigo.
-Modo oscuro con `prefers-color-scheme` dentro del SVG. Entrega: `icon.svg`,
+Entrega: `icon.svg`,
 `favicon.ico` 32, `apple-touch-icon.png` 180, manifiesto con 192/512 y 512
 maskable (zona segura: círculo de 409) [CONVENCIÓN Evil Martians 2026];
 `PROCEDENCIA.md` con autoría, fecha, obra original, licencia, SVG fuente,
