@@ -791,7 +791,12 @@ checklist fija, en escritorio y a 390 px, sin capturas (derechos), en
 - [x] Salida del modelo = especificación + tokens DTCG, no código.
       Componentes con estados: ficha, subrayado por familia, medidor,
       informe, cargador; vista de impresión incluida
-- [ ] Modelo VISTO y cerrado por Antonio
+- [x] Modelo VISTO y cerrado por Antonio (04/10: seis pantallas en
+      1280/820/390, informe A4, muestrario, estados, icono; «a simple
+      vista me gusta»; fuente del calco: `docs/figma/tokens.json`, la URL
+      publicada medible por CDP y `docs/figma/modelo-make.zip` como
+      referencia de lectura. **Desviación**: no hizo falta leer Figma
+      Design por MCP; la copia como capas queda opcional)
 - [x] Logo: candidatos SVG, Antonio elige, `PROCEDENCIA.md`, favicon
       cableado
 - [ ] Calco por tandas al Astro existente, cada una vista en Chrome
