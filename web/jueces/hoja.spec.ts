@@ -15,7 +15,21 @@
  *   5. Tab y Mayúsculas+Tab dan la vuelta dentro de la hoja.
  *   6. Escape la cierra, el foco vuelve al tramo y la página deja de estar
  *      inerte; tocar el velo también la cierra.
+ *   7. También si la tarjeta se abrió antes anclada en escritorio
+ *      (docs/BITACORA.md, 2026-10-04): la hoja, abajo y a todo el ancho. Cada
+ *      cambio de ancho se espera ya asentado: en Chrome, matches lo dice en el
+ *      acto, pero los oyentes de la página (las pestañas, la tarjeta) lo
+ *      reciben en la siguiente actualización del renderizado (sondeado en la
+ *      Tanda 3: justo después de pasar a 1280, la barra de pestañas seguía
+ *      visible 5 veces de 5); sin esperar, el juez actuaba a medio cambio y
+ *      fallaba a veces.
  *
+ * [DOC] https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering
+ *    — «For each doc of docs, run the resize steps for doc. […] For each doc
+ *    of docs, evaluate media queries and report changes for doc».
+ * [DOC] https://drafts.csswg.org/cssom-view/#evaluate-media-queries-and-report-changes
+ *    — «If target's matches state has changed since the last time these
+ *    steps were run, fire an event named change at target».
  * [DOC] https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/ — aria-modal,
  *    Tab que da la vuelta dentro, Escape y el foco de vuelta.
  * [DOC] https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html
@@ -167,7 +181,10 @@ describe('la hoja inferior en el móvil, sobre astro preview', () => {
   test('7 · también si la tarjeta se abrió antes anclada en escritorio: la hoja, abajo y a todo el ancho', async () => {
     const pestana = await p();
     await pestana.cdp('Emulation.setDeviceMetricsOverride', { width: 1280, height: 900, deviceScaleFactor: 1, mobile: false });
+    // El cambio de ancho llega a los oyentes de la página en el siguiente fotograma, no en el acto: se espera al escritorio ya asentado.
+    await pestana.hasta(`!document.getElementById('barra-pestanas').checkVisibility()`, 'el escritorio, sin pestañas');
     await pestana.evaluar(`${ADEMAS}.click()`);
+    assert.deepEqual(await pestana.evaluar(`(() => { const t = document.getElementById('tarjeta'); return [t.checkVisibility(), t.classList.contains('hoja'), t.style.top !== '']; })()`), [true, false, true], 'en escritorio, la tarjeta anclada, colocada en línea');
     await pestana.evaluar(`document.querySelector('#tarjeta .cerrar').click()`);
     await pestana.cdp('Emulation.setDeviceMetricsOverride', { width: 390, height: ALTO, deviceScaleFactor: 1, mobile: true });
     await pestana.hasta(`document.getElementById('barra-pestanas').checkVisibility()`, 'el móvil, con sus pestañas');
