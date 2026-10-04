@@ -10,6 +10,14 @@
  *
  * Los jueces no salen a Internet: leen el JSON.
  *
+ * Desde la Tanda 2, también las piezas del analizador: el formulario, el
+ * recuadro del resultado, la pastilla, las tarjetas de lo que más pesa y de
+ * las familias, el detalle, Español correcto, los botones, los tramos y sus
+ * capas, la tarjeta de regla abierta, y en el móvil la pastilla compacta, las
+ * pestañas y la hoja; y además de lo de antes, el estilo, el grosor, el color y
+ * el desplazamiento de la línea, la alineación, el borde izquierdo y el alto
+ * máximo.
+ *
  * Cada pieza se mide en el marco de su tamaño (escritorio 1280, tableta 820,
  * móvil 390): el modelo pinta cada pantalla en un marco de ancho fijo
  * (MarcoPantalla), así que sus medidas no dependen de la ventana. El margen de
@@ -55,6 +63,66 @@ const PIEZAS: readonly { clave: string; pantalla: string; selector: string }[] =
   { clave: 'movil.cabecera.nombre', pantalla: 'analizador-vacio/movil', selector: '[data-capa="marca"] p:first-child' },
   { clave: 'movil.cabecera.enlace', pantalla: 'analizador-vacio/movil', selector: '[data-capa="enlace-catalogo"]' },
   { clave: 'movil.boton.principal', pantalla: 'analizador-vacio/movil', selector: '[data-capa="boton-principal"]' },
+  // Tanda 2 (el analizador): el formulario y el recuadro del resultado, antes de analizar.
+  { clave: 'escritorio.chip', pantalla: 'analizador-vacio/escritorio', selector: '[data-capa="chip – Texto humano"]' },
+  { clave: 'escritorio.tipo', pantalla: 'analizador-vacio/escritorio', selector: '#tipo-texto' },
+  { clave: 'escritorio.tipo.etiqueta', pantalla: 'analizador-vacio/escritorio', selector: 'label[for="tipo-texto"]' },
+  { clave: 'escritorio.paquetes', pantalla: 'analizador-vacio/escritorio', selector: '[data-capa="paquetes"]' },
+  { clave: 'escritorio.paquetes.resumen', pantalla: 'analizador-vacio/escritorio', selector: '[data-capa="paquetes"] summary' },
+  { clave: 'escritorio.hueco', pantalla: 'analizador-vacio/escritorio', selector: '[data-capa="columna-resultado"]' },
+  { clave: 'escritorio.hueco.texto', pantalla: 'analizador-vacio/escritorio', selector: '[data-capa="resultado"]' },
+  // El resultado, a 1280.
+  { clave: 'escritorio.plegado', pantalla: 'analizador-resultado/escritorio', selector: '[data-capa="cuadro-plegado"] p' },
+  { clave: 'escritorio.plegado.editar', pantalla: 'analizador-resultado/escritorio', selector: '[data-capa="cuadro-plegado"] button' },
+  { clave: 'escritorio.pastilla', pantalla: 'analizador-resultado/escritorio', selector: '[data-capa="pastilla"]' },
+  { clave: 'escritorio.pastilla.etiqueta', pantalla: 'analizador-resultado/escritorio', selector: '[data-capa="pastilla"] p:first-child' },
+  { clave: 'escritorio.pastilla.frase', pantalla: 'analizador-resultado/escritorio', selector: '[data-capa="pastilla"] p:nth-child(2)' },
+  { clave: 'escritorio.pesa.titulo', pantalla: 'analizador-resultado/escritorio', selector: '[data-capa="lo-que-mas-pesa"] h2' },
+  { clave: 'escritorio.motivo', pantalla: 'analizador-resultado/escritorio', selector: '[data-capa^="motivo"] > div' },
+  { clave: 'escritorio.motivo.sigla', pantalla: 'analizador-resultado/escritorio', selector: '[data-capa^="motivo"] [data-capa^="sigla"]' },
+  { clave: 'escritorio.motivo.nombre', pantalla: 'analizador-resultado/escritorio', selector: '[data-capa^="motivo"] > div > span:nth-child(2)' },
+  { clave: 'escritorio.motivo.cola', pantalla: 'analizador-resultado/escritorio', selector: '[data-capa^="motivo"] > div > span:nth-child(3)' },
+  { clave: 'escritorio.motivo.empieza', pantalla: 'analizador-resultado/escritorio', selector: '[data-capa^="motivo"] > p' },
+  { clave: 'escritorio.familia', pantalla: 'analizador-resultado/escritorio', selector: '[data-capa^="tarjeta-familia"]' },
+  { clave: 'escritorio.familia.muestra', pantalla: 'analizador-resultado/escritorio', selector: '[data-capa^="tarjeta-familia"] > span:first-child' },
+  { clave: 'escritorio.familia.etiqueta', pantalla: 'analizador-resultado/escritorio', selector: '[data-capa^="tarjeta-familia"] > span:nth-child(2)' },
+  { clave: 'escritorio.familia.ojo', pantalla: 'analizador-resultado/escritorio', selector: '[data-capa^="tarjeta-familia"] button' },
+  { clave: 'escritorio.detalle', pantalla: 'analizador-resultado/escritorio', selector: '[data-capa="desglose"]' },
+  { clave: 'escritorio.detalle.resumen', pantalla: 'analizador-resultado/escritorio', selector: '[data-capa="desglose"] summary' },
+  { clave: 'escritorio.espanol', pantalla: 'analizador-resultado/escritorio', selector: '[data-capa="espanol-correcto"]' },
+  { clave: 'escritorio.espanol.titulo', pantalla: 'analizador-resultado/escritorio', selector: '[data-capa="espanol-correcto"] h2' },
+  { clave: 'escritorio.espanol.resumen', pantalla: 'analizador-resultado/escritorio', selector: '[data-capa="espanol-correcto"] p' },
+  { clave: 'escritorio.acciones.principal', pantalla: 'analizador-resultado/escritorio', selector: '[data-capa="resultado"] [data-capa="boton-principal"]' },
+  { clave: 'escritorio.tramo', pantalla: 'analizador-resultado/escritorio', selector: '.tramo' },
+  { clave: 'escritorio.tramo.sigla', pantalla: 'analizador-resultado/escritorio', selector: '.tramo > span[aria-hidden]' },
+  { clave: 'escritorio.capa.discurso', pantalla: 'analizador-resultado/escritorio', selector: '.sub-discurso' },
+  { clave: 'escritorio.capa.sintaxis', pantalla: 'analizador-resultado/escritorio', selector: '.sub-sintaxis' },
+  { clave: 'escritorio.capa.gramatica', pantalla: 'analizador-resultado/escritorio', selector: '.sub-gramatica' },
+  { clave: 'escritorio.capa.lexico', pantalla: 'analizador-resultado/escritorio', selector: '.sub-lexico' },
+  // La tarjeta de regla abierta sobre el primer «Además», a 1280.
+  { clave: 'escritorio.tarjeta', pantalla: 'tarjeta-regla/escritorio', selector: '[data-capa="tarjeta-regla"]' },
+  { clave: 'escritorio.tarjeta.barra', pantalla: 'tarjeta-regla/escritorio', selector: '[data-capa="barra-familia"]' },
+  { clave: 'escritorio.tarjeta.titulo', pantalla: 'tarjeta-regla/escritorio', selector: '[data-capa="cabecera-tarjeta"] h2' },
+  { clave: 'escritorio.tarjeta.linea', pantalla: 'tarjeta-regla/escritorio', selector: '[data-capa="cabecera-tarjeta"] p' },
+  { clave: 'escritorio.tarjeta.cerrar', pantalla: 'tarjeta-regla/escritorio', selector: '[data-capa="boton-cerrar"]' },
+  { clave: 'escritorio.tarjeta.cuerpo', pantalla: 'tarjeta-regla/escritorio', selector: '[data-capa="tarjeta-regla"] > div:last-child' },
+  { clave: 'escritorio.tarjeta.frase', pantalla: 'tarjeta-regla/escritorio', selector: '[data-capa="tarjeta-regla"] > div:last-child > p' },
+  { clave: 'escritorio.tarjeta.porque', pantalla: 'tarjeta-regla/escritorio', selector: '[data-capa="por-que"]' },
+  { clave: 'escritorio.tarjeta.porque.resumen', pantalla: 'tarjeta-regla/escritorio', selector: '[data-capa="por-que"] summary' },
+  { clave: 'escritorio.tarjeta.anterior', pantalla: 'tarjeta-regla/escritorio', selector: '[data-capa="navegacion-reglas"] button' },
+  { clave: 'escritorio.tarjeta.pico', pantalla: 'tarjeta-regla/escritorio', selector: '[data-capa="pico"]' },
+  { clave: 'escritorio.tramo.activo', pantalla: 'tarjeta-regla/escritorio', selector: '.tramo-activo .subrayado' },
+  // El móvil: la pastilla compacta, las pestañas y la hoja.
+  { clave: 'movil.pastilla', pantalla: 'analizador-resultado/movil', selector: '[data-capa="pastilla"]' },
+  { clave: 'movil.pastilla.etiqueta', pantalla: 'analizador-resultado/movil', selector: '[data-capa="pastilla"] p:first-child' },
+  { clave: 'movil.pestanas', pantalla: 'analizador-resultado/movil', selector: '[data-capa="barra-pestanas"]' },
+  { clave: 'movil.pestana.elegida', pantalla: 'analizador-resultado/movil', selector: '[data-capa="pestana – Texto"]' },
+  { clave: 'movil.pestana.otra', pantalla: 'analizador-resultado/movil', selector: '[data-capa="pestana – Reglas"]' },
+  { clave: 'movil.hoja', pantalla: 'tarjeta-regla/movil', selector: '[data-capa="hoja-inferior"]' },
+  { clave: 'movil.hoja.asa', pantalla: 'tarjeta-regla/movil', selector: '[data-capa="asa"]' },
+  { clave: 'movil.hoja.raya', pantalla: 'tarjeta-regla/movil', selector: '[data-capa="asa"] span' },
+  { clave: 'movil.hoja.cuerpo', pantalla: 'tarjeta-regla/movil', selector: '[data-capa="hoja-inferior"] > div:last-child' },
+  { clave: 'movil.hoja.siguiente', pantalla: 'tarjeta-regla/movil', selector: '[data-capa="hoja-inferior"] [data-capa="navegacion-reglas"] button' },
 ];
 
 /**
@@ -112,8 +180,15 @@ try {
           color: c.color,
           fondo: c.backgroundColor,
           decoracion: c.textDecorationLine,
+          decoEstilo: c.textDecorationStyle,
+          decoGrosor: c.textDecorationThickness,
+          decoColor: c.textDecorationColor,
+          decoDesplazamiento: c.textUnderlineOffset,
+          alineacion: c.verticalAlign,
           bordeArriba: borde('top'),
           bordeAbajo: borde('bottom'),
+          bordeIzquierdo: borde('left'),
+          altoMaximo: c.maxHeight,
           radio: c.borderRadius,
           relleno: [c.paddingTop, c.paddingRight, c.paddingBottom, c.paddingLeft],
           ancho: Math.round(r.width * 100) / 100,

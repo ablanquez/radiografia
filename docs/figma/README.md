@@ -32,7 +32,10 @@ la web real es `web/` (Astro). Esto es la fuente del calco (10.4).
   regenera a mano cuando cambia el modelo o entran piezas en el calco.
   Las piezas con `origen` no son del prototipo sino del DISEÑO, que manda
   (el icono (c) de la cabecera, 56/48 px, §8): el script las escribe con
-  su apartado y su nota.
+  su apartado y su nota. Desde la Tanda 2, 76 piezas: las del analizador
+  (formulario, resultado, tramos, tarjeta de regla, pestañas y hoja), y
+  también el estilo, el grosor, el color y el desplazamiento de la línea,
+  la alineación, el borde izquierdo y el alto máximo.
 - `fuentes.md` y `subconjunto-unicode.txt` — la ficha de las fuentes
   autoalojadas (origen, versiones, huellas, Reserved Font Name, comandos y
   cifras de la decisión) y la lista de caracteres del recorte (10.4,
