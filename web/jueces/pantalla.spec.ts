@@ -16,6 +16,8 @@
  *      desglose.
  *   2. El panel de un subrayado, en el orden firmado: el nombre, la frase en
  *      claro de la regla, «Qué hacer» y «¿Por qué lo miramos?», plegado.
+ *      Desde el 10.4 (Tanda 2), la tarjeta del modelo: el nombre en su
+ *      cabecera y, debajo, «Anterior» y «Siguiente».
  *   3. Ninguna palabra del motor en el texto visible del analizador: ni
  *      informativa, ni atenuante, ni no aplicadas, ni tramo, ni p95, p99 o
  *      percentil, que solo quedan dentro de «Ver el detalle», plegado.
@@ -107,22 +109,22 @@ describe('el lenguaje de calle en Chrome, sobre astro preview', () => {
     await arrancar();
     const panel = await p().evaluar<{ partes: string[]; nombre: string; enClaro: string; abierto: boolean; resumen: string }>(`(() => {
       document.querySelector('#vista .tramo').click();
-      const a = document.querySelector('#panel article');
+      const a = document.getElementById('tarjeta');
       const d = a.querySelector('details.por-que');
       return {
-        partes: [...a.children].map((x) => x.tagName.toLowerCase() + (x.className ? '.' + x.className : '')),
-        nombre: a.querySelector('h4').textContent,
+        partes: [...a.querySelector('.cuerpo-tarjeta').children].map((x) => x.tagName.toLowerCase() + (x.className ? '.' + x.className : '')),
+        nombre: a.querySelector('.cabecera-tarjeta h2').textContent,
         enClaro: a.querySelector('.en-claro')?.textContent ?? '',
         abierto: d.open,
         resumen: d.querySelector('summary').textContent,
       };
     })()`);
-    assert.deepEqual(panel.partes, ['h4', 'p.en-claro', 'p', 'details.por-que'], 'el orden del panel');
+    assert.deepEqual(panel.partes, ['div.cabecera-tarjeta', 'p.en-claro', 'p.que-hacer', 'details.por-que', 'div.navegacion-reglas'], 'el orden de la tarjeta');
     const regla = paquetesIncluidos().flatMap((x) => x.reglas).find((x) => x.nombre === panel.nombre);
     assert.ok(regla, `«${panel.nombre}» no es el nombre de una regla`);
     assert.equal(panel.enClaro, regla.enClaro);
     assert.deepEqual([panel.abierto, panel.resumen], [false, textos.POR_QUE_LO_MIRAMOS]);
-    assert.ok((await p().evaluar<string>(`document.querySelector('#panel article p:not(.en-claro)').textContent`)).startsWith(`${textos.QUE_HACER}: ${regla.sugerencia}`));
+    assert.ok((await p().evaluar<string>(`document.querySelector('#tarjeta p.que-hacer').textContent`)).startsWith(`${textos.QUE_HACER}: ${regla.sugerencia}`));
   });
 
   test('3 · ninguna palabra del motor en el texto visible del analizador', async (t) => {

@@ -64,7 +64,9 @@
  *     cuadro; «Descargar informe» del formulario se queda para cuando no hay
  *     resultado, y con resultado va entre los botones del final;
  *   · el ojo de cada familia oculta o enseña su capa en la vista; lo oculto
- *     vale para ese resultado: al volver a analizar, todo se ve otra vez.
+ *     vale para ese resultado: al volver a analizar, todo se ve otra vez;
+ *   · al tocar un tramo, la tarjeta de su primera señal (tarjeta.ts), una sola
+ *     por página, que se prepara con cada análisis.
  *   [DOC] https://www.w3.org/TR/wai-aria-1.2/#aria-describedby — «Identifies
  *   the element (or elements) that describes the object».
  *   [DOC] https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus
@@ -95,7 +97,8 @@ import {
   pintarDesglose,
   pintarLeyenda,
   pintarMedidor,
-  pintarPanel,
+  familiaDeLaSenal,
+  pintarTarjeta,
   pintarProblemas,
   pintarSenalesDelInforme,
   pintarVista,
@@ -103,6 +106,7 @@ import {
 } from './pintar.ts';
 import { activos, leerPaquetePropio } from './propios.ts';
 import { recuentoDeFamilias, type Voz } from './lectura.ts';
+import { crearTarjeta } from './tarjeta.ts';
 
 function elemento<T extends HTMLElement>(id: string): T {
   const e = document.getElementById(id);
@@ -120,7 +124,8 @@ const resultado = elemento<HTMLElement>('resultado');
 const medidor = elemento<HTMLDivElement>('medidor');
 const leyenda = elemento<HTMLDivElement>('leyenda');
 const vista = elemento<HTMLDivElement>('vista');
-const panel = elemento<HTMLElement>('panel');
+const contenedorDeLaTarjeta = elemento<HTMLElement>('tarjeta');
+const tarjeta = crearTarjeta(contenedorDeLaTarjeta, vista);
 const desglose = elemento<HTMLDivElement>('desglose');
 const botonesDeEjemplo: [HTMLButtonElement, Ejemplo][] = [
   [elemento<HTMLButtonElement>('ejemplo-humano'), 'humano'],
@@ -171,7 +176,8 @@ function avisarInsuficiente(palabras: number | null): void {
 
 elemento<HTMLButtonElement>('otro').addEventListener('click', () => {
   texto.value = '';
-  for (const parte of [resultado, vista, panel]) parte.hidden = true;
+  tarjeta.cerrar(false);
+  for (const parte of [resultado, vista]) parte.hidden = true;
   hueco.hidden = false;
   avisarInsuficiente(null);
   hayResultado = false;
@@ -193,21 +199,25 @@ function analizarYPintar(paquetes: readonly Paquete[], indice: Indice, vozDe: (p
     pintarCabeceraDelInforme(cabeceraDelInforme, r, paquetes, indice, fechaDelAnalisis.format(new Date()), nombreDeGenero(elGenero));
     pintarMedidor(medidor, r, vozDe, indice, nombreDeGenero(elGenero));
     pintarSenalesDelInforme(senalesDelInforme, r, elTexto, indice, import.meta.env.BASE_URL, location.href);
-    panel.replaceChildren();
-    panel.hidden = true;
     const hayAnalisis = r.tramo !== 'insuficiente';
+    const ocultas = new Set<string>();
+    tarjeta.preparar({
+      senales: r.senales,
+      seVe: (i) => !ocultas.has(familiaDeLaSenal(r.senales[i]!, indice)),
+      pintar: (i) => pintarTarjeta(contenedorDeLaTarjeta, r.senales[i]!, indice, import.meta.env.BASE_URL),
+    });
     for (const parte of [leyenda, vista, desglose]) {
       parte.replaceChildren();
       parte.hidden = !hayAnalisis;
     }
     if (hayAnalisis) {
-      const ocultas = new Set<string>();
       pintarLeyenda(leyenda, indice, new Set(paquetes.map((p) => p.cabecera.nombre)), recuentoDeFamilias(r), (familia, oculta) => {
         if (oculta) ocultas.add(familia);
         else ocultas.delete(familia);
         ocultarCapas(vista, ocultas, indice);
+        tarjeta.alCambiarLasCapas();
       });
-      pintarVista(vista, elTexto, r.senales, indice, (indices) => pintarPanel(panel, indices.map((i) => r.senales[i]!), indice, import.meta.env.BASE_URL));
+      pintarVista(vista, elTexto, r.senales, indice, (indices) => tarjeta.abrir(indices));
       pintarDesglose(desglose, r, paquetes, indice, import.meta.env.BASE_URL, vozDe, nombreDeGenero(elGenero));
     }
     problemas.hidden = true;

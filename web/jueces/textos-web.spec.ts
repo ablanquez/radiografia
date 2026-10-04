@@ -118,6 +118,7 @@ const MUESTRAS: Readonly<Record<string, readonly unknown[]>> = {
   familiaConRecuento: ['Discurso', 7],
   familiaInformativa: ['Canal', 1],
   ocultarCapa: ['Léxico', 'RadiografIA'],
+  lineaDeLaTarjeta: ['Discurso', 'RadiografIA'],
 };
 
 /** El texto visible de la página construida y su placeholder. */

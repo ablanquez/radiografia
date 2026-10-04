@@ -352,9 +352,7 @@ function vestirTramo(boton: HTMLElement, familias: readonly string[], indice: In
   }
   dentro.append(textoDeTramo.get(boton) ?? '');
   if (familias.length === 0) {
-    boton.removeAttribute('role');
-    boton.removeAttribute('tabindex');
-    boton.removeAttribute('aria-label');
+    for (const atributo of ['role', 'tabindex', 'aria-label', 'aria-haspopup', 'aria-expanded']) boton.removeAttribute(atributo);
     return;
   }
   const sigla = el('span', familias.map((familia) => indice.siglaDeFamilia.get(familia) ?? '').join('·'), 'sigla-tramo');
@@ -363,6 +361,8 @@ function vestirTramo(boton: HTMLElement, familias: readonly string[], indice: In
   boton.setAttribute('role', 'button');
   boton.tabIndex = 0;
   boton.setAttribute('aria-label', boton.dataset['nombre'] ?? '');
+  boton.setAttribute('aria-haspopup', 'dialog');
+  boton.setAttribute('aria-expanded', String(boton.classList.contains('activo')));
 }
 
 export function pintarVista(
@@ -411,49 +411,92 @@ export function ocultarCapas(vista: HTMLElement, ocultas: ReadonlySet<string>, i
   for (const boton of vista.querySelectorAll<HTMLElement>('.tramo')) vestirTramo(boton, capasVisibles((boton.dataset['familias'] ?? '').split('|'), ocultas), indice);
 }
 
+/** La clave «paquete::familia» de la familia de una señal. */
+export function familiaDeLaSenal(senal: SenalCalificada, indice: Indice): string {
+  return familiaDe(senal, indice);
+}
+
+/** La X de cerrar, del modelo (TarjetaRegla). */
+function iconoDeCerrar(): SVGSVGElement {
+  const ns = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns, 'svg');
+  for (const [nombre, valor] of [['aria-hidden', 'true'], ['viewBox', '0 0 20 20'], ['width', '20'], ['height', '20'], ['fill', 'none'], ['stroke', 'currentColor'], ['stroke-width', '2'], ['stroke-linecap', 'round']]) svg.setAttribute(nombre!, valor!);
+  const aspa = document.createElementNS(ns, 'path');
+  aspa.setAttribute('d', 'M5 5l10 10M15 5L5 15');
+  svg.append(aspa);
+  return svg;
+}
+
 /**
- * El panel de un subrayado (firmado en la parada 1 del 9.2): por regla, el
- * nombre, la frase en claro, qué hacer y, plegado, «¿Por qué lo miramos?», con
- * la explicación, el nivel de evidencia, el origen de la lista, el id con su
- * paquete y el enlace a la ficha; la de un paquete propio no tiene ficha en
- * /reglas/, y lleva dentro su ficha completa (8.1).
+ * La tarjeta de una señal (desde el 10.4, Tanda 2; DISEÑO §6.1 y §7,
+ * TarjetaRegla del modelo; antes, el panel firmado en la parada 1 del 9.2):
+ * el pico y la barra del color de su familia; la sigla, el nombre de la regla
+ * (el título, que recibe el foco), la línea «familia · paquete» y la X de
+ * cerrar; la frase en claro; «Qué hacer»; «¿Por qué lo miramos?», plegado,
+ * con el id y su paquete, la explicación, el nivel de evidencia, el origen de
+ * la lista, el paquete con su versión y el enlace a la ficha; la de un paquete
+ * propio no tiene ficha en /reglas/: lleva su ficha completa (8.1) y la nota
+ * de que no tiene página, sin enlace. Debajo, «Anterior» y «Siguiente»
+ * (tarjeta.ts los activa o los desactiva). Devuelve la clase de su familia,
+ * para el color de la barra y del pico.
  */
-export function pintarPanel(contenedor: HTMLElement, senales: readonly SenalCalificada[], indice: Indice, base: string): void {
-  contenedor.replaceChildren(el('h3', textos.TITULO_DEL_PANEL));
-  const vistas = new Set<string>();
-  for (const senal of senales) {
-    const k = clave(senal.paquete, senal.reglaId);
-    if (vistas.has(k)) continue;
-    vistas.add(k);
-    const ficha = el('article', undefined, 'ficha');
-    const regla = indice.reglas.get(k);
-    const cabecera = indice.cabeceras.get(senal.paquete);
-    ficha.append(el('h4', nombreDeRegla(senal.reglaId, regla)));
-    if (regla?.enClaro !== undefined) ficha.append(el('p', regla.enClaro, 'en-claro'));
-    if (regla !== undefined) ficha.append(campo(textos.QUE_HACER, regla.sugerencia));
-    const porQue = el('details', undefined, 'por-que');
-    porQue.append(el('summary', textos.POR_QUE_LO_MIRAMOS));
-    if (indice.propios.has(senal.paquete) && regla !== undefined && cabecera !== undefined) {
-      porQue.append(...fichaCompleta(regla, cabecera));
-    } else {
-      porQue.append(el('p', `${senal.reglaId} · ${senal.paquete}`, 'id-regla'));
-      if (regla !== undefined) {
-        porQue.append(
-          campo(textos.EXPLICACION, regla.explicacion),
-          campo(textos.NIVEL_DE_EVIDENCIA, regla.nivelEvidencia),
-          campo(textos.ORIGEN_DE_LA_LISTA, regla.origenLista ?? textos.SIN_DATO),
-        );
-      }
-      const enlace = el('a', textos.VER_SU_FICHA);
-      enlace.href = urlDeRegla(base, senal.reglaId);
-      const parrafo = el('p');
-      parrafo.append(enlace);
-      porQue.append(parrafo);
-    }
-    ficha.append(porQue);
-    contenedor.append(ficha);
+export function pintarTarjeta(contenedor: HTMLElement, senal: SenalCalificada, indice: Indice, base: string): string {
+  const regla = indice.reglas.get(clave(senal.paquete, senal.reglaId));
+  const cabecera = indice.cabeceras.get(senal.paquete);
+  const familia = familiaDe(senal, indice);
+  const clase = indice.claseDeFamilia.get(familia) ?? 'fam-propia';
+  const nombreDeFamilia = indice.familias.find((f) => f.clave === familia)?.nombre ?? regla?.familia ?? '';
+  const pico = el('span', undefined, 'pico');
+  pico.setAttribute('aria-hidden', 'true');
+  const titulo = el('h2', nombreDeRegla(senal.reglaId, regla));
+  titulo.id = 'titulo-tarjeta';
+  titulo.tabIndex = -1;
+  const nombres = el('div', undefined, 'nombre-tarjeta');
+  nombres.append(titulo, el('p', textos.lineaDeLaTarjeta(nombreDeFamilia, senal.paquete), 'linea-tarjeta'));
+  const cerrar = el('button', undefined, 'cerrar');
+  cerrar.type = 'button';
+  cerrar.setAttribute('aria-label', textos.CERRAR);
+  cerrar.append(iconoDeCerrar());
+  const cabeza = el('div', undefined, 'cabecera-tarjeta');
+  cabeza.append(sigla(indice.siglaDeFamilia.get(familia) ?? ''), nombres, cerrar);
+  const cuerpo = el('div', undefined, 'cuerpo-tarjeta');
+  cuerpo.append(cabeza);
+  if (regla?.enClaro !== undefined) cuerpo.append(el('p', regla.enClaro, 'en-claro'));
+  if (regla !== undefined) {
+    const queHacer = campo(textos.QUE_HACER, regla.sugerencia);
+    queHacer.className = 'que-hacer';
+    cuerpo.append(queHacer);
   }
-  contenedor.hidden = false;
+  const porQue = el('details', undefined, 'por-que');
+  const dentro = el('div', undefined, 'por-que-dentro');
+  if (indice.propios.has(senal.paquete) && regla !== undefined && cabecera !== undefined) {
+    dentro.append(...fichaCompleta(regla, cabecera), el('p', textos.REGLA_PROPIA_SIN_FICHA, 'nota-propia'));
+  } else {
+    dentro.append(el('p', `${senal.reglaId} · ${senal.paquete}`, 'id-regla'));
+    if (regla !== undefined) {
+      dentro.append(
+        campo(textos.EXPLICACION, regla.explicacion),
+        campo(textos.NIVEL_DE_EVIDENCIA, regla.nivelEvidencia),
+        campo(textos.ORIGEN_DE_LA_LISTA, regla.origenLista ?? textos.SIN_DATO),
+      );
+    }
+    if (cabecera !== undefined) dentro.append(campo(textos.PAQUETE, `${cabecera.nombre} ${cabecera.version}`));
+    const enlace = el('a', textos.VER_SU_FICHA);
+    enlace.href = urlDeRegla(base, senal.reglaId);
+    const parrafo = el('p');
+    parrafo.append(enlace);
+    dentro.append(parrafo);
+  }
+  porQue.append(el('summary', textos.POR_QUE_LO_MIRAMOS), dentro);
+  const navegacion = el('div', undefined, 'navegacion-reglas');
+  for (const texto of [textos.ANTERIOR, textos.SIGUIENTE]) {
+    const boton = el('button', texto);
+    boton.type = 'button';
+    navegacion.append(boton);
+  }
+  cuerpo.append(porQue, navegacion);
+  contenedor.replaceChildren(pico, el('div', undefined, 'barra-familia'), cuerpo);
+  return clase;
 }
 
 /** La sigla de una familia en su círculo, con el color de la clase de familia de quien la contiene (aria-hidden: el nombre ya es texto). */

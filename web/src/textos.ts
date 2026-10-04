@@ -119,9 +119,12 @@ export const MUESTRA_DE_SUBRAYADO = 'Abc';
 const enLista = new Intl.ListFormat('es', { type: 'conjunction' });
 export const nombreDelTramo = (reglas: readonly string[], texto: string): string => `${enLista.format(reglas)}: “${texto}”`;
 
-// El panel de un subrayado.
-/** Sin «tramo», que es palabra del motor (encargo 9.2): lo que se toca es un subrayado. */
-export const TITULO_DEL_PANEL = 'Lo que señala este subrayado';
+// La tarjeta de un subrayado (desde el 10.4, Tanda 2, la del modelo; antes, el panel): la línea de su familia y su
+// paquete, la X y el recorrido por las señales.
+export const lineaDeLaTarjeta = (familia: string, paquete: string): string => `${familia} · ${paquete}`;
+export const CERRAR = 'Cerrar';
+export const ANTERIOR = 'Anterior';
+export const SIGUIENTE = 'Siguiente';
 export const EXPLICACION = 'Explicación';
 export const SUGERENCIA = 'Sugerencia';
 export const NIVEL_DE_EVIDENCIA = 'Nivel de evidencia';

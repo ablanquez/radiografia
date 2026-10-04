@@ -138,10 +138,11 @@ describe('el cargador en Chrome, sobre astro preview', () => {
     assert.ok(leyenda.some((x) => new RegExp(`^${PRUEBA} \\| Pruebas \\(\\d+\\) \\| muestra capa fam-propia$`).test(x)), leyenda.join('\n'));
 
     const propia = await p().evaluar<{ titulo: string; enlacesEnTitulo: number; texto: string; hrefs: string[]; ejemplos: string[] }>(`(() => {
-      const tramo = [...document.querySelectorAll('#vista .tramo')].find((t) => t.dataset.familias.split('|').includes('${PRUEBA}::pruebas'));
+      // Desde el 10.4 (Tanda 2), la tarjeta enseña una señal cada vez, la primera del tramo: un tramo solo del paquete de prueba.
+      const tramo = [...document.querySelectorAll('#vista .tramo')].find((t) => t.dataset.familias === '${PRUEBA}::pruebas');
       tramo.click();
-      const a = [...document.querySelectorAll('#panel article')].find((x) => x.querySelector('.id-regla')?.textContent.endsWith(' · ${PRUEBA}'));
-      return { titulo: a.querySelector('h4').textContent, enlacesEnTitulo: a.querySelectorAll('h4 a').length, texto: a.textContent, hrefs: [...a.querySelectorAll('a')].map((x) => x.getAttribute('href')), ejemplos: [...a.querySelectorAll('pre.ejemplo')].map((x) => x.textContent) };
+      const a = document.getElementById('tarjeta');
+      return { titulo: a.querySelector('h2').textContent, enlacesEnTitulo: a.querySelectorAll('h2 a').length, texto: a.textContent, hrefs: [...a.querySelectorAll('a')].map((x) => x.getAttribute('href')), ejemplos: [...a.querySelectorAll('pre.ejemplo')].map((x) => x.textContent) };
     })()`);
     const prueba = paqueteDePrueba();
     const regla = prueba.reglas.find((r) => r.nombre === propia.titulo);
@@ -168,9 +169,9 @@ describe('el cargador en Chrome, sobre astro preview', () => {
     assert.deepEqual(propia.ejemplos, [...regla.ejemplos.positivos, ...regla.ejemplos.negativos], 'los ejemplos de la ficha propia');
 
     const incluida = await p().evaluar<{ id: string; href: string | null }>(`(() => {
-      const tramo = [...document.querySelectorAll('#vista .tramo')].find((t) => t.dataset.familias.split('|').some((f) => f.startsWith('RadiografIA::')));
+      const tramo = [...document.querySelectorAll('#vista .tramo')].find((t) => t.dataset.familias.split('|').every((f) => f.startsWith('RadiografIA::')));
       tramo.click();
-      const a = [...document.querySelectorAll('#panel article')].find((x) => x.querySelector('.id-regla')?.textContent.endsWith(' · RadiografIA'));
+      const a = document.getElementById('tarjeta');
       // Desde el 9.2 el enlace a la ficha va dentro de «¿Por qué lo miramos?», no en el título.
       return { id: a.querySelector('.id-regla').textContent.split(' · ')[0], href: a.querySelector('details a')?.getAttribute('href') ?? null };
     })()`);

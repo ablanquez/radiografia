@@ -1,0 +1,163 @@
+/*
+ * La tarjeta de regla (encargo 10.4, Tanda 2; DISEÑO §6.1 y §7), como en el
+ * modelo (TarjetaRegla, medida por CDP el 04/10): 360 de ancho, fondo bg,
+ * borde line, radio 8 y la sombra suave; arriba, la barra de 6 px del color de
+ * su familia (ink-2 en una regla propia); dentro, 16 · 20 · 20 de margen y 16
+ * entre piezas; la cabecera con la sigla, el nombre a 20/26 en negrita, la
+ * línea «familia · paquete» a 15 en ink-2 y la X de 44 × 44; el texto a 16;
+ * «¿Por qué lo miramos?» con una línea encima y su resumen de 44 en negrita;
+ * «Anterior» y «Siguiente» a 12, repartidos. El pico, un cuadrado de 12 girado
+ * 45°, del color de la familia cuando la tarjeta va debajo del tramo y blanco
+ * con borde line cuando va encima; su sitio lo pone tarjeta.ts (--pico-x).
+ * La tarjeta se coloca con position: absolute en coordenadas de la página
+ * (tarjeta.ts, colocar). Solo variables de tokens.css; los 6 px de la barra y
+ * del pico y los 10 que bajan la sigla (mt-2.5 del modelo), en px como
+ * estructura (como los del modelo que Antonio dejó fuera de tokens.json,
+ * parada de sutura de la Tanda 1).
+ */
+
+.tarjeta-regla {
+  position: absolute;
+  z-index: 20;
+  box-sizing: border-box;
+  width: var(--medida-columna-resultado);
+  max-width: calc(100vw - 2 * var(--espacio-16));
+  border: 1px solid var(--color-line);
+  border-radius: var(--radio-tarjeta);
+  background: var(--color-bg);
+  box-shadow: var(--sombra-suave);
+}
+
+.tarjeta-regla p,
+.tarjeta-regla h2 {
+  margin: 0;
+}
+
+/* La frase en claro, en la tarjeta del modelo, a 16 sin negrita (la del catálogo y la del papel siguen en 600). */
+.tarjeta-regla .en-claro {
+  font-weight: 400;
+}
+
+.barra-familia {
+  height: 6px;
+  border-radius: calc(var(--radio-tarjeta) - 1px) calc(var(--radio-tarjeta) - 1px) 0 0;
+  background: var(--c);
+}
+
+.cuerpo-tarjeta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-16);
+  padding: var(--espacio-16) var(--espacio-20) var(--espacio-20);
+}
+
+.cabecera-tarjeta {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--espacio-12);
+}
+
+.cabecera-tarjeta .sigla {
+  margin-top: 10px;
+}
+
+.nombre-tarjeta {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: var(--espacio-2);
+  min-width: 0;
+  padding-top: var(--espacio-8);
+}
+
+.nombre-tarjeta h2 {
+  font-size: var(--tipografia-tamano-titulo-tarjeta);
+  line-height: var(--tipografia-interlineado-titulo-tarjeta);
+}
+
+.linea-tarjeta {
+  font-size: var(--tipografia-tamano-secundario);
+  line-height: var(--tipografia-interlineado-secundario);
+  color: var(--color-ink-2);
+}
+
+.cerrar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--medida-toque);
+  margin-right: calc(-1 * var(--espacio-8));
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+.cerrar:hover {
+  background: var(--color-card);
+}
+
+.por-que {
+  border-top: 1px solid var(--color-line);
+}
+
+.por-que > summary {
+  display: flex;
+  align-items: center;
+  min-height: var(--medida-toque);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.por-que-dentro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-8);
+  padding-bottom: var(--espacio-4);
+  font-size: var(--tipografia-tamano-secundario);
+  line-height: var(--tipografia-interlineado-secundario);
+}
+
+.por-que-dentro h5 {
+  margin: 0;
+}
+
+.nota-propia {
+  color: var(--color-ink-2);
+}
+
+.navegacion-reglas {
+  display: flex;
+  gap: var(--espacio-12);
+}
+
+.navegacion-reglas button {
+  flex: 1;
+}
+
+.navegacion-reglas button:not(:disabled):hover {
+  background: var(--color-card);
+}
+
+.pico {
+  position: absolute;
+  left: calc(var(--pico-x, 40px) - 6px);
+  box-sizing: border-box;
+  width: var(--espacio-12);
+  height: var(--espacio-12);
+  transform: rotate(45deg);
+}
+
+.tarjeta-regla[data-pico='arriba'] .pico {
+  top: -6px;
+  border-top: 1px solid var(--c);
+  border-left: 1px solid var(--c);
+  background: var(--c);
+}
+
+.tarjeta-regla[data-pico='abajo'] .pico {
+  bottom: -6px;
+  border-right: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-bg);
+}
