@@ -41,7 +41,7 @@ const base = import.meta.env.BASE_URL;
 const peso = new Intl.NumberFormat('es').format(regla.peso);
 ---
 
-<Catalogo titulo={nombre}>
+<Catalogo titulo={nombre} clase="ficha">
   <nav>
     <a href={urlDelCatalogo(base)}>{textos.VOLVER_AL_CATALOGO}</a> · <a href={urlDelAnalizador(base)}>{textos.PROBAR_EN_EL_ANALIZADOR}</a>
   </nav>

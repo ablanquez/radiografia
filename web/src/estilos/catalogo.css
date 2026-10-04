@@ -1,0 +1,328 @@
+/*
+ * El índice del catálogo, /reglas/ (encargo 10.4, Tanda 3; DISEÑO §6.3), como
+ * en el modelo (Catalogo, medido por CDP el 04/10).
+ *
+ * Escritorio: bloques a 32; el título con la presentación debajo (Literata 18
+ * en ink-2, a 34em como mucho); el buscador a todo el ancho (etiqueta en
+ * negrita, campo de 48 con borde ink-2 y radio 6); los filtros en una rejilla
+ * de cuatro columnas a 40 (familia 1,5; detector 1; severidad 1; y «Quitar
+ * filtros» con el recuento), cada grupo con su leyenda en negrita y las
+ * casillas en filas de 44 a 15, con 12 entre la casilla, la muestra y el
+ * nombre; la lista, tarjetas a 12 con borde line, radio 8 y 20 de margen
+ * interior: a la izquierda la muestra y la sigla, y a la derecha el nombre
+ * (enlace a 20 en negrita), la frase en claro a 16 y la línea de datos a 15
+ * en ink-2; las que solo avisan, con borde discontinuo ink-2 al 50 % sobre
+ * card y la frase en ink-2. Sin resultados, un recuadro card con borde line,
+ * radio 8 y 32 de margen, el aviso a 20 en negrita y «Quitar filtros».
+ * Tableta (769-1023): los filtros en dos columnas a 32 (familia; detector y
+ * severidad, a 24), y debajo, a 16, «Quitar filtros» y el recuento en una
+ * fila. Móvil (hasta 768): bloques a 24; en vez de los filtros, el botón
+ * «Filtros (n)» con el recuento al lado; los filtros, en una hoja inferior
+ * (60 % de alto, 90 % con el asa), con su título, la X, los tres grupos con
+ * scroll y abajo «Aplicar» y «Quitar filtros», a todo el ancho.
+ * La hoja: la abre catalogo/hoja-filtros.ts, que le pone la clase hoja; el asa
+ * y el velo, de estilos/hoja.css. Solo variables de tokens.css.
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/display
+ *    — contents: «These elements don't produce a specific box by
+ *    themselves»: los grupos cuentan como columnas de la rejilla del
+ *    escritorio sin cambiar el orden del documento.
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/overflow-wrap
+ *    — anywhere: la línea de datos parte un id largo en vez de desbordar.
+ */
+
+.catalogo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-32);
+}
+
+.catalogo :is(h1, h2, p, ul, fieldset, legend) {
+  margin: 0;
+}
+
+.encabezado-catalogo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-8);
+}
+
+.presentacion {
+  max-width: var(--medida-columna-texto);
+  font-family: var(--tipografia-font-family-texto);
+  font-size: var(--tipografia-tamano-cuerpo);
+  line-height: var(--tipografia-interlineado-cuerpo);
+  color: var(--color-ink-2);
+}
+
+.filtros {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-32);
+}
+
+.buscador {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-8);
+}
+
+.buscador input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--medida-toque-movil);
+  padding: 0 var(--espacio-16);
+}
+
+.barra-filtros,
+.panel-filtros:not(.hoja) :is(.asa, .cabecera-hoja, #aplicar-filtros) {
+  display: none;
+}
+
+.panel-filtros {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) 1fr 1fr auto;
+  gap: var(--espacio-40);
+}
+
+.grupos-filtros,
+.otros-filtros {
+  display: contents;
+}
+
+.panel-filtros fieldset {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+}
+
+.panel-filtros legend {
+  margin-bottom: var(--espacio-4);
+  padding: 0;
+  font-weight: 700;
+}
+
+.panel-filtros label {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-12);
+  min-height: var(--medida-toque);
+  font-size: var(--tipografia-tamano-secundario);
+  line-height: var(--tipografia-interlineado-secundario);
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.panel-filtros input[type='checkbox'] {
+  flex-shrink: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+/* La muestra de la línea de cada familia: «Abc» en Literata 18, con el tinte y la línea (familias.css). */
+.catalogo .muestra {
+  font-family: var(--tipografia-font-family-texto);
+  font-size: var(--tipografia-tamano-cuerpo);
+  line-height: 1;
+}
+
+.acciones-filtros {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--espacio-16);
+}
+
+#recuento {
+  font-weight: 700;
+}
+
+#quitar-filtros:hover,
+#quitar-filtros-sin-reglas:hover,
+#abrir-filtros:hover {
+  background: var(--color-card);
+}
+
+/* La lista. */
+.reglas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-12);
+  padding: 0;
+  list-style: none;
+}
+
+.regla-del-catalogo {
+  display: flex;
+  gap: var(--espacio-16);
+  padding: var(--espacio-20);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radio-tarjeta);
+  background: var(--color-bg);
+}
+
+.regla-del-catalogo.informativa {
+  border-style: dashed;
+  border-color: var(--color-ink-2-50);
+  background: var(--color-card);
+}
+
+.marca-familia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  gap: var(--espacio-8);
+  padding-top: var(--espacio-2);
+}
+
+.cuerpo-regla {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+  min-width: 0;
+}
+
+.cuerpo-regla .en-claro {
+  font-weight: 400;
+}
+
+.informativa .en-claro {
+  color: var(--color-ink-2);
+}
+
+.cuerpo-regla .datos {
+  font-size: var(--tipografia-tamano-secundario);
+  line-height: var(--tipografia-interlineado-secundario);
+  color: var(--color-ink-2);
+  overflow-wrap: anywhere;
+}
+
+/* Sin resultados. */
+.sin-reglas {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--espacio-16);
+  padding: var(--espacio-32);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radio-tarjeta);
+  background: var(--color-card);
+}
+
+.sin-reglas p {
+  font-size: var(--tipografia-tamano-titulo-tarjeta);
+  line-height: var(--tipografia-interlineado-titulo-tarjeta);
+  font-weight: 700;
+}
+
+/* Tableta: los filtros en dos columnas y, debajo, «Quitar filtros» y el recuento. */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .panel-filtros {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-16);
+  }
+
+  .grupos-filtros {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--espacio-32);
+  }
+
+  .otros-filtros {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-24);
+  }
+
+  .acciones-filtros {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+/* Móvil: el botón «Filtros (n)» con el recuento; los filtros, en la hoja. */
+@media (max-width: 768px) {
+  .catalogo,
+  .filtros {
+    gap: var(--espacio-24);
+  }
+
+  .barra-filtros {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--espacio-16);
+  }
+
+  .panel-filtros:not(.hoja) {
+    display: none;
+  }
+
+  .panel-filtros.hoja {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-height: 60%;
+    border-top: 1px solid var(--color-line);
+    border-radius: var(--radio-tarjeta) var(--radio-tarjeta) 0 0;
+    background: var(--color-bg);
+  }
+
+  .panel-filtros.hoja.grande {
+    max-height: 90%;
+  }
+
+  .hoja .asa {
+    min-height: var(--medida-toque);
+  }
+
+  .hoja .cabecera-hoja {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--espacio-12);
+    padding: 0 var(--espacio-16);
+  }
+
+  .hoja .cerrar {
+    margin-right: calc(-1 * var(--espacio-8));
+    border: 0;
+    background: none;
+  }
+
+  .hoja .cerrar:hover {
+    background: var(--color-card);
+  }
+
+  .hoja .grupos-filtros {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-24);
+    min-height: 0;
+    padding: var(--espacio-12) var(--espacio-16);
+    overflow-y: auto;
+  }
+
+  .hoja .otros-filtros {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-24);
+  }
+
+  .hoja .acciones-filtros {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--espacio-12);
+    padding: var(--espacio-16) var(--espacio-16) calc(var(--espacio-16) + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--color-line);
+  }
+}

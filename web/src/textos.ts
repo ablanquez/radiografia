@@ -219,6 +219,14 @@ export const PRESENTACION_DEL_CATALOGO =
 export const BUSCAR = 'Buscar por nombre, id o explicación';
 export const QUITAR_FILTROS = 'Quitar filtros';
 export const recuentoDeReglas = (n: number): string => `${n} ${n === 1 ? 'regla' : 'reglas'}`;
+// Desde el 10.4 (Tanda 3; DISEÑO §6.3), el del modelo: el nombre de la lista, la línea de datos de cada regla, el
+// estado sin resultados, y en el móvil el botón de los filtros con cuántas casillas van marcadas y su hoja con «Aplicar».
+export const LISTA_DE_REGLAS = 'Reglas';
+export const lineaDeLaRegla = (partes: readonly string[]): string => partes.join(' · ');
+export const NINGUNA_REGLA = 'Ninguna regla con esos filtros.';
+export const FILTROS = 'Filtros';
+export const filtrosMarcados = (n: number): string => (n === 0 ? FILTROS : `${FILTROS} (${n})`);
+export const APLICAR = 'Aplicar';
 
 // El lenguaje de calle (encargo 9.2, b; firmado por Antonio en la parada 1): la etiqueta y la frase del medidor, su
 // detalle plegado, el resumen, las unidades de cada métrica y las etiquetas que sustituyen el vocabulario del motor.

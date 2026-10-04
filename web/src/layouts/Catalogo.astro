@@ -23,6 +23,10 @@
  *    como en index.astro. La cabecera (el icono, el nombre, el eslogan y el
  *    enlace al analizador, como en el modelo) y el pie con la nota son
  *    Cabecera.astro y Pie.astro; el marco de la página, estilos/marco.css.
+ * Desde el 10.4 (Tanda 3), cada página dice la clase de su <main> (clase):
+ *    el índice, «catalogo», con estilos/catalogo.css; las familias (la muestra
+ *    y la sigla), de estilos/familias.css, y la hoja (el asa y el velo), de
+ *    estilos/hoja.css.
  */
 import { urlDelAnalizador } from '../catalogo/catalogo.ts';
 import { ANALIZADOR } from '../textos.ts';
@@ -33,13 +37,18 @@ import '../estilos/tokens.css';
 import '../estilos/fuentes.css';
 import '../estilos/base.css';
 import '../estilos/marco.css';
+import '../estilos/familias.css';
+import '../estilos/hoja.css';
+import '../estilos/catalogo.css';
 
 interface Props {
   /** Lo que va delante de «RadiografIA» en el título de la pestaña. */
   titulo: string;
+  /** La clase de <main>: la de la página. */
+  clase: string;
 }
 
-const { titulo } = Astro.props;
+const { titulo, clase } = Astro.props;
 const analizador = urlDelAnalizador(import.meta.env.BASE_URL);
 ---
 
@@ -52,13 +61,12 @@ const analizador = urlDelAnalizador(import.meta.env.BASE_URL);
   </head>
   <body>
     <Cabecera enlace={{ href: analizador, texto: ANALIZADOR }} />
-    <main>
+    <main class={clase}>
       <slot />
     </main>
     <Pie />
     <style is:global>
-      .id-regla,
-      .datos {
+      .id-regla {
         font-size: var(--tipografia-tamano-secundario);
         line-height: var(--tipografia-interlineado-secundario);
         color: var(--color-ink-2);
@@ -76,9 +84,6 @@ const analizador = urlDelAnalizador(import.meta.env.BASE_URL);
         line-height: var(--tipografia-interlineado-cuerpo);
         font-weight: 400;
       }
-      .presentacion {
-        color: var(--color-ink-2);
-      }
       dt {
         font-weight: 700;
       }
@@ -87,20 +92,6 @@ const analizador = urlDelAnalizador(import.meta.env.BASE_URL);
       }
       code {
         overflow-wrap: anywhere;
-      }
-      .reglas {
-        list-style: none;
-        padding-left: 0;
-      }
-      .reglas h2 {
-        margin-bottom: 0;
-      }
-      .datos {
-        margin: 0;
-      }
-      fieldset label {
-        display: inline-block;
-        margin-right: 1rem;
       }
       .ejemplo {
         white-space: pre-wrap;

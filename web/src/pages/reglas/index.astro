@@ -2,18 +2,30 @@
 /**
  * El índice del catálogo de reglas, /reglas/ (encargo 7.1, b; plan, punto 7):
  * todas las reglas de los dos paquetes, generadas en build, con un buscador y
- * tres filtros (familia, severidad, detector). Funciona, no luce: el diseño es
- * del punto 10.
+ * tres filtros (familia, detector, severidad).
  *
- * Por regla: su nombre, que enlaza a su ficha, y debajo su frase en claro
- * (encargo 9.2, b; firmada por Antonio en la parada 1); id y paquete; familia,
- * detector, severidad, nivel de evidencia y peso; y la primera frase de su
- * explicación. Cada fila lleva en data-* lo que miran el buscador (nombre, id
- * y explicación entera, ya pasados por paraBuscar) y los filtros.
+ * Desde el 10.4 (Tanda 3; DISEÑO §6.3), el del modelo (Catalogo, medido por
+ * CDP): el título con su presentación; el buscador a todo el ancho; los
+ * filtros en tres columnas (familia, con la muestra de su línea y «(paquete)»;
+ * detector; severidad) y a su lado «Quitar filtros» con el recuento; y la
+ * lista en tarjetas: la muestra y la sigla de la familia, el nombre que enlaza
+ * a la ficha, la frase en claro y una línea con el id, la familia, el
+ * paquete, el detector, la severidad y el nivel de evidencia (el modelo
+ * llevaba id, paquete, detector y evidencia: sus reglas de muestra no traían
+ * severidad, y la familia, sin su nombre en texto, quedaba solo en la sigla,
+ * que es aria-hidden). Las reglas que solo avisan, en tarjeta discontinua
+ * sobre card. Sin resultados, «Ninguna regla con esos filtros.» con su
+ * «Quitar filtros». En la tableta, los filtros en dos columnas (familia; detector y
+ * severidad) y debajo «Quitar filtros» y el recuento; en el móvil, un botón
+ * «Filtros (n)» con el recuento al lado, que abre los filtros en una hoja
+ * inferior con «Aplicar» y «Quitar filtros» (catalogo/hoja-filtros.ts). Los
+ * estilos, en estilos/catalogo.css.
  *
- * El buscador y los filtros son JavaScript del navegador sobre esta lista ya
- * pintada (catalogo/buscador.ts): ocultan y enseñan filas, sin librerías y
- * sin volver a pintar. Sin JavaScript, la lista se ve entera.
+ * Cada fila lleva en data-* lo que miran el buscador (nombre, id y
+ * explicación entera, ya pasados por paraBuscar) y los filtros. El buscador y
+ * los filtros son JavaScript del navegador sobre esta lista ya pintada
+ * (catalogo/buscador.ts): ocultan y enseñan filas, sin librerías y sin volver
+ * a pintar. Sin JavaScript, la lista se ve entera.
  * El orden de las filas y de las casillas de familia y de detector, el de
  * orden.ts (cierre del 7.1); las de severidad, baja → media → alta.
  * Cada control con su etiqueta: el buscador con <label for>, y cada casilla
@@ -30,70 +42,126 @@
  *    ensure that live regions are registered is to include them in the
  *    initial markup»; y con role="status», «To maximize compatibility, add a
  *    redundant aria-live="polite"».
+ * La muestra («Abc») y la sigla son aria-hidden: lo que dicen, la familia, va
+ *    en texto en la casilla y en la línea de datos (WCAG 1.3.1).
  */
 import Catalogo from '../../layouts/Catalogo.astro';
-import { DETECTORES, primeraFrase, SEVERIDADES, urlDeRegla } from '../../catalogo/catalogo.ts';
+import { DETECTORES, SEVERIDADES, urlDeRegla } from '../../catalogo/catalogo.ts';
 import { paraBuscar } from '../../catalogo/filtro.ts';
 import { enOrden } from '../../orden.ts';
 import { ENTRADAS, PAQUETES } from '../../catalogo/paquetes.ts';
 import { nombreDeRegla } from '../../pantalla/humanizar.ts';
+import { indexar } from '../../pantalla/pintar.ts';
 import * as textos from '../../textos.ts';
 
 const base = import.meta.env.BASE_URL;
-const peso = new Intl.NumberFormat('es');
+const indice = indexar(PAQUETES);
 // El orden (cierre del 7.1, orden.ts): paquetes como los carga el analizador; familias y reglas, alfabéticas por su nombre.
 const posicion = new Map(PAQUETES.map((p, i) => [p.cabecera.nombre, i]));
 const familias = enOrden(
-  PAQUETES.flatMap((p, i) => p.cabecera.familias.map((f) => ({ i, nombre: f.nombre, valor: `${p.cabecera.nombre}::${f.id}`, etiqueta: `${f.nombre} (${p.cabecera.nombre})` }))),
+  PAQUETES.flatMap((p, i) =>
+    p.cabecera.familias.map((f) => {
+      const valor = `${p.cabecera.nombre}::${f.id}`;
+      return { i, nombre: f.nombre, valor, etiqueta: `${f.nombre} (${p.cabecera.nombre})`, clase: indice.claseDeFamilia.get(valor) ?? '' };
+    }),
+  ),
   (f) => [f.i, f.nombre],
 );
 const detectores = enOrden(DETECTORES, (d) => [d]);
 const filas = enOrden(
   ENTRADAS.map(({ regla, paquete, familia }) => {
     const nombre = nombreDeRegla(regla.id, regla);
-    return { regla, paquete, familia, nombre, texto: paraBuscar(`${nombre} ${regla.id} ${regla.explicacion}`) };
+    const clave = `${paquete.nombre}::${familia.id}`;
+    return {
+      regla,
+      paquete,
+      familia,
+      nombre,
+      clave,
+      clase: indice.claseDeFamilia.get(clave) ?? '',
+      sigla: indice.siglaDeFamilia.get(clave) ?? '',
+      informativa: regla.informativa === true || familia.informativa === true,
+      texto: paraBuscar(`${nombre} ${regla.id} ${regla.explicacion}`),
+    };
   }),
   (x) => [posicion.get(x.paquete.nombre) ?? 0, x.familia.nombre, x.nombre],
 );
 ---
 
-<Catalogo titulo={textos.CATALOGO}>
-  <h1>{textos.CATALOGO}</h1>
-  <p class="presentacion texto-largo">{textos.PRESENTACION_DEL_CATALOGO}</p>
-  <form id="filtros" role="search">
-    <label for="buscar">{textos.BUSCAR}</label>
-    <input id="buscar" type="search" />
-    <fieldset>
-      <legend>{textos.FAMILIA}</legend>
-      {familias.map((f) => <label><input type="checkbox" name="familia" value={f.valor} /> {f.etiqueta}</label>)}
-    </fieldset>
-    <fieldset>
-      <legend>{textos.SEVERIDAD}</legend>
-      {SEVERIDADES.map((s) => <label><input type="checkbox" name="severidad" value={s} /> {s}</label>)}
-    </fieldset>
-    <fieldset>
-      <legend>{textos.DETECTOR}</legend>
-      {detectores.map((d) => <label><input type="checkbox" name="detector" value={d} /> {d}</label>)}
-    </fieldset>
-    <button id="quitar-filtros" type="button">{textos.QUITAR_FILTROS}</button>
+<Catalogo titulo={textos.CATALOGO} clase="catalogo">
+  <div class="encabezado-catalogo">
+    <h1>{textos.CATALOGO}</h1>
+    <p class="presentacion">{textos.PRESENTACION_DEL_CATALOGO}</p>
+  </div>
+  <form id="filtros" class="filtros" role="search">
+    <div class="buscador">
+      <label for="buscar">{textos.BUSCAR}</label>
+      <input id="buscar" type="search" />
+    </div>
+    <div class="barra-filtros">
+      <button id="abrir-filtros" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="panel-filtros">{textos.FILTROS}</button>
+    </div>
+    <div id="panel-filtros" class="panel-filtros">
+      <button class="asa" type="button" aria-label={textos.CAMBIAR_TAMANO}><span></span></button>
+      <div class="cabecera-hoja">
+        <h2 id="titulo-filtros" tabindex="-1">{textos.FILTROS}</h2>
+        <button class="cerrar" type="button" aria-label={textos.CERRAR}>
+          <svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l10 10M15 5L5 15"></path></svg>
+        </button>
+      </div>
+      <div class="grupos-filtros">
+        <fieldset>
+          <legend>{textos.FAMILIA}</legend>
+          {
+            familias.map((f) => (
+              <label>
+                <input type="checkbox" name="familia" value={f.valor} />
+                <span class={`muestra capa ${f.clase}`} aria-hidden="true">{textos.MUESTRA_DE_SUBRAYADO}</span>
+                <span>{f.etiqueta}</span>
+              </label>
+            ))
+          }
+        </fieldset>
+        <div class="otros-filtros">
+          <fieldset>
+            <legend>{textos.DETECTOR}</legend>
+            {detectores.map((d) => <label><input type="checkbox" name="detector" value={d} /> {d}</label>)}
+          </fieldset>
+          <fieldset>
+            <legend>{textos.SEVERIDAD}</legend>
+            {SEVERIDADES.map((s) => <label><input type="checkbox" name="severidad" value={s} /> {s}</label>)}
+          </fieldset>
+        </div>
+      </div>
+      <div class="acciones-filtros">
+        <button id="aplicar-filtros" class="boton-principal" type="button">{textos.APLICAR}</button>
+        <button id="quitar-filtros" type="button">{textos.QUITAR_FILTROS}</button>
+        <p id="recuento" role="status" aria-live="polite">{textos.recuentoDeReglas(filas.length)}</p>
+      </div>
+    </div>
   </form>
-  <p id="recuento" role="status" aria-live="polite">{textos.recuentoDeReglas(filas.length)}</p>
-  <ul id="reglas" class="reglas">
+  <div id="sin-reglas" class="sin-reglas" hidden>
+    <p>{textos.NINGUNA_REGLA}</p>
+    <button id="quitar-filtros-sin-reglas" type="button">{textos.QUITAR_FILTROS}</button>
+  </div>
+  <ul id="reglas" class="reglas" aria-label={textos.LISTA_DE_REGLAS}>
     {
-      filas.map(({ regla, paquete, familia, nombre, texto }) => (
-        <li data-texto={texto} data-familia={`${paquete.nombre}::${familia.id}`} data-severidad={regla.severidad} data-detector={regla.detector}>
-          <h2><a href={urlDeRegla(base, regla.id)}>{nombre}</a></h2>
-          {regla.enClaro !== undefined && <p class="en-claro">{regla.enClaro}</p>}
-          <p class="id-regla">{regla.id} · {paquete.nombre}</p>
-          <p class="datos">
-            {textos.FAMILIA}: {familia.nombre} · {textos.DETECTOR}: {regla.detector} · {textos.SEVERIDAD}: {regla.severidad} ·{' '}
-            {textos.NIVEL_DE_EVIDENCIA}: {regla.nivelEvidencia} · {textos.PESO}: {peso.format(regla.peso)}
-          </p>
-          <p>{primeraFrase(regla.explicacion)}</p>
+      filas.map(({ regla, paquete, familia, nombre, clave, clase, sigla, informativa, texto }) => (
+        <li class:list={['regla-del-catalogo', { informativa }]} data-texto={texto} data-familia={clave} data-severidad={regla.severidad} data-detector={regla.detector}>
+          <div class="marca-familia">
+            <span class={`muestra capa ${clase}`} aria-hidden="true">{textos.MUESTRA_DE_SUBRAYADO}</span>
+            <span class={`sigla ${clase}`} aria-hidden="true">{sigla}</span>
+          </div>
+          <div class="cuerpo-regla">
+            <h2><a href={urlDeRegla(base, regla.id)}>{nombre}</a></h2>
+            {regla.enClaro !== undefined && <p class="en-claro">{regla.enClaro}</p>}
+            <p class="datos">{textos.lineaDeLaRegla([regla.id, familia.nombre, paquete.nombre, regla.detector, regla.severidad, regla.nivelEvidencia])}</p>
+          </div>
         </li>
       ))
     }
   </ul>
+  <div id="velo" class="velo" hidden></div>
   <script>
     import '../../catalogo/buscador.ts';
   </script>

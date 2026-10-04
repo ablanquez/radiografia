@@ -16,9 +16,11 @@
  *      use lo ve Chrome, no este juez: esos enlaces los crea el script al
  *      analizar.
  *   5. El índice lleva el buscador con su <label>, los tres filtros (familia,
- *      severidad, detector) en su <fieldset> con su <legend> y cada casilla
- *      dentro de su <label>, el botón «Quitar filtros», el recuento en una
- *      región viva (role=status, aria-live=polite) y el script que filtra.
+ *      detector y severidad, en ese orden desde el 10.4, Tanda 3: el del
+ *      DISEÑO §6.3 y el modelo) en su <fieldset> con su <legend> y cada
+ *      casilla dentro de su <label> con su texto (las de familia, con la
+ *      muestra de su línea delante), el botón «Quitar filtros», el recuento en
+ *      una región viva (role=status, aria-live=polite) y el script que filtra.
  *   6. astro preview sirve el índice y una ficha (200) y da 404 en
  *      /reglas/no-existe/.
  *   7. El índice en su orden (cierre del 7.1, firmado por Antonio): los
@@ -116,12 +118,12 @@ describe('el catálogo construido', () => {
     const grupos = [...html.matchAll(/<fieldset>\s*<legend>([^<]*)<\/legend>([\s\S]*?)<\/fieldset>/g)].map((m) => ({
       legend: decodificar(m[1]!),
       casillas: (m[2]!.match(/<input type="checkbox"/g) ?? []).length,
-      etiquetadas: (m[2]!.match(/<label>\s*<input type="checkbox"[^>]*>[^<]+<\/label>/g) ?? []).length,
+      etiquetadas: [...m[2]!.matchAll(/<label>\s*<input type="checkbox"[^>]*>([\s\S]*?)<\/label>/g)].filter((l) => l[1]!.replace(/<[^>]*>/g, '').trim() !== '').length,
     }));
     assert.deepEqual(grupos, [
       { legend: textos.FAMILIA, casillas: familias, etiquetadas: familias },
-      { legend: textos.SEVERIDAD, casillas: SEVERIDADES.length, etiquetadas: SEVERIDADES.length },
       { legend: textos.DETECTOR, casillas: DETECTORES.length, etiquetadas: DETECTORES.length },
+      { legend: textos.SEVERIDAD, casillas: SEVERIDADES.length, etiquetadas: SEVERIDADES.length },
     ]);
     assert.match(html, new RegExp(`<button id="quitar-filtros" type="button">${textos.QUITAR_FILTROS}</button>`), 'sin «Quitar filtros»');
     const viva = /<p id="recuento" role="status" aria-live="polite">([^<]*)<\/p>/.exec(html);

@@ -81,8 +81,8 @@ export interface Peticion {
   url: string;
 }
 
-/** El analizador abierto en Chrome sobre astro preview, con lo que vieron los testigos antes y después de la marca. */
-export interface AnalizadorConTestigos {
+/** Una página de la web abierta en Chrome sobre astro preview, con lo que vieron los testigos antes y después de la marca. */
+export interface PaginaConTestigos {
   pestana: Pestana;
   /** La dirección de astro preview, con la barra final. */
   url: string;
@@ -95,6 +95,9 @@ export interface AnalizadorConTestigos {
   cerrar(): Promise<void>;
 }
 
+/** El analizador abierto en Chrome sobre astro preview (desde el 9.1). */
+export type AnalizadorConTestigos = PaginaConTestigos;
+
 /**
  * Build, astro preview y Chrome con el analizador cargado: espera a que diga
  * que cargó los paquetes y a que la red lleve 500 ms quieta (nada en vuelo ni
@@ -102,6 +105,16 @@ export interface AnalizadorConTestigos {
  * llegó a abrir.
  */
 export async function abrirAnalizadorConTestigos(): Promise<AnalizadorConTestigos> {
+  const cargados = textos.paquetesCargados(paquetesIncluidos().map((x) => `${x.cabecera.nombre} ${x.cabecera.version}`));
+  return abrirConTestigos('', `document.getElementById('estado')?.textContent === ${JSON.stringify(cargados)}`, 'los paquetes incluidos cargados');
+}
+
+/**
+ * Lo mismo con cualquier página de la web (desde el 10.4, Tanda 3: el
+ * catálogo y las fichas): su ruta, sin barra delante, y la expresión que dice
+ * que ya está lista.
+ */
+export async function abrirConTestigos(ruta: string, lista: string, que: string): Promise<PaginaConTestigos> {
   construir();
   const preview = await abrirPreview();
   let pestana: Pestana | undefined;
@@ -130,9 +143,8 @@ export async function abrirAnalizadorConTestigos(): Promise<AnalizadorConTestigo
     await pestana.cdp('Page.addScriptToEvaluateOnNewDocument', {
       source: `window.__violaciones = []; document.addEventListener('securitypolicyviolation', (e) => window.__violaciones.push(e.effectiveDirective + ' ' + e.blockedURI));`,
     });
-    await pestana.cdp('Page.navigate', { url: preview.url });
-    const cargados = textos.paquetesCargados(paquetesIncluidos().map((x) => `${x.cabecera.nombre} ${x.cabecera.version}`));
-    await pestana.hasta(`document.getElementById('estado')?.textContent === ${JSON.stringify(cargados)}`, 'los paquetes incluidos cargados');
+    await pestana.cdp('Page.navigate', { url: preview.url + ruta });
+    await pestana.hasta(lista, que);
     const limite = Date.now() + 15_000;
     while (enVuelo.size > 0 || Date.now() - ultimo < 500) {
       if (Date.now() > limite) throw new Error(`la red no se aquieta: ${enVuelo.size} peticiones en vuelo`);
