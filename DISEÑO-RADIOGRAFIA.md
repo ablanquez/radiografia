@@ -162,7 +162,10 @@ Dos columnas [CONVENCIÓN: Hemingway, GPTZero, LanguageTool]:
   tipo rotulador + línea con su estilo + sigla, §4), en
   Literata a 60-66 cpl; el cuadro queda editable arriba, plegado a tres
   líneas con «Editar».
-- **Derecha (resultado)**, columna de ~360 px, fija al hacer scroll:
+- **Derecha (resultado)**, columna de ~360 px, fija al hacer scroll y con
+  scroll propio cuando es más alta que la ventana (`sticky; max-height:
+  calc(100vh - 32px); overflow-y: auto`; decisión 04/10 tras la tanda 2:
+  con textos largos la columna medía 1.350 px y su parte baja no se veía hasta el final del texto):
   1. **Pastilla del resultado**: la etiqueta de la 9.2 en grande (28 px;
      24 en móvil), en tinta sobre fondo card (como el modelo; no en el
      color del acento ni semáforo: no es un veredicto de autoría); debajo
