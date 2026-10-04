@@ -14,7 +14,16 @@ la web real es `web/` (Astro). Esto es la fuente del calco (10.4).
 - `tokens.json` — tokens en formato Design Tokens Community Group
   2025.10, exportados por Make y validados el 04/10 (31 colores bien
   formados, sin hex sueltos; contrastes recalculados y coincidentes con
-  el DISEÑO).
+  el DISEÑO). **Ampliado el 04/10** (10.4, Tanda 1, aprobado por Antonio)
+  con lo que el modelo tenía en `@theme` o en sus componentes y no en el
+  JSON: los colores `sobre-acento`, `aviso-error`, `velo`, `ink-2-40` e
+  `ink-2-50`; `radio.redondo`; `tipografia.interletrado.marca`; los grupos
+  `medida` (columnas, 44 y 48 px), `sigla-tarjeta`, `sombra` e
+  `impresion`. DTCG 2025.10 solo admite `px` y `rem` en `dimension`
+  (§8.2.1): las medidas en em, pt y mm van como `number` con su unidad en
+  `$extensions` (`com.github.ablanquez.radiografia`, §5.2.3). El
+  `$type: "string"` del estilo de línea de cada familia, que venía de
+  Make, no es un tipo de la especificación; se deja como estaba.
 - `icono/` — `icono-a.svg` (favicon, manifiesto, apple-touch) e
   `icono-c.svg` (cabecera y portada), elegidos por Antonio; `PROCEDENCIA.md`.
 - `modelo-make.zip` — el código que generó Make (React + Tailwind v4, 62
