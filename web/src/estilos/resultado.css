@@ -5,9 +5,34 @@
  *
  * Escritorio (desde 1024 px): dos columnas a 64 px, la del texto de 34em (el
  * cuadro o, tras analizar, el cuadro plegado y la vista) y la del resultado
- * de 360, fija al hacer scroll (sticky a 32 px del borde de arriba, como el
- * modelo); antes de analizar, la del resultado es un recuadro con «Aquí
- * verás el resultado.». Tableta (769-1023): una columna con los mismos
+ * de 360, fija al hacer scroll; antes de analizar, la del resultado es un
+ * recuadro con «Aquí verás el resultado.». Desde la Tanda 3 (decisión de
+ * Antonio en la parada 2; DISEÑO §6.1), la columna del resultado tiene scroll
+ * propio cuando es más alta que la ventana: sticky a 16 px, alto máximo el de
+ * la ventana menos 32 y overflow-y: auto (con el texto de las cinco claves
+ * medía 1.550 px y su parte de abajo no se veía hasta el final del texto).
+ * Dentro hay botones y desplegables, así que se recorre con el teclado
+ * (WCAG 2.1.1): cada Tab desplaza la columna hasta el foco. Para que el anillo
+ * de foco (2 px a 2 px) no se corte en los bordes de la columna, la columna
+ * lleva un margen interior del tamaño del anillo (y el mismo margen exterior
+ * en negativo, para que el contenido quede donde estaba) y un scroll-padding
+ * igual arriba y abajo. La barra de scroll clásica (la de Windows: 15 px en
+ * el Chrome de los jueces) va en un carril reservado aparte, fuera de los 360
+ * del contenido: la columna mide lo que su contenido (max-content) y cada
+ * bloque, 360; así el resultado mide lo mismo que en el modelo, con barra o
+ * sin ella, y no salta cuando aparece. Con barras superpuestas (macOS, iOS)
+ * no hay carril.
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/scrollbar-gutter
+ *    — stable: «When using classic scrollbars, the gutter will be present if
+ *    overflow is auto, scroll, or hidden even if the box is not overflowing.
+ *    When using overlay scrollbars, the gutter will not be present»;
+ *    Baseline 2024.
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/scroll-padding
+ *    — «specifies offsets that define the optimal viewing region of a
+ *    scrollport within a scroll container»; Baseline desde abril de 2021.
+ * [DOC] https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html — 2.1.1:
+ *    «All functionality of the content is operable through a keyboard
+ *    interface». Tableta (769-1023): una columna con los mismos
  * bloques y en el orden del modelo (cuadro plegado, pastilla y lo que más
  * pesa, vista, familias, detalle, Español correcto y botones): las columnas
  * no cuentan (display: contents) y cada bloque lleva su orden. Móvil (hasta
@@ -55,10 +80,29 @@
 }
 
 .columna-resultado {
-  position: sticky;
-  top: var(--espacio-32);
   flex-shrink: 0;
   width: var(--medida-columna-resultado);
+}
+
+/* Escritorio: la columna del resultado, fija y con scroll propio (solo en pantalla y solo aquí: en la tableta y el móvil no es sticky). */
+@media screen and (min-width: 1024px) {
+  .columna-resultado {
+    position: sticky;
+    top: var(--espacio-16);
+    box-sizing: border-box;
+    width: max-content;
+    max-height: calc(100vh - 2 * var(--espacio-16));
+    margin: calc(-1 * (var(--foco-grosor) + var(--foco-desplazamiento)));
+    padding: calc(var(--foco-grosor) + var(--foco-desplazamiento));
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    scroll-padding-block: calc(var(--foco-grosor) + var(--foco-desplazamiento));
+  }
+
+  .columna-resultado > * {
+    box-sizing: border-box;
+    width: var(--medida-columna-resultado);
+  }
 }
 
 .hueco-resultado {
@@ -443,10 +487,6 @@
   #resultado:not([hidden], .insuficiente),
   .medidor {
     display: contents;
-  }
-
-  .columna-resultado {
-    position: static;
   }
 
   .formulario {

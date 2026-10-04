@@ -4,8 +4,11 @@
  * comparten la pestaña.
  *
  *   1. A 1280, antes de analizar: dos columnas, la del texto de 34em (544) y
- *      la del resultado de 360, fija (sticky a 32), con «Aquí verás el
- *      resultado.» en un recuadro de borde line, radio 8 y 24 de margen.
+ *      la del resultado de 360, fija (sticky; desde la Tanda 3, a 16, con su
+ *      scroll propio: jueces/columna.spec.ts), con «Aquí verás el resultado.»
+ *      en un recuadro de borde line, radio 8 y 24 de margen. Desde la Tanda 3,
+ *      los 360 son los de su contenido: la columna lleva además el margen del
+ *      anillo de foco y el carril de la barra (estilos/resultado.css).
  *   2. Al analizar combinacion-real: el cuadro se pliega a tres líneas con «Tu
  *      texto» y «Editar el texto»; la vista, debajo, en la columna del texto;
  *      el foco, en la etiqueta del resultado; en la columna del resultado, de
@@ -87,11 +90,11 @@ describe('el resultado del analizador en Chrome, sobre astro preview', () => {
 
   test('1 · a 1280, antes de analizar: dos columnas, la del resultado fija y con «Aquí verás el resultado.»', async () => {
     await anchoDe(1280);
-    const [texto, columna, hueco] = await Promise.all(['#columna-texto', '#columna-resultado', '#hueco-resultado'].map(caja));
-    assert.deepEqual([texto!.ancho, columna!.ancho], [544, 360], 'los anchos de las columnas');
-    assert.ok(columna!.izquierda - texto!.derecha >= 64, `entre columnas: ${columna!.izquierda - texto!.derecha}`);
-    assert.equal(Math.round(texto!.arriba), Math.round(columna!.arriba), 'las dos columnas empiezan a la misma altura');
-    assert.deepEqual(await estilo('#columna-resultado', ['position', 'top']), ['sticky', '32px']);
+    const [texto, hueco] = await Promise.all(['#columna-texto', '#hueco-resultado'].map(caja));
+    assert.deepEqual([texto!.ancho, hueco!.ancho], [544, 360], 'los anchos de las columnas');
+    assert.ok(hueco!.izquierda - texto!.derecha >= 64, `entre columnas: ${hueco!.izquierda - texto!.derecha}`);
+    assert.equal(Math.round(texto!.arriba), Math.round(hueco!.arriba), 'las dos columnas empiezan a la misma altura');
+    assert.deepEqual(await estilo('#columna-resultado', ['position', 'top']), ['sticky', '16px']);
     assert.equal(await (await p()).evaluar(`document.getElementById('hueco-resultado').textContent`), textos.AQUI_VERAS_EL_RESULTADO);
     assert.ok(hueco!.visible, 'el recuadro se ve');
     assert.deepEqual(await estilo('#hueco-resultado', ['border-top', 'border-radius', 'padding', 'color']), [`1px solid ${LINEA}`, '8px', '24px', TINTA_2]);

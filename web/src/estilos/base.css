@@ -81,6 +81,19 @@ a {
 }
 
 /*
+ * Al tabular, el navegador desplaza la ventana lo justo para que se vea el
+ * elemento, no su anillo: con un elemento pegado al borde, el anillo quedaba
+ * fuera (visto en la Tanda 3, jueces/columna.spec.ts). La ventana deja arriba
+ * y abajo el sitio del anillo.
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/scroll-padding
+ *    — «specifies offsets that define the optimal viewing region of a
+ *    scrollport within a scroll container»; Baseline desde abril de 2021.
+ */
+html {
+  scroll-padding-block: calc(var(--foco-grosor) + var(--foco-desplazamiento));
+}
+
+/*
  * Botones (DISEÑO §7): el principal, índigo con texto blanco; los demás, con
  * borde. Desactivado (DISEÑO §4, 04/10): fondo card, borde line discontinuo,
  * texto ink-2 (8,1:1) y cursor not-allowed; el principal pierde el índigo.
