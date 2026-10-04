@@ -3,7 +3,12 @@
 Documento rector de la estética (punto 10 del `PLAN-RADIOGRAFIA.md`). Nada
 se dibuja ni se calca sin estar aquí. Estado a 03/10/2026: **FIRMADO por
 Antonio como punto de partida**; lo que no guste se ajusta en el modelado
-de Figma Make y se vuelve a escribir aquí antes del calco. Fuentes: `docs/investigacion/
+de Figma Make y se vuelve a escribir aquí antes del calco. **04/10/2026:
+modelado en Figma Make hecho (seis pantallas en 1280/820/390, informe A4,
+tokens.json, icono); tres cambios de Antonio sobre el borrador, ya
+incorporados: fondo suave tipo rotulador en los tramos (§4), tableta como
+tercer tamaño (§6) y el tramo como `<span role="button">` (§6.1).**
+Fuentes: `docs/investigacion/
 informes/diseno-modulo.md` (doctrina, 03/10), `docs/investigacion/
 ux-benchmark.md` (prospección, 03/10) y los nueve apuntes de Antonio del
 punto 10. Cada decisión lleva su nivel: [NORMA] (WCAG, licencias,
@@ -14,8 +19,8 @@ patrones de otros), [PROPIO] (decisión nuestra sin fuente).
 
 Una página para pegar un texto en español y leer, en una línea, si suena a
 asistente (IA) y por qué. Tres pantallas (analizador, catálogo de reglas,
-ficha de regla), un informe en papel, y los dos tamaños: escritorio y
-móvil con el mismo peso. Identidad fijada el 29/09: **RadiografIA**, «A
+ficha de regla), un informe en papel, y tres tamaños con el mismo peso:
+escritorio (1280), tableta (820) y móvil (390). Identidad fijada el 29/09: **RadiografIA**, «A
 contraluz se nota todo.», «Pon tu texto a contraluz», icono «documento en
 negativo». Referente de forma: **Hemingway Editor** (prospección 03/10):
 cada cosa en un solo sitio; una línea arriba; una tarjeta por categoría;
@@ -73,7 +78,7 @@ siempre la comparación con textos humanos del mismo tipo.
 | 6 | informe largo | secciones numeradas con salto de página antes de las largas; explicaciones de contexto plegadas al final; la nota al pie no queda sola |
 | 7 | resultado fijo arriba + pestañas | escritorio: dos columnas (texto \| resultado y tarjetas); móvil: resultado arriba y pestañas Texto · Reglas · Datos |
 | 8 | la etiqueta debe destacar | pastilla grande con la etiqueta, primera cosa visible tras analizar (ancla visual, como el sello de GPTZero, sin porcentaje) |
-| 9 | móvil como requisito | cada pantalla con maqueta móvil y escritorio; tramos tocables; hoja inferior; sin scroll horizontal a 320 px; juez |
+| 9 | móvil como requisito | cada pantalla en tres tamaños (escritorio 1280, tableta 820 en una columna con los componentes de escritorio, móvil 390); tramos tocables; hoja inferior; sin scroll horizontal a 320 px; juez |
 
 ## 4 · Color
 
@@ -138,7 +143,8 @@ Pendiente antes de fijar: pasar la paleta por un simulador de daltonismo
 
 ## 6 · Las pantallas
 
-### 6.1 Analizador (escritorio, ≥ 1024 px)
+### 6.1 Analizador (escritorio, ≥ 1024 px; tableta 769-1023 px, los
+mismos bloques en una columna, sin barra de pestañas)
 
 Dos columnas [CONVENCIÓN: Hemingway, GPTZero, LanguageTool]:
 
@@ -147,7 +153,8 @@ Dos columnas [CONVENCIÓN: Hemingway, GPTZero, LanguageTool]:
   palabras; el análisis es completo desde 300») [CONVENCIÓN QuillBot];
   debajo, los chips de ejemplo («Texto humano», «Texto de IA») y el
   selector de género; el bloque «Paquetes» plegado. Después de analizar,
-  la **vista del texto** con subrayados finos por familia (no fondo), en
+  la **vista del texto** con los tramos marcados por familia (fondo suave
+  tipo rotulador + línea con su estilo + sigla, §4), en
   Literata a 60-66 cpl; el cuadro queda editable arriba, plegado a tres
   líneas con «Editar».
 - **Derecha (resultado)**, columna de ~360 px, fija al hacer scroll:
@@ -171,10 +178,12 @@ Dos columnas [CONVENCIÓN: Hemingway, GPTZero, LanguageTool]:
   lleva botones) [CONVENCIÓN APG: diálogo no modal]: nombre, frase en
   claro, «Qué hacer», «¿Por qué lo miramos?» plegado, enlace a la ficha,
   «Anterior / Siguiente» para recorrer las señales, cierre con Escape y
-  foco de vuelta al tramo (1.4.13, 2.4.7). El tramo es `<button>` con
-  nombre accesible («Conector repetido: “Además”») y `<mark>` dentro
-  (patrón propuesto en el informe; pendiente de prueba con lector de
-  pantalla).
+  foco de vuelta al tramo (1.4.13, 2.4.7). El tramo es `<span
+  role="button" tabindex="0">` con nombre accesible («Conector repetido:
+  “Además”») y manejo de Enter y Espacio según el patrón button de la
+  APG: no `<button>`, porque los navegadores lo fuerzan a inline-block y
+  no se parte con la frase (comprobado en el modelo el 04/10; es lo que
+  ya hace la web del 6.2). Pendiente de prueba con lector de pantalla.
 
 ### 6.2 Analizador (móvil, ≤ 768 px)
 
@@ -231,7 +240,7 @@ imprescindible.
 | Pastilla del resultado | 6 etiquetas de la 9.2 + texto corto + sin referencia + paquete propio con escala |
 | Tarjeta «lo que más pesa» | con meta (estadística) / con recuento (patrón) / ausencia («ni una vez») / «Empieza por» en la primera / sin puntuables («bien») |
 | Tarjeta de familia (leyenda) | activa / ocultada con el ojo / sin señales (atenuada) / informativa (Canal) / paquete propio (discontinuo) |
-| Tramo subrayado | reposo / foco visible (anillo 2 px, ≥ 3:1) / activo (tarjeta abierta) / solapado (dos líneas apiladas) |
+| Tramo subrayado | reposo (tinte 14 % + línea + sigla) / foco visible (anillo 2 px, ≥ 3:1) / activo (tarjeta abierta: tinte 28 %, línea más gruesa) / solapado (dos líneas apiladas, tinte de la primera familia) |
 | Tarjeta de regla (escritorio) y hoja inferior (móvil) | abierta / «¿Por qué?» desplegado / regla propia sin ficha (sin enlace) / anterior-siguiente deshabilitados en los extremos |
 | Cuadro de texto | vacío con placeholder / con texto / insuficiente (< 100) / corto (100-299, aviso) / error de carga de paquete (botón desactivado) |
 | Cargador de paquetes | sin propios / propio cargado (nombre, versión, reglas, Quitar) / error con lista de mensajes / «los paquetes han cambiado» |
@@ -245,7 +254,16 @@ desplazamiento de 2 px (2.4.7; meta 2.4.13).
 
 ## 8 · Icono y favicon
 
-**Documento en negativo** [PROPIO]: una hoja con esquina doblada, invertida
+**Elegido por Antonio el 04/10 en Figma Make**: la variante **(a)** (hoja
+blanca con esquina doblada sobre cuadrado #1A1A1A de radio 96; tres líneas
+en tinta y la central subrayada en #332288) para favicon, manifiesto y
+apple-touch; la variante **(c)** (círculo #332288 con la hoja en negativo,
+líneas en índigo y la central en #D55E00) para la cabecera y la portada;
+la (b) descartada (se funde en fondo oscuro). Los SVG, limpios, están en
+`docs/figma/icono/`; la zona segura maskable (círculo de 409) se respeta.
+
+**Documento en negativo** [PROPIO], el concepto del que salieron las tres
+variantes (elección arriba): una hoja con esquina doblada, invertida
 (fondo oscuro, hoja clara), con tres líneas «de texto» de las que la
 central va subrayada: a contraluz se nota todo. Una o dos formas planas;
 nada que desaparezca a 16 px. Variantes para que Antonio elija: (a) hoja
@@ -259,19 +277,22 @@ herramienta y hash.
 
 ## 9 · Resumen ejecutivo — lo que Antonio valida antes de abrir Figma
 
-1. Hemingway como molde; dos columnas en escritorio, pestañas en móvil.
+1. Hemingway como molde; dos columnas en escritorio, una columna en
+   tableta, pestañas en móvil.
 2. La pastilla del resultado como ancla visual: etiqueta grande + frase;
    sin semáforo ni porcentaje.
 3. «Lo que más pesa» como tarjetas por regla; la leyenda como tarjetas de
    familia con ojo.
-4. Subrayado fino por familia con estilo de línea propio y sigla; la
-   paleta de ocho de la sección 4 (≥ 3,4:1), pendiente del simulador.
+4. Tramos con fondo suave tipo rotulador más línea con estilo propio y
+   sigla (cambio de Antonio del 04/10 sobre el subrayado solo); la paleta
+   de ocho de la sección 4 (≥ 3,4:1), pendiente del simulador.
 5. Tarjeta anclada al tocar (escritorio) y hoja inferior (móvil), una
    regla a la vez con anterior/siguiente.
 6. Literata (texto) y Atkinson Hyperlegible Next (interfaz), autoalojadas.
 7. Columna de 60-66 caracteres, 18-19 px, interlineado 1,5.
 8. Catálogo con filtros en columnas; informe por secciones numeradas.
-9. Icono «documento en negativo»: tres variantes para elegir.
+9. Icono «documento en negativo»: elegidas la (a) para favicon y la (c)
+   para cabecera y portada (04/10).
 10. Fuera de la v1: modo oscuro completo (solo el icono lo respeta),
     animaciones, Highlight API, personalización de colores.
 

@@ -785,14 +785,14 @@ checklist fija, en escritorio y a 390 px, sin capturas (derechos), en
       serif editorial y la sans se eligen sabiendo esto (03/10: Literata y
       Atkinson Hyperlegible Next, OFL 1.1; el autoalojado y el subsetting se
       hacen en el calco)
-- [ ] Brief a Figma Make escrito desde el DISEÑO (layout, hex, fuentes,
+- [x] Brief a Figma Make escrito desde el DISEÑO (layout, hex, fuentes,
       estados honestos, restricciones al modelo). Antonio modela; Claude
       lee por MCP
-- [ ] Salida del modelo = especificación + tokens DTCG, no código.
+- [x] Salida del modelo = especificación + tokens DTCG, no código.
       Componentes con estados: ficha, subrayado por familia, medidor,
       informe, cargador; vista de impresión incluida
 - [ ] Modelo VISTO y cerrado por Antonio
-- [ ] Logo: candidatos SVG, Antonio elige, `PROCEDENCIA.md`, favicon
+- [x] Logo: candidatos SVG, Antonio elige, `PROCEDENCIA.md`, favicon
       cableado
 - [ ] Calco por tandas al Astro existente, cada una vista en Chrome
 - [ ] Contraste AA verificado con acta. **PUNTO 10 CERRADO**
