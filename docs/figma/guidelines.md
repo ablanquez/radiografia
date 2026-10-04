@@ -8,7 +8,8 @@ prompt conflicts with this file, follow this file and say so.
 A static web app in Spanish (Spain) that analyses a pasted text and shows
 whether it *sounds like* an AI assistant, and why. It never claims
 authorship. Three screens (analyser, rules catalogue, rule page) plus a
-print layout. Desktop and mobile with equal weight. Language of every UI
+print layout. Three sizes with equal weight: desktop (1280 px), tablet
+(820 px) and mobile (390 px). Language of every UI
 string: **Spanish**, exactly as given in the prompts; never translate or
 rephrase them.
 
@@ -20,16 +21,24 @@ rephrase them.
 2. **Colour is never the only cue.** Every highlighted span has its own
    underline style and a 1–2 letter tag; every card names the category in
    words.
-3. **Underlines, not background fills,** for highlighted spans. Thin
-   (2–3 px), offset below the baseline, body text stays readable.
+3. **Highlighted spans look like a soft highlighter plus an underline.**
+   Background: color-mix(in srgb, <category colour> 14%, white), 2 px
+   radius; text stays `ink`. Underline: thin (2–3 px), the category's
+   style and colour, offset below the baseline. The tint is what you see;
+   the line style and the tag are what tells categories apart (overlaps,
+   colour-blind readers, print). Never a strong fill that lowers text
+   contrast; never fill without the line.
 4. **Contrast:** text ≥ 4.5:1, underlines and UI parts ≥ 3:1 on their
    background. Use only the tokens below.
-5. **Keyboard and focus:** everything clickable is a real button or link;
-   visible focus ring (2 px, accent, 2 px offset); dialogs trap focus,
-   close with Escape and return focus to the span that opened them. A
-   highlighted span is a `<button>` with an accessible name («Conector
-   repetido: “Además”»); the mobile sheet is a modal dialog and must not
-   cover the active span.
+5. **Keyboard and focus:** everything clickable is a real button or link,
+   with one exception: a highlighted span inside running text is a
+   `<span role="button" tabindex="0">` that handles Enter and Space,
+   because browsers force `<button>` to inline-block and it would not wrap
+   with the sentence. Visible focus ring (2 px, accent, 2 px offset);
+   dialogs trap focus, close with Escape and return focus to the span
+   that opened them. The span has an accessible name («Conector repetido:
+   “Además”»); the mobile sheet is a modal dialog and must not cover the
+   active span.
 6. **Touch targets:** buttons ≥ 44 × 44 px; inline spans are exempt.
 7. **No horizontal scroll at 320 px.** Mobile is a first-class layout.
 8. Do not invent features, data, charts, animations or dark mode. Build

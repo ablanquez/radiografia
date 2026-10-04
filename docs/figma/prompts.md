@@ -20,22 +20,21 @@ Pasos en Figma (del DISEÑO y de la ayuda de Figma, 03/10/2026):
    `movil/…`. Ahí es donde Claude lee por MCP.
 8. Prompt 7: `tokens.json`.
 
-Las cadenas en «comillas» van tal cual; son el texto real de la web.
+Las cadenas en «comillas» van tal cual; son el texto real de la web. Cada
+pantalla se pide en tres tamaños: escritorio 1280 px, tableta 820 px
+(una columna con los componentes de escritorio) y móvil 390 px; cuando un
+prompt dice «Móvil:», la tableta es la versión de escritorio apilada en
+una columna salvo que se diga otra cosa.
 
 ---
 
 ## Prompt 0 (Plan mode)
 
-Vamos a construir el prototipo de RadiografIA, un analizador de estilo de
-texto en español. Lee guidelines.md. Quiero que planifiques, sin escribir
-código todavía, estas pantallas, cada una en escritorio (1280 px) y móvil
-(390 px): (1) analizador antes de analizar; (2) analizador con resultado;
-(3) tarjeta de regla al tocar un tramo (escritorio) y hoja inferior
-(móvil); (4) catálogo de reglas; (5) ficha de una regla; (6) vista de
-impresión del informe. Todo con datos de ejemplo estáticos que te daré en
-cada prompt. Sin backend. Confirma los tokens y las reglas de
-guidelines.md en el plan y dime qué componentes reutilizarás entre
-pantallas.
+(El que se envió el 04/10, con los tres tamaños; está en la conversación
+de estrategia. Resumen: planificar las seis pantallas en 1280/820/390,
+escritorio → tableta → móvil, sin código, con las reglas de guidelines.md
+que se entregan después, componentes reutilizables y nombres de capas en
+español.)
 
 ## Prompt 1 — Analizador, antes de analizar (escritorio y móvil)
 

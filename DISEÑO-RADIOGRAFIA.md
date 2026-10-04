@@ -102,7 +102,12 @@ que es otro paquete.
 
 Reglas: el tono **nunca** va solo (1.4.1): cada tramo lleva estilo de
 línea propio y, en papel y al tocar, su sigla; cada tarjeta lleva el
-nombre en texto. Los dos de menor contraste (Puntuación 3,42 y
+nombre en texto. **Cambio de Antonio (04/10, al ver el modelo)**: el
+subrayado solo le parece poco visible; el tramo lleva además un **fondo
+suave tipo rotulador** (color-mix 14 % del color de la familia sobre
+blanco; la tinta sigue siendo ink, contraste > 12:1) y la línea con su
+estilo debajo. El fondo es lo que se ve; la línea y la sigla son lo que
+distingue (solapes, daltonismo, papel). En papel el fondo no cuenta. Los dos de menor contraste (Puntuación 3,42 y
 Ortotipografía 3,66) no se usan como texto, solo como línea. Paquetes
 propios: el color del hueco libre o el gris, siempre discontinuo (8.1).
 Pendiente antes de fijar: pasar la paleta por un simulador de daltonismo
