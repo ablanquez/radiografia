@@ -14,7 +14,7 @@
 
 ---
 
-## [2026-10-04] 🔴 ABIERTA — La hoja inferior del móvil sale estrecha si la tarjeta se abrió antes en escritorio
+## [2026-10-04] ✅ CERRADA — La hoja inferior del móvil sale estrecha si la tarjeta se abrió antes en escritorio
 
 **Categoría:** interfaz del analizador (calco 10.4, Tanda 2)
 **Síntoma:** abierta la tarjeta de regla a 1280 y cerrada, al estrechar la ventana a 390 y tocar un tramo, la hoja inferior mide 229 px de ancho en vez de los 390 de la pantalla (el asa, 229; «Siguiente», 197 en vez de 358). Commiteado en `76ef465` (web(hoja)), vivo en `51aadab`.
@@ -22,10 +22,11 @@
 `$ node --test --test-concurrency=1 --test-timeout=120000 jueces/hoja.spec.ts`
 `✔ 1 · tocar un tramo abre la hoja: modal, con nombre y el foco en el título, abajo, a todo el ancho y como mucho al 60 %; lo demás, inerte (5231.7985ms)` … `ℹ tests 6` `ℹ pass 6` `ℹ fail 0`
 **Cómo se cazó:** test (el juez de fidelidad ampliado, `fidelidad.spec.ts`, juez 7, sin commitear: «'movil.hoja · ancho: web 229.109375, modelo 390', 'movil.hoja.asa · ancho: web 229.109375, modelo 390', 'movil.hoja.siguiente · ancho: web 197.109375, modelo 358'»)
-**Causa raíz:** ⏳ PENDIENTE
-**Arreglo aplicado:** ⏳ PENDIENTE
-**Commit:** ⏳ PENDIENTE
+**Causa raíz:** la tarjeta tiene dos modos con el mismo elemento: anclada (recolocar le pone `style.top` y `style.left` en línea) y hoja (`.tarjeta-regla.hoja { left: 0; right: 0; bottom: 0 }`). Al abrirla como hoja, el estilo en línea que dejó el modo anclado le ganaba a la clase: 161 px a la izquierda y el top de la página. El juez de la hoja mentía porque su sesión arranca a 390 y abre la hoja sin haber anclado nunca la tarjeta: el estado que causa el fallo no existía en su recorrido.
+**Arreglo aplicado:** `web/src/pantalla/tarjeta.ts`, abrirHoja (líneas 179-180): quita `top` y `left` en línea antes de ponerse la clase hoja. `web/jueces/hoja.spec.ts`, juez 7 (línea 167): abre la tarjeta a 1280, la cierra, pasa a 390 y exige la hoja abajo y a todo el ancho; rojo con el fallo vivo («[862, 161, 229]» frente a «[844, 0, 390]»), verde con el arreglo, contraprueba en rojo. Verificado en clon limpio de `477d879` (suite web: «ℹ tests 173 · ℹ pass 173 · ℹ fail 0»).
+**Commit:** `477d879`
 **Ley que sale de aquí:** SIN LEY TODAVÍA
+Al cerrar: un componente con dos modos se juzga también pasando de uno a otro con el estado que deja el primero, no solo arrancando en cada uno.
 **Traza:** `web/src/pantalla/tarjeta.ts` (crearTarjeta: recolocar, abrirHoja); `web/src/estilos/tarjeta.css` (`.tarjeta-regla.hoja`); `web/jueces/hoja.spec.ts` (juez 1).
 
 ## [2026-10-02] ✅ CERRADA — El aviso MIT de Ajv no viaja en el build de Astro: Vite 8 tira los comentarios legales al minificar
