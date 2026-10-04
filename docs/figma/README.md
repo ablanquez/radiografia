@@ -24,6 +24,16 @@ la web real es `web/` (Astro). Esto es la fuente del calco (10.4).
   `$extensions` (`com.github.ablanquez.radiografia`, §5.2.3). El
   `$type: "string"` del estilo de línea de cada familia, que venía de
   Make, no es un tipo de la especificación; se deja como estaba.
+- `medidas-modelo.json` — las medidas del prototipo publicado (fuente,
+  tamaño, interlineado, colores calculados, bordes, radios, rellenos y
+  cajas de cada pieza, en sus tres tamaños), tomadas por CDP con
+  `web/scripts/medir-modelo.ts`. Las lee `web/jueces/fidelidad.spec.ts`
+  (±1 px; ±0,01 en proporciones); los jueces no salen a Internet. Se
+  regenera a mano cuando cambia el modelo o entran piezas en el calco.
+- `fuentes.md` y `subconjunto-unicode.txt` — la ficha de las fuentes
+  autoalojadas (origen, versiones, huellas, Reserved Font Name, comandos y
+  cifras de la decisión) y la lista de caracteres del recorte (10.4,
+  Tanda 1).
 - `icono/` — `icono-a.svg` (favicon, manifiesto, apple-touch) e
   `icono-c.svg` (cabecera y portada), elegidos por Antonio; `PROCEDENCIA.md`.
 - `modelo-make.zip` — el código que generó Make (React + Tailwind v4, 62
