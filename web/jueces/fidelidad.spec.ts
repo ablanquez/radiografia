@@ -51,7 +51,8 @@ const ESCRITORIO: readonly Caso[] = [
   { clave: 'escritorio.cabecera.enlace', selector: '.cabecera nav a', propiedades: [...TIPO, 'decoracion', 'alto', 'texto'] },
   { clave: 'escritorio.pie', selector: '.pie', propiedades: [...TIPO, 'bordeArriba', 'relleno', 'texto'] },
   { clave: 'escritorio.boton.principal', selector: '#analizar', propiedades: [...BOTON, 'texto'] },
-  { clave: 'escritorio.boton.secundario', selector: '#ejemplo-humano', propiedades: BOTON },
+  // Desde el 10.4 (Tanda 2) los ejemplos son chips: el secundario es el cargador, como en el modelo (que lo mide con «Paquetes» abierto).
+  { clave: 'escritorio.boton.secundario', selector: 'label[for="paquete-propio"]', propiedades: BOTON },
   { clave: 'escritorio.cuadro', selector: '#texto', propiedades: [...TIPO, 'fondo', 'bordeArriba', 'radio', 'relleno'] },
   { clave: 'escritorio.cuadro.etiqueta', selector: 'label[for="texto"]', propiedades: [...TIPO, 'texto'] },
   { clave: 'escritorio.columna-texto', selector: '#formulario', propiedades: ['ancho'] },
@@ -143,7 +144,10 @@ describe('la fidelidad al modelo, sobre astro preview', () => {
 
   test('2 · a 1280, cada pieza como en el modelo', async () => {
     await anchoDe(1280);
-    assert.deepEqual(await juzgar(ESCRITORIO), []);
+    await (await p()).evaluar(`document.getElementById('paquetes').open = true`);
+    const diferentes = await juzgar(ESCRITORIO);
+    await (await p()).evaluar(`document.getElementById('paquetes').open = false`);
+    assert.deepEqual(diferentes, []);
   });
 
   test('3 · la vista del texto, ya analizado, como la del modelo', async () => {

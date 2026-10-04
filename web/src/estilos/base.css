@@ -155,6 +155,23 @@ input[type='checkbox'] {
   accent-color: var(--color-accent);
 }
 
+/*
+ * Lo que solo es para el lector de pantalla (10.4, Tanda 2): fuera de la vista,
+ * pero en el árbol de accesibilidad.
+ * [DOC] https://webaim.org/techniques/css/invisiblecontent/ — la clase
+ *    «.sr-only» (position: absolute, left: -10000px, 1 × 1 px, overflow:
+ *    hidden); display: none y visibility: hidden, no, porque el contenido
+ *    «is ignored by screen readers».
+ */
+.solo-lector {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 /* Las tarjetas (DISEÑO §7): fondo card, borde line, radio de tarjeta. */
 .tarjeta {
   border: 1px solid var(--color-line);

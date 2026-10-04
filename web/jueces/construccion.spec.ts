@@ -53,13 +53,15 @@ import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { EJEMPLOS } from '../src/pantalla/ejemplos.ts';
+import * as textos from '../src/textos.ts';
 import { conPreview, construir, decodificar, DIST, motorDelNavegador, PAQUETES, PAQUETES_DE_PRUEBA } from './apoyo.ts';
 
 const PUBLICOS = new URL('../public/ejemplos/', import.meta.url);
 
 const BOTON = 'Pon tu texto a contraluz';
 const NOTA = 'RadiografIA analiza estilo; no demuestra autoría.';
-const BOTONES_DE_EJEMPLO = ['Cargar ejemplo: texto humano', 'Cargar ejemplo: texto de IA'];
+/** Desde el 10.4 (Tanda 2), los chips del modelo, con la misma función (formulario.spec.ts). */
+const BOTONES_DE_EJEMPLO = [textos.TEXTO_HUMANO, textos.TEXTO_DE_IA];
 const PROCEDENCIA = 'El texto humano lo escribió Antonio; el de IA lo generó Claude Opus 5.5, sin instrucciones de estilo.';
 
 /** Los .js de dist/, a cualquier profundidad, con su ruta relativa y su texto. */

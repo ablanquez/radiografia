@@ -72,6 +72,14 @@ export const SIN_INFORME = 'No hay análisis que imprimir: pega un texto y pulsa
 // Los textos de ejemplo (ejemplos.ts).
 export const ejemploNoCargado = (url: string, motivo: string): string => `No se ha podido cargar el ejemplo ${url}: ${motivo}.`;
 
+// El formulario como el modelo (encargo 10.4, Tanda 2; DISEÑO §6.1): el placeholder dice el mínimo (el del DISEÑO,
+// literal), los chips de los ejemplos sustituyen a los botones «Cargar ejemplo: …» con la misma función, y el selector
+// se llama «Tipo de texto», con la misma lista y el mismo orden.
+export const PLACEHOLDER_DEL_TEXTO = 'Pega aquí tu texto: a partir de 100 palabras; el análisis es completo desde 300';
+export const TEXTO_HUMANO = 'Texto humano';
+export const TEXTO_DE_IA = 'Texto de IA';
+export const TIPO_DE_TEXTO = 'Tipo de texto';
+
 // Los géneros del selector (generos.ts). [PROPIO, firmado en el encargo 6.2]
 export const NOMBRES_DE_GENERO: Readonly<Record<string, string>> = {
   general: 'General',

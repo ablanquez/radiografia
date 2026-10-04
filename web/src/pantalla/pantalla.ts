@@ -47,6 +47,11 @@
  *      — dateStyle y timeStyle, «long» y «short»; la zona horaria, «the
  *      runtime's time zone».
  *
+ * Desde el 10.4 (Tanda 2; DISEÑO §6.1), el formulario es el del modelo: los
+ * ejemplos son chips y el cargador va dentro de «Paquetes», plegado, con su
+ * etiqueta como botón (estilos/formulario.css). La línea de paquetes cargados
+ * se queda para el lector de pantalla (.solo-lector); si la carga falla, se ve.
+ *
  * Sin red salvo los fetch de los paquetes incluidos y de los ejemplos: el
  * paquete propio se lee del fichero, en el navegador (lo demuestra
  * jueces/navegador.spec.ts). Sin librerías de UI. Las cadenas de la interfaz,
@@ -275,6 +280,7 @@ if (carga.paquetes === null) {
     });
   }
   estado.textContent = textos.paquetesCargados(incluidos.map((p) => `${p.cabecera.nombre} ${p.cabecera.version}`));
+  estado.classList.add('solo-lector');
   formulario.addEventListener('submit', (e) => {
     e.preventDefault();
     analizarYPintar(losActivos(), indice, vozDe);

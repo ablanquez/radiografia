@@ -96,7 +96,9 @@ describe('la base de la interfaz en Chrome, sobre astro preview', () => {
     const informe = await estilo('#informe');
     assert.equal(await pestana.evaluar(`document.getElementById('informe').disabled`), true, '«Descargar informe», desactivado antes de analizar');
     assert.deepEqual([informe.fondo, informe.borde, informe.color, informe.cursor], [CARD, `1px dashed ${LINEA}`, TINTA_2, 'not-allowed'], 'secundario desactivado');
-    const activo = await estilo('#ejemplo-humano');
+    // Desde el 10.4 (Tanda 2) los ejemplos son chips: el secundario activo es el cargador, dentro de «Paquetes».
+    await pestana.evaluar(`document.getElementById('paquetes').open = true`);
+    const activo = await estilo('label[for="paquete-propio"]');
     assert.deepEqual([activo.fondo, activo.borde, activo.color, activo.cursor], [BLANCO, `1px solid ${TINTA_2}`, TINTA, 'pointer'], 'secundario activo');
     // Sin paquetes activos, el principal se desactiva (8.1): pierde el índigo.
     await pestana.evaluar(`document.querySelectorAll('#incluidos input[type=checkbox]').forEach((c) => { c.checked = false; c.dispatchEvent(new Event('change', { bubbles: true })); })`);
@@ -111,9 +113,10 @@ describe('la base de la interfaz en Chrome, sobre astro preview', () => {
     const principal = await estilo('#analizar');
     assert.deepEqual([principal.fondo, principal.color, principal.borde, principal.radio, principal.peso], [ACENTO, BLANCO, `1px solid ${ACENTO}`, '6px', '700'], 'el principal');
     assert.ok(principal.altura >= 44, `el principal mide ${principal.altura} de alto`);
-    const secundario = await estilo('#ejemplo-humano');
+    const secundario = await estilo('label[for="paquete-propio"]');
     assert.deepEqual([secundario.radio, secundario.peso, secundario.relleno], ['6px', '700', '0px 20px'], 'un secundario');
     assert.ok(secundario.altura >= 44, `el secundario mide ${secundario.altura} de alto`);
+    await (await p()).evaluar(`document.getElementById('paquetes').open = false`);
   });
 
   test('4 · el foco con el teclado: anillo de 2 px en el acento, a 2 px', async () => {

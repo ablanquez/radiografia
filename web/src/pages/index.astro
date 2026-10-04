@@ -26,7 +26,13 @@
  *    newline characters […] and as necessary to fill line boxes»: la vista
  *    respeta los saltos del texto.
  * Los botones de los ejemplos (encargo 6.3, a) son type="button": cargan el
- *    texto y no envían el formulario, es decir, no analizan.
+ *    texto y no envían el formulario, es decir, no analizan. Desde el 10.4
+ *    (Tanda 2), son los chips del modelo, «Texto humano» y «Texto de IA», con
+ *    la misma función.
+ * El formulario, desde el 10.4 (Tanda 2; DISEÑO §6.1 y §6.2): el del modelo,
+ *    con el placeholder del DISEÑO, el selector «Tipo de texto» (misma lista
+ *    y mismo orden), «Paquetes» plegado y los botones; las cadenas nuevas, en
+ *    textos.ts, y los estilos, en estilos/formulario.css.
  *    [DOC] https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/button
  *    — type «button: The button has no default behavior».
  * El enlace de la cabecera lleva al catálogo de reglas (encargo 7.1, b), con
@@ -38,6 +44,11 @@
  *    lista de propios y sus errores. Agrupado en un <fieldset> con su <legend>.
  *    [DOC] https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/fieldset
  *    — «used to group several controls as well as labels».
+ *    Desde el 10.4 (Tanda 2), dentro de un <details> plegado, como el modelo:
+ *    el <summary> «Paquetes» es lo que se ve y nombra el <fieldset>
+ *    (aria-labelledby), que ya no lleva <legend> para no repetirlo.
+ *    [DOC] https://www.w3.org/TR/wai-aria-1.2/#aria-labelledby — «Identifies
+ *    the element (or elements) that labels the current element».
  *    [DOC] https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/file
  *    — el input con su <label for>; accept «provides hints for browsers to
  *    guide users towards selecting the correct file types» y no valida nada
@@ -101,7 +112,7 @@
  *    «there isn't any guarantee that print-color-adjust will do anything».
  */
 import { urlDelCatalogo } from '../catalogo/catalogo.ts';
-import { CATALOGO, CATALOGO_CORTO, DESCARGAR_INFORME, NOTA_DE_AUTORIA, SIN_INFORME } from '../textos.ts';
+import { CATALOGO, CATALOGO_CORTO, DESCARGAR_INFORME, NOTA_DE_AUTORIA, PLACEHOLDER_DEL_TEXTO, SIN_INFORME, TEXTO_DE_IA, TEXTO_HUMANO, TIPO_DE_TEXTO } from '../textos.ts';
 import Cabecera from '../componentes/Cabecera.astro';
 import Pie from '../componentes/Pie.astro';
 import Recursos from '../componentes/Recursos.astro';
@@ -110,6 +121,7 @@ import '../estilos/fuentes.css';
 import '../estilos/base.css';
 import '../estilos/marco.css';
 import '../estilos/familias.css';
+import '../estilos/formulario.css';
 
 const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
 ---
@@ -124,31 +136,43 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
   <body>
     <Cabecera enlace={{ href: catalogo, texto: CATALOGO, corto: CATALOGO_CORTO }} nombreEnH1 />
     <main>
-      <form id="formulario">
-        <p id="estado" role="status">Cargando los paquetes de reglas…</p>
+      <form id="formulario" class="formulario">
+        <p id="estado" class="secundario" role="status">Cargando los paquetes de reglas…</p>
         <div id="problemas" class="problemas" role="alert" hidden></div>
-        <label for="texto">Tu texto</label>
-        <textarea id="texto" rows="12" placeholder="Pega aquí un texto en español."></textarea>
-        <div class="ejemplos">
-          <button id="ejemplo-humano" type="button" disabled>Cargar ejemplo: texto humano</button>
-          <button id="ejemplo-ia" type="button" disabled>Cargar ejemplo: texto de IA</button>
+        <div class="campo">
+          <label for="texto">Tu texto</label>
+          <textarea id="texto" rows="12" placeholder={PLACEHOLDER_DEL_TEXTO}></textarea>
         </div>
-        <p class="procedencia secundario">El texto humano lo escribió Antonio; el de IA lo generó Claude Opus 5.5, sin instrucciones de estilo.</p>
-        <p id="estado-ejemplo" role="status"></p>
-        <label for="genero">Género del texto</label>
-        <select id="genero" disabled></select>
-        <fieldset id="paquetes" class="tarjeta">
-          <legend>Paquetes</legend>
-          <div id="incluidos"></div>
-          <label for="paquete-propio">Cargar un paquete propio (JSON)</label>
-          <input id="paquete-propio" type="file" accept="application/json,.json" disabled />
-          <p class="aviso-propio secundario">Se queda en tu navegador: no se sube a ningún sitio. No se guarda: al recargar la página, desaparece.</p>
-          <ul id="propios" hidden></ul>
-          <p id="estado-propio" role="status"></p>
-          <div id="errores-propio" class="problemas" role="alert" hidden></div>
-        </fieldset>
-        <button id="analizar" class="boton-principal" type="submit" disabled>Pon tu texto a contraluz</button>
-        <button id="informe" type="button" disabled>{DESCARGAR_INFORME}</button>
+        <div class="ejemplos">
+          <div class="chips">
+            <button id="ejemplo-humano" class="chip" type="button" disabled>{TEXTO_HUMANO}</button>
+            <button id="ejemplo-ia" class="chip" type="button" disabled>{TEXTO_DE_IA}</button>
+          </div>
+          <p class="procedencia secundario">El texto humano lo escribió Antonio; el de IA lo generó Claude Opus 5.5, sin instrucciones de estilo.</p>
+          <p id="estado-ejemplo" role="status"></p>
+        </div>
+        <div class="campo">
+          <label for="genero">{TIPO_DE_TEXTO}</label>
+          <select id="genero" disabled></select>
+        </div>
+        <details id="paquetes" class="paquetes">
+          <summary id="resumen-paquetes">Paquetes</summary>
+          <fieldset aria-labelledby="resumen-paquetes">
+            <div id="incluidos"></div>
+            <div class="cargador">
+              <input id="paquete-propio" class="fichero" type="file" accept="application/json,.json" disabled />
+              <label for="paquete-propio" class="boton-fichero">Cargar un paquete propio (JSON)</label>
+            </div>
+            <ul id="propios" hidden></ul>
+            <p id="estado-propio" role="status"></p>
+            <div id="errores-propio" class="problemas" role="alert" hidden></div>
+            <p class="aviso-propio secundario">Se queda en tu navegador: no se sube a ningún sitio. No se guarda: al recargar la página, desaparece.</p>
+          </fieldset>
+        </details>
+        <div class="acciones-formulario">
+          <button id="analizar" class="boton-principal" type="submit" disabled>Pon tu texto a contraluz</button>
+          <button id="informe" type="button" disabled>{DESCARGAR_INFORME}</button>
+        </div>
         <p id="aviso-paquetes" role="status"></p>
       </form>
       <section id="resultado" aria-labelledby="titulo-resultado" hidden>
@@ -174,36 +198,8 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
       #resultado {
         max-width: var(--medida-columna-texto);
       }
-      label {
-        display: block;
-        margin-top: 1rem;
-      }
-      fieldset {
-        margin-top: 1rem;
-        padding: var(--espacio-16);
-      }
-      label.casilla {
-        display: inline-block;
-        margin: 0 1rem 0 0;
-        font-weight: normal;
-      }
-      #propios button {
-        display: inline-block;
-        margin-top: 0;
-      }
       pre.ejemplo {
         white-space: pre-wrap;
-      }
-      button {
-        display: block;
-        margin-top: 1rem;
-      }
-      .ejemplos button {
-        display: inline-block;
-        margin-right: 0.5rem;
-      }
-      .procedencia {
-        margin-bottom: 0;
       }
       .problemas {
         color: var(--color-ink);

@@ -1,0 +1,187 @@
+/*
+ * El formulario del analizador (encargo 10.4, Tanda 2; DISEÑO §6.1 y §6.2),
+ * como en el modelo (FormularioAnalisis, medido por CDP el 04/10): el cuadro
+ * con su etiqueta, los chips de los ejemplos con de quién es cada texto, el
+ * selector «Tipo de texto», «Paquetes» plegado (casillas, cargador y aviso) y
+ * los botones. Huecos de 24 entre bloques y de 8 dentro de cada uno; chips de
+ * 44 de alto, redondos, con borde ink-2 y separados 12; el selector, de 320
+ * de ancho (w-80 del modelo; en el móvil, a todo el ancho); «Paquetes» sobre
+ * card, con borde line y radio 8, el resumen de 44 en negrita y el contenido
+ * a 16 de los bordes, con 12 entre piezas; los botones, a 16 (en el móvil,
+ * uno debajo de otro a 12 y a todo el ancho). En el móvil los botones van
+ * antes de «Paquetes» (DISEÑO §6.2); el orden del documento es el del
+ * escritorio, y el móvil lo cambia con order (dos bloques vecinos).
+ * Solo variables de tokens.css.
+ *
+ * Una región viva vacía (los avisos de estado, role="status" o "alert") sale
+ * del flujo para no dejar un hueco de 24: sigue en el árbol de accesibilidad,
+ * que es lo que necesita para anunciar lo que entre en ella.
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/order
+ *    — «sets the order to lay out an item in a flex or grid container»; y
+ *    avisa: «will create a disconnect between the visual presentation of
+ *    content and DOM order». El foco y el lector siguen el documento: en el
+ *    móvil, «Paquetes» se recorre antes que los botones aunque se vea
+ *    después (un solo DOM no puede llevar los dos órdenes; dicho en el
+ *    reporte de la parada 2).
+ */
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-24);
+}
+
+.formulario p {
+  margin: 0;
+}
+
+.formulario :is([role='status'], [role='alert']):empty {
+  position: absolute;
+}
+
+.campo,
+.ejemplos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-8);
+}
+
+.campo textarea {
+  resize: vertical;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-12);
+}
+
+.chip {
+  border-radius: var(--radio-redondo);
+  font-weight: 400;
+}
+
+.chip:not(:disabled):hover,
+.paquetes button:not(:disabled):hover,
+#informe:not(:disabled):hover {
+  background: var(--color-card);
+}
+
+#genero {
+  width: 320px;
+  max-width: 100%;
+}
+
+.paquetes {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radio-tarjeta);
+  background: var(--color-card);
+}
+
+.paquetes summary {
+  display: flex;
+  align-items: center;
+  min-height: var(--medida-toque);
+  padding: 0 var(--espacio-16);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.paquetes fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-12);
+  min-width: 0;
+  margin: 0;
+  padding: 0 var(--espacio-16) var(--espacio-16);
+  border: 0;
+}
+
+.paquetes ul {
+  margin: 0;
+  padding-left: var(--espacio-20);
+}
+
+/*
+ * El cargador: la etiqueta del <input type="file"> hace de botón secundario
+ * (el del modelo) y el input, transparente, sigue siendo el que recibe el foco
+ * y lee el fichero; el anillo de foco, en la etiqueta.
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/file
+ *    — «You can activate the input element by clicking its <label>, so it is
+ *    better to visually hide the input and style the label like a button»; y
+ *    «opacity is used to hide the file input instead of visibility: hidden or
+ *    display: none, because assistive technology interprets the latter two
+ *    styles to mean the file input isn't interactive».
+ */
+.cargador {
+  position: relative;
+}
+
+.fichero {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.boton-fichero {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: var(--medida-toque);
+  padding: 0 var(--espacio-20);
+  border: 1px solid var(--color-ink-2);
+  border-radius: var(--radio-boton);
+  background: var(--color-bg);
+  cursor: pointer;
+}
+
+.fichero:not(:disabled) + .boton-fichero:hover {
+  background: var(--color-card);
+}
+
+.fichero:focus-visible + .boton-fichero {
+  outline: var(--foco-grosor) solid var(--foco-color);
+  outline-offset: var(--foco-desplazamiento);
+}
+
+.fichero:disabled + .boton-fichero {
+  border-style: dashed;
+  border-color: var(--color-line);
+  background: var(--color-card);
+  color: var(--color-ink-2);
+  cursor: not-allowed;
+}
+
+label.casilla {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-12);
+  min-height: var(--medida-toque);
+  font-weight: 400;
+}
+
+.acciones-formulario {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-16);
+}
+
+@media (max-width: 768px) {
+  #genero {
+    width: 100%;
+  }
+
+  .paquetes {
+    order: 1;
+  }
+
+  .acciones-formulario {
+    flex-direction: column;
+    gap: var(--espacio-12);
+  }
+
+  .acciones-formulario button {
+    width: 100%;
+  }
+}
