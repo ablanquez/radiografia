@@ -2531,6 +2531,11 @@
       "nota": "Del DISEÑO, no del prototipo (el modelo no tiene icono en la cabecera): el icono (c) a 48 px en la cabecera compacta del móvil; corregido por Antonio al verlo pequeño a 32 en su iPhone (04/10, cb89407).",
       "ancho": 48,
       "alto": 48
+    },
+    "escritorio.vista.parrafos": {
+      "origen": "DISEÑO-RADIOGRAFIA.md §5",
+      "nota": "Del DISEÑO, no del prototipo (el modelo separaba los párrafos de la vista con 16 px): la vista respeta los saltos del texto (white-space: pre-wrap) y una línea en blanco entre párrafos mide un renglón de Literata 18 a 1,5, 27 px; es la legibilidad del DISEÑO, decidido por Antonio en la parada 2 de la Tanda 2 (04/10).",
+      "separacionDeParrafos": 27
     }
   }
 }

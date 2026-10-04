@@ -24,7 +24,10 @@
  *   1. El fichero de medidas es del prototipo y trae cada pieza que se juzga;
  *      la que no sale del prototipo dice de qué apartado del DISEÑO sale.
  *   2. A 1280 (escritorio), cada pieza como en el modelo.
- *   3. La vista del texto, ya analizado, como la del modelo.
+ *   3. La vista del texto, ya analizado, como la del modelo; y desde la
+ *      Tanda 3, la separación de sus párrafos, que viene del DISEÑO (§5; una
+ *      línea en blanco, 27 px; decisión de Antonio en la parada 2: el modelo
+ *      la tenía en 16), medida con el texto humano, que los separa así.
  *   4. A 820 (tableta) y a 390 (móvil), lo que cambia con el tamaño: los
  *      márgenes, la cabecera compacta y el botón principal.
  *   5. El resultado de combinacion-real a 1280, pieza a pieza.
@@ -70,6 +73,7 @@ type Propiedad =
   | 'alto'
   | 'altoMaximo'
   | 'desdeElMarco'
+  | 'separacionDeParrafos'
   | 'texto';
 type Medida = Partial<Record<Propiedad, unknown>>;
 interface Caso {
@@ -104,6 +108,8 @@ const ESCRITORIO: readonly Caso[] = [
   { clave: 'escritorio.hueco.texto', selector: '#hueco-resultado', propiedades: ['color', 'tamano', 'texto'] },
 ];
 const VISTA: Caso = { clave: 'escritorio.vista', selector: '#vista', propiedades: [...TIPO, 'ancho'] };
+/** Tanda 3: la separación de los párrafos de la vista, la del DISEÑO (una línea en blanco), con el texto humano, que los separa así. */
+const VISTA_PARRAFOS: Caso = { clave: 'escritorio.vista.parrafos', selector: '#vista', propiedades: ['separacionDeParrafos'] };
 const CAPA: readonly Propiedad[] = ['familia', 'tamano', 'fondo', 'decoracion', 'decoEstilo', 'decoGrosor', 'decoColor', 'decoDesplazamiento', 'radio'];
 const LEXICO = '.tarjeta-familia[data-familia="RadiografIA::lexico"]';
 /** Tanda 2: el resultado de combinacion-real a 1280 (el texto del modelo: sus mismas reglas, familias y cifras). */
@@ -201,7 +207,7 @@ function diferencias(caso: Caso, web: Medida, modelo: Medida): string[] {
     let igual: boolean;
     if (p === 'interletrado') igual = Math.abs(px(a) / px(web.tamano) - px(b) / px(modelo.tamano)) <= 0.01;
     else if (p === 'relleno') igual = (a as string[]).every((x, i) => Math.abs(px(x) - px((b as string[])[i])) <= 1);
-    else if (['tamano', 'interlineado', 'ancho', 'alto', 'desdeElMarco', 'radio', 'decoGrosor', 'decoDesplazamiento'].includes(p)) igual = Math.abs(px(a) - px(b)) <= 1;
+    else if (['tamano', 'interlineado', 'ancho', 'alto', 'desdeElMarco', 'radio', 'decoGrosor', 'decoDesplazamiento', 'separacionDeParrafos'].includes(p)) igual = Math.abs(px(a) - px(b)) <= 1;
     else if (['color', 'fondo', 'decoColor'].includes(p) && a !== b) {
       // Dos maneras de escribir el mismo color (rgb() y color(srgb …)): el mismo con un margen de una unidad por canal y 0,01 de alfa.
       const [ca, cb] = [canales(a), canales(b)];
@@ -245,6 +251,22 @@ describe('la fidelidad al modelo, sobre astro preview', () => {
         bordeArriba: borde('top'), bordeAbajo: borde('bottom'), bordeIzquierdo: borde('left'), radio: c.borderRadius, altoMaximo: c.maxHeight,
         relleno: [c.paddingTop, c.paddingRight, c.paddingBottom, c.paddingLeft],
         ancho: r.width, alto: r.height, desdeElMarco: r.left,
+        separacionDeParrafos: (() => {
+          // Dos párrafos separados por una línea en blanco, en un mismo trozo de texto que no sea una sigla (aria-hidden): del renglón
+          // del último carácter del primero al del primero del segundo, menos un renglón.
+          const w = document.createTreeWalker(e, NodeFilter.SHOW_TEXT);
+          for (let n = w.nextNode(); n !== null; n = w.nextNode()) {
+            if (n.parentElement.closest('[aria-hidden="true"]')) continue;
+            const k = n.data.indexOf('\\n\\n');
+            if (k < 0) continue;
+            const antes = n.data.slice(0, k).search(/\\S\\s*$/);
+            const despues = n.data.slice(k).search(/\\S/);
+            if (antes < 0 || despues < 0) continue;
+            const renglon = (i) => { const g = document.createRange(); g.setStart(n, i); g.setEnd(n, i + 1); return g.getBoundingClientRect().top; };
+            return renglon(k + despues) - renglon(antes) - parseFloat(c.lineHeight);
+          }
+          return null;
+        })(),
       };
     })()`);
   const juzgar = async (casos: readonly Caso[]): Promise<string[]> => {
@@ -257,7 +279,7 @@ describe('la fidelidad al modelo, sobre astro preview', () => {
   test('1 · el fichero de medidas es del prototipo y trae cada pieza que se juzga; la que no sale del prototipo dice de qué apartado del DISEÑO sale', () => {
     const json = JSON.parse(readFileSync(MEDIDAS, 'utf8')) as { url: string; medidas: Record<string, Record<string, unknown>> };
     assert.match(json.url, /^https:\/\/[\w-]+\.figma\.site\/$/, 'la URL del prototipo publicado');
-    const claves = [...ESCRITORIO, VISTA, ...TABLETA, ...MOVIL, ...RESULTADO, ...TARJETA, ...MOVIL_RESULTADO, ...HOJA].map((c) => c.clave);
+    const claves = [...ESCRITORIO, VISTA, VISTA_PARRAFOS, ...TABLETA, ...MOVIL, ...RESULTADO, ...TARJETA, ...MOVIL_RESULTADO, ...HOJA].map((c) => c.clave);
     assert.deepEqual(claves.filter((c) => !(c in json.medidas)), [], 'piezas que el fichero no trae');
     const sinProcedencia = Object.entries(json.medidas)
       .filter(([, m]) => ('origen' in m ? !/^DISEÑO-RADIOGRAFIA\.md §\d/.test(String(m.origen)) || typeof m.nota !== 'string' || !/no del prototipo/.test(m.nota) : typeof m.pantalla !== 'string' || typeof m.selector !== 'string'))
@@ -265,7 +287,7 @@ describe('la fidelidad al modelo, sobre astro preview', () => {
     assert.deepEqual(sinProcedencia, [], 'piezas sin pantalla y selector del prototipo, o sin apartado del DISEÑO y nota');
     assert.deepEqual(
       Object.keys(json.medidas).filter((c) => 'origen' in json.medidas[c]!),
-      ['escritorio.cabecera.icono', 'movil.cabecera.icono'],
+      ['escritorio.cabecera.icono', 'movil.cabecera.icono', 'escritorio.vista.parrafos'],
       'las piezas que vienen del DISEÑO y no del prototipo',
     );
   });
@@ -278,7 +300,7 @@ describe('la fidelidad al modelo, sobre astro preview', () => {
     assert.deepEqual(diferentes, []);
   });
 
-  test('3 · la vista del texto, ya analizado, como la del modelo', async () => {
+  test('3 · la vista del texto, ya analizado, como la del modelo; sus párrafos, separados como dice el DISEÑO', async () => {
     const pestana = await p();
     const texto = readFileSync(new URL('antonio.txt', EJEMPLOS_PUBLICOS), 'utf8');
     await pestana.evaluar(`(() => {
@@ -288,7 +310,7 @@ describe('la fidelidad al modelo, sobre astro preview', () => {
       document.getElementById('analizar').click();
     })()`);
     await pestana.hasta(`!document.getElementById('resultado').hidden`, 'el resultado');
-    assert.deepEqual(await juzgar([VISTA]), []);
+    assert.deepEqual(await juzgar([VISTA, VISTA_PARRAFOS]), []);
   });
 
   test('4 · a 820 y a 390, lo que cambia con el tamaño', async () => {

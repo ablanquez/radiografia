@@ -16,7 +16,9 @@
  * capas, la tarjeta de regla abierta, y en el móvil la pastilla compacta, las
  * pestañas y la hoja; y además de lo de antes, el estilo, el grosor, el color y
  * el desplazamiento de la línea, la alineación, el borde izquierdo y el alto
- * máximo.
+ * máximo. Desde la Tanda 3, entre las piezas del DISEÑO, la separación de los
+ * párrafos de la vista: una línea en blanco (decisión de Antonio en la parada
+ * 2; el modelo la tenía en 16).
  *
  * Cada pieza se mide en el marco de su tamaño (escritorio 1280, tableta 820,
  * móvil 390): el modelo pinta cada pantalla en un marco de ancho fijo
@@ -131,7 +133,7 @@ const PIEZAS: readonly { clave: string; pantalla: string; selector: string }[] =
  * ni selector, para que el juez de fidelidad las mida igual y nadie las tome
  * por medidas del prototipo.
  */
-const DEL_DISENO: Readonly<Record<string, { origen: string; nota: string; ancho: number; alto: number }>> = {
+const DEL_DISENO: Readonly<Record<string, { origen: string; nota: string } & Partial<Record<'ancho' | 'alto' | 'separacionDeParrafos', number>>>> = {
   'escritorio.cabecera.icono': {
     origen: 'DISEÑO-RADIOGRAFIA.md §8',
     nota: 'Del DISEÑO, no del prototipo (el modelo no tiene icono en la cabecera): el icono (c) a 56 px en escritorio, la altura del bloque nombre + eslogan; corregido por Antonio al ver la Tanda 1 (04/10, cb89407).',
@@ -143,6 +145,12 @@ const DEL_DISENO: Readonly<Record<string, { origen: string; nota: string; ancho:
     nota: 'Del DISEÑO, no del prototipo (el modelo no tiene icono en la cabecera): el icono (c) a 48 px en la cabecera compacta del móvil; corregido por Antonio al verlo pequeño a 32 en su iPhone (04/10, cb89407).',
     ancho: 48,
     alto: 48,
+  },
+  // La separación entre dos párrafos de la vista: lo que hay entre el renglón de arriba del segundo y el último del primero, menos un renglón.
+  'escritorio.vista.parrafos': {
+    origen: 'DISEÑO-RADIOGRAFIA.md §5',
+    nota: 'Del DISEÑO, no del prototipo (el modelo separaba los párrafos de la vista con 16 px): la vista respeta los saltos del texto (white-space: pre-wrap) y una línea en blanco entre párrafos mide un renglón de Literata 18 a 1,5, 27 px; es la legibilidad del DISEÑO, decidido por Antonio en la parada 2 de la Tanda 2 (04/10).',
+    separacionDeParrafos: 27,
   },
 };
 
