@@ -57,6 +57,27 @@ const PIEZAS: readonly { clave: string; pantalla: string; selector: string }[] =
   { clave: 'movil.boton.principal', pantalla: 'analizador-vacio/movil', selector: '[data-capa="boton-principal"]' },
 ];
 
+/**
+ * Las piezas que el modelo no tiene y fija el DISEÑO, que manda sobre él
+ * (encargo 10.4, método): se escriben con su apartado y su nota, sin pantalla
+ * ni selector, para que el juez de fidelidad las mida igual y nadie las tome
+ * por medidas del prototipo.
+ */
+const DEL_DISENO: Readonly<Record<string, { origen: string; nota: string; ancho: number; alto: number }>> = {
+  'escritorio.cabecera.icono': {
+    origen: 'DISEÑO-RADIOGRAFIA.md §8',
+    nota: 'Del DISEÑO, no del prototipo (el modelo no tiene icono en la cabecera): el icono (c) a 56 px en escritorio, la altura del bloque nombre + eslogan; corregido por Antonio al ver la Tanda 1 (04/10, cb89407).',
+    ancho: 56,
+    alto: 56,
+  },
+  'movil.cabecera.icono': {
+    origen: 'DISEÑO-RADIOGRAFIA.md §8',
+    nota: 'Del DISEÑO, no del prototipo (el modelo no tiene icono en la cabecera): el icono (c) a 48 px en la cabecera compacta del móvil; corregido por Antonio al verlo pequeño a 32 en su iPhone (04/10, cb89407).',
+    ancho: 48,
+    alto: 48,
+  },
+};
+
 const esperar = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
 const pestana = await abrirChrome();
 try {
@@ -104,10 +125,11 @@ try {
     };
     console.log(`${clave}: medido`);
   }
+  Object.assign(medidas, DEL_DISENO);
   const version = (await pestana.cdp('Browser.getVersion', {})) as { product: string };
   const json = {
     $descripcion:
-      'Medidas del modelo de Figma Make publicado (encargo 10.4), tomadas por CDP con web/scripts/medir-modelo.ts. Las lee web/jueces/fidelidad.spec.ts; se regeneran a mano cuando cambia el modelo. Longitudes en px CSS, colores como los da getComputedStyle.',
+      'Medidas del modelo de Figma Make publicado (encargo 10.4), tomadas por CDP con web/scripts/medir-modelo.ts. Las lee web/jueces/fidelidad.spec.ts; se regeneran a mano cuando cambia el modelo. Longitudes en px CSS, colores como los da getComputedStyle. Las piezas con «origen» no son del prototipo: las fija el DISEÑO, que manda, y su «nota» dice por qué.',
     url: URL_DEL_MODELO,
     fecha: new Date().toISOString().slice(0, 10),
     navegador: version.product,

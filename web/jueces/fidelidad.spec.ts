@@ -5,13 +5,16 @@
  * juez no sale a Internet). En esta tanda, las piezas que ya existen: la
  * cabecera, el pie, los botones, el cuadro de texto y su etiqueta, la columna
  * de texto, la vista del texto y los márgenes de la página en los tres
- * tamaños.
+ * tamaños. El icono (c) de la cabecera no está en el modelo: su medida viene
+ * del DISEÑO §8 (56 px en escritorio y 48 en móvil, corregida por Antonio al
+ * ver la Tanda 1) y el fichero la lleva con su origen y su nota.
  *
  * Tolerancia (encargo): ±1 px en las longitudes y ±0,01 en las proporciones
  * (el interletrado, en em); la familia, el peso, el estilo, el color, la
  * decoración y el texto, iguales.
  *
- *   1. El fichero de medidas es del prototipo y trae cada pieza que se juzga.
+ *   1. El fichero de medidas es del prototipo y trae cada pieza que se juzga;
+ *      la que no sale del prototipo dice de qué apartado del DISEÑO sale.
  *   2. A 1280 (escritorio), cada pieza como en el modelo.
  *   3. La vista del texto, ya analizado, como la del modelo.
  *   4. A 820 (tableta) y a 390 (móvil), lo que cambia con el tamaño: los
@@ -42,6 +45,7 @@ const BOTON: readonly Propiedad[] = [...TIPO, 'fondo', 'bordeArriba', 'radio', '
 const ESCRITORIO: readonly Caso[] = [
   { clave: 'escritorio.cabecera', selector: '.cabecera', propiedades: ['bordeAbajo', 'desdeElMarco'] },
   { clave: 'escritorio.cabecera.marca', selector: '.cabecera .marca', propiedades: ['relleno'] },
+  { clave: 'escritorio.cabecera.icono', selector: '.cabecera .icono-marca', propiedades: ['ancho', 'alto'] },
   { clave: 'escritorio.cabecera.nombre', selector: '.cabecera .nombre', propiedades: [...TIPO, 'interletrado', 'texto'] },
   { clave: 'escritorio.cabecera.eslogan', selector: '.cabecera .eslogan', propiedades: [...TIPO, 'estilo', 'texto'] },
   { clave: 'escritorio.cabecera.enlace', selector: '.cabecera nav a', propiedades: [...TIPO, 'decoracion', 'alto', 'texto'] },
@@ -57,6 +61,7 @@ const TABLETA: readonly Caso[] = [{ clave: 'tableta.cabecera', selector: '.cabec
 const MOVIL: readonly Caso[] = [
   { clave: 'movil.cabecera', selector: '.cabecera', propiedades: ['desdeElMarco', 'bordeAbajo'] },
   { clave: 'movil.cabecera.marca', selector: '.cabecera .marca', propiedades: ['relleno'] },
+  { clave: 'movil.cabecera.icono', selector: '.cabecera .icono-marca', propiedades: ['ancho', 'alto'] },
   { clave: 'movil.cabecera.nombre', selector: '.cabecera .nombre', propiedades: [...TIPO, 'interletrado'] },
   { clave: 'movil.cabecera.enlace', selector: '.cabecera nav a', propiedades: ['alto', 'texto'] },
   { clave: 'movil.boton.principal', selector: '#analizar', propiedades: ['alto'] },
@@ -120,11 +125,20 @@ describe('la fidelidad al modelo, sobre astro preview', () => {
     return salida;
   };
 
-  test('1 · el fichero de medidas es del prototipo y trae cada pieza que se juzga', () => {
-    const json = JSON.parse(readFileSync(MEDIDAS, 'utf8')) as { url: string; medidas: Record<string, Medida> };
+  test('1 · el fichero de medidas es del prototipo y trae cada pieza que se juzga; la que no sale del prototipo dice de qué apartado del DISEÑO sale', () => {
+    const json = JSON.parse(readFileSync(MEDIDAS, 'utf8')) as { url: string; medidas: Record<string, Record<string, unknown>> };
     assert.match(json.url, /^https:\/\/[\w-]+\.figma\.site\/$/, 'la URL del prototipo publicado');
-    const faltan = [...ESCRITORIO, VISTA, ...TABLETA, ...MOVIL].map((c) => c.clave).filter((c) => !(c in json.medidas));
-    assert.deepEqual(faltan, [], 'piezas que el fichero no trae');
+    const claves = [...ESCRITORIO, VISTA, ...TABLETA, ...MOVIL].map((c) => c.clave);
+    assert.deepEqual(claves.filter((c) => !(c in json.medidas)), [], 'piezas que el fichero no trae');
+    const sinProcedencia = Object.entries(json.medidas)
+      .filter(([, m]) => ('origen' in m ? !/^DISEÑO-RADIOGRAFIA\.md §\d/.test(String(m.origen)) || typeof m.nota !== 'string' || !/no del prototipo/.test(m.nota) : typeof m.pantalla !== 'string' || typeof m.selector !== 'string'))
+      .map(([clave]) => clave);
+    assert.deepEqual(sinProcedencia, [], 'piezas sin pantalla y selector del prototipo, o sin apartado del DISEÑO y nota');
+    assert.deepEqual(
+      Object.keys(json.medidas).filter((c) => 'origen' in json.medidas[c]!),
+      ['escritorio.cabecera.icono', 'movil.cabecera.icono'],
+      'las piezas que vienen del DISEÑO y no del prototipo',
+    );
   });
 
   test('2 · a 1280, cada pieza como en el modelo', async () => {

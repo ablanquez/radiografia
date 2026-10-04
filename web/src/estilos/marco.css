@@ -14,8 +14,11 @@
  * interletrado −0,025em (20/26 en móvil), eslogan en Literata itálica a 15 en
  * ink-2, enlace en negrita con 44 de alto, 20 px arriba y abajo (12 en
  * móvil), línea line debajo; pie a 15 en ink-2 con línea line encima.
- * El icono (c), 40 px a 12 del nombre y 32 en móvil (DISEÑO §8, 04/10); el
- * modelo no lo tenía.
+ * El icono (c), del DISEÑO §8 (el modelo no lo tenía; tamaño corregido por
+ * Antonio al ver la Tanda 1): 56 px en escritorio, la altura del bloque nombre
+ * + eslogan, a 12 del nombre; 48 en la cabecera compacta del móvil. El 56 no
+ * es un token: va en px como estructura, igual que los 6, 4, 56 y 3 px del
+ * modelo que Antonio dejó fuera de tokens.json (parada de sutura, Tanda 1).
  */
 
 body {
@@ -45,8 +48,8 @@ body {
 
 .icono-marca {
   flex-shrink: 0;
-  width: var(--espacio-40);
-  height: var(--espacio-40);
+  width: 56px;
+  height: 56px;
 }
 
 .nombre {
@@ -104,8 +107,8 @@ body {
   }
 
   .icono-marca {
-    width: var(--espacio-32);
-    height: var(--espacio-32);
+    width: var(--espacio-48);
+    height: var(--espacio-48);
   }
 
   .nombre {

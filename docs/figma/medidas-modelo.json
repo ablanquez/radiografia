@@ -1,5 +1,5 @@
 {
-  "$descripcion": "Medidas del modelo de Figma Make publicado (encargo 10.4), tomadas por CDP con web/scripts/medir-modelo.ts. Las lee web/jueces/fidelidad.spec.ts; se regeneran a mano cuando cambia el modelo. Longitudes en px CSS, colores como los da getComputedStyle.",
+  "$descripcion": "Medidas del modelo de Figma Make publicado (encargo 10.4), tomadas por CDP con web/scripts/medir-modelo.ts. Las lee web/jueces/fidelidad.spec.ts; se regeneran a mano cuando cambia el modelo. Longitudes en px CSS, colores como los da getComputedStyle. Las piezas con «origen» no son del prototipo: las fija el DISEÑO, que manda, y su «nota» dice por qué.",
   "url": "https://exit-pure-51322631.figma.site/",
   "fecha": "2026-10-04",
   "navegador": "Chrome/154.0.8037.93",
@@ -489,6 +489,18 @@
       "alto": 48,
       "desdeElMarco": 16,
       "anchoDelMarco": 390
+    },
+    "escritorio.cabecera.icono": {
+      "origen": "DISEÑO-RADIOGRAFIA.md §8",
+      "nota": "Del DISEÑO, no del prototipo (el modelo no tiene icono en la cabecera): el icono (c) a 56 px en escritorio, la altura del bloque nombre + eslogan; corregido por Antonio al ver la Tanda 1 (04/10, cb89407).",
+      "ancho": 56,
+      "alto": 56
+    },
+    "movil.cabecera.icono": {
+      "origen": "DISEÑO-RADIOGRAFIA.md §8",
+      "nota": "Del DISEÑO, no del prototipo (el modelo no tiene icono en la cabecera): el icono (c) a 48 px en la cabecera compacta del móvil; corregido por Antonio al verlo pequeño a 32 en su iPhone (04/10, cb89407).",
+      "ancho": 48,
+      "alto": 48
     }
   }
 }

@@ -30,6 +30,9 @@ la web real es `web/` (Astro). Esto es la fuente del calco (10.4).
   `web/scripts/medir-modelo.ts`. Las lee `web/jueces/fidelidad.spec.ts`
   (±1 px; ±0,01 en proporciones); los jueces no salen a Internet. Se
   regenera a mano cuando cambia el modelo o entran piezas en el calco.
+  Las piezas con `origen` no son del prototipo sino del DISEÑO, que manda
+  (el icono (c) de la cabecera, 56/48 px, §8): el script las escribe con
+  su apartado y su nota.
 - `fuentes.md` y `subconjunto-unicode.txt` — la ficha de las fuentes
   autoalojadas (origen, versiones, huellas, Reserved Font Name, comandos y
   cifras de la decisión) y la lista de caracteres del recorte (10.4,
