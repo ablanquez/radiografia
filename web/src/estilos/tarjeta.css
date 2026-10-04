@@ -161,3 +161,85 @@
   border-bottom: 1px solid var(--color-line);
   background: var(--color-bg);
 }
+
+/*
+ * La hoja inferior del móvil (encargo 10.4, Tanda 2; DISEÑO §2 y §6.2), como
+ * en el modelo (VistaMovilConHoja y TarjetaRegla en modo hoja, medidos por
+ * CDP el 04/10): fija abajo, a todo el ancho, con el radio de tarjeta arriba,
+ * borde line encima y como mucho el 60 % de la pantalla (40 % compacta); bajo
+ * la barra, el asa, un botón de 44 de alto con una raya de 40 × 4 en ink-2,
+ * que cambia de tamaño con un toque (la alternativa a arrastrar, WCAG 2.5.7);
+ * el contenido a 16 de los bordes, con scroll propio; «Anterior» y
+ * «Siguiente», uno debajo de otro y a todo el ancho. Detrás, el velo negro al
+ * 40 % (token velo), y por encima del velo el tramo activo, que no queda
+ * tapado.
+ * [DOC] https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html —
+ *    2.5.7: lo que se arrastra se puede hacer «with a single pointer without
+ *    dragging».
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/env
+ *    — env(safe-area-inset-bottom): el margen del borde de abajo de la
+ *    pantalla (el del gesto del iPhone).
+ */
+.tarjeta-regla.hoja {
+  position: fixed;
+  top: auto;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  max-width: none;
+  max-height: 60%;
+  border-width: 1px 0 0;
+  border-radius: var(--radio-tarjeta) var(--radio-tarjeta) 0 0;
+  box-shadow: none;
+}
+
+.tarjeta-regla.hoja.compacta {
+  max-height: 40%;
+}
+
+.hoja .pico {
+  display: none;
+}
+
+.asa {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+.asa span {
+  width: var(--espacio-40);
+  height: var(--espacio-4);
+  border-radius: var(--radio-redondo);
+  background: var(--color-ink-2);
+}
+
+.hoja .cuerpo-tarjeta {
+  min-height: 0;
+  padding: 0 var(--espacio-16) calc(var(--espacio-16) + env(safe-area-inset-bottom));
+  overflow-y: auto;
+}
+
+.hoja .navegacion-reglas {
+  flex-direction: column;
+}
+
+.velo {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  background: var(--color-velo);
+}
+
+body.con-hoja .tramo.activo {
+  position: relative;
+  z-index: 15;
+}

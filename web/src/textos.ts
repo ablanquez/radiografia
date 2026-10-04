@@ -125,6 +125,8 @@ export const lineaDeLaTarjeta = (familia: string, paquete: string): string => `$
 export const CERRAR = 'Cerrar';
 export const ANTERIOR = 'Anterior';
 export const SIGUIENTE = 'Siguiente';
+/** El asa de la hoja inferior del móvil, un botón: la cambia de tamaño con un toque. */
+export const CAMBIAR_TAMANO = 'Cambiar tamaño';
 export const EXPLICACION = 'Explicación';
 export const SUGERENCIA = 'Sugerencia';
 export const NIVEL_DE_EVIDENCIA = 'Nivel de evidencia';

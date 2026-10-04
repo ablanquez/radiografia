@@ -205,7 +205,6 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
           <div class="texto-plegado"><p id="texto-plegado"></p></div>
         </div>
         <article id="vista" class="vista texto-largo" aria-label={TU_TEXTO_ANALIZADO} hidden></article>
-        <div id="tarjeta" class="tarjeta-regla" role="dialog" aria-labelledby="titulo-tarjeta" hidden></div>
       </section>
       <div id="columna-resultado" class="columna-resultado">
         <p id="hueco-resultado" class="hueco-resultado">{AQUI_VERAS_EL_RESULTADO}</p>
@@ -224,6 +223,8 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
         <p class="solo-impresion sin-informe">{SIN_INFORME}</p>
       </div>
     </main>
+    <div id="tarjeta" class="tarjeta-regla" role="dialog" aria-labelledby="titulo-tarjeta" hidden></div>
+    <div id="velo" class="velo" hidden></div>
     <Pie />
     <script>
       import '../pantalla/pantalla.ts';

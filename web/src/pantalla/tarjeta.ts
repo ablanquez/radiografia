@@ -21,6 +21,21 @@
  *
  * El foco: al abrir y al pasar de señal, al título de la tarjeta, como el
  * modelo (así se lee la regla nueva); al cerrar, al tramo de la señal abierta.
+ *
+ * En el móvil (hasta 768 px; DISEÑO §2 y §6.2, VistaMovilConHoja del modelo),
+ * la misma tarjeta es una hoja inferior modal: aria-modal, el resto de la
+ * página inerte, Tab y Mayúsculas+Tab dando la vuelta dentro, el velo detrás
+ * (tocarlo la cierra), el asa «Cambiar tamaño» (del 60 % al 40 % de la
+ * pantalla con un toque: no hay que arrastrar) y el tramo activo arriba, a 120
+ * px del borde, por encima del velo y del borde de la hoja.
+ * [DOC] https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/ — «Tab: Moves
+ *    focus to the next tabbable element inside the dialog. If focus is on the
+ *    last tabbable element inside the dialog, moves focus to the first
+ *    tabbable element inside the dialog»; «The dialog container element has
+ *    aria-modal set to true».
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/inert
+ *    — sus descendientes «cannot receive focus or be clicked», y el elemento
+ *    «gets removed from the tab order and accessibility tree».
  * [DOC] https://www.w3.org/TR/wai-aria-1.2/#dialog — role dialog: «A
  *    descendant window of the primary window of a web application»; no modal
  *    (sin aria-modal): el resto de la página sigue a mano.
@@ -32,6 +47,8 @@
  *    abre un diálogo (aria-haspopup="dialog") y si lo tiene abierto
  *    (aria-expanded).
  */
+
+import { CAMBIAR_TAMANO } from '../textos.ts';
 
 /** Una señal con su sitio en el texto. */
 interface ConSitio {
@@ -97,10 +114,20 @@ export interface Tarjeta {
   alCambiarLasCapas: () => void;
 }
 
-/** Una sola por página (los escuchadores de Escape y del tamaño de la ventana, una vez): `tarjeta` es su contenedor (role="dialog") y `vista`, la de los tramos. */
-export function crearTarjeta(tarjeta: HTMLElement, vista: HTMLElement): Tarjeta {
+/** El móvil del DISEÑO §6.2 (hasta 768 px): la tarjeta es una hoja inferior modal. */
+const MOVIL = '(max-width: 768px)';
+
+/**
+ * Una sola por página (los escuchadores de Escape, del tamaño de la ventana y
+ * del ancho del móvil, una vez): `tarjeta` es su contenedor (role="dialog",
+ * hijo de <body>), `vista`, la de los tramos, y `velo`, el fondo oscurecido de
+ * la hoja.
+ */
+export function crearTarjeta(tarjeta: HTMLElement, vista: HTMLElement, velo: HTMLElement): Tarjeta {
   let analisis: Analisis = { senales: [], seVe: () => false, pintar: () => '' };
   let abierta: number | null = null;
+  let compacta = false;
+  const movil = matchMedia(MOVIL);
   const tramosDe = (indice: number): HTMLElement[] =>
     [...vista.querySelectorAll<HTMLElement>('.tramo')].filter((t) => (t.dataset['senales'] ?? '').split(' ').includes(String(indice)));
   const marcar = (activa: boolean): void => {
@@ -110,8 +137,9 @@ export function crearTarjeta(tarjeta: HTMLElement, vista: HTMLElement): Tarjeta 
       if (t.hasAttribute('role')) t.setAttribute('aria-expanded', String(activa));
     }
   };
+  const esHoja = (): boolean => tarjeta.classList.contains('hoja');
   const recolocar = (): void => {
-    if (abierta === null) return;
+    if (abierta === null || esHoja()) return;
     const renglones = tramosDe(abierta)
       .flatMap((t) => [...t.getClientRects()])
       .map((r) => ({ left: r.left + scrollX, top: r.top + scrollY, bottom: r.bottom + scrollY, width: r.width }));
@@ -133,6 +161,36 @@ export function crearTarjeta(tarjeta: HTMLElement, vista: HTMLElement): Tarjeta 
       boton.onclick = destino === null ? null : () => ir(destino);
     }
   };
+  /** Lo que queda detrás de la hoja: todo <body> menos la hoja y el velo, inerte mientras está abierta. */
+  const detras = (): Element[] => [...document.body.children].filter((e) => e !== tarjeta && e !== velo && e.tagName !== 'SCRIPT');
+  /** La hoja: el asa, el velo, lo de detrás inerte y el tramo arriba, a 120 px del borde, por encima del borde de la hoja (como el modelo). */
+  const abrirHoja = (): void => {
+    const asa = document.createElement('button');
+    asa.type = 'button';
+    asa.className = 'asa';
+    asa.setAttribute('aria-label', CAMBIAR_TAMANO);
+    asa.append(document.createElement('span'));
+    asa.addEventListener('click', () => {
+      compacta = !compacta;
+      tarjeta.classList.toggle('compacta', compacta);
+    });
+    tarjeta.querySelector('.barra-familia')?.after(asa);
+    tarjeta.classList.add('hoja');
+    tarjeta.classList.toggle('compacta', compacta);
+    tarjeta.setAttribute('aria-modal', 'true');
+    velo.hidden = false;
+    for (const e of detras()) e.setAttribute('inert', '');
+    document.body.classList.add('con-hoja');
+    const tramo = abierta === null ? undefined : tramosDe(abierta)[0];
+    if (tramo !== undefined) scrollTo({ top: scrollY + tramo.getBoundingClientRect().top - 120 });
+  };
+  const cerrarHoja = (): void => {
+    tarjeta.classList.remove('hoja', 'compacta');
+    tarjeta.removeAttribute('aria-modal');
+    velo.hidden = true;
+    for (const e of detras()) e.removeAttribute('inert');
+    document.body.classList.remove('con-hoja');
+  };
   const ir = (indice: number): void => {
     marcar(false);
     abierta = indice;
@@ -141,12 +199,18 @@ export function crearTarjeta(tarjeta: HTMLElement, vista: HTMLElement): Tarjeta 
     navegar();
     tarjeta.hidden = false;
     marcar(true);
-    recolocar();
+    if (movil.matches) abrirHoja();
+    else {
+      cerrarHoja();
+      recolocar();
+    }
     tarjeta.querySelector<HTMLElement>('h2')?.focus({ preventScroll: true });
-    tarjeta.scrollIntoView({ block: 'nearest' });
+    if (!esHoja()) tarjeta.scrollIntoView({ block: 'nearest' });
   };
   const cerrar = (devolverElFoco: boolean): void => {
     if (abierta === null) return;
+    // Lo de detrás deja de ser inerte antes de devolver el foco: un elemento inerte no lo recibe.
+    cerrarHoja();
     const vuelta = tramosDe(abierta).find((t) => t.hasAttribute('role'));
     marcar(false);
     abierta = null;
@@ -155,12 +219,24 @@ export function crearTarjeta(tarjeta: HTMLElement, vista: HTMLElement): Tarjeta 
     if (devolverElFoco) vuelta?.focus();
   };
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && abierta !== null) {
+    if (abierta === null) return;
+    if (e.key === 'Escape') {
       e.preventDefault();
       cerrar(true);
+      return;
     }
+    // En la hoja, Tab y Mayúsculas+Tab dan la vuelta dentro de ella (APG, diálogo modal).
+    if (e.key !== 'Tab' || !esHoja()) return;
+    const enfocables = [...tarjeta.querySelectorAll<HTMLElement>('button:not([disabled]), a[href], summary')].filter((x) => x.checkVisibility());
+    const k = enfocables.indexOf(document.activeElement as HTMLElement);
+    const siguiente = e.shiftKey ? (k <= 0 ? enfocables.length - 1 : k - 1) : k === enfocables.length - 1 ? 0 : k + 1;
+    e.preventDefault();
+    enfocables[siguiente]?.focus();
   });
+  velo.addEventListener('click', () => cerrar(true));
   addEventListener('resize', recolocar);
+  // Si la ventana cruza el ancho del móvil con la tarjeta abierta, se cierra: tarjeta y hoja no se transforman la una en la otra.
+  movil.addEventListener('change', () => cerrar(false));
   return {
     preparar: (nuevo) => {
       cerrar(false);

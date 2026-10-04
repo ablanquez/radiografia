@@ -125,7 +125,7 @@ const medidor = elemento<HTMLDivElement>('medidor');
 const leyenda = elemento<HTMLDivElement>('leyenda');
 const vista = elemento<HTMLDivElement>('vista');
 const contenedorDeLaTarjeta = elemento<HTMLElement>('tarjeta');
-const tarjeta = crearTarjeta(contenedorDeLaTarjeta, vista);
+const tarjeta = crearTarjeta(contenedorDeLaTarjeta, vista, elemento<HTMLDivElement>('velo'));
 const desglose = elemento<HTMLDivElement>('desglose');
 const botonesDeEjemplo: [HTMLButtonElement, Ejemplo][] = [
   [elemento<HTMLButtonElement>('ejemplo-humano'), 'humano'],
