@@ -62,7 +62,9 @@
  *     el papel (el informe del 9.1 lo imprime);
  *   · «Analizar otro texto» vacía el cuadro, quita el resultado y enfoca el
  *     cuadro; «Descargar informe» del formulario se queda para cuando no hay
- *     resultado, y con resultado va entre los botones del final.
+ *     resultado, y con resultado va entre los botones del final;
+ *   · el ojo de cada familia oculta o enseña su capa en la vista; lo oculto
+ *     vale para ese resultado: al volver a analizar, todo se ve otra vez.
  *   [DOC] https://www.w3.org/TR/wai-aria-1.2/#aria-describedby — «Identifies
  *   the element (or elements) that describes the object».
  *   [DOC] https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus
@@ -88,6 +90,7 @@ import { cargarEjemplo, GENERO_DE_LOS_EJEMPLOS, type Ejemplo } from './ejemplos.
 import { GENERO_POR_DEFECTO, generosDe, nombreDeGenero } from './generos.ts';
 import {
   indexar,
+  ocultarCapas,
   pintarCabeceraDelInforme,
   pintarDesglose,
   pintarLeyenda,
@@ -198,7 +201,12 @@ function analizarYPintar(paquetes: readonly Paquete[], indice: Indice, vozDe: (p
       parte.hidden = !hayAnalisis;
     }
     if (hayAnalisis) {
-      pintarLeyenda(leyenda, indice, new Set(paquetes.map((p) => p.cabecera.nombre)), recuentoDeFamilias(r));
+      const ocultas = new Set<string>();
+      pintarLeyenda(leyenda, indice, new Set(paquetes.map((p) => p.cabecera.nombre)), recuentoDeFamilias(r), (familia, oculta) => {
+        if (oculta) ocultas.add(familia);
+        else ocultas.delete(familia);
+        ocultarCapas(vista, ocultas, indice);
+      });
       pintarVista(vista, elTexto, r.senales, indice, (indices) => pintarPanel(panel, indices.map((i) => r.senales[i]!), indice, import.meta.env.BASE_URL));
       pintarDesglose(desglose, r, paquetes, indice, import.meta.env.BASE_URL, vozDe, nombreDeGenero(elGenero));
     }

@@ -93,6 +93,9 @@ export const LO_QUE_MAS_PESA = 'Lo que más pesa';
 export const familiaConRecuento = (nombre: string, n: number): string => `${nombre} (${n})`;
 /** Una familia informativa (Canal): se señala y no suma. */
 export const familiaInformativa = (nombre: string, n: number): string => `${nombre}: solo avisos (${n})`;
+/** El ojo de cada familia (botón con aria-pressed): su nombre no cambia al pulsarlo (APG); el del modelo, con el paquete. */
+export const OCULTAR_ESTA_CAPA = 'Ocultar esta capa';
+export const ocultarCapa = (familia: string, paquete: string): string => `${OCULTAR_ESTA_CAPA}: ${familia} (${paquete})`;
 export const ANALIZAR_OTRO_TEXTO = 'Analizar otro texto';
 
 // Los géneros del selector (generos.ts). [PROPIO, firmado en el encargo 6.2]

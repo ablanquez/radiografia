@@ -34,6 +34,15 @@ export const TOKEN_DE_FAMILIA: Readonly<Record<string, Readonly<Record<string, T
   'Español correcto': { gramatica: 'gramatica', ortotipografia: 'ortotipografia' },
 };
 
+/**
+ * El ojo de cada familia (encargo 10.4, Tanda 2; DISEÑO §6.1, punto 3): las
+ * familias de un tramo que se siguen viendo, en su orden. La primera que
+ * queda lleva el tinte; si no queda ninguna, el tramo es texto sin más.
+ */
+export function capasVisibles(familias: readonly string[], ocultas: ReadonlySet<string>): string[] {
+  return familias.filter((f) => !ocultas.has(f));
+}
+
 /** La clase de una familia: la de su token o, si no lo tiene (un paquete propio), la de los propios. */
 export function claseDeFamilia(paquete: string, familia: string): string {
   const delPaquete = Object.hasOwn(TOKEN_DE_FAMILIA, paquete) ? TOKEN_DE_FAMILIA[paquete]! : {};

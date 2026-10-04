@@ -93,7 +93,7 @@ import { nombreDeRegla } from './humanizar.ts';
 import { entradasDelInforme, repartirSiglas } from './informe.ts';
 import { cifrasDelPaquete, detalleDelPaquete, etiquetaDelPaquete, generoEnCalle, lineaDelTextoEntero, loQueMasPesa, motivoNoMirada, motivoSinComparar, palabrasDelTexto, resumenDelPaquete, type Voz } from './lectura.ts';
 import { partirEnTramos } from './tramos.ts';
-import { claseDeFamilia } from './familias.ts';
+import { capasVisibles, claseDeFamilia } from './familias.ts';
 
 type Regla = Paquete['reglas'][number];
 type ResultadoDePaquete = Resultado['paquetes'][number];
@@ -250,6 +250,22 @@ export function pintarProblemas(contenedor: HTMLElement, problemas: readonly Pro
   contenedor.hidden = false;
 }
 
+/** El icono del ojo, del modelo (TarjetaFamilia), con su tachado; el tachado solo se ve con la capa oculta (estilos/resultado.css). */
+function iconoDelOjo(): SVGSVGElement {
+  const ns = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns, 'svg');
+  for (const [nombre, valor] of [['aria-hidden', 'true'], ['viewBox', '0 0 24 24'], ['width', '20'], ['height', '20'], ['fill', 'none'], ['stroke', 'currentColor'], ['stroke-width', '2'], ['stroke-linecap', 'round']]) svg.setAttribute(nombre!, valor!);
+  const ojo = document.createElementNS(ns, 'path');
+  ojo.setAttribute('d', 'M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z');
+  const pupila = document.createElementNS(ns, 'circle');
+  for (const [nombre, valor] of [['cx', '12'], ['cy', '12'], ['r', '3']]) pupila.setAttribute(nombre!, valor!);
+  const tachado = document.createElementNS(ns, 'path');
+  tachado.setAttribute('d', 'M4 4l16 16');
+  tachado.setAttribute('class', 'tachado');
+  svg.append(ojo, pupila, tachado);
+  return svg;
+}
+
 /**
  * Las familias (desde el 10.4, Tanda 2; DISEÑO §6.1 y §7, TarjetaFamilia del
  * modelo): una tarjeta por familia de los paquetes activos (desde el 8.1, el
@@ -259,8 +275,24 @@ export function pintarProblemas(contenedor: HTMLElement, problemas: readonly Pro
  * atenuada. [PROPIO] Agrupadas por paquete bajo su nombre: el paquete se dice
  * siempre en texto (8.1), y el modelo, que solo enseña los incluidos, no lo
  * necesitaba. En papel es la clave: la sigla delante de cada una (data-sigla).
+ *
+ * Cada tarjeta lleva su ojo (función nueva del 10.4): un botón conmutador que
+ * oculta o enseña la capa de esa familia en la vista (quien llama, con
+ * alAlternar); el recuento no cambia. Su nombre no cambia al pulsarlo: lo
+ * dice aria-pressed.
+ * [DOC] https://www.w3.org/WAI/ARIA/apg/patterns/button/ — toggle button:
+ *    «A two-state button that can be either off (not pressed) or on
+ *    (pressed)», con aria-pressed; «it is critical the label on a toggle does
+ *    not change when its state changes»; Espacio y Enter lo activan (los de
+ *    un <button>).
  */
-export function pintarLeyenda(contenedor: HTMLElement, indice: Indice, activos: ReadonlySet<string>, recuento: ReadonlyMap<string, number>): void {
+export function pintarLeyenda(
+  contenedor: HTMLElement,
+  indice: Indice,
+  activos: ReadonlySet<string>,
+  recuento: ReadonlyMap<string, number>,
+  alAlternar: (familia: string, oculta: boolean) => void,
+): void {
   const titulo = el('h2', textos.FAMILIAS);
   titulo.id = 't-familias';
   contenedor.setAttribute('aria-labelledby', titulo.id);
@@ -276,7 +308,19 @@ export function pintarLeyenda(contenedor: HTMLElement, indice: Indice, activos: 
       tarjeta.dataset['familia'] = f.clave;
       const muestra = el('span', textos.MUESTRA_DE_SUBRAYADO, `muestra capa ${f.clase}`);
       muestra.setAttribute('aria-hidden', 'true');
-      tarjeta.append(muestra, el('span', f.informativa ? textos.familiaInformativa(f.nombre, n) : textos.familiaConRecuento(f.nombre, n), 'etiqueta-familia'));
+      const ojo = el('button', undefined, 'ojo');
+      ojo.type = 'button';
+      ojo.title = textos.OCULTAR_ESTA_CAPA;
+      ojo.setAttribute('aria-label', textos.ocultarCapa(f.nombre, f.paquete));
+      ojo.setAttribute('aria-pressed', 'false');
+      ojo.append(iconoDelOjo());
+      ojo.addEventListener('click', () => {
+        const oculta = ojo.getAttribute('aria-pressed') !== 'true';
+        ojo.setAttribute('aria-pressed', String(oculta));
+        tarjeta.classList.toggle('oculta', oculta);
+        alAlternar(f.clave, oculta);
+      });
+      tarjeta.append(muestra, el('span', f.informativa ? textos.familiaInformativa(f.nombre, n) : textos.familiaConRecuento(f.nombre, n), 'etiqueta-familia'), ojo);
       (f.informativa ? informativas : puntuan).append(tarjeta);
     }
     grupo.append(el('h3', paquete), puntuan);
@@ -287,6 +331,38 @@ export function pintarLeyenda(contenedor: HTMLElement, indice: Indice, activos: 
 
 function familiaDe(senal: SenalCalificada, indice: Indice): string {
   return clave(senal.paquete, indice.reglas.get(clave(senal.paquete, senal.reglaId))?.familia ?? '');
+}
+
+/** El texto de cada tramo, para volver a vestirlo cuando cambian las capas que se ven (el ojo de las familias). */
+const textoDeTramo = new WeakMap<HTMLElement, string>();
+
+/**
+ * Las capas de un tramo, una por familia que se ve (la primera, con el tinte),
+ * y detrás su sigla voladita. Sin ninguna familia a la vista (las ha ocultado
+ * el ojo), el tramo es texto sin más: ni botón ni foco ni nombre, porque no
+ * hay nada que tocar.
+ */
+function vestirTramo(boton: HTMLElement, familias: readonly string[], indice: Indice): void {
+  boton.replaceChildren();
+  let dentro: HTMLElement = boton;
+  for (const familia of familias) {
+    const capa = el('span', undefined, `capa ${indice.claseDeFamilia.get(familia) ?? 'fam-propia'}`);
+    dentro.append(capa);
+    dentro = capa;
+  }
+  dentro.append(textoDeTramo.get(boton) ?? '');
+  if (familias.length === 0) {
+    boton.removeAttribute('role');
+    boton.removeAttribute('tabindex');
+    boton.removeAttribute('aria-label');
+    return;
+  }
+  const sigla = el('span', familias.map((familia) => indice.siglaDeFamilia.get(familia) ?? '').join('·'), 'sigla-tramo');
+  sigla.setAttribute('aria-hidden', 'true');
+  boton.append(sigla);
+  boton.setAttribute('role', 'button');
+  boton.tabIndex = 0;
+  boton.setAttribute('aria-label', boton.dataset['nombre'] ?? '');
 }
 
 export function pintarVista(
@@ -304,29 +380,21 @@ export function pintarVista(
       continue;
     }
     const familias = [...new Set(tramo.senales.map((i) => familiaDe(senales[i]!, indice)))];
-    const siglas = familias.map((familia) => indice.siglaDeFamilia.get(familia) ?? '').join('·');
     const reglas = [...new Set(tramo.senales.map((i) => clave(senales[i]!.paquete, senales[i]!.reglaId)))].map((k) => {
       const [paquete, id] = k.split('::') as [string, string];
       return nombreDeRegla(id, indice.reglas.get(clave(paquete, id)));
     });
     const boton = el('span', undefined, 'tramo');
-    boton.setAttribute('role', 'button');
-    boton.tabIndex = 0;
-    boton.setAttribute('aria-label', textos.nombreDelTramo(reglas, trozo.replace(/\s+/g, ' ').trim()));
+    boton.dataset['nombre'] = textos.nombreDelTramo(reglas, trozo.replace(/\s+/g, ' ').trim());
     boton.dataset['familias'] = familias.join('|');
-    boton.dataset['siglas'] = siglas;
+    boton.dataset['siglas'] = familias.map((familia) => indice.siglaDeFamilia.get(familia) ?? '').join('·');
     boton.dataset['senales'] = tramo.senales.join(' ');
-    let dentro: HTMLElement = boton;
-    for (const familia of familias) {
-      const capa = el('span', undefined, `capa ${indice.claseDeFamilia.get(familia) ?? 'fam-propia'}`);
-      dentro.append(capa);
-      dentro = capa;
-    }
-    dentro.append(trozo);
-    const sigla = el('span', siglas, 'sigla-tramo');
-    sigla.setAttribute('aria-hidden', 'true');
-    boton.append(sigla);
-    const activar = () => alActivar(tramo.senales);
+    textoDeTramo.set(boton, trozo);
+    vestirTramo(boton, familias, indice);
+    // Un tramo cuyas familias están todas ocultas no es un botón: no se activa.
+    const activar = (): void => {
+      if (boton.getAttribute('role') === 'button') alActivar(tramo.senales);
+    };
     boton.addEventListener('click', activar);
     boton.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -336,6 +404,11 @@ export function pintarVista(
     });
     contenedor.append(boton);
   }
+}
+
+/** El ojo de las familias (10.4, Tanda 2): viste de nuevo cada tramo con las capas de sus familias que no están ocultas. */
+export function ocultarCapas(vista: HTMLElement, ocultas: ReadonlySet<string>, indice: Indice): void {
+  for (const boton of vista.querySelectorAll<HTMLElement>('.tramo')) vestirTramo(boton, capasVisibles((boton.dataset['familias'] ?? '').split('|'), ocultas), indice);
 }
 
 /**

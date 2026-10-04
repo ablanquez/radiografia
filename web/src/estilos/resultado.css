@@ -310,8 +310,40 @@
   line-height: var(--tipografia-interlineado-secundario);
 }
 
-.atenuada .etiqueta-familia {
+.atenuada .etiqueta-familia,
+.oculta .etiqueta-familia {
   color: var(--color-ink-2);
+}
+
+/* El ojo: 44 × 44, radio 6, en ink-2, sin borde; con la capa oculta, la muestra sin tinte ni línea y el ojo tachado. */
+.ojo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--medida-toque);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-ink-2);
+}
+
+.ojo:hover {
+  background: var(--color-card);
+}
+
+.ojo .tachado {
+  display: none;
+}
+
+.ojo[aria-pressed='true'] .tachado {
+  display: inline;
+}
+
+.oculta .muestra {
+  background: none;
+  color: var(--color-ink-2);
+  text-decoration-line: none;
 }
 
 /* «Ver el detalle» y los desgloses. */
