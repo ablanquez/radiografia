@@ -8,21 +8,21 @@
  * de ancho (w-80 del modelo; en el móvil, a todo el ancho); «Paquetes» sobre
  * card, con borde line y radio 8, el resumen de 44 en negrita y el contenido
  * a 16 de los bordes, con 12 entre piezas; los botones, a 16 (en el móvil,
- * uno debajo de otro a 12 y a todo el ancho). En el móvil los botones van
- * antes de «Paquetes» (DISEÑO §6.2); el orden del documento es el del
- * escritorio, y el móvil lo cambia con order (dos bloques vecinos).
+ * uno debajo de otro a 12 y a todo el ancho). Los botones van antes de
+ * «Paquetes» en todos los anchos, y en el documento también (desde la Tanda
+ * 3, corrección de Antonio en la parada 2): en la Tanda 2 el móvil los subía
+ * con order y el tabulador y el lector los recorrían después de «Paquetes»,
+ * aunque se vieran antes (WCAG 1.3.2 y 2.4.3; jueces/orden-del-foco.spec.ts).
+ * El modelo los ponía así solo en el móvil; en el escritorio, después.
  * Solo variables de tokens.css.
  *
  * Una región viva vacía (los avisos de estado, role="status" o "alert") sale
  * del flujo para no dejar un hueco de 24: sigue en el árbol de accesibilidad,
  * que es lo que necesita para anunciar lo que entre en ella.
  * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/order
- *    — «sets the order to lay out an item in a flex or grid container»; y
- *    avisa: «will create a disconnect between the visual presentation of
- *    content and DOM order». El foco y el lector siguen el documento: en el
- *    móvil, «Paquetes» se recorre antes que los botones aunque se vea
- *    después (un solo DOM no puede llevar los dos órdenes; dicho en el
- *    reporte de la parada 2).
+ *    — avisa: «will create a disconnect between the visual presentation of
+ *    content and DOM order». Por eso aquí no hay order: lo que se ve primero
+ *    va primero en el documento.
  */
 
 .formulario {
@@ -170,10 +170,6 @@ label.casilla {
 @media (max-width: 768px) {
   #genero {
     width: 100%;
-  }
-
-  .paquetes {
-    order: 1;
   }
 
   .acciones-formulario {

@@ -8,7 +8,8 @@
  *      DISEÑO; los chips «Texto humano» y «Texto de IA» (botones, redondos,
  *      de 44, borde ink-2, sin negrita) con de quién es cada texto; «Tipo de
  *      texto» con su selector (320 de ancho, los mismos géneros en el mismo
- *      orden); «Paquetes» plegado; los botones.
+ *      orden); los botones; «Paquetes» plegado (desde la Tanda 3, los botones
+ *      antes de «Paquetes» también en el escritorio: jueces/orden-del-foco.spec.ts).
  *   2. «Paquetes», abierto: una casilla por paquete incluido, marcada; el
  *      cargador, la etiqueta del input de fichero como botón secundario (44,
  *      radio 6, borde ink-2), con el input transparente pero en el árbol de
@@ -59,7 +60,7 @@ describe('el formulario del analizador en Chrome, sobre astro preview', () => {
   const caja = async (selector: string): Promise<Caja> =>
     (await p()).evaluar<Caja>(`(() => { const r = document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect(); return { izquierda: r.left, arriba: r.top, ancho: r.width, alto: r.height }; })()`);
 
-  test('1 · a 1280: el cuadro, los chips, el tipo de texto, «Paquetes» plegado y los botones, en ese orden', async () => {
+  test('1 · a 1280: el cuadro, los chips, el tipo de texto, los botones y «Paquetes» plegado, en ese orden', async () => {
     await anchoDe(1280);
     const pestana = await p();
     const forma = await pestana.evaluar<{ etiqueta: string; placeholder: string; chips: [string, string, string, string, string, string, number][]; procedencia: string; tipo: string; opciones: string[]; abierto: boolean; resumen: string; botones: string[] }>(`(() => {
@@ -94,7 +95,7 @@ describe('el formulario del analizador en Chrome, sobre astro preview', () => {
     assert.equal((await caja('#genero')).ancho, 320, 'el selector, de 320');
     assert.deepEqual([forma.abierto, forma.resumen], [false, 'Paquetes'], '«Paquetes», plegado');
     assert.deepEqual(forma.botones, ['analizar', 'informe']);
-    const orden = await Promise.all(['#texto', '.chips', '#genero', '#paquetes', '.acciones-formulario'].map(async (s) => (await caja(s)).arriba));
+    const orden = await Promise.all(['#texto', '.chips', '#genero', '.acciones-formulario', '#paquetes'].map(async (s) => (await caja(s)).arriba));
     assert.deepEqual([...orden].sort((a, b) => a - b), orden, `de arriba abajo: ${orden.join(' · ')}`);
   });
 
