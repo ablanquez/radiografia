@@ -60,10 +60,50 @@
  *    Visto en la parada 1 en un clon (build, preview y dev en Chrome): la
  *    página analiza, pinta y filtra igual, y un fetch a otro origen queda
  *    bloqueado. En el punto 11 se valora pasarla a cabecera del servidor.
+ *
+ * integrations: cspPrimero — Astro escribe ese <meta> al final del <head>,
+ *    detrás de lo que escribe la página, y la precarga de fuentes y los
+ *    enlaces de icono y manifiesto (encargo 10.4) quedaban delante, fuera de
+ *    la política (juez 9 de jueces/construccion.spec.ts). Al terminar el
+ *    build, la integración RECOLOCA en cada página el <meta> que Astro ya
+ *    generó, justo detrás de <meta charset> (scripts/csp-primero.ts): no
+ *    toca su contenido ni amplía la política. Escribe en la salida del build
+ *    la huella sha256 de cada contenido, tal como lo emitió Astro, y el juez
+ *    9 la compara con la de dist/. Decidido por Antonio el 04/10 (parada de
+ *    sutura de la Tanda 1). En dev no hay CSP (arriba) y no hace nada.
+ *    Para el punto 11: si en Hostinger la CSP pasa a cabecera HTTP, esta
+ *    integración sobra.
+ *    [DOC] https://docs.astro.build/en/reference/integrations-reference/ —
+ *    astro:build:done: «After a production build (SSG or SSR) has
+ *    completed»; `dir`: «A URL path to the build output directory»; el
+ *    logger antepone a cada mensaje «a label that has the same value as the
+ *    name of the integration».
  */
+import { createHash } from 'node:crypto';
+import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'astro/config';
+import { cspDetrasDelCharset } from './scripts/csp-primero.ts';
+
+/** @type {import('astro').AstroIntegration} */
+const cspPrimero = {
+  name: 'radiografia-csp-primero',
+  hooks: {
+    'astro:build:done': ({ dir, logger }) => {
+      const raiz = fileURLToPath(dir);
+      for (const ruta of readdirSync(raiz, { recursive: true, encoding: 'utf8' }).filter((f) => f.endsWith('.html'))) {
+        const fichero = join(raiz, ruta);
+        const { html, contenido } = cspDetrasDelCharset(readFileSync(fichero, 'utf8'));
+        writeFileSync(fichero, html);
+        logger.info(`${ruta.replaceAll('\\', '/')} ${createHash('sha256').update(contenido).digest('hex')}`);
+      }
+    },
+  },
+};
 
 export default defineConfig({
+  integrations: [cspPrimero],
   security: { csp: { directives: ["connect-src 'self'", "form-action 'self'"] } },
   vite: {
     optimizeDeps: { include: ['@radiografia/motor/navegador'] },

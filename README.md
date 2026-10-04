@@ -1150,6 +1150,13 @@ género “Noticia” de 300 a 599 palabras», con su total y los percentiles.
 ## Cómo está pensado
 
 - **Astro estático, sin backend.** Todo corre en el navegador.
+- **La CSP, lo primero de cada página.** Astro escribe el `<meta>` de la
+  política al final del `<head>`, y lo que la página pusiera antes (una
+  precarga de fuentes, un icono) quedaría fuera. Una integración de
+  [`web/astro.config.mjs`](web/astro.config.mjs) lo recoloca al terminar el
+  build, justo detrás de `<meta charset>`, sin tocar su contenido; un juez
+  comprueba el sitio y que el contenido es el que emitió Astro. Si en el
+  despliegue la CSP pasa a cabecera HTTP, la integración sobra.
 - **Párrafos como en CommonMark.** Una línea en blanco separa dos párrafos
   y un salto de línea simple no (especificación CommonMark 0.31.2, § 4.8 y
   § 6.8). Así, un texto cortado a mano (un correo, un PDF copiado, un
