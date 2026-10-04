@@ -14,6 +14,20 @@
 
 ---
 
+## [2026-10-04] 🔴 ABIERTA — La hoja inferior del móvil sale estrecha si la tarjeta se abrió antes en escritorio
+
+**Categoría:** interfaz del analizador (calco 10.4, Tanda 2)
+**Síntoma:** abierta la tarjeta de regla a 1280 y cerrada, al estrechar la ventana a 390 y tocar un tramo, la hoja inferior mide 229 px de ancho en vez de los 390 de la pantalla (el asa, 229; «Siguiente», 197 en vez de 358). Commiteado en `76ef465` (web(hoja)), vivo en `51aadab`.
+**⭐ Qué dio verde mientras el fallo estaba vivo:** `web/jueces/hoja.spec.ts`, cuyo juez 1 exige la hoja «abajo y a todo el ancho». Dio verde en los clones limpios de `76ef465` y `51aadab` (suite web: «ℹ tests 165 · ℹ pass 165 · ℹ fail 0» y «ℹ tests 172 · ℹ pass 172 · ℹ fail 0»). Ejecutado otra vez con el fallo vivo (`tarjeta.ts` igual que en HEAD), antes de tocar nada:
+`$ node --test --test-concurrency=1 --test-timeout=120000 jueces/hoja.spec.ts`
+`✔ 1 · tocar un tramo abre la hoja: modal, con nombre y el foco en el título, abajo, a todo el ancho y como mucho al 60 %; lo demás, inerte (5231.7985ms)` … `ℹ tests 6` `ℹ pass 6` `ℹ fail 0`
+**Cómo se cazó:** test (el juez de fidelidad ampliado, `fidelidad.spec.ts`, juez 7, sin commitear: «'movil.hoja · ancho: web 229.109375, modelo 390', 'movil.hoja.asa · ancho: web 229.109375, modelo 390', 'movil.hoja.siguiente · ancho: web 197.109375, modelo 358'»)
+**Causa raíz:** ⏳ PENDIENTE
+**Arreglo aplicado:** ⏳ PENDIENTE
+**Commit:** ⏳ PENDIENTE
+**Ley que sale de aquí:** SIN LEY TODAVÍA
+**Traza:** `web/src/pantalla/tarjeta.ts` (crearTarjeta: recolocar, abrirHoja); `web/src/estilos/tarjeta.css` (`.tarjeta-regla.hoja`); `web/jueces/hoja.spec.ts` (juez 1).
+
 ## [2026-10-02] ✅ CERRADA — El aviso MIT de Ajv no viaja en el build de Astro: Vite 8 tira los comentarios legales al minificar
 
 **Categoría:** licencias de terceros (empaquetado del navegador)
