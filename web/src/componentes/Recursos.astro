@@ -3,18 +3,27 @@
  * Lo que comparten en el <head> el analizador y las páginas del catálogo
  * (encargo 10.4, Tanda 1): la precarga de las dos caras principales, Atkinson
  * Hyperlegible Next (la interfaz) y Literata 400 (el texto), para que no
- * esperen a que el navegador descubra el CSS. Las rutas llevan la base de
- * Astro (conBarraFinal, como los paquetes y el catálogo).
+ * esperen a que el navegador descubra el CSS; y el icono y el manifiesto.
+ * Las rutas llevan la base de Astro (conBarraFinal, como los paquetes y el
+ * catálogo).
  *
  * [DOC] https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/rel/preload
  *    — as="font" con type; «crossorigin»: las fuentes se piden en modo CORS
  *    y la precarga tiene que llevarlo, también desde el mismo origen, o se
  *    pide dos veces.
+ * [DOC] https://evilmartians.com/chronicles/how-to-favicon-in-2021-six-files-that-fit-most-needs
+ *    — `<link rel="icon" href="/favicon.ico" sizes="32x32">`, `<link
+ *    rel="icon" href="/icon.svg" type="image/svg+xml">`, `<link
+ *    rel="apple-touch-icon" href="/apple-touch-icon.png">` y el manifiesto.
+ *    Aquí con la base delante en vez de «/». Sustituyen al `<link rel="icon"
+ *    href="data:,">` del 6.2, que solo evitaba que Chrome pidiera un
+ *    /favicon.ico que no existía.
  */
 import { conBarraFinal } from '../pantalla/cargar.ts';
-import { FUENTES_PRECARGADAS } from '../estilos/recursos.ts';
+import { ENLACES_DE_ICONO, FUENTES_PRECARGADAS } from '../estilos/recursos.ts';
 
 const base = conBarraFinal(import.meta.env.BASE_URL);
 ---
 
 {FUENTES_PRECARGADAS.map((ruta) => <link rel="preload" href={`${base}${ruta}`} as="font" type="font/woff2" crossorigin />)}
+{ENLACES_DE_ICONO.map(({ href, ...resto }) => <link {...resto} href={`${base}${href}`} />)}

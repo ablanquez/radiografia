@@ -20,3 +20,10 @@ web/public/ejemplos/*.json text eol=lf
 *.woff2 binary
 *.png binary
 *.ico binary
+
+# Los SVG del icono (docs/figma/icono/ y sus copias en web/public/) y el
+# manifiesto se sirven y se comparan byte a byte, con su huella en
+# PROCEDENCIA.md (encargo 10.4, Tanda 1): con saltos \n, como los ejemplos.
+docs/figma/icono/*.svg text eol=lf
+web/public/*.svg text eol=lf
+web/public/site.webmanifest text eol=lf

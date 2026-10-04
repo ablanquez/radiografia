@@ -16,9 +16,10 @@
  *    componente se aplican «only […] to HTML written inside of that same
  *    component»; lo que crea el script no lo está, así que el estilo va con
  *    `is:global`.
- * [PROPIO] `<link rel="icon" href="data:,">`: sin él, Chrome pide
- *    /favicon.ico por su cuenta, que da 404 y es una petición de red que no
- *    son los paquetes (visto el 02/10). El icono llega con el diseño (punto 10).
+ * El icono y el manifiesto (encargo 10.4, Tanda 1) los enlaza Recursos.astro;
+ *    el icono (c) va en la cabecera, junto al nombre, con alt="" porque el
+ *    nombre ya es texto (DISEÑO §8). Sustituyen al <link rel="icon"
+ *    href="data:,"> del 6.2.
  * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/white-space
  *    — pre-wrap: «Sequences of white space are preserved. Lines are broken at
  *    newline characters […] and as necessary to fill line boxes»: la vista
@@ -100,6 +101,8 @@
  *    «there isn't any guarantee that print-color-adjust will do anything».
  */
 import { urlDelCatalogo } from '../catalogo/catalogo.ts';
+import { conBarraFinal } from '../pantalla/cargar.ts';
+import { ICONO_DE_CABECERA } from '../estilos/recursos.ts';
 import { CATALOGO, DESCARGAR_INFORME, NOTA_DE_AUTORIA, SIN_INFORME } from '../textos.ts';
 import Recursos from '../componentes/Recursos.astro';
 import '../estilos/tokens.css';
@@ -107,18 +110,19 @@ import '../estilos/fuentes.css';
 import '../estilos/base.css';
 
 const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
+const icono = `${conBarraFinal(import.meta.env.BASE_URL)}${ICONO_DE_CABECERA}`;
 ---
 
 <html lang="es">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" href="data:," />
     <Recursos />
     <title>RadiografIA</title>
   </head>
   <body>
     <header>
+      <img class="icono-marca" src={icono} alt="" width="40" height="40" />
       <h1>RadiografIA</h1>
       <p>A contraluz se nota todo.</p>
       <nav><a href={catalogo}>{CATALOGO}</a></nav>

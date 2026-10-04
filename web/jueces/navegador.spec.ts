@@ -29,7 +29,10 @@
  *      servidor, por diseño (encargo 6.3). Desde el 10.4 (Tanda 1), con las
  *      fuentes autoalojadas: ni una petición a fonts.googleapis.com ni a
  *      fonts.gstatic.com, antes o después de la marca; las dos caras
- *      precargadas, en la carga inicial; y ninguna cara pedida dos veces.
+ *      precargadas, en la carga inicial; y ninguna cara pedida dos veces. Y
+ *      la carga inicial, solo lo esperado: la página, su JS y su CSS, las
+ *      fuentes, los paquetes, y el icono y el manifiesto (Chrome pide el
+ *      manifiesto y sus iconos por su cuenta al cargar).
  *
  * ⚠️ El arranque (build, preview, Chrome, la carga y la marca) no va en un
  *    before(): si revienta ahí (sin Chrome, por ejemplo), node --test cuenta
@@ -239,6 +242,15 @@ describe('el cargador en Chrome, sobre astro preview', () => {
     const fuentes = carga.filter((x) => x.tipo === 'Font').map((x) => new URL(x.url).pathname);
     for (const ruta of FUENTES_PRECARGADAS) assert.ok(fuentes.includes(`/${ruta}`), `la precarga de ${ruta}: ${fuentes.join(' · ')}`);
     assert.deepEqual(fuentes.filter((x, i) => fuentes.indexOf(x) !== i), [], 'caras pedidas dos veces (una precarga sin crossorigin no se reutiliza)');
+    // Y nada en la carga inicial fuera de lo esperado: la página, su JS y su CSS, las fuentes, los paquetes, y el icono y el manifiesto (10.4).
+    const ESPERADAS = [
+      /^\/$/,
+      /^\/_astro\/[\w.-]+\.(js|css)$/,
+      /^\/fuentes\/[\w-]+\/[\w-]+\.woff2$/,
+      /^\/paquetes\/[\w-]+\.json$/,
+      /^\/(icono-c\.svg|icon\.svg|favicon\.ico|apple-touch-icon\.png|icon-192\.png|icon-512\.png|icon-512-maskable\.png|site\.webmanifest)$/,
+    ];
+    assert.deepEqual(carga.filter((x) => !ESPERADAS.some((e) => e.test(new URL(x.url).pathname))), [], 'peticiones de la carga inicial que no se esperan');
     assert.deepEqual(despues, [], 'peticiones después de la carga inicial');
     assert.deepEqual(violaciones, [], 'intentos bloqueados por la CSP');
   });
