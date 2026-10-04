@@ -5,7 +5,9 @@
  * <slot />. Funciona, no luce: el diseño es del punto 10. La página del
  * analizador (index.astro) no lo usa: no se toca más que para su enlace.
  * Desde el 10.4 (Tanda 1), los colores y las familias tipográficas salen de
- * los tokens de diseño (estilos/tokens.css): ningún color suelto.
+ * los tokens de diseño (estilos/tokens.css): ningún color suelto. La letra,
+ * la escala, el foco, los botones y los campos, de estilos/base.css; los
+ * párrafos largos de las fichas, en Literata (DISEÑO §5).
  *
  * [DOC] https://docs.astro.build/en/basics/layouts/ — «Layouts are Astro
  *    components used to provide a reusable UI structure, such as a page
@@ -24,6 +26,7 @@ import { urlDelAnalizador } from '../catalogo/catalogo.ts';
 import Recursos from '../componentes/Recursos.astro';
 import '../estilos/tokens.css';
 import '../estilos/fuentes.css';
+import '../estilos/base.css';
 
 interface Props {
   /** Lo que va delante de «RadiografIA» en el título de la pestaña. */
@@ -50,12 +53,6 @@ const analizador = urlDelAnalizador(import.meta.env.BASE_URL);
       <slot />
     </main>
     <style is:global>
-      :root {
-        font-family: var(--tipografia-font-family-ui);
-        line-height: var(--tipografia-interlineado-base);
-        color: var(--color-ink);
-        background: var(--color-bg);
-      }
       body {
         max-width: 52rem;
         margin: 0 auto;
@@ -64,16 +61,30 @@ const analizador = urlDelAnalizador(import.meta.env.BASE_URL);
       .marca {
         font-weight: 600;
       }
+      .id-regla,
+      .datos {
+        font-size: var(--tipografia-tamano-secundario);
+        line-height: var(--tipografia-interlineado-secundario);
+        color: var(--color-ink-2);
+      }
       .id-regla {
         margin-top: 0;
-        font-size: 0.8rem;
-        color: var(--color-ink-2);
       }
       .en-claro {
         font-weight: 600;
       }
+      /* En la ficha, la frase en claro bajo el nombre es texto largo, como en el modelo. */
+      h1 + .en-claro {
+        font-family: var(--tipografia-font-family-texto);
+        font-size: var(--tipografia-tamano-cuerpo);
+        line-height: var(--tipografia-interlineado-cuerpo);
+        font-weight: 400;
+      }
+      .presentacion {
+        color: var(--color-ink-2);
+      }
       dt {
-        font-weight: 600;
+        font-weight: 700;
       }
       dd {
         margin: 0 0 0.5rem 0;
@@ -87,11 +98,9 @@ const analizador = urlDelAnalizador(import.meta.env.BASE_URL);
       }
       .reglas h2 {
         margin-bottom: 0;
-        font-size: 1.15rem;
       }
       .datos {
         margin: 0;
-        font-size: 0.9rem;
       }
       fieldset label {
         display: inline-block;
@@ -99,7 +108,9 @@ const analizador = urlDelAnalizador(import.meta.env.BASE_URL);
       }
       .ejemplo {
         white-space: pre-wrap;
-        font: inherit;
+        font-family: var(--tipografia-font-family-texto);
+        font-size: var(--tipografia-tamano-cuerpo);
+        line-height: var(--tipografia-interlineado-cuerpo);
         border-left: 3px solid var(--color-line);
         padding-left: 0.75rem;
       }

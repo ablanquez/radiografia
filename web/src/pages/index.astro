@@ -7,7 +7,9 @@
  * Funciona, no luce: el diseño es del punto 10.
  * Desde el 10.4 (Tanda 1), los colores, las familias tipográficas y el foco
  * salen de los tokens de diseño (estilos/tokens.css, que se genera desde
- * docs/figma/tokens.json): ningún color suelto (jueces/tokens.spec.ts).
+ * docs/figma/tokens.json): ningún color suelto (jueces/tokens.spec.ts). La
+ * letra, la escala, el foco, los botones, los campos y las tarjetas, de
+ * estilos/base.css; aquí, lo propio de esta página.
  *
  * [DOC] https://docs.astro.build/en/install/manual/ — src/pages/index.astro.
  * [DOC] https://docs.astro.build/en/guides/styling/ — los <style> de un
@@ -102,6 +104,7 @@ import { CATALOGO, DESCARGAR_INFORME, NOTA_DE_AUTORIA, SIN_INFORME } from '../te
 import Recursos from '../componentes/Recursos.astro';
 import '../estilos/tokens.css';
 import '../estilos/fuentes.css';
+import '../estilos/base.css';
 
 const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
 ---
@@ -130,21 +133,21 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
           <button id="ejemplo-humano" type="button" disabled>Cargar ejemplo: texto humano</button>
           <button id="ejemplo-ia" type="button" disabled>Cargar ejemplo: texto de IA</button>
         </div>
-        <p class="procedencia">El texto humano lo escribió Antonio; el de IA lo generó Claude Opus 5.5, sin instrucciones de estilo.</p>
+        <p class="procedencia secundario">El texto humano lo escribió Antonio; el de IA lo generó Claude Opus 5.5, sin instrucciones de estilo.</p>
         <p id="estado-ejemplo" role="status"></p>
         <label for="genero">Género del texto</label>
         <select id="genero" disabled></select>
-        <fieldset id="paquetes">
+        <fieldset id="paquetes" class="tarjeta">
           <legend>Paquetes</legend>
           <div id="incluidos"></div>
           <label for="paquete-propio">Cargar un paquete propio (JSON)</label>
           <input id="paquete-propio" type="file" accept="application/json,.json" disabled />
-          <p class="aviso-propio">Se queda en tu navegador: no se sube a ningún sitio. No se guarda: al recargar la página, desaparece.</p>
+          <p class="aviso-propio secundario">Se queda en tu navegador: no se sube a ningún sitio. No se guarda: al recargar la página, desaparece.</p>
           <ul id="propios" hidden></ul>
           <p id="estado-propio" role="status"></p>
           <div id="errores-propio" class="problemas" role="alert" hidden></div>
         </fieldset>
-        <button id="analizar" type="submit" disabled>Pon tu texto a contraluz</button>
+        <button id="analizar" class="boton-principal" type="submit" disabled>Pon tu texto a contraluz</button>
         <button id="informe" type="button" disabled>{DESCARGAR_INFORME}</button>
         <p id="aviso-paquetes" role="status"></p>
       </form>
@@ -154,7 +157,7 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
         <div id="medidor"></div>
         <p class="nota">{NOTA_DE_AUTORIA}</p>
         <div id="leyenda"></div>
-        <div id="vista" class="vista"></div>
+        <div id="vista" class="vista texto-largo"></div>
         <aside id="panel" aria-live="polite" hidden></aside>
         <div id="desglose"></div>
         <div id="senales-informe" class="solo-impresion" hidden></div>
@@ -166,34 +169,23 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
       import '../pantalla/pantalla.ts';
     </script>
     <style is:global>
-      :root {
-        font-family: var(--tipografia-font-family-ui);
-        line-height: var(--tipografia-interlineado-base);
-        color: var(--color-ink);
-        background: var(--color-bg);
-      }
       body {
         max-width: 52rem;
         margin: 0 auto;
         padding: 1rem;
       }
+      /* La columna de texto (DISEÑO §5): 34em sobre la letra de 16 px de la interfaz, como el modelo. */
+      #formulario,
+      #resultado {
+        max-width: var(--medida-columna-texto);
+      }
       label {
         display: block;
         margin-top: 1rem;
-        font-weight: 600;
-      }
-      textarea {
-        width: 100%;
-        box-sizing: border-box;
-        font: inherit;
-        font-family: var(--tipografia-font-family-texto);
-      }
-      select,
-      button {
-        font: inherit;
       }
       fieldset {
         margin-top: 1rem;
+        padding: var(--espacio-16);
       }
       label.casilla {
         display: inline-block;
@@ -203,10 +195,6 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
       #propios button {
         display: inline-block;
         margin-top: 0;
-        padding: 0 0.5rem;
-      }
-      .aviso-propio {
-        font-size: 0.9rem;
       }
       pre.ejemplo {
         white-space: pre-wrap;
@@ -214,7 +202,6 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
       button {
         display: block;
         margin-top: 1rem;
-        padding: 0.5rem 1rem;
       }
       .ejemplos button {
         display: inline-block;
@@ -222,12 +209,13 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
       }
       .procedencia {
         margin-bottom: 0;
-        font-size: 0.9rem;
       }
       .problemas {
         color: var(--color-ink);
         background: var(--color-aviso-error);
         border: 1px solid var(--color-ink-2);
+        border-radius: var(--radio-tarjeta);
+        padding: var(--espacio-16);
       }
       .problema-paquete,
       .estado-tramo {
@@ -236,19 +224,16 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
       .nota {
         font-style: italic;
       }
+      /*
+       * Sin caja, como en el modelo: con la columna de 34em, Literata a 18 px da
+       * de 60 a 61 caracteres por línea con los tres textos de prueba (DISEÑO
+       * §5: 60-66); con el margen interior de antes, 56 a 58.
+       */
       .vista {
-        font-family: var(--tipografia-font-family-texto);
         white-space: pre-wrap;
-        line-height: 2.4;
-        border: 1px solid var(--color-line);
-        padding: 1rem;
       }
       .tramo {
         cursor: pointer;
-      }
-      .tramo:focus-visible {
-        outline: var(--foco-grosor) solid var(--foco-color);
-        outline-offset: var(--foco-desplazamiento);
       }
       [class^='familia-'],
       [class*=' familia-'] {
@@ -285,7 +270,8 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
       }
       .id-regla {
         margin-top: 0;
-        font-size: 0.8rem;
+        font-size: var(--tipografia-tamano-secundario);
+        line-height: var(--tipografia-interlineado-secundario);
         color: var(--color-ink-2);
       }
       .ficha {

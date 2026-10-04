@@ -75,13 +75,13 @@ const peso = new Intl.NumberFormat('es').format(regla.peso);
     }
   </dl>
   <h2>{textos.EXPLICACION}</h2>
-  <p>{regla.explicacion}</p>
+  <p class="texto-largo">{regla.explicacion}</p>
   <h2>{textos.SUGERENCIA}</h2>
-  <p>{regla.sugerencia}</p>
+  <p class="texto-largo">{regla.sugerencia}</p>
   <h2>{textos.EXCEPCIONES}</h2>
-  {regla.excepciones.length === 0 ? <p>{textos.NINGUNA}</p> : <ul>{regla.excepciones.map((e) => <li>{e}</li>)}</ul>}
+  {regla.excepciones.length === 0 ? <p>{textos.NINGUNA}</p> : <ul class="texto-largo">{regla.excepciones.map((e) => <li>{e}</li>)}</ul>}
   <h2>{textos.ORIGEN_DE_LA_LISTA}</h2>
-  <p>{regla.origenLista ?? textos.SIN_DATO}</p>
+  <p class="texto-largo">{regla.origenLista ?? textos.SIN_DATO}</p>
   <h2>{textos.FUENTES}</h2>
   <ul>{regla.fuente.map((f) => <li><a href={f.url}>{f.titulo}</a></li>)}</ul>
   <h2>{textos.DONDE_DISPARA}</h2>

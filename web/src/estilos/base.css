@@ -1,0 +1,163 @@
+/*
+ * La base de la interfaz (encargo 10.4, Tanda 1; DISEÑO §4, §5 y §7), común al
+ * analizador y al catálogo: la letra, la escala, los enlaces, el foco, los
+ * botones, los campos y las tarjetas. Solo variables de tokens.css (ningún
+ * color suelto: jueces/tokens.spec.ts); los valores, de docs/figma/tokens.json
+ * y del modelo de Figma Make. Lo de cada página va en su <style>.
+ *
+ * Escala (DISEÑO §5): 28 título de pantalla, 20 título de tarjeta, 18 cuerpo
+ * del texto (Literata), 16 interfaz (Atkinson), 15 secundario; 24 y 11 los
+ * usan la pastilla en móvil y la sigla voladita (Tanda 2).
+ *
+ * [DOC] https://www.w3.org/TR/WCAG22/#focus-visible — 2.4.7: el foco se ve en
+ *    todo lo operable; anillo de 2 px en el acento con 2 px de separación
+ *    (DISEÑO §7; meta 2.4.13).
+ * [DOC] https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html
+ *    — 2.5.8; DISEÑO §2: 44 × 44 para los controles importantes (2.5.5), 48
+ *    de alto el botón principal en móvil.
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Selectors/:focus-visible
+ *    — aplica cuando el elemento tiene el foco y el navegador «determines via
+ *    heuristics that the focus should be made evident»: con el teclado sí,
+ *    con un clic no hace falta.
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Selectors/:where
+ *    — «:where() always has 0 specificity»: una regla de una página la puede
+ *    afinar sin pelear.
+ */
+
+html {
+  font-family: var(--tipografia-font-family-ui);
+  font-size: var(--tipografia-tamano-base);
+  line-height: var(--tipografia-interlineado-base);
+  color: var(--color-ink);
+  background: var(--color-bg);
+}
+
+body {
+  margin: 0;
+}
+
+h1 {
+  font-size: var(--tipografia-tamano-titulo-pantalla);
+  line-height: var(--tipografia-interlineado-titulo-pantalla);
+  font-weight: 700;
+}
+
+h2,
+h3 {
+  font-size: var(--tipografia-tamano-titulo-tarjeta);
+  line-height: var(--tipografia-interlineado-titulo-tarjeta);
+  font-weight: 700;
+}
+
+h4,
+h5 {
+  font-size: var(--tipografia-tamano-base);
+  line-height: var(--tipografia-interlineado-base);
+  font-weight: 700;
+}
+
+/* El texto analizado y los textos largos, en Literata (DISEÑO §5). */
+textarea,
+.texto-largo {
+  font-family: var(--tipografia-font-family-texto);
+  font-size: var(--tipografia-tamano-cuerpo);
+  line-height: var(--tipografia-interlineado-cuerpo);
+}
+
+.secundario {
+  font-size: var(--tipografia-tamano-secundario);
+  line-height: var(--tipografia-interlineado-secundario);
+  color: var(--color-ink-2);
+}
+
+a {
+  color: var(--color-accent);
+  text-underline-offset: var(--espacio-4);
+}
+
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: var(--foco-grosor) solid var(--foco-color);
+  outline-offset: var(--foco-desplazamiento);
+}
+
+/*
+ * Botones (DISEÑO §7): el principal, índigo con texto blanco; los demás, con
+ * borde. Desactivado (DISEÑO §4, 04/10): fondo card, borde line discontinuo,
+ * texto ink-2 (8,1:1) y cursor not-allowed; el principal pierde el índigo.
+ */
+button {
+  min-width: var(--medida-toque);
+  min-height: var(--medida-toque);
+  padding: 0 var(--espacio-20);
+  border: 1px solid var(--color-ink-2);
+  border-radius: var(--radio-boton);
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.boton-principal {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-sobre-acento);
+}
+
+button:disabled {
+  border-style: dashed;
+  border-color: var(--color-line);
+  background: var(--color-card);
+  color: var(--color-ink-2);
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .boton-principal {
+    width: 100%;
+    min-height: var(--medida-toque-movil);
+  }
+}
+
+label {
+  font-weight: 700;
+}
+
+select,
+input[type='search'] {
+  min-height: var(--medida-toque);
+  padding: 0 var(--espacio-12);
+  border: 1px solid var(--color-ink-2);
+  border-radius: var(--radio-boton);
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font: inherit;
+}
+
+textarea {
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--espacio-16);
+  border: 1px solid var(--color-ink-2);
+  border-radius: var(--radio-tarjeta);
+  background: var(--color-bg);
+  color: var(--color-ink);
+}
+
+textarea::placeholder {
+  color: var(--color-ink-2);
+  opacity: 1;
+}
+
+input[type='checkbox'] {
+  width: var(--espacio-20);
+  height: var(--espacio-20);
+  accent-color: var(--color-accent);
+}
+
+/* Las tarjetas (DISEÑO §7): fondo card, borde line, radio de tarjeta. */
+.tarjeta {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radio-tarjeta);
+  background: var(--color-card);
+}
