@@ -19,6 +19,8 @@
  *    Chrome pide /favicon.ico por su cuenta.
  */
 import { urlDelAnalizador } from '../catalogo/catalogo.ts';
+import Recursos from '../componentes/Recursos.astro';
+import '../estilos/fuentes.css';
 
 interface Props {
   /** Lo que va delante de «RadiografIA» en el título de la pestaña. */
@@ -34,6 +36,7 @@ const analizador = urlDelAnalizador(import.meta.env.BASE_URL);
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" href="data:," />
+    <Recursos />
     <title>{titulo} · RadiografIA</title>
   </head>
   <body>
@@ -45,7 +48,7 @@ const analizador = urlDelAnalizador(import.meta.env.BASE_URL);
     </main>
     <style is:global>
       :root {
-        font-family: system-ui, sans-serif;
+        font-family: 'Atkinson Hyperlegible Next', system-ui, sans-serif;
         line-height: 1.5;
         color: #1f2937;
         background: #ffffff;

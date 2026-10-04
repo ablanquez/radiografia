@@ -4,12 +4,13 @@ La licencia Apache 2.0 cubre **el código y los paquetes de reglas** de Radiogra
 lo ajeno**, que conserva sus propias condiciones. Aquí está, una por una, con lo que sabemos y lo
 que no.
 
-> ℹ️ **Estado a 02/10/2026.** Lo ajeno es software y datos. Software (§ 1): **siete**
+> ℹ️ **Estado a 04/10/2026.** Lo ajeno es software, datos y dos fuentes tipográficas. Software (§ 1): **siete**
 > dependencias declaradas en los dos workspaces, [`motor/package.json`](motor/package.json) y
 > [`web/package.json`](web/package.json) —dos de ejecución y cinco de desarrollo—, el árbol que
 > arrastran y **un fichero de código ajeno incorporado** al repositorio (§ 1.5). Datos (§ 2):
 > las carpetas de [`data/`](data/), **aparte del código Apache 2.0**, cada una con su licencia
-> al lado.
+> al lado. Fuentes (§ 2.4): Literata y Atkinson Hyperlegible Next, OFL 1.1, autoalojadas en
+> [`web/public/fuentes/`](web/public/fuentes/) con su `OFL.txt` al lado.
 >
 > Las **fuentes de cada regla** (estudios, guías, corpus) no van aquí: se citan en la ficha de
 > la regla y en el catálogo. Lo propio (logo, marca) irá en `PROCEDENCIA.md`.
@@ -220,7 +221,8 @@ transitivo, treinta son MIT y una BSD-3-Clause (§ 1.6). Nada bloquea.
 Viven en [`data/`](data/), **aparte del código Apache 2.0**: una carpeta por conjunto, y en cada
 una su `LICENSE-*.md` con la atribución que exige su licencia, el enlace canónico y qué se
 cambió. Aquí va la ficha de cada carpeta; el detalle está en su `LICENSE-*.md`. Ni una carpeta
-sin ficha ni una ficha sin carpeta: lo vigila `motor/src/notices.spec.ts`.
+sin ficha ni una ficha sin carpeta: lo vigila `motor/src/notices.spec.ts`. Las fuentes (§ 2.4)
+no viven en `data/` porque las sirve la web: su tabla la vigila `web/jueces/fuentes.spec.ts`.
 
 ### 2.1 · `data/referencia/` — UD Spanish-AnCora, 100 + 100 frases
 
@@ -283,3 +285,35 @@ escribir (`motor/herramientas/calibrar/manifiesto.ts`). Los textos se descargan 
 - **Viajará al navegador**: los percentiles entran en la cabecera del paquete
   (`cabecera.calibracion`), cada celda con el nombre de su corpus. Cómo se enseña la atribución
   en la interfaz, **NO CONSTA** hasta el punto 6.
+
+### 2.4 · `web/public/fuentes/` — Literata y Atkinson Hyperlegible Next (OFL 1.1)
+
+Las dos fuentes de la web, autoalojadas (encargo 10.4; DISEÑO § 5): Literata para el texto
+analizado y los textos largos, Atkinson Hyperlegible Next para la interfaz. Salen del
+repositorio de Google Fonts en el commit `9710da1e` (30/09/2026), recortadas a latin + latin-ext.
+Cada familia lleva al lado su `OFL.txt`, copia del original, y viaja con ella a `dist/`. La ficha
+completa (origen, versiones, comandos, cifras de la decisión) está en
+[`docs/figma/fuentes.md`](docs/figma/fuentes.md).
+
+| Fichero | Cara | Original | Titular | Licencia | Qué se cambió | sha256 del fichero |
+|---|---|---|---|---|---|---|
+| `atkinson-hyperlegible-next.woff2` | Atkinson Hyperlegible Next, variable 400-700 | `AtkinsonHyperlegibleNext[wght].ttf`, versión 2.001, sha256 `5a455d1cfa099b601ab70751bb9673e8fe1854dc4500c80e1a220d0d75e31745` | The Atkinson Hyperlegible Next Project Authors | **OFL-1.1** | peso acotado de 200-800 a 400-700; recorte; WOFF2 | `61b142d8dce2ed4a961902890097797dd410ee3bb5eb5c773327b61fb8842e23` |
+| `literata-400.woff2` | Literata 400 | `Literata[opsz,wght].ttf`, versión 3.103, sha256 `b41138c9373112f32abb589cc22e8674b06ed4048b0c513be922bdd26f274440` | The Literata Project Authors | **OFL-1.1** | peso fijado en 400; eje óptico acotado de 7-72 a 12-20; recorte; WOFF2 | `247ae9904f2b541c7c2f2b3cbb9fec3ec4ff1f38bbad256e799f3775a85e96fe` |
+| `literata-400-italica.woff2` | Literata 400 itálica | `Literata-Italic[opsz,wght].ttf`, versión 3.103, sha256 `d483dfaeba9cbf4ce71d32a52ee65df82f7e35b15fff8d1011cdb242d1fcd465` | The Literata Project Authors | **OFL-1.1** | peso fijado en 400; eje óptico acotado de 7-72 a 12-20; recorte; WOFF2 | `07c13facde53915a4b94ecc0cbe514d31aa14aa8cc1cb824d15fcaa7d140575d` |
+| `literata-600.woff2` | Literata 600 | `Literata[opsz,wght].ttf`, versión 3.103, sha256 `b41138c9373112f32abb589cc22e8674b06ed4048b0c513be922bdd26f274440` | The Literata Project Authors | **OFL-1.1** | peso fijado en 600; eje óptico acotado de 7-72 a 12-20; recorte; WOFF2 | `b4b5b88df63606d3f22622109b6ba1596ad14449d8f93e821dd4dda8d5965858` |
+
+- **Licencia**: SIL Open Font License 1.1, con su texto entero en
+  [`web/public/fuentes/literata/OFL.txt`](web/public/fuentes/literata/OFL.txt) y
+  [`web/public/fuentes/atkinson-hyperlegible-next/OFL.txt`](web/public/fuentes/atkinson-hyperlegible-next/OFL.txt).
+  Copyright: «Copyright 2017 The Literata Project Authors (https://github.com/googlefonts/literata)»
+  y «Copyright 2020-2024 The Atkinson Hyperlegible Next Project Authors
+  (https://github.com/googlefonts/atkinson-hyperlegible-next)».
+- **Reserved Font Name: ninguna de las dos lo declara** (su línea de copyright no lleva la
+  cláusula). El recorte es una versión modificada (OFL-FAQ 2.6) y, sin RFN, puede conservar el
+  nombre (FAQ 5.6): las familias no se renombran.
+- **Metadatos**: cada woff2 conserva su tabla `name` entera, con el copyright (0), la licencia
+  (13) y su URL (14), como pide la FAQ 2.4.
+- **Herramienta**: fontTools 4.66.1 (MIT), fuera del repositorio; no es dependencia del proyecto.
+- **Viaja al navegador**: sí. Atkinson y Literata 400 se precargan; la itálica y la 600, cuando
+  algo las pide.
+- Una fila por woff2 y un woff2 por fila, con su huella: lo vigila `web/jueces/fuentes.spec.ts`.

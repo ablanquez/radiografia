@@ -1,0 +1,20 @@
+---
+/**
+ * Lo que comparten en el <head> el analizador y las páginas del catálogo
+ * (encargo 10.4, Tanda 1): la precarga de las dos caras principales, Atkinson
+ * Hyperlegible Next (la interfaz) y Literata 400 (el texto), para que no
+ * esperen a que el navegador descubra el CSS. Las rutas llevan la base de
+ * Astro (conBarraFinal, como los paquetes y el catálogo).
+ *
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/rel/preload
+ *    — as="font" con type; «crossorigin»: las fuentes se piden en modo CORS
+ *    y la precarga tiene que llevarlo, también desde el mismo origen, o se
+ *    pide dos veces.
+ */
+import { conBarraFinal } from '../pantalla/cargar.ts';
+import { FUENTES_PRECARGADAS } from '../estilos/recursos.ts';
+
+const base = conBarraFinal(import.meta.env.BASE_URL);
+---
+
+{FUENTES_PRECARGADAS.map((ruta) => <link rel="preload" href={`${base}${ruta}`} as="font" type="font/woff2" crossorigin />)}

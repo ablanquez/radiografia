@@ -1,0 +1,25 @@
+# Subconjunto de las fuentes autoalojadas de RadiografIA (encargo 10.4, Tanda 1):
+# latin + latin-ext por bloques de Unicode, más los signos sueltos que usa la web.
+# Formato de --unicodes-file de pyftsubset (fontTools): «Anything after a '#' on
+# any line in the file is ignored as comments». Los nombres de bloque son los de
+# https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt
+# Un código que la fuente no tiene no añade nada: el recorte solo guarda los
+# glifos que existen.
+
+U+0020-007E  # Basic Latin, los imprimibles
+U+00A0-00FF  # Latin-1 Supplement: á é í ó ú ü ñ Á É Í Ó Ú Ñ ¿ ¡ « » º ª · × § y el espacio duro
+U+0100-017F  # Latin Extended-A
+U+0180-024F  # Latin Extended-B
+U+02B0-02FF  # Spacing Modifier Letters
+U+0300-036F  # Combining Diacritical Marks: un texto pegado en forma descompuesta (NFD)
+U+2000-206F  # General Punctuation: — – … “ ” ‘ ’ • y los espacios finos
+U+20A0-20CF  # Currency Symbols: €
+U+2122       # ™
+U+2190-2193  # ← ↑ → ↓ (→ en las fichas y en el desglose)
+U+2212       # − (signo menos)
+U+2248       # ≈
+U+2260       # ≠
+U+2264-2265  # ≤ ≥
+U+03B7       # η (en las fichas de Estadística)
+U+03C1       # ρ (en las fichas de Estadística)
+U+FFFD       # carácter de sustitución

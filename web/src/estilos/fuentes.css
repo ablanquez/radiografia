@@ -1,0 +1,57 @@
+/*
+ * Las fuentes autoalojadas de RadiografIA (encargo 10.4, Tanda 1; DISEÑO §5):
+ * Atkinson Hyperlegible Next para la interfaz y Literata para el texto
+ * analizado y los textos largos, recortadas a latin + latin-ext y servidas
+ * desde web/public/fuentes/, con su OFL.txt al lado. Nada de
+ * fonts.googleapis.com (LG München I, 20/01/2022). Origen, versión, huellas,
+ * Reserved Font Name y qué se cambió: docs/figma/fuentes.md.
+ *
+ * Caras: Atkinson variable 400-700 en un fichero; Literata en tres estáticas
+ * (400, 400 itálica y 600) con el eje óptico acotado a 12-20, los tamaños en
+ * que se usa. El navegador solo baja una cara cuando algo la pide.
+ *
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@font-face
+ *    — src con url() y format("woff2"); font-weight admite un rango («400
+ *    700») para una fuente variable.
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@font-face/font-display
+ *    — swap: «extremely small block period and an infinite swap period»;
+ *    fallback: «extremely small block period and a short swap period». swap
+ *    en la interfaz y fallback en el texto analizado, para que el texto del
+ *    usuario no salte tarde (DISEÑO §5).
+ * [DOC] https://vite.dev/guide/assets — lo de public/ se nombra con «root
+ *    absolute path» y se copia a dist/ tal cual. Con una base distinta de
+ *    «/», la ruta la reescribe Vite al construir (comprobado en el encargo:
+ *    docs/figma/fuentes.md).
+ */
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible Next';
+  src: url('/fuentes/atkinson-hyperlegible-next/atkinson-hyperlegible-next.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Literata';
+  src: url('/fuentes/literata/literata-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: 'Literata';
+  src: url('/fuentes/literata/literata-400-italica.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: 'Literata';
+  src: url('/fuentes/literata/literata-600.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: fallback;
+}

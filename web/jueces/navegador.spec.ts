@@ -26,7 +26,10 @@
  *      origen; lo de después, nada, y si hay algo, el juez lo lista. Entre
  *      medias: cargar dos ficheros, analizar tres veces, abrir paneles, marcar,
  *      desmarcar y quitar. No se pulsa «Cargar ejemplo»: pide el .txt al
- *      servidor, por diseño (encargo 6.3).
+ *      servidor, por diseño (encargo 6.3). Desde el 10.4 (Tanda 1), con las
+ *      fuentes autoalojadas: ni una petición a fonts.googleapis.com ni a
+ *      fonts.gstatic.com, antes o después de la marca; las dos caras
+ *      precargadas, en la carga inicial; y ninguna cara pedida dos veces.
  *
  * ⚠️ El arranque (build, preview, Chrome, la carga y la marca) no va en un
  *    before(): si revienta ahí (sin Chrome, por ejemplo), node --test cuenta
@@ -54,6 +57,7 @@ import { fileURLToPath } from 'node:url';
 import * as textos from '../src/textos.ts';
 import { urlDeRegla } from '../src/catalogo/catalogo.ts';
 import { generosDe } from '../src/pantalla/generos.ts';
+import { FUENTES_PRECARGADAS } from '../src/estilos/recursos.ts';
 import { EJEMPLOS_PUBLICOS, PAQUETES_DE_PRUEBA, paqueteDePrueba, paquetesIncluidos, TEXTO_DE_TRES_PAQUETES } from './apoyo.ts';
 import { abrirAnalizadorConTestigos, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
 
@@ -230,6 +234,11 @@ describe('el cargador en Chrome, sobre astro preview', () => {
     t.diagnostic(`intentos bloqueados por la CSP (${violaciones.length}): ${enLinea(violaciones)}`);
     assert.ok(carga.length > 0, 'el juez no vio ni la carga inicial');
     assert.deepEqual(carga.filter((x) => new URL(x.url).origin !== origen), [], 'peticiones de la carga inicial a otro origen');
+    // Las fuentes, autoalojadas (10.4, Tanda 1): nada de Google Fonts, las dos precargadas sí, y ninguna cara dos veces.
+    assert.deepEqual([...carga, ...despues].filter((x) => /^fonts\.(googleapis|gstatic)\.com$/.test(new URL(x.url).hostname)), [], 'peticiones a Google Fonts');
+    const fuentes = carga.filter((x) => x.tipo === 'Font').map((x) => new URL(x.url).pathname);
+    for (const ruta of FUENTES_PRECARGADAS) assert.ok(fuentes.includes(`/${ruta}`), `la precarga de ${ruta}: ${fuentes.join(' · ')}`);
+    assert.deepEqual(fuentes.filter((x, i) => fuentes.indexOf(x) !== i), [], 'caras pedidas dos veces (una precarga sin crossorigin no se reutiliza)');
     assert.deepEqual(despues, [], 'peticiones después de la carga inicial');
     assert.deepEqual(violaciones, [], 'intentos bloqueados por la CSP');
   });
