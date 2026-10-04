@@ -4,6 +4,8 @@
  * cabecera con el nombre de la web y el contenido de cada página en el
  * <slot />. Funciona, no luce: el diseño es del punto 10. La página del
  * analizador (index.astro) no lo usa: no se toca más que para su enlace.
+ * Desde el 10.4 (Tanda 1), los colores y las familias tipográficas salen de
+ * los tokens de diseño (estilos/tokens.css): ningún color suelto.
  *
  * [DOC] https://docs.astro.build/en/basics/layouts/ — «Layouts are Astro
  *    components used to provide a reusable UI structure, such as a page
@@ -20,6 +22,7 @@
  */
 import { urlDelAnalizador } from '../catalogo/catalogo.ts';
 import Recursos from '../componentes/Recursos.astro';
+import '../estilos/tokens.css';
 import '../estilos/fuentes.css';
 
 interface Props {
@@ -48,10 +51,10 @@ const analizador = urlDelAnalizador(import.meta.env.BASE_URL);
     </main>
     <style is:global>
       :root {
-        font-family: 'Atkinson Hyperlegible Next', system-ui, sans-serif;
-        line-height: 1.5;
-        color: #1f2937;
-        background: #ffffff;
+        font-family: var(--tipografia-font-family-ui);
+        line-height: var(--tipografia-interlineado-base);
+        color: var(--color-ink);
+        background: var(--color-bg);
       }
       body {
         max-width: 52rem;
@@ -64,7 +67,7 @@ const analizador = urlDelAnalizador(import.meta.env.BASE_URL);
       .id-regla {
         margin-top: 0;
         font-size: 0.8rem;
-        color: #4b5563;
+        color: var(--color-ink-2);
       }
       .en-claro {
         font-weight: 600;
@@ -97,7 +100,7 @@ const analizador = urlDelAnalizador(import.meta.env.BASE_URL);
       .ejemplo {
         white-space: pre-wrap;
         font: inherit;
-        border-left: 3px solid #d1d5db;
+        border-left: 3px solid var(--color-line);
         padding-left: 0.75rem;
       }
     </style>

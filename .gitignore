@@ -17,6 +17,11 @@ motor/corpus/
 # `astro build`. La fuente es paquetes/, que sí se versiona.
 web/public/paquetes/
 
+# La hoja de tokens de diseño (encargo 10.4, Tanda 1): la escribe
+# web/scripts/tokens-a-css.ts desde docs/figma/tokens.json antes de `astro dev`
+# y de `astro build`. La fuente es el JSON, que sí se versiona.
+web/src/estilos/tokens.css
+
 # generated types
 .astro/
 

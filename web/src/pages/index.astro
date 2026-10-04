@@ -5,6 +5,9 @@
  * del enlace al catálogo (firmado en la parada 1 del 6.2: sin `astro check`,
  * la lógica va en .ts revisados con tsc, en src/pantalla/ y src/catalogo/).
  * Funciona, no luce: el diseño es del punto 10.
+ * Desde el 10.4 (Tanda 1), los colores, las familias tipográficas y el foco
+ * salen de los tokens de diseño (estilos/tokens.css, que se genera desde
+ * docs/figma/tokens.json): ningún color suelto (jueces/tokens.spec.ts).
  *
  * [DOC] https://docs.astro.build/en/install/manual/ — src/pages/index.astro.
  * [DOC] https://docs.astro.build/en/guides/styling/ — los <style> de un
@@ -97,6 +100,7 @@
 import { urlDelCatalogo } from '../catalogo/catalogo.ts';
 import { CATALOGO, DESCARGAR_INFORME, NOTA_DE_AUTORIA, SIN_INFORME } from '../textos.ts';
 import Recursos from '../componentes/Recursos.astro';
+import '../estilos/tokens.css';
 import '../estilos/fuentes.css';
 
 const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
@@ -163,10 +167,10 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
     </script>
     <style is:global>
       :root {
-        font-family: 'Atkinson Hyperlegible Next', system-ui, sans-serif;
-        line-height: 1.5;
-        color: #1f2937;
-        background: #ffffff;
+        font-family: var(--tipografia-font-family-ui);
+        line-height: var(--tipografia-interlineado-base);
+        color: var(--color-ink);
+        background: var(--color-bg);
       }
       body {
         max-width: 52rem;
@@ -182,7 +186,7 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
         width: 100%;
         box-sizing: border-box;
         font: inherit;
-        font-family: 'Literata', Georgia, serif;
+        font-family: var(--tipografia-font-family-texto);
       }
       select,
       button {
@@ -221,7 +225,9 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
         font-size: 0.9rem;
       }
       .problemas {
-        color: #991b1b;
+        color: var(--color-ink);
+        background: var(--color-aviso-error);
+        border: 1px solid var(--color-ink-2);
       }
       .problema-paquete,
       .estado-tramo {
@@ -231,18 +237,18 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
         font-style: italic;
       }
       .vista {
-        font-family: 'Literata', Georgia, serif;
+        font-family: var(--tipografia-font-family-texto);
         white-space: pre-wrap;
         line-height: 2.4;
-        border: 1px solid #d1d5db;
+        border: 1px solid var(--color-line);
         padding: 1rem;
       }
       .tramo {
         cursor: pointer;
       }
       .tramo:focus-visible {
-        outline: 2px solid #111827;
-        outline-offset: 2px;
+        outline: var(--foco-grosor) solid var(--foco-color);
+        outline-offset: var(--foco-desplazamiento);
       }
       [class^='familia-'],
       [class*=' familia-'] {
@@ -253,18 +259,24 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
       .muestra {
         text-underline-offset: 0.15em;
       }
-      .familia-color-0 { text-decoration-color: #e69f00; }
-      .familia-color-1 { text-decoration-color: #0072b2; }
-      .familia-color-2 { text-decoration-color: #009e73; }
-      .familia-color-3 { text-decoration-color: #d55e00; }
-      .familia-color-4 { text-decoration-color: #cc79a7; }
-      .familia-color-5 { text-decoration-color: #56b4e9; }
-      .familia-color-6 { text-decoration-color: #8a7000; }
+      /*
+       * Hasta la Tanda 2, que da a cada familia su color, su línea y su sigla por
+       * su id (DISEÑO §4), cada clase lleva el token de la familia que hoy cae en
+       * ella al repartir (pintar.ts): RadiografIA en el orden de su cabecera y
+       * después Español correcto.
+       */
+      .familia-color-0 { text-decoration-color: var(--color-lexico); }
+      .familia-color-1 { text-decoration-color: var(--color-sintaxis); }
+      .familia-color-2 { text-decoration-color: var(--color-puntuacion); }
+      .familia-color-3 { text-decoration-color: var(--color-estadistica); }
+      .familia-color-4 { text-decoration-color: var(--color-discurso); }
+      .familia-color-5 { text-decoration-color: var(--color-gramatica); }
+      .familia-color-6 { text-decoration-color: var(--color-ortotipografia); }
       .familia-propia {
         text-decoration-style: dashed;
       }
       .familia-informativa {
-        text-decoration-color: #6b7280;
+        text-decoration-color: var(--color-canal);
         text-decoration-style: dotted;
       }
       .leyenda {
@@ -274,10 +286,10 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
       .id-regla {
         margin-top: 0;
         font-size: 0.8rem;
-        color: #4b5563;
+        color: var(--color-ink-2);
       }
       .ficha {
-        border-top: 1px solid #d1d5db;
+        border-top: 1px solid var(--color-line);
       }
       .en-claro {
         font-weight: 600;
