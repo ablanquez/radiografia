@@ -175,6 +175,9 @@ export function crearTarjeta(tarjeta: HTMLElement, vista: HTMLElement, velo: HTM
       tarjeta.classList.toggle('compacta', compacta);
     });
     tarjeta.querySelector('.barra-familia')?.after(asa);
+    // La colocación de la tarjeta anclada va en línea y ganaría a la de la hoja (docs/BITACORA.md, 2026-10-04).
+    tarjeta.style.removeProperty('top');
+    tarjeta.style.removeProperty('left');
     tarjeta.classList.add('hoja');
     tarjeta.classList.toggle('compacta', compacta);
     tarjeta.setAttribute('aria-modal', 'true');

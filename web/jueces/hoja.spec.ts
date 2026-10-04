@@ -162,4 +162,19 @@ describe('la hoja inferior en el móvil, sobre astro preview', () => {
     await pestana.evaluar(`document.getElementById('velo').click()`);
     assert.deepEqual(await pestana.evaluar(`[document.getElementById('tarjeta').checkVisibility(), document.activeElement === ${ADEMAS}]`), [false, true]);
   });
+
+  // docs/BITACORA.md, 2026-10-04: con la tarjeta abierta antes en escritorio, la hoja salía de 229 px (el juez 1 abría siempre a 390).
+  test('7 · también si la tarjeta se abrió antes anclada en escritorio: la hoja, abajo y a todo el ancho', async () => {
+    const pestana = await p();
+    await pestana.cdp('Emulation.setDeviceMetricsOverride', { width: 1280, height: 900, deviceScaleFactor: 1, mobile: false });
+    await pestana.evaluar(`${ADEMAS}.click()`);
+    await pestana.evaluar(`document.querySelector('#tarjeta .cerrar').click()`);
+    await pestana.cdp('Emulation.setDeviceMetricsOverride', { width: 390, height: ALTO, deviceScaleFactor: 1, mobile: true });
+    await pestana.hasta(`document.getElementById('barra-pestanas').checkVisibility()`, 'el móvil, con sus pestañas');
+    await pestana.evaluar(`${ADEMAS}.click()`);
+    const h = await hoja();
+    const util = await pestana.evaluar<number>('document.documentElement.clientWidth');
+    assert.deepEqual([Math.round(h.abajo), Math.round(h.izquierda), Math.round(h.ancho)], [ALTO, 0, util], 'abajo y a todo el ancho, tras abrirla en escritorio');
+    await pestana.evaluar(`document.querySelector('#tarjeta .cerrar').click()`);
+  });
 });
