@@ -274,18 +274,18 @@ describe('el orden de presentación (cierre del 7.1, firmado por Antonio)', () =
     assert.deepEqual(generosDe([paquetesIncluidos()[0]!]), ['general', 'academico', 'administrativo', 'narrativa-clasica', 'noticia', 'opinion']);
   });
 
-  test('indexar: las familias, por paquete y alfabéticas por su nombre; cada una con el color de antes', () => {
+  test('indexar: las familias, por paquete y alfabéticas por su nombre; cada una con la clase de su id (desde el 10.4, familias.ts)', () => {
     assert.deepEqual(
       indexar(paquetesIncluidos()).familias.map((f) => [f.clave, f.clase]),
       [
-        ['RadiografIA::canal', 'familia-informativa'],
-        ['RadiografIA::discurso', 'familia-color-4'],
-        ['RadiografIA::estadistica', 'familia-color-3'],
-        ['RadiografIA::lexico', 'familia-color-0'],
-        ['RadiografIA::puntuacion-formato', 'familia-color-2'],
-        ['RadiografIA::sintaxis', 'familia-color-1'],
-        ['Español correcto::gramatica', 'familia-color-5'],
-        ['Español correcto::ortotipografia', 'familia-color-6'],
+        ['RadiografIA::canal', 'fam-canal'],
+        ['RadiografIA::discurso', 'fam-discurso'],
+        ['RadiografIA::estadistica', 'fam-estadistica'],
+        ['RadiografIA::lexico', 'fam-lexico'],
+        ['RadiografIA::puntuacion-formato', 'fam-puntuacion'],
+        ['RadiografIA::sintaxis', 'fam-sintaxis'],
+        ['Español correcto::gramatica', 'fam-gramatica'],
+        ['Español correcto::ortotipografia', 'fam-ortotipografia'],
       ],
     );
   });

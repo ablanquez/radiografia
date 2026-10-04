@@ -25,15 +25,17 @@
  *    prefiere: <button> es inline-block, y un tramo largo se haría un bloque
  *    y rompería el renglón.
  * Un subrayado por familia en el mismo tramo: dentro del tramo, un <span>
- *    por familia, anidados, cada uno con su color y más separado del texto
- *    que el anterior.
- * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/text-decoration
- *    — «Text decorations are drawn across descendant text elements», y un
- *    descendiente con su propia decoración añade otra línea.
- * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/text-underline-offset
- *    — «sets the offset distance of an underline text decoration line […]
- *    from its original position»; en em, «so the offset scales with the font
- *    size».
+ *    por familia (una capa), anidados; estilos/familias.css da a cada capa la
+ *    línea de su familia, más abajo que la anterior, y a la primera el tinte.
+ * Desde el 10.4 (Tanda 2; DISEÑO §4 y §6.1), como el modelo: el color, la
+ *    línea y la sigla de cada familia van por su id (familias.ts); detrás del
+ *    texto, la sigla voladita de sus familias, aria-hidden; y el tramo lleva
+ *    de nombre accesible el de sus reglas y su texto («Conector repetido:
+ *    “Además”»).
+ * [DOC] https://www.w3.org/TR/wai-aria-1.2/#aria-hidden — aria-hidden="true"
+ *    saca el elemento del árbol de accesibilidad: la sigla no se lee.
+ * [DOC] https://www.w3.org/TR/accname-1.2/ — paso 2C: el nombre de un
+ *    elemento con aria-label es su aria-label.
  * Las señales del texto entero (ausencias y estadísticas) no tienen tramo: van
  * al desglose. Las familias informativas (canal) llevan otro estilo y van
  * aparte en la leyenda.
@@ -84,13 +86,11 @@ import { nombreDeRegla } from './humanizar.ts';
 import { entradasDelInforme, repartirSiglas } from './informe.ts';
 import { cifrasDelPaquete, detalleDelPaquete, etiquetaDelPaquete, generoEnCalle, lineaDelTextoEntero, motivoNoMirada, motivoSinComparar, palabrasDelTexto, resumenDelPaquete, type Voz } from './lectura.ts';
 import { partirEnTramos } from './tramos.ts';
+import { claseDeFamilia } from './familias.ts';
 
 type Regla = Paquete['reglas'][number];
 type ResultadoDePaquete = Resultado['paquetes'][number];
 type SenalCalificada = Resultado['senales'][number];
-
-/** [PROPIO] Siete colores distintos entre sí sobre blanco (clases familia-color-N de index.astro); si hubiera más familias, se repiten. */
-const COLORES = 7;
 
 /** Un elemento con su texto (textContent, nunca HTML) y su clase. */
 function el<K extends keyof HTMLElementTagNameMap>(etiqueta: K, texto?: string, clase?: string): HTMLElementTagNameMap[K] {
@@ -113,24 +113,21 @@ const pesoEnCifra = new Intl.NumberFormat('es');
 
 /**
  * Lo que se busca por clave: las reglas y las familias de los paquetes, con su
- * clase de color. Desde el 8.1 (firmado en la parada 1), de TODOS los paquetes
- * que conoce la página, activos o no: los incluidos y después los propios, en
- * el orden de carga. Así una familia no cambia de color al marcar o desmarcar
- * una casilla. La clave es paquete + familia: dos familias que se llaman
- * igual en dos paquetes son dos entradas.
- * [PROPIO] Las familias de un paquete propio llevan además la clase
- *    familia-propia (subrayado discontinuo en index.astro): con siete colores
- *    y siete familias que puntúan en los incluidos, las de un propio repiten
- *    color. El paquete se dice siempre en texto: en la leyenda, en el panel y
- *    en el desglose.
- *    [DOC] https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html — 1.4.1:
- *    «Color is not used as the only visual means of conveying information».
+ * clase de familia. Desde el 8.1 (firmado en la parada 1), de TODOS los
+ * paquetes que conoce la página, activos o no: los incluidos y después los
+ * propios, en el orden de carga. La clave es paquete + familia: dos familias
+ * que se llaman igual en dos paquetes son dos entradas.
+ * Desde el 10.4 (Tanda 2), la clase sale del id de la familia y de su paquete
+ * (familias.ts: fam-<token> o, en un paquete propio, fam-propia, en gris y
+ * discontinuo), no del orden: una familia no cambia de color al marcar o
+ * desmarcar una casilla ni al cargar un propio. El paquete se dice siempre en
+ * texto: en la leyenda, en la tarjeta y en el desglose.
  */
 export interface Indice {
   /** «paquete::reglaId» → la ficha. */
   reglas: Map<string, Regla>;
   familias: { clave: string; paquete: string; nombre: string; informativa: boolean; clase: string }[];
-  /** «paquete::familiaId» → su clase de color. */
+  /** «paquete::familiaId» → su clase de familia (familias.ts). */
   claseDeFamilia: Map<string, string>;
   /** Los nombres de los paquetes propios: sus reglas no tienen ficha en /reglas/. */
   propios: ReadonlySet<string>;
@@ -218,24 +215,22 @@ export function fichaCompleta(regla: Regla, cabecera: Paquete['cabecera']): HTML
 export function indexar(paquetes: readonly Paquete[], propios: ReadonlySet<string> = new Set()): Indice {
   const reglas = new Map<string, Regla>();
   const familias: { posicion: number; familia: Indice['familias'][number] }[] = [];
-  const claseDeFamilia = new Map<string, string>();
+  const clases = new Map<string, string>();
   const cabeceras = new Map<string, Paquete['cabecera']>();
-  let color = 0;
   paquetes.forEach((paquete, posicion) => {
     const nombre = paquete.cabecera.nombre;
     cabeceras.set(nombre, paquete.cabecera);
     for (const regla of paquete.reglas) reglas.set(clave(nombre, regla.id), regla);
     for (const familia of paquete.cabecera.familias) {
-      const deColor = familia.informativa ? 'familia-informativa' : `familia-color-${color++ % COLORES}`;
-      const clase = propios.has(nombre) ? `${deColor} familia-propia` : deColor;
-      claseDeFamilia.set(clave(nombre, familia.id), clase);
+      const clase = claseDeFamilia(nombre, familia.id);
+      clases.set(clave(nombre, familia.id), clase);
       familias.push({ posicion, familia: { clave: clave(nombre, familia.id), paquete: nombre, nombre: familia.nombre, informativa: familia.informativa, clase } });
     }
   });
-  // Los colores se reparten en el orden de declaración, como desde el 6.2; la lista va en el de presentación (orden.ts).
+  // La lista, en el orden de presentación (orden.ts).
   const enPresentacion = enOrden(familias, (x) => [x.posicion, x.familia.nombre]).map((x) => x.familia);
   // Las siglas, en el de presentación: el de la leyenda, que en papel es su clave (9.1).
-  return { reglas, familias: enPresentacion, claseDeFamilia, propios, cabeceras, siglaDeFamilia: repartirSiglas(enPresentacion) };
+  return { reglas, familias: enPresentacion, claseDeFamilia: clases, propios, cabeceras, siglaDeFamilia: repartirSiglas(enPresentacion) };
 }
 
 export function pintarProblemas(contenedor: HTMLElement, problemas: readonly ProblemaDeCarga[]): void {
@@ -255,7 +250,7 @@ export function pintarLeyenda(contenedor: HTMLElement, indice: Indice, activos: 
   for (const f of indice.familias.filter((x) => activos.has(x.paquete))) {
     const elemento = el('li');
     elemento.dataset['sigla'] = indice.siglaDeFamilia.get(f.clave) ?? '';
-    elemento.append(el('span', textos.MUESTRA_DE_SUBRAYADO, `muestra ${f.clase}`), ` ${f.nombre} (${f.paquete})`);
+    elemento.append(el('span', textos.MUESTRA_DE_SUBRAYADO, `muestra capa ${f.clase}`), ` ${f.nombre} (${f.paquete})`);
     (f.informativa ? informativas : puntuan).append(elemento);
   }
   contenedor.replaceChildren(el('h3', textos.FAMILIAS), el('p', textos.CLAVE_DE_SIGLAS, 'solo-impresion'), puntuan);
@@ -281,20 +276,28 @@ export function pintarVista(
       continue;
     }
     const familias = [...new Set(tramo.senales.map((i) => familiaDe(senales[i]!, indice)))];
+    const siglas = familias.map((familia) => indice.siglaDeFamilia.get(familia) ?? '').join('·');
+    const reglas = [...new Set(tramo.senales.map((i) => clave(senales[i]!.paquete, senales[i]!.reglaId)))].map((k) => {
+      const [paquete, id] = k.split('::') as [string, string];
+      return nombreDeRegla(id, indice.reglas.get(clave(paquete, id)));
+    });
     const boton = el('span', undefined, 'tramo');
     boton.setAttribute('role', 'button');
     boton.tabIndex = 0;
+    boton.setAttribute('aria-label', textos.nombreDelTramo(reglas, trozo.replace(/\s+/g, ' ').trim()));
     boton.dataset['familias'] = familias.join('|');
-    boton.dataset['siglas'] = familias.map((familia) => indice.siglaDeFamilia.get(familia) ?? '').join('·');
+    boton.dataset['siglas'] = siglas;
     boton.dataset['senales'] = tramo.senales.join(' ');
     let dentro: HTMLElement = boton;
-    familias.forEach((familia, nivel) => {
-      const capa = el('span', undefined, indice.claseDeFamilia.get(familia) ?? 'familia-color-0');
-      capa.style.textUnderlineOffset = `${0.15 + nivel * 0.3}em`;
+    for (const familia of familias) {
+      const capa = el('span', undefined, `capa ${indice.claseDeFamilia.get(familia) ?? 'fam-propia'}`);
       dentro.append(capa);
       dentro = capa;
-    });
+    }
     dentro.append(trozo);
+    const sigla = el('span', siglas, 'sigla-tramo');
+    sigla.setAttribute('aria-hidden', 'true');
+    boton.append(sigla);
     const activar = () => alActivar(tramo.senales);
     boton.addEventListener('click', activar);
     boton.addEventListener('keydown', (e) => {

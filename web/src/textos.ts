@@ -88,6 +88,11 @@ export const FAMILIAS = 'Familias';
 export const MUESTRA_DE_SUBRAYADO = 'subrayado';
 export const INFORMATIVAS_EN_LA_LEYENDA = 'Solo avisos: no suman.';
 
+// El nombre accesible de cada subrayado (encargo 10.4, Tanda 2; DISEÑO §6.1): sus reglas y su texto, «Conector repetido:
+// “Además”». Las reglas, en lista con «y» (Intl.ListFormat de «es», conjunción).
+const enLista = new Intl.ListFormat('es', { type: 'conjunction' });
+export const nombreDelTramo = (reglas: readonly string[], texto: string): string => `${enLista.format(reglas)}: “${texto}”`;
+
 // El panel de un subrayado.
 /** Sin «tramo», que es palabra del motor (encargo 9.2): lo que se toca es un subrayado. */
 export const TITULO_DEL_PANEL = 'Lo que señala este subrayado';

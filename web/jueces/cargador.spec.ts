@@ -159,11 +159,11 @@ describe('indexar con un paquete propio', () => {
     assert.deepEqual(
       conPropio.familias.filter((f) => f.nombre === 'Léxico').map((f) => [f.clave, f.paquete, f.clase]),
       [
-        ['RadiografIA::lexico', 'RadiografIA', 'familia-color-0'],
-        ['Sintético::lexico', 'Sintético', 'familia-color-0 familia-propia'],
+        ['RadiografIA::lexico', 'RadiografIA', 'fam-lexico'],
+        ['Sintético::lexico', 'Sintético', 'fam-propia'],
       ],
     );
-    assert.equal(conPropio.claseDeFamilia.get('Sintético::ortotipografia'), 'familia-color-1 familia-propia');
+    assert.equal(conPropio.claseDeFamilia.get('Sintético::ortotipografia'), 'fam-propia');
   });
 
   test('dos familias «Léxico» de dos paquetes: cada señal lleva su paquete', async () => {

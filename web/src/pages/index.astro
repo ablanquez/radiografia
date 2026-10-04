@@ -46,11 +46,10 @@
  *    — «If an input has no name specified, or name is empty, the input's
  *    value is not submitted with the form!»: el input del paquete propio no
  *    lleva name, y el fichero no viajaría con el formulario ni sin JavaScript.
- * Las familias de un paquete propio se subrayan discontinuo (familia-propia,
- *    pintar.ts) [PROPIO, firmado]; las informativas siguen punteadas, también
- *    las de un propio, porque su regla va después.
- *    [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/text-decoration-style
- *    — dashed: «Draws a dashed line»; Baseline desde enero de 2020.
+ * Las familias en el texto (encargo 10.4, Tanda 2): su color, su línea, su
+ *    tinte y su sigla, en estilos/familias.css, por el id de cada familia
+ *    (pantalla/familias.ts); las de un paquete propio, en gris y siempre
+ *    discontinuas (DISEÑO §4).
  * El botón «Descargar informe» (encargo 9.1, b; firmado en la parada 1),
  *    type="button" y desactivado hasta el primer resultado: abre el diálogo de
  *    imprimir (pantalla.ts), donde se elige «Guardar como PDF».
@@ -110,6 +109,7 @@ import '../estilos/tokens.css';
 import '../estilos/fuentes.css';
 import '../estilos/base.css';
 import '../estilos/marco.css';
+import '../estilos/familias.css';
 
 const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
 ---
@@ -224,38 +224,6 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
       .vista {
         white-space: pre-wrap;
       }
-      .tramo {
-        cursor: pointer;
-      }
-      [class^='familia-'],
-      [class*=' familia-'] {
-        text-decoration-line: underline;
-        text-decoration-thickness: 2px;
-        text-decoration-skip-ink: none;
-      }
-      .muestra {
-        text-underline-offset: 0.15em;
-      }
-      /*
-       * Hasta la Tanda 2, que da a cada familia su color, su línea y su sigla por
-       * su id (DISEÑO §4), cada clase lleva el token de la familia que hoy cae en
-       * ella al repartir (pintar.ts): RadiografIA en el orden de su cabecera y
-       * después Español correcto.
-       */
-      .familia-color-0 { text-decoration-color: var(--color-lexico); }
-      .familia-color-1 { text-decoration-color: var(--color-sintaxis); }
-      .familia-color-2 { text-decoration-color: var(--color-puntuacion); }
-      .familia-color-3 { text-decoration-color: var(--color-estadistica); }
-      .familia-color-4 { text-decoration-color: var(--color-discurso); }
-      .familia-color-5 { text-decoration-color: var(--color-gramatica); }
-      .familia-color-6 { text-decoration-color: var(--color-ortotipografia); }
-      .familia-propia {
-        text-decoration-style: dashed;
-      }
-      .familia-informativa {
-        text-decoration-color: var(--color-canal);
-        text-decoration-style: dotted;
-      }
       .leyenda {
         list-style: none;
         padding-left: 0;
@@ -314,11 +282,14 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
           content: ' [' attr(data-siglas) ']';
           font-size: 0.75em;
         }
+        /* En papel, la sigla va entre corchetes (::after): la voladita de la pantalla, fuera. */
+        .sigla-tramo {
+          display: none;
+        }
         .leyenda li[data-sigla]::before {
           content: '[' attr(data-sigla) '] ';
         }
-        [class^='familia-'],
-        [class*=' familia-'],
+        .capa,
         .muestra {
           print-color-adjust: exact;
         }

@@ -1,0 +1,193 @@
+/*
+ * Las familias en el texto (encargo 10.4, Tanda 2; DISEÑO §4 y §7), como en el
+ * modelo (TramoSubrayado, TarjetaFamilia y el index.css de Make): cada tramo,
+ * un fondo suave tipo rotulador (el tinte al 14 % del color de su familia) y
+ * la línea de la familia con su estilo, su grosor y su desplazamiento; detrás,
+ * la sigla voladita (11 px, ink-2, aria-hidden). El activo (su tarjeta
+ * abierta), el tinte al 28 % y la línea 1 px más gruesa. Solo variables de
+ * tokens.css: la clase fam-<token> de cada familia las reúne en --c, --tinte,
+ * --tinte-activo, --estilo, --grosor y --desplazamiento (pantalla/familias.ts
+ * dice qué clase lleva cada familia).
+ *
+ * Un tramo con varias familias (un solape) lleva una capa por familia, una
+ * dentro de otra: el tinte es el de la primera y cada capa añade su línea,
+ * cada una más abajo que la anterior (la primera arriba, como el modelo).
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/text-decoration
+ *    — «Text decorations are drawn across descendant text elements»; un
+ *    descendiente con su propia decoración hace que «a second decoration»
+ *    aparezca. Baseline desde julio de 2015.
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/box-decoration-break
+ *    — clone: «Each box fragment is rendered independently», y «The
+ *    background is also drawn independently for each fragment»: el tinte y la
+ *    segunda línea de Ortotipografía, en cada renglón de un tramo partido. No
+ *    es Baseline: Safari pide el prefijo -webkit-, que va delante.
+ *
+ * Ortotipografía es «doble discontinuo» (tokens.json, estilo double-dashed),
+ * que no es un valor de text-decoration-style: sus dos líneas discontinuas
+ * se dibujan como fondo, pegadas al borde de abajo, como el modelo (raya de 4
+ * en 7 px, con su grosor y 2 px entre las dos).
+ *
+ * Los paquetes propios (fam-propia), en gris y discontinuos (DISEÑO §4 y 8.1):
+ * el tinte, el mismo 14 % (28 % en el activo) de ink-2 sobre el fondo; el
+ * grosor y el desplazamiento, los de la otra línea discontinua (Sintaxis).
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value/color-mix
+ *    — «returns the result of mixing them in a given colorspace by a given
+ *    amount»; con un solo porcentaje, «p2 = 100% - p1». Baseline desde mayo
+ *    de 2023.
+ */
+
+.fam-lexico {
+  --c: var(--color-lexico);
+  --tinte: var(--color-tinte-lexico);
+  --tinte-activo: var(--color-tinte-activo-lexico);
+  --estilo: var(--subrayado-lexico-estilo);
+  --grosor: var(--subrayado-lexico-grosor);
+  --desplazamiento: var(--subrayado-lexico-desplazamiento);
+}
+
+.fam-discurso {
+  --c: var(--color-discurso);
+  --tinte: var(--color-tinte-discurso);
+  --tinte-activo: var(--color-tinte-activo-discurso);
+  --estilo: var(--subrayado-discurso-estilo);
+  --grosor: var(--subrayado-discurso-grosor);
+  --desplazamiento: var(--subrayado-discurso-desplazamiento);
+}
+
+.fam-sintaxis {
+  --c: var(--color-sintaxis);
+  --tinte: var(--color-tinte-sintaxis);
+  --tinte-activo: var(--color-tinte-activo-sintaxis);
+  --estilo: var(--subrayado-sintaxis-estilo);
+  --grosor: var(--subrayado-sintaxis-grosor);
+  --desplazamiento: var(--subrayado-sintaxis-desplazamiento);
+}
+
+.fam-estadistica {
+  --c: var(--color-estadistica);
+  --tinte: var(--color-tinte-estadistica);
+  --tinte-activo: var(--color-tinte-activo-estadistica);
+  --estilo: var(--subrayado-estadistica-estilo);
+  --grosor: var(--subrayado-estadistica-grosor);
+  --desplazamiento: var(--subrayado-estadistica-desplazamiento);
+}
+
+.fam-puntuacion {
+  --c: var(--color-puntuacion);
+  --tinte: var(--color-tinte-puntuacion);
+  --tinte-activo: var(--color-tinte-activo-puntuacion);
+  --estilo: var(--subrayado-puntuacion-estilo);
+  --grosor: var(--subrayado-puntuacion-grosor);
+  --desplazamiento: var(--subrayado-puntuacion-desplazamiento);
+}
+
+.fam-canal {
+  --c: var(--color-canal);
+  --tinte: var(--color-tinte-canal);
+  --tinte-activo: var(--color-tinte-activo-canal);
+  --estilo: var(--subrayado-canal-estilo);
+  --grosor: var(--subrayado-canal-grosor);
+  --desplazamiento: var(--subrayado-canal-desplazamiento);
+}
+
+.fam-gramatica {
+  --c: var(--color-gramatica);
+  --tinte: var(--color-tinte-gramatica);
+  --tinte-activo: var(--color-tinte-activo-gramatica);
+  --estilo: var(--subrayado-gramatica-estilo);
+  --grosor: var(--subrayado-gramatica-grosor);
+  --desplazamiento: var(--subrayado-gramatica-desplazamiento);
+}
+
+.fam-ortotipografia {
+  --c: var(--color-ortotipografia);
+  --tinte: var(--color-tinte-ortotipografia);
+  --tinte-activo: var(--color-tinte-activo-ortotipografia);
+  --estilo: dashed;
+  --grosor: var(--subrayado-ortotipografia-grosor);
+  --desplazamiento: var(--subrayado-ortotipografia-desplazamiento);
+}
+
+.fam-propia {
+  --c: var(--color-ink-2);
+  --tinte: color-mix(in srgb, var(--color-ink-2) 14%, var(--color-bg));
+  --tinte-activo: color-mix(in srgb, var(--color-ink-2) 28%, var(--color-bg));
+  --estilo: dashed;
+  --grosor: var(--subrayado-sintaxis-grosor);
+  --desplazamiento: var(--subrayado-sintaxis-desplazamiento);
+}
+
+/* La línea de cada capa. */
+.capa {
+  text-decoration-line: underline;
+  text-decoration-style: var(--estilo);
+  text-decoration-color: var(--c);
+  text-decoration-thickness: var(--grosor);
+  text-underline-offset: var(--desplazamiento);
+  text-decoration-skip-ink: auto;
+}
+
+/* Ortotipografía: las dos líneas discontinuas, de fondo, abajo del todo. */
+.capa.fam-ortotipografia {
+  text-decoration-line: none;
+  background-image: linear-gradient(to right, var(--c) 4px, transparent 4px), linear-gradient(to right, var(--c) 4px, transparent 4px);
+  background-size:
+    7px var(--grosor),
+    7px var(--grosor);
+  background-repeat: repeat-x;
+  background-position:
+    left bottom calc(var(--grosor) + 2px),
+    left bottom;
+  padding-bottom: var(--desplazamiento);
+}
+
+/* El tinte, en la primera capa del tramo (y en la muestra de cada familia). */
+.tramo > .capa,
+.muestra {
+  background-color: var(--tinte);
+  border-radius: 2px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* Un solape: la segunda capa, 2 px por debajo de la línea de la primera; la tercera, por debajo de la segunda. */
+.tramo > .capa {
+  --abajo: calc(var(--desplazamiento) + var(--grosor) + 2px);
+}
+
+.tramo > .capa > .capa {
+  text-underline-offset: var(--abajo);
+  --abajo-2: calc(var(--abajo) + var(--grosor) + 2px);
+}
+
+.tramo > .capa > .capa > .capa {
+  text-underline-offset: var(--abajo-2);
+}
+
+.tramo {
+  padding: 0 2px;
+  border-radius: 2px;
+  cursor: pointer;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* El activo: el tinte al 28 % y cada línea 1 px más gruesa. */
+.tramo.activo > .capa {
+  background-color: var(--tinte-activo);
+}
+
+.tramo.activo .capa {
+  text-decoration-thickness: calc(var(--grosor) + 1px);
+}
+
+.sigla-tramo {
+  margin-left: 2px;
+  font-family: var(--tipografia-font-family-ui);
+  font-size: var(--tipografia-tamano-sigla);
+  font-weight: 400;
+  font-style: normal;
+  line-height: var(--tipografia-interlineado-sigla);
+  color: var(--color-ink-2);
+  vertical-align: super;
+}

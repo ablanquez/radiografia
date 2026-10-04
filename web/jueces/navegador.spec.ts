@@ -133,7 +133,7 @@ describe('el cargador en Chrome, sobre astro preview', () => {
     await analizar();
 
     const leyenda = await p().evaluar<string[]>(`[...document.querySelectorAll('#leyenda li')].map((li) => li.textContent.trim() + ' | ' + li.querySelector('.muestra').className)`);
-    assert.ok(leyenda.includes(`${textos.MUESTRA_DE_SUBRAYADO} Pruebas (${PRUEBA}) | muestra familia-color-0 familia-propia`), leyenda.join('\n'));
+    assert.ok(leyenda.includes(`${textos.MUESTRA_DE_SUBRAYADO} Pruebas (${PRUEBA}) | muestra capa fam-propia`), leyenda.join('\n'));
 
     const propia = await p().evaluar<{ titulo: string; enlacesEnTitulo: number; texto: string; hrefs: string[]; ejemplos: string[] }>(`(() => {
       const tramo = [...document.querySelectorAll('#vista .tramo')].find((t) => t.dataset.familias.split('|').includes('${PRUEBA}::pruebas'));
