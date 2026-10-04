@@ -273,22 +273,6 @@
   background: var(--color-bg);
 }
 
-.sigla {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  box-sizing: border-box;
-  width: var(--sigla-tarjeta-circulo);
-  height: var(--sigla-tarjeta-circulo);
-  border: var(--sigla-tarjeta-borde) solid var(--c);
-  border-radius: var(--radio-redondo);
-  background: var(--color-bg);
-  font-size: var(--sigla-tarjeta-tamano);
-  font-weight: 700;
-  line-height: 1;
-}
-
 .nombre-motivo {
   flex: 1;
   font-weight: 700;

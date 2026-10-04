@@ -172,7 +172,8 @@
  * el contenido a 16 de los bordes, con scroll propio; «Anterior» y
  * «Siguiente», uno debajo de otro y a todo el ancho. Detrás, el velo negro al
  * 40 % (token velo), y por encima del velo el tramo activo, que no queda
- * tapado.
+ * tapado. El asa y el velo, comunes con la hoja de filtros del catálogo, en
+ * hoja.css (desde la Tanda 3).
  * [DOC] https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html —
  *    2.5.7: lo que se arrastra se puede hacer «with a single pointer without
  *    dragging».
@@ -204,24 +205,6 @@
   display: none;
 }
 
-.asa {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 100%;
-  padding: 0;
-  border: 0;
-  background: none;
-}
-
-.asa span {
-  width: var(--espacio-40);
-  height: var(--espacio-4);
-  border-radius: var(--radio-redondo);
-  background: var(--color-ink-2);
-}
-
 .hoja .cuerpo-tarjeta {
   min-height: 0;
   padding: 0 var(--espacio-16) calc(var(--espacio-16) + env(safe-area-inset-bottom));
@@ -230,13 +213,6 @@
 
 .hoja .navegacion-reglas {
   flex-direction: column;
-}
-
-.velo {
-  position: fixed;
-  inset: 0;
-  z-index: 10;
-  background: var(--color-velo);
 }
 
 body.con-hoja .tramo.activo {

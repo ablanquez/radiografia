@@ -1,0 +1,36 @@
+/*
+ * Lo común a las hojas inferiores del móvil (encargo 10.4; DISEÑO §6.2 y
+ * §6.3): el asa, un botón a todo el ancho con una raya de 40 × 4 en ink-2 que
+ * cambia el tamaño de la hoja con un toque (la alternativa a arrastrar, WCAG
+ * 2.5.7), y el velo negro al 40 % (token velo) que queda detrás y la cierra.
+ * La usan la tarjeta de regla del analizador (tarjeta.css, Tanda 2) y los
+ * filtros del catálogo (catalogo.css, Tanda 3). Solo variables de tokens.css.
+ * [DOC] https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html —
+ *    2.5.7: lo que se arrastra se puede hacer «with a single pointer without
+ *    dragging».
+ */
+
+.asa {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+.asa span {
+  width: var(--espacio-40);
+  height: var(--espacio-4);
+  border-radius: var(--radio-redondo);
+  background: var(--color-ink-2);
+}
+
+.velo {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  background: var(--color-velo);
+}

@@ -191,3 +191,20 @@
   color: var(--color-ink-2);
   vertical-align: super;
 }
+
+/* La sigla de la familia en un círculo de 24 con borde de 2 de su color (las tarjetas del resultado y de regla, el catálogo y la ficha). */
+.sigla {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: var(--sigla-tarjeta-circulo);
+  height: var(--sigla-tarjeta-circulo);
+  border: var(--sigla-tarjeta-borde) solid var(--c);
+  border-radius: var(--radio-redondo);
+  background: var(--color-bg);
+  font-size: var(--sigla-tarjeta-tamano);
+  font-weight: 700;
+  line-height: 1;
+}
