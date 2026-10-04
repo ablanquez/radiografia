@@ -701,8 +701,12 @@ export function pintarDesglose(
   };
   const genero = generoEnCalle(resultado.genero).conArticulo;
   const reglaDe = (paquete: string, id: string) => indice.reglas.get(clave(paquete, id));
-  /** El desglose de un paquete. */
-  const desgloseDe = (r: ResultadoDePaquete, cabecera: Paquete['cabecera']): HTMLElement => {
+  /**
+   * El desglose de un paquete en dos partes (desde el 10.4: en el móvil van a dos pestañas, Reglas y Datos): sus
+   * familias y sus reglas con lo que se nota en el conjunto; y solo avisos, sin textos con los que comparar y no
+   * miradas (null si no hay nada de eso).
+   */
+  const desgloseDe = (r: ResultadoDePaquete, cabecera: Paquete['cabecera']): [HTMLElement, HTMLElement | null] => {
     const p = r.puntuacion;
     const seccion = el('section', undefined, 'desglose-paquete');
     seccion.append(el('h3', `${r.paquete} ${cabecera.version}`));
@@ -739,7 +743,8 @@ export function pintarDesglose(
       else informativas.push({ id: s.reglaId, linea: deRegla(r.paquete, s.reglaId, lineaDelTextoEntero(s, genero, true, reglaDe(r.paquete, s.reglaId))) });
     }
     for (const [id, n] of porRegla) informativas.push({ id, linea: deRegla(r.paquete, id, textos.veces(n)) });
-    seccion.append(
+    const avisos = el('section', undefined, 'desglose-avisos');
+    avisos.append(
       ...apartado(textos.INFORMATIVAS_EN_EL_DESGLOSE, enOrdenDeRegla(informativas, (x) => x.id).map((x) => x.linea)),
       ...apartado(
         textos.SIN_TEXTOS_PARA_COMPARAR,
@@ -752,10 +757,14 @@ export function pintarDesglose(
         ),
       ),
     );
-    return seccion;
+    return [seccion, avisos.childElementCount > 0 ? avisos : null];
   };
-  /** «Ver el detalle», plegado: las cifras (si hay escala) y el desglose. */
-  const detalleDe = (r: ResultadoDePaquete, cabecera: Paquete['cabecera']): HTMLDetailsElement => {
+  /**
+   * «Ver el detalle», plegado: las cifras (si hay escala) y el desglose. Las dos partes del desglose del paquete de la
+   * pastilla llevan id, para las pestañas del móvil (pestanas.ts); la primera, con el título «Desglose», que solo se
+   * ve allí.
+   */
+  const detalleDe = (r: ResultadoDePaquete, cabecera: Paquete['cabecera'], delaPastilla: boolean): HTMLDetailsElement => {
     const detalle = el('details', undefined, 'detalle');
     detalle.append(el('summary', textos.VER_EL_DETALLE));
     if (r.banda !== null) {
@@ -763,7 +772,15 @@ export function pintarDesglose(
       cifras.append(...detalleDelPaquete(resultado, r, nombreDelGenero).map((linea) => el('p', linea)));
       detalle.append(cifras);
     }
-    detalle.append(desgloseDe(r, cabecera));
+    const [reglas, avisos] = desgloseDe(r, cabecera);
+    if (delaPastilla) {
+      const envoltorio = el('section');
+      envoltorio.id = 'desglose-reglas';
+      envoltorio.append(el('h2', textos.DESGLOSE, 'titulo-desglose'), reglas);
+      detalle.append(envoltorio);
+      if (avisos !== null) avisos.id = 'desglose-avisos';
+    } else detalle.append(reglas);
+    if (avisos !== null) detalle.append(avisos);
     return detalle;
   };
   contenedor.replaceChildren();
@@ -771,7 +788,7 @@ export function pintarDesglose(
   for (const r of principal === undefined ? resultado.paquetes : [principal, ...resultado.paquetes.filter((x) => x !== principal)]) {
     const cabecera = paquetes[resultado.paquetes.indexOf(r)]!.cabecera;
     if (r === principal) {
-      contenedor.append(detalleDe(r, cabecera));
+      contenedor.append(detalleDe(r, cabecera, true));
       continue;
     }
     const voz = vozDe(r.paquete);
@@ -780,7 +797,7 @@ export function pintarDesglose(
     tarjeta.append(titulo);
     if (r.banda !== null) tarjeta.append(lecturaDe(resultado, r, voz, 'h3', 'lectura'));
     for (const linea of resumenDelPaquete(resultado, r, voz, indice)) tarjeta.append(el('p', linea, 'resumen'));
-    tarjeta.append(detalleDe(r, cabecera));
+    tarjeta.append(detalleDe(r, cabecera, false));
     contenedor.append(tarjeta);
   }
 }

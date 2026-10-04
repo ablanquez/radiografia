@@ -1,0 +1,134 @@
+/*
+ * Las pestañas del móvil (encargo 10.4, Tanda 2; DISEÑO §6.2), como en el
+ * modelo (BarraPestanas, medida por CDP el 04/10): la barra fija abajo, a todo
+ * el ancho, sobre bg y con la línea line encima; tres pestañas iguales de 56
+ * de alto (en px como estructura: el ALTO_BARRA del modelo), a 16 en ink-2; la
+ * elegida, en negrita e índigo con una raya de 3 px arriba; y el margen de
+ * abajo del iPhone (env(safe-area-inset-bottom)). La página deja abajo el
+ * hueco de la barra. Los paneles, a 32 entre bloques; solo se ve el elegido.
+ * Antes de analizar, en el móvil no hay «Aquí verás el resultado.» (como en
+ * el modelo), y con la pestaña Reglas no se ve el pie (DISEÑO §6.2: la nota,
+ * al pie de Texto y de Datos).
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/env
+ *    — env() «insert the value of a user-agent defined environment variable»;
+ *    safe-area-inset-bottom, el borde seguro de abajo.
+ */
+
+.barra-pestanas {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding-bottom: env(safe-area-inset-bottom);
+  border-top: 1px solid var(--color-line);
+  background: var(--color-bg);
+}
+
+.barra-pestanas [role='tab'] {
+  height: 56px;
+  min-width: 0;
+  margin-top: -1px;
+  padding: 0;
+  border: 0;
+  border-top: 3px solid transparent;
+  border-radius: 0;
+  background: none;
+  color: var(--color-ink-2);
+  font-weight: 400;
+}
+
+.barra-pestanas [role='tab'][aria-selected='true'] {
+  border-top-color: var(--color-accent);
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+body.con-pestanas {
+  padding-bottom: calc(56px + 1px + env(safe-area-inset-bottom));
+}
+
+body.con-pestanas[data-pestana='reglas'] .pie {
+  display: none;
+}
+
+.panel-pestana {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-32);
+  order: 5;
+}
+
+/* En Reglas, el desglose de las reglas con su título, en una tarjeta de borde line (como el modelo); el título no se ve fuera. */
+.titulo-desglose {
+  display: none;
+}
+
+.panel-pestana .titulo-desglose {
+  display: block;
+  margin: 0;
+}
+
+.panel-pestana #desglose-reglas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-12);
+}
+
+.panel-pestana .desglose-paquete {
+  padding: var(--espacio-16);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radio-tarjeta);
+  font-size: var(--tipografia-tamano-secundario);
+  line-height: var(--tipografia-interlineado-secundario);
+}
+
+.panel-pestana .desglose-avisos {
+  font-size: var(--tipografia-tamano-secundario);
+  line-height: var(--tipografia-interlineado-secundario);
+}
+
+
+/* Dentro de un panel, el orden del reparto (pestanas.ts), no el de la tableta. */
+.panel-pestana > * {
+  order: 0;
+}
+
+.panel-pestana:focus-visible {
+  outline-offset: var(--espacio-4);
+}
+
+@media screen and (max-width: 768px) {
+  .hueco-resultado {
+    display: none;
+  }
+}
+
+/*
+ * En papel no hay pestañas (encargo 10.4, Tanda 2): si se imprime desde el móvil, con los bloques repartidos, los
+ * paneles no cuentan (display: contents, también el oculto) y cada parte del desglose lleva el orden del desglose en
+ * el informe (index.astro); «Ver el detalle», que en Datos solo lleva las cifras (en papel van en la cabecera), no sale.
+ * Visto por el juez de impresión: sin esto, lo de una pestaña oculta no salía en el papel.
+ */
+@media print {
+  .barra-pestanas {
+    display: none;
+  }
+
+  .panel-pestana,
+  .panel-pestana[hidden] {
+    display: contents !important;
+  }
+
+  #desglose-reglas,
+  #desglose-avisos,
+  .panel-pestana > .otro-paquete {
+    order: 5;
+  }
+
+  .panel-pestana > .detalle {
+    display: none;
+  }
+}

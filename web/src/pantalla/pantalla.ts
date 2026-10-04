@@ -66,7 +66,10 @@
  *   · el ojo de cada familia oculta o enseña su capa en la vista; lo oculto
  *     vale para ese resultado: al volver a analizar, todo se ve otra vez;
  *   · al tocar un tramo, la tarjeta de su primera señal (tarjeta.ts), una sola
- *     por página, que se prepara con cada análisis.
+ *     por página, que se prepara con cada análisis;
+ *   · en el móvil, las pestañas Texto · Reglas · Datos (pestanas.ts): lo que
+ *     se llevan a sus paneles vuelve a su sitio antes de pintar otro análisis
+ *     o de quitar el resultado.
  *   [DOC] https://www.w3.org/TR/wai-aria-1.2/#aria-describedby — «Identifies
  *   the element (or elements) that describes the object».
  *   [DOC] https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus
@@ -107,6 +110,7 @@ import {
 import { activos, leerPaquetePropio } from './propios.ts';
 import { recuentoDeFamilias, type Voz } from './lectura.ts';
 import { crearTarjeta } from './tarjeta.ts';
+import { crearPestanas } from './pestanas.ts';
 
 function elemento<T extends HTMLElement>(id: string): T {
   const e = document.getElementById(id);
@@ -126,6 +130,7 @@ const leyenda = elemento<HTMLDivElement>('leyenda');
 const vista = elemento<HTMLDivElement>('vista');
 const contenedorDeLaTarjeta = elemento<HTMLElement>('tarjeta');
 const tarjeta = crearTarjeta(contenedorDeLaTarjeta, vista, elemento<HTMLDivElement>('velo'));
+const pestanas = crearPestanas(elemento<HTMLDivElement>('barra-pestanas'));
 const desglose = elemento<HTMLDivElement>('desglose');
 const botonesDeEjemplo: [HTMLButtonElement, Ejemplo][] = [
   [elemento<HTMLButtonElement>('ejemplo-humano'), 'humano'],
@@ -177,6 +182,7 @@ function avisarInsuficiente(palabras: number | null): void {
 elemento<HTMLButtonElement>('otro').addEventListener('click', () => {
   texto.value = '';
   tarjeta.cerrar(false);
+  pestanas.devolver();
   for (const parte of [resultado, vista]) parte.hidden = true;
   hueco.hidden = false;
   avisarInsuficiente(null);
@@ -196,6 +202,8 @@ function analizarYPintar(paquetes: readonly Paquete[], indice: Indice, vozDe: (p
   const elGenero = genero.value;
   try {
     const r = analizar(elTexto, paquetes, { genero: elGenero });
+    // Lo que las pestañas del móvil se llevaron vuelve a su sitio antes de pintar encima.
+    pestanas.devolver();
     pintarCabeceraDelInforme(cabeceraDelInforme, r, paquetes, indice, fechaDelAnalisis.format(new Date()), nombreDeGenero(elGenero));
     pintarMedidor(medidor, r, vozDe, indice, nombreDeGenero(elGenero));
     pintarSenalesDelInforme(senalesDelInforme, r, elTexto, indice, import.meta.env.BASE_URL, location.href);
@@ -231,6 +239,7 @@ function analizarYPintar(paquetes: readonly Paquete[], indice: Indice, vozDe: (p
     avisoDePaquetes.textContent = '';
     if (hayAnalisis) {
       plegar();
+      pestanas.alPintar();
       medidor.querySelector<HTMLElement>('.pastilla > [tabindex]')?.focus();
     }
   } catch (fallo) {

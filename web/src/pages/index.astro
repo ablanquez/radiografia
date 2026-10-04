@@ -118,6 +118,10 @@ import {
   CATALOGO,
   CATALOGO_CORTO,
   DESCARGAR_INFORME,
+  PESTANA_DATOS,
+  PESTANA_REGLAS,
+  PESTANA_TEXTO,
+  SECCIONES_DEL_RESULTADO,
   EDITAR_EL_TEXTO,
   NOTA_DE_AUTORIA,
   PLACEHOLDER_DEL_TEXTO,
@@ -139,6 +143,7 @@ import '../estilos/familias.css';
 import '../estilos/formulario.css';
 import '../estilos/resultado.css';
 import '../estilos/tarjeta.css';
+import '../estilos/pestanas.css';
 
 const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
 ---
@@ -222,9 +227,17 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
         </section>
         <p class="solo-impresion sin-informe">{SIN_INFORME}</p>
       </div>
+      <div id="panel-texto" class="panel-pestana" role="tabpanel" aria-labelledby="pestana-texto" tabindex="0" hidden></div>
+      <div id="panel-reglas" class="panel-pestana" role="tabpanel" aria-labelledby="pestana-reglas" tabindex="0" hidden></div>
+      <div id="panel-datos" class="panel-pestana" role="tabpanel" aria-labelledby="pestana-datos" tabindex="0" hidden></div>
     </main>
     <div id="tarjeta" class="tarjeta-regla" role="dialog" aria-labelledby="titulo-tarjeta" hidden></div>
     <div id="velo" class="velo" hidden></div>
+    <div id="barra-pestanas" class="barra-pestanas" role="tablist" aria-label={SECCIONES_DEL_RESULTADO} hidden>
+      <button id="pestana-texto" type="button" role="tab" aria-selected="true" aria-controls="panel-texto" tabindex="0">{PESTANA_TEXTO}</button>
+      <button id="pestana-reglas" type="button" role="tab" aria-selected="false" aria-controls="panel-reglas" tabindex="-1">{PESTANA_REGLAS}</button>
+      <button id="pestana-datos" type="button" role="tab" aria-selected="false" aria-controls="panel-datos" tabindex="-1">{PESTANA_DATOS}</button>
+    </div>
     <Pie />
     <script>
       import '../pantalla/pantalla.ts';
@@ -279,6 +292,7 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
         .acciones-resultado,
         .ojo,
         #tarjeta,
+        .titulo-desglose,
         #medidor .datos,
         .detalle > summary,
         .detalle > .cifras {

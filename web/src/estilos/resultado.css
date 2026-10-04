@@ -82,12 +82,8 @@
   }
 }
 
-.resultado p,
-.resultado ul,
-.resultado ol,
-.resultado h2,
-.resultado h3,
-.resultado h4 {
+/* Sin márgenes de párrafo ni de título: los huecos son los del modelo (también en los paneles de las pestañas del móvil). */
+:is(.resultado, .panel-pestana) :is(p, ul, ol, h2, h3, h4) {
   margin: 0;
 }
 
@@ -372,7 +368,8 @@
 }
 
 .detalle > .cifras,
-.desglose-paquete {
+.desglose-paquete,
+.desglose-avisos {
   display: flex;
   flex-direction: column;
   gap: var(--espacio-8);
@@ -380,12 +377,14 @@
 }
 
 .desglose-paquete h3,
-.desglose-paquete h4 {
+.desglose-paquete h4,
+.desglose-avisos h4 {
   font-size: var(--tipografia-tamano-secundario);
   line-height: var(--tipografia-interlineado-secundario);
 }
 
-.desglose-paquete ul {
+.desglose-paquete ul,
+.desglose-avisos ul {
   padding-left: var(--espacio-20);
   color: var(--color-ink-2);
 }

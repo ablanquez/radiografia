@@ -95,7 +95,7 @@ describe('la hoja inferior en el móvil, sobre astro preview', () => {
     assert.ok(h.alto <= ALTO * 0.6 + 1, `como mucho el 60 %: ${h.alto}`);
     assert.deepEqual(
       await pestana.evaluar(`[...document.body.children].filter((e) => e.tagName !== 'SCRIPT').map((e) => [e.id || e.tagName.toLowerCase(), e.inert])`),
-      [['header', true], ['main', true], ['tarjeta', false], ['velo', false], ['footer', true]],
+      [['header', true], ['main', true], ['tarjeta', false], ['velo', false], ['barra-pestanas', true], ['footer', true]],
       'detrás de la hoja, todo inerte',
     );
   });

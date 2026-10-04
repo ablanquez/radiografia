@@ -127,6 +127,14 @@ export const ANTERIOR = 'Anterior';
 export const SIGUIENTE = 'Siguiente';
 /** El asa de la hoja inferior del móvil, un botón: la cambia de tamaño con un toque. */
 export const CAMBIAR_TAMANO = 'Cambiar tamaño';
+
+// Las pestañas del móvil (encargo 10.4, Tanda 2; DISEÑO §6.2): la barra, sus tres pestañas y el título del desglose en
+// la de Reglas.
+export const SECCIONES_DEL_RESULTADO = 'Secciones del resultado';
+export const PESTANA_TEXTO = 'Texto';
+export const PESTANA_REGLAS = 'Reglas';
+export const PESTANA_DATOS = 'Datos';
+export const DESGLOSE = 'Desglose';
 export const EXPLICACION = 'Explicación';
 export const SUGERENCIA = 'Sugerencia';
 export const NIVEL_DE_EVIDENCIA = 'Nivel de evidencia';

@@ -49,6 +49,9 @@ describe('el lenguaje de calle en Chrome, sobre astro preview', () => {
   let arranque: Promise<AnalizadorConTestigos> | undefined;
   const arrancar = async (): Promise<void> => {
     sesion = await (arranque ??= abrirAnalizadorConTestigos());
+    // A 1280 (desde el 10.4, Tanda 2): el Chrome de los jueces abre a 764 de ancho, que es el móvil, con el resultado
+    // repartido en pestañas; este juez mira lo que dice la página, y la estructura del móvil la miran pestanas.spec.ts y hoja.spec.ts.
+    await sesion.pestana.cdp('Emulation.setDeviceMetricsOverride', { width: 1280, height: 900, deviceScaleFactor: 1, mobile: false });
   };
   const p = (): Pestana => {
     assert.ok(sesion, 'Chrome no llegó a abrirse');
