@@ -1,0 +1,127 @@
+/*
+ * El marco de cada página (encargo 10.4, Tanda 1), como en el modelo
+ * (MarcoPantalla, CabeceraApp y PieApp): los márgenes laterales y el hueco
+ * entre cabecera, contenido y pie según el tamaño; la cabecera con su línea; el
+ * pie con la nota. Solo variables de tokens.css.
+ *
+ * Tamaños (DISEÑO §6): escritorio desde 1024 px (márgenes de 64 y huecos de
+ * 40, como el px-16 y el gap-10 del modelo), tableta de 769 a 1023 (40 y 32) y
+ * móvil hasta 768 (16 y 24, y la cabecera compacta).
+ * [PROPIO] Por encima de 1280 px (el escritorio del DISEÑO §1), la página no
+ *    se estira: se centra con ese ancho, como el marco del modelo.
+ * Las medidas de la cabecera y del pie, del prototipo publicado (medido por
+ * CDP el 04/10): nombre a 28/33,6 en negrita con
+ * interletrado −0,025em (20/26 en móvil), eslogan en Literata itálica a 15 en
+ * ink-2, enlace en negrita con 44 de alto, 20 px arriba y abajo (12 en
+ * móvil), línea line debajo; pie a 15 en ink-2 con línea line encima.
+ * El icono (c), 40 px a 12 del nombre y 32 en móvil (DISEÑO §8, 04/10); el
+ * modelo no lo tenía.
+ */
+
+body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-40);
+  box-sizing: border-box;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--espacio-64);
+}
+
+.cabecera {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--espacio-16);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-12);
+  padding: var(--espacio-20) 0;
+}
+
+.icono-marca {
+  flex-shrink: 0;
+  width: var(--espacio-40);
+  height: var(--espacio-40);
+}
+
+.nombre {
+  margin: 0;
+  font-size: var(--tipografia-tamano-titulo-pantalla);
+  line-height: var(--tipografia-interlineado-titulo-pantalla);
+  font-weight: 700;
+  letter-spacing: var(--tipografia-interletrado-marca);
+}
+
+.eslogan {
+  margin: 0;
+  font-family: var(--tipografia-font-family-texto);
+  font-size: var(--tipografia-tamano-secundario);
+  line-height: var(--tipografia-interlineado-secundario);
+  font-style: italic;
+  color: var(--color-ink-2);
+}
+
+.cabecera nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--medida-toque);
+  margin-top: var(--espacio-20);
+  font-weight: 700;
+}
+
+.cabecera .corto {
+  display: none;
+}
+
+.pie {
+  padding: var(--espacio-20) 0;
+  border-top: 1px solid var(--color-line);
+  font-size: var(--tipografia-tamano-secundario);
+  line-height: var(--tipografia-interlineado-secundario);
+  color: var(--color-ink-2);
+}
+
+@media (max-width: 1023px) {
+  body {
+    gap: var(--espacio-32);
+    padding: 0 var(--espacio-40);
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    gap: var(--espacio-24);
+    padding: 0 var(--espacio-16);
+  }
+
+  .marca {
+    padding: var(--espacio-12) 0;
+  }
+
+  .icono-marca {
+    width: var(--espacio-32);
+    height: var(--espacio-32);
+  }
+
+  .nombre {
+    font-size: var(--tipografia-tamano-titulo-tarjeta);
+    line-height: var(--tipografia-interlineado-titulo-tarjeta);
+  }
+
+  .cabecera nav a {
+    margin-top: var(--espacio-12);
+  }
+
+  .cabecera .largo {
+    display: none;
+  }
+
+  .cabecera .corto {
+    display: inline;
+  }
+}

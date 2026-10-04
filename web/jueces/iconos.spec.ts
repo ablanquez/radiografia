@@ -107,7 +107,7 @@ describe('el icono y el manifiesto', () => {
         `${pagina}: los enlaces del icono y del manifiesto`,
       );
       assert.ok(!/href="data:/.test(html), `${pagina}: todavía lleva un enlace data:`);
-      const img = /<header>[\s\S]*?<img\b([^>]*)>/.exec(html)?.[1] ?? '';
+      const img = /<header\b[^>]*>[\s\S]*?<img\b([^>]*)>/.exec(html)?.[1] ?? '';
       assert.match(img, /src="\/icono-c\.svg"/, `${pagina}: el icono (c) en la cabecera`);
       assert.match(img, /alt=""/, `${pagina}: con alt vacío`);
     }

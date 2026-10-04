@@ -17,9 +17,10 @@
  *    component»; lo que crea el script no lo está, así que el estilo va con
  *    `is:global`.
  * El icono y el manifiesto (encargo 10.4, Tanda 1) los enlaza Recursos.astro;
- *    el icono (c) va en la cabecera, junto al nombre, con alt="" porque el
- *    nombre ya es texto (DISEÑO §8). Sustituyen al <link rel="icon"
- *    href="data:,"> del 6.2.
+ *    sustituyen al <link rel="icon" href="data:,"> del 6.2. La cabecera (con
+ *    el icono, el nombre como <h1>, el eslogan y el enlace al catálogo) y el
+ *    pie (la nota de autoría) son Cabecera.astro y Pie.astro, comunes con el
+ *    catálogo, y el marco de la página, estilos/marco.css.
  * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/white-space
  *    — pre-wrap: «Sequences of white space are preserved. Lines are broken at
  *    newline characters […] and as necessary to fill line boxes»: la vista
@@ -101,16 +102,16 @@
  *    «there isn't any guarantee that print-color-adjust will do anything».
  */
 import { urlDelCatalogo } from '../catalogo/catalogo.ts';
-import { conBarraFinal } from '../pantalla/cargar.ts';
-import { ICONO_DE_CABECERA } from '../estilos/recursos.ts';
-import { CATALOGO, DESCARGAR_INFORME, NOTA_DE_AUTORIA, SIN_INFORME } from '../textos.ts';
+import { CATALOGO, CATALOGO_CORTO, DESCARGAR_INFORME, NOTA_DE_AUTORIA, SIN_INFORME } from '../textos.ts';
+import Cabecera from '../componentes/Cabecera.astro';
+import Pie from '../componentes/Pie.astro';
 import Recursos from '../componentes/Recursos.astro';
 import '../estilos/tokens.css';
 import '../estilos/fuentes.css';
 import '../estilos/base.css';
+import '../estilos/marco.css';
 
 const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
-const icono = `${conBarraFinal(import.meta.env.BASE_URL)}${ICONO_DE_CABECERA}`;
 ---
 
 <html lang="es">
@@ -121,12 +122,7 @@ const icono = `${conBarraFinal(import.meta.env.BASE_URL)}${ICONO_DE_CABECERA}`;
     <title>RadiografIA</title>
   </head>
   <body>
-    <header>
-      <img class="icono-marca" src={icono} alt="" width="40" height="40" />
-      <h1>RadiografIA</h1>
-      <p>A contraluz se nota todo.</p>
-      <nav><a href={catalogo}>{CATALOGO}</a></nav>
-    </header>
+    <Cabecera enlace={{ href: catalogo, texto: CATALOGO, corto: CATALOGO_CORTO }} nombreEnH1 />
     <main>
       <form id="formulario">
         <p id="estado" role="status">Cargando los paquetes de reglas…</p>
@@ -159,7 +155,6 @@ const icono = `${conBarraFinal(import.meta.env.BASE_URL)}${ICONO_DE_CABECERA}`;
         <h2 id="titulo-resultado">Resultado</h2>
         <div id="cabecera-informe" class="solo-impresion"></div>
         <div id="medidor"></div>
-        <p class="nota">{NOTA_DE_AUTORIA}</p>
         <div id="leyenda"></div>
         <div id="vista" class="vista texto-largo"></div>
         <aside id="panel" aria-live="polite" hidden></aside>
@@ -169,15 +164,11 @@ const icono = `${conBarraFinal(import.meta.env.BASE_URL)}${ICONO_DE_CABECERA}`;
       </section>
       <p class="solo-impresion sin-informe">{SIN_INFORME}</p>
     </main>
+    <Pie />
     <script>
       import '../pantalla/pantalla.ts';
     </script>
     <style is:global>
-      body {
-        max-width: 52rem;
-        margin: 0 auto;
-        padding: 1rem;
-      }
       /* La columna de texto (DISEÑO §5): 34em sobre la letra de 16 px de la interfaz, como el modelo. */
       #formulario,
       #resultado {
@@ -224,9 +215,6 @@ const icono = `${conBarraFinal(import.meta.env.BASE_URL)}${ICONO_DE_CABECERA}`;
       .problema-paquete,
       .estado-tramo {
         font-weight: 600;
-      }
-      .nota {
-        font-style: italic;
       }
       /*
        * Sin caja, como en el modelo: con la columna de 34em, Literata a 18 px da
@@ -300,6 +288,7 @@ const icono = `${conBarraFinal(import.meta.env.BASE_URL)}${ICONO_DE_CABECERA}`;
           padding: 0;
         }
         header nav,
+        .pie,
         #formulario,
         #panel,
         #medidor .datos,

@@ -110,6 +110,11 @@ export const INFORMATIVAS_EN_EL_DESGLOSE = 'Solo avisos: no suman';
 // Solo la interfaz: el contenido de las fichas (nombre, explicación, ejemplos…) viene de los paquetes y menciona
 // las formas que las reglas buscan; no es texto de la web (mención, no uso), y el juez de textos no lo analiza.
 export const CATALOGO = 'Catálogo de reglas';
+// La cabecera común (encargo 10.4, Tanda 1; Cabecera.astro): el eslogan de la identidad, el enlace corto del móvil y el
+// enlace del catálogo al analizador, como en el modelo.
+export const ESLOGAN = 'A contraluz se nota todo.';
+export const CATALOGO_CORTO = 'Catálogo';
+export const ANALIZADOR = 'Analizador';
 export const VOLVER_AL_CATALOGO = 'Volver al catálogo';
 export const PROBAR_EN_EL_ANALIZADOR = 'Probar en el analizador';
 export const INFORMATIVA = 'Solo aviso: no suma.';

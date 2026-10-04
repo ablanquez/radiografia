@@ -20,16 +20,19 @@
  *    expressions». Ningún set:html en el catálogo: lo que viene de los
  *    paquetes entra como texto (OWASP, encargo 6.2).
  * El icono y el manifiesto (encargo 10.4, Tanda 1) los enlaza Recursos.astro,
- *    como en index.astro; el icono (c) va en la cabecera, junto al nombre,
- *    con alt="" (DISEÑO §8).
+ *    como en index.astro. La cabecera (el icono, el nombre, el eslogan y el
+ *    enlace al analizador, como en el modelo) y el pie con la nota son
+ *    Cabecera.astro y Pie.astro; el marco de la página, estilos/marco.css.
  */
 import { urlDelAnalizador } from '../catalogo/catalogo.ts';
-import { conBarraFinal } from '../pantalla/cargar.ts';
-import { ICONO_DE_CABECERA } from '../estilos/recursos.ts';
+import { ANALIZADOR } from '../textos.ts';
+import Cabecera from '../componentes/Cabecera.astro';
+import Pie from '../componentes/Pie.astro';
 import Recursos from '../componentes/Recursos.astro';
 import '../estilos/tokens.css';
 import '../estilos/fuentes.css';
 import '../estilos/base.css';
+import '../estilos/marco.css';
 
 interface Props {
   /** Lo que va delante de «RadiografIA» en el título de la pestaña. */
@@ -38,7 +41,6 @@ interface Props {
 
 const { titulo } = Astro.props;
 const analizador = urlDelAnalizador(import.meta.env.BASE_URL);
-const icono = `${conBarraFinal(import.meta.env.BASE_URL)}${ICONO_DE_CABECERA}`;
 ---
 
 <html lang="es">
@@ -49,22 +51,12 @@ const icono = `${conBarraFinal(import.meta.env.BASE_URL)}${ICONO_DE_CABECERA}`;
     <title>{titulo} · RadiografIA</title>
   </head>
   <body>
-    <header>
-      <img class="icono-marca" src={icono} alt="" width="40" height="40" />
-      <p class="marca"><a href={analizador}>RadiografIA</a></p>
-    </header>
+    <Cabecera enlace={{ href: analizador, texto: ANALIZADOR }} />
     <main>
       <slot />
     </main>
+    <Pie />
     <style is:global>
-      body {
-        max-width: 52rem;
-        margin: 0 auto;
-        padding: 1rem;
-      }
-      .marca {
-        font-weight: 600;
-      }
       .id-regla,
       .datos {
         font-size: var(--tipografia-tamano-secundario);

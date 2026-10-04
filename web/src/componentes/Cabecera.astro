@@ -1,0 +1,57 @@
+---
+/**
+ * La cabecera común del analizador y del catálogo (encargo 10.4, Tanda 1),
+ * como en el modelo (CabeceraApp): el icono (c), el nombre y el eslogan a la
+ * izquierda; el enlace a la otra pantalla a la derecha; una línea debajo. En
+ * el móvil, compacta, con el nombre a 20 px y el texto corto del enlace.
+ *
+ * El nombre es el <h1> del analizador, que no tiene otro título; en el
+ * catálogo el <h1> es el de cada página y el nombre va en un <p>. El icono
+ * lleva alt vacío porque el nombre ya es texto (DISEÑO §8). El enlace va en un
+ * <nav>, como antes. Los estilos, en estilos/marco.css.
+ *
+ * Con texto corto, el enlace lleva los dos y la hoja oculta uno según el
+ * ancho: display: none lo saca también del nombre accesible.
+ * [DOC] https://www.w3.org/TR/accname-1.2/ — paso 2A, «Hidden Not
+ *    Referenced»: un nodo oculto (display:none entre ellos) que no recorre
+ *    aria-labelledby ni aria-describedby da la cadena vacía.
+ */
+import { ESLOGAN } from '../textos.ts';
+import { conBarraFinal } from '../pantalla/cargar.ts';
+import { ICONO_DE_CABECERA } from '../estilos/recursos.ts';
+
+interface Props {
+  /** La otra pantalla: su dirección, su texto y, si lo tiene, el corto del móvil. */
+  enlace: { href: string; texto: string; corto?: string };
+  /** El nombre como <h1> (el analizador) o como <p> (el catálogo). */
+  nombreEnH1?: boolean;
+}
+
+const { enlace, nombreEnH1 = false } = Astro.props;
+const icono = `${conBarraFinal(import.meta.env.BASE_URL)}${ICONO_DE_CABECERA}`;
+const Nombre = nombreEnH1 ? 'h1' : 'p';
+---
+
+<header class="cabecera">
+  <div class="marca">
+    <img class="icono-marca" src={icono} alt="" width="40" height="40" />
+    <div>
+      <Nombre class="nombre">RadiografIA</Nombre>
+      <p class="eslogan">{ESLOGAN}</p>
+    </div>
+  </div>
+  <nav>
+    <a href={enlace.href}>
+      {
+        enlace.corto === undefined ? (
+          enlace.texto
+        ) : (
+          <>
+            <span class="largo">{enlace.texto}</span>
+            <span class="corto">{enlace.corto}</span>
+          </>
+        )
+      }
+    </a>
+  </nav>
+</header>
