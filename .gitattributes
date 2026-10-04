@@ -8,3 +8,15 @@
 #    when the file is checked out».
 web/public/ejemplos/*.txt text eol=lf
 web/public/ejemplos/*.json text eol=lf
+
+# Las fuentes autoalojadas, el favicon y los iconos del manifiesto (encargo
+# 10.4, Tanda 1; apunte 4 del punto 10): binarios, antes de que entre el
+# primero. Sin esto, Git para Windows con core.autocrlf=true podría tratar
+# como texto un fichero que no lo es y cambiarle bytes.
+# [DOC] https://git-scm.com/docs/gitattributes — «the built-in macro
+#    attribute "binary" is equivalent to: [attr]binary -diff -merge -text»;
+#    `-text`: «Unsetting the text attribute on a path tells Git not to
+#    attempt any end-of-line conversion upon checkin or checkout».
+*.woff2 binary
+*.png binary
+*.ico binary
