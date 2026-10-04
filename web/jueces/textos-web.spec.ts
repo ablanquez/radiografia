@@ -40,7 +40,7 @@ const MINIMO = 100;
 /** Las reglas de RadiografIA que puntúan en los textos de la web, y por qué no se cambia la frase. */
 const DECLARADAS: Readonly<Record<string, string>> = {
   'lex-verbos-de-enfasis':
-    '«subrayado», la muestra de la leyenda, es el nombre de la función y no se cambia (decisión del 01/10). La regla busca la raíz subray- y no distingue el nombre del verbo; está declarado en su ficha.',
+    '«subrayado», en la clave del papel («detrás de cada subrayado, va entre corchetes la sigla de su familia»), es el nombre de la función y no se cambia (decisión del 01/10). La muestra de la leyenda ya no lo dice: desde el 10.4 (Tanda 2) es «Abc». La regla busca la raíz subray- y no distingue el nombre del verbo; está declarado en su ficha.',
   'est-frases-cortas':
     'los textos de la web son etiquetas y mensajes sueltos, no prosa: cada uno cuenta como una frase, y salen muchas frases para tan pocas palabras. Juntarlos en frases largas para que no dispare sería escribir para la regla.',
   'est-pocas-comas':
