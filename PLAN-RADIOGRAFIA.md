@@ -61,7 +61,12 @@ La v1 entrega, y solo entrega, esto:
    un JSON propio desde el ordenador (se lee en el navegador, no sale de
    él); combinar paquetes distinguiendo el origen de cada señal;
    validación con esquema que dice qué regla y qué campo fallan.
-7. **Informe PDF** mediante CSS de impresión + `window.print()`.
+7. **Informe PDF**: el botón «Descargar informe» genera y descarga el PDF
+   en el navegador (pdfmake, cargado al pulsar), idéntico en PC, tableta y
+   móvil; **decisión de Antonio del 05/10** que sustituye al «CSS de
+   impresión + `window.print()`» del 29/09 (el diálogo de imprimir no sirve
+   en iPhone/iPad). La hoja de impresión del punto 9 se conserva para
+   Ctrl+P, sin más trabajo.
 8. **Identidad**: RadiografIA · eslogan «A contraluz se nota todo.» ·
    botón «Pon tu texto a contraluz» · concepto de partida del icono:
    «documento en negativo». Diseño en Figma, llamativo pero agradable,
@@ -697,7 +702,8 @@ Astro, sin diseño todavía: funciona, no luce.
       distintas); orphans/widows como mejora no Baseline)
 - [x] Botón «Descargar informe» → `window.print()` (9.1: desactivado
       hasta que hay resultado; imprime el último análisis pintado, con su
-      fecha en la cabecera)
+      fecha en la cabecera). **Superado el 05/10 por la 9.3**: el botón
+      pasa a generar y descargar el PDF; el papel queda para Ctrl+P.
 - [x] PDF generado y abierto por Antonio (03/10: cabecera, banda, texto con
       siglas y clave, señales regla a regla, nota al pie, sin botones ni
       textarea, ninguna regla cortada). Juez con CDP: Page.printToPDF con
@@ -734,6 +740,18 @@ Astro, sin diseño todavía: funciona, no luce.
       (juez de Chrome lo vigila); catálogo e informe con la frase en
       claro. Visto por Antonio con los tres textos (03/10). Pendiente para
       el DISEÑO: dónde y cómo destaca la etiqueta; pestañas
+- [ ] **9.3 — Descarga directa del PDF (decisión de Antonio del 05/10, al
+      ver el informe en el calco)**: «No quiero imprimir, quiero guardar en
+      PDF». El botón genera el PDF en el navegador con pdfmake (MIT; con
+      pdfkit), cargado bajo demanda al pulsar, con Literata y Atkinson
+      incrustadas (subconjuntos TTF), calcado al marco «Informe · A4» del
+      modelo (secciones, márgenes 20/18, tamaños, clave con muestra de
+      línea, siglas, «n / N»); juez que compara el texto del PDF con el
+      resultado y con el informe de papel; NOTICES; nada sale del
+      navegador. Va dentro del calco (10.4), después de la tanda 4 bis (el
+      papel como el marco A4, con la hoja «sin resultado» centrada) y antes
+      de la tanda 5; la hoja de impresión se queda para Ctrl+P y menú
+      Imprimir, que no se bloquean
 
 ## 10 — Estética (DISEÑO → Figma Make → calco)
 

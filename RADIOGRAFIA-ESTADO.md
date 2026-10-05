@@ -419,6 +419,19 @@ Gemini 3.8 Flash; Prompt 7 tokens; Prompt 8 logo opcional.
   construir, Gemini 3.8 Flash para retocar (doctrina de Figma: modelo por
   tarea; guidelines.md leído en cada prompt; plan mode; escritorio antes
   que móvil; copiar como capas; nada de código de Make al repo).
+- 05/10 — **Decisión de Antonio sobre el informe (al ver el calco)**: el
+  diálogo de imprimir no sirve en iPhone ni iPad y «no quiero imprimir,
+  quiero guardar en PDF». Por tanto: (1) el botón «Descargar informe»
+  genera y descarga el PDF en el navegador con pdfmake cargado al pulsar,
+  con las fuentes incrustadas (subconjuntos TTF), calcado al marco
+  «Informe · A4» del modelo (nueva casilla 9.3; sustituye al «CSS +
+  window.print()» del 29/09 en el alcance); (2) imprimir no se bloquea:
+  sin resultado sale una página con el icono (c) y «RadiografIA»
+  centrados y el mensaje «No hay análisis que imprimir…», con resultado
+  solo el informe, y ese papel tiene que ser el del marco A4 (la tanda 4
+  del calco se quedó en la estructura: sin márgenes, sin «n / N», clave
+  con «Abc» en vez de muestra de línea, menos aire; se rehace como tanda
+  4 bis con juez de fidelidad del papel); (3) Ctrl+P no se intercepta.
 
 ## 6 · Cabos abiertos
 

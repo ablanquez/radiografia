@@ -151,7 +151,13 @@ Pendiente antes de fijar: pasar la paleta por un simulador de daltonismo
 ### 6.1 Analizador (escritorio, ≥ 1024 px; tableta 769-1023 px, los
 mismos bloques en una columna, sin barra de pestañas)
 
-Dos columnas [CONVENCIÓN: Hemingway, GPTZero, LanguageTool]:
+Dos columnas [CONVENCIÓN: Hemingway, GPTZero, LanguageTool]. **Orden del
+documento** (05/10, WCAG 1.3.2): en tableta y móvil, la pastilla y «Lo
+que más pesa» van antes que la vista del texto también en el DOM (la
+vista se mueve en el documento al cambiar de ancho, como los paneles de
+las pestañas); en escritorio el documento sigue columna a columna, texto
+y después resultado, que es una secuencia válida para dos columnas y
+conserva la columna fija con scroll propio.
 
 - **Izquierda (texto)**: antes de analizar, el cuadro de texto con
   placeholder que dice el mínimo («Pega aquí tu texto: a partir de 100
@@ -241,8 +247,19 @@ explicación larga y las seis reglas de contexto al final, en cuerpo menor);
 márgenes 20 mm · 18 mm, Literata 11 pt en el cuerpo, títulos de sección en
 Atkinson 14 pt, etiqueta del resultado 16 pt, pie 10 pt, URL 9,5 pt,
 siglas 9 pt (tamaños del modelo, 04/10), interlineado 1,4, orphans/widows
-2, `break-inside: avoid` por regla [CONVENCIÓN del informe]. Sin color
-imprescindible.
+2, `break-inside: avoid` por regla [CONVENCIÓN del informe]. Número de
+página «n / N» abajo a la derecha (Atkinson 9 pt, ink-2) por `@page
+@bottom-right` con counter(page)/counter(pages) (añadido 05/10, como el
+modelo; donde el navegador no soporte las cajas de margen, no sale). Sin
+color imprescindible. **Imprimir sin resultado** (Antonio, 05/10): una
+sola página A4 con el icono (c) a 96 px y «RadiografIA» (Atkinson 700,
+24 pt) centrados en horizontal y en vertical, y debajo, en Literata 12 pt
+e ink-2, «No hay análisis que imprimir: pega un texto y pulsa «Pon tu
+texto a contraluz».»; nada más en la hoja. Imprimir no se bloquea: sin
+resultado sale esa hoja; con resultado, solo el informe. **Descarga del
+PDF** (9.3, 05/10): el botón genera el PDF en el navegador con pdfmake,
+calcado a este mismo marco; el papel (Ctrl+P / menú Imprimir) sigue
+saliendo igual.
 
 ## 7 · Componentes y estados
 
