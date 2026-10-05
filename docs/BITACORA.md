@@ -14,6 +14,46 @@
 
 ---
 
+## [2026-10-05] 🔴 ABIERTA — Un fichero de jueces que termina sus tests no sale si su `astro preview` se queda vivo
+
+**Categoría:** arnés de los jueces (Chrome por CDP)
+**Síntoma:** el 04/10 y otra vez el 05/10, el rojo de `catalogo-pantalla.spec.ts` contra `53e5051` en clon imprime sus diez tests y la línea de su suite, y el proceso del fichero no sale: siguen vivos `node --test`, su hijo y el `astro preview` del clon, sin ningún Chrome del arnés. Matado solo el preview, el fichero sale solo y `node --test` sigue con el siguiente. Queda el perfil temporal de Chrome de esa ejecución (`radiografia-chrome-aVyXyH`, 07:10:10). Ver también la entrada de abajo: es otro cuelgue con otra causa.
+**⭐ Qué dio verde mientras el fallo estaba vivo:** nada dio verde: `node --test` guardó silencio tras la suite. El 05/10 (clon de `53e5051`, juez de `ac88047`, `--test-timeout=90000`), lo último que imprimió hasta matar el preview fue:
+```
+  ✔ 10 · ninguna petición de red después de la carga y ninguna violación de la CSP (0.9998ms)
+✖ el índice del catálogo en Chrome, sobre astro preview (96931.3933ms)
+```
+con vivos, 20 s después, `node --test --test-concurrency=1 --test-timeout=90000 jueces…` (13696), su hijo (16732) y `F:\_clones-005\rojo2-53e5051\node_modules\astro\bin\astro.mjs preview` (9092). Al matar el 9092, el resumen final dijo, entre sus errores: `Error: EPERM, Permission denied: \\?\C:\Users\ORDENA~1\AppData\Local\Temp\radiografia-chrome-aVyXyH`. En pequeño (scratchpad, un test que deja vivo un hijo con tuberías, `node --test --test-timeout=2000`): `✔ deja un hijo vivo (11.0864ms)` · `ℹ pass 1` · `ℹ fail 0` y el proceso no salió: `real 0m20.105s`, cortado por `timeout` (salida 124).
+**Cómo se cazó:** instrumento (la verificación del rojo en clon, que no terminaba) y ojo humano (la lista de procesos y el perfil que quedó)
+**Causa raíz:** ⏳ PENDIENTE
+**Arreglo aplicado:** ⏳ PENDIENTE
+**Commit:** ⏳ PENDIENTE
+**Ley que sale de aquí:** SIN LEY TODAVÍA
+**Traza:** `web/jueces/chrome.ts`, `abrirConTestigos` (`cerrar`) y `abrirChrome` (`cerrarChrome`, `rmSync` del perfil); `web/jueces/apoyo.ts`, `abrirPreview`.
+
+---
+
+## [2026-10-05] 🔴 ABIERTA — Si Chrome cae a media prueba, la orden CDP en vuelo no termina nunca y `node --test` se queda colgado sin decir nada
+
+**Categoría:** arnés de los jueces (Chrome por CDP)
+**Síntoma:** el 04/10, verificando `50ffc75` en clon, los jueces web pasaron diez minutos en su primer fichero sin imprimir nada, con el `astro preview` del clon vivo y ningún `chrome.exe`; hubo que matar el árbol. El 05/10, con Chrome tumbado con `Browser.crash` y una orden en vuelo, la orden no contesta.
+**⭐ Qué dio verde mientras el fallo estaba vivo:** nada dio verde: `npm test` de web (sin `--test-timeout`) guardó silencio. En el clon de `50ffc75` la salida se quedó en `> @radiografia/web@0.0.0 test`, y a las `Sun Oct  4 20:50:47 2026` seguían vivos `node  --test --test-concurrency=1 "jueces/**/*.spec.ts"` (desde `20:40:05`), su hijo y `F:\_clones-005\50ffc75\node_modules\astro\bin\astro.mjs preview` (desde `20:40:09`), sin ningún `chrome.exe`. El 05/10, el juez nuevo contra el arnés sin tocar:
+```
+$ node --test --test-concurrency=1 jueces/chrome.spec.ts
+✖ 1 · Chrome cae a media prueba: la prueba falla con el motivo y node --test termina, sin --test-timeout (30081.8622ms)
+  AssertionError [ERR_ASSERTION]: node --test sigue colgado a los 30 s de que Chrome cayera; lo que imprimió:
+✖ 2 · tras la caída: la orden en vuelo, una nueva y hasta() fallan con el motivo, enseguida; cerrar() termina (11159.1975ms)
+  AssertionError [ERR_ASSERTION]: la orden en vuelo: colgada
+```
+**Cómo se cazó:** instrumento (la verificación en clon, que no terminaba) y ojo humano (la lista de procesos)
+**Causa raíz:** ⏳ PENDIENTE
+**Arreglo aplicado:** ⏳ PENDIENTE
+**Commit:** ⏳ PENDIENTE
+**Ley que sale de aquí:** SIN LEY TODAVÍA
+**Traza:** `web/jueces/chrome.ts`, `abrirChrome` (`cdp`, `pendientes`, `hasta`); `web/package.json`, script `test`.
+
+---
+
 ## [2026-10-04] ✅ CERRADA — La hoja inferior del móvil sale estrecha si la tarjeta se abrió antes en escritorio
 
 **Categoría:** interfaz del analizador (calco 10.4, Tanda 2)
