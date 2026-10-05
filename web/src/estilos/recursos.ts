@@ -11,6 +11,15 @@ export const FUENTES_PRECARGADAS = [
 ] as const;
 
 /**
+ * La negrita del papel (10.4, Tanda 4 bis; el marco «Informe / A4»): Literata
+ * 600, la que pinta el modelo en los nombres de las reglas, en «Qué hacer» y en
+ * las familias del desglose. Solo la precarga el analizador, el que imprime el
+ * informe: pedirla al imprimir sería una petición de red después de la carga
+ * (jueces/impresion.spec.ts, test 4). 46 KB.
+ */
+export const NEGRITA_DEL_PAPEL = 'fuentes/literata/literata-600.woff2';
+
+/**
  * Los enlaces del icono y del manifiesto, en el orden de Evil Martians (DISEÑO
  * §8): favicon.ico de 32, icon.svg, apple-touch-icon y el manifiesto. Los
  * escribe scripts/iconos.ts desde docs/figma/icono/.

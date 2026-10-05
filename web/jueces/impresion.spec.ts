@@ -29,7 +29,12 @@
  *   familia; cada señal, con su nombre en un <h3> (su id, en data-regla) y
  *   «Qué hacer»; la explicación de cada una, al final, en «¿Por qué lo
  *   miramos?», y las seis de contexto, enteras y con la suya, detrás, todo en
- *   cuerpo menor (9,5 pt).
+ *   cuerpo menor (9,5 pt). Desde la Tanda 4 bis (el papel como el marco
+ *   «Informe / A4», decisión de Antonio del 05/10), los títulos de la 3 y la
+ *   4 son los del marco («Clave de familias» y «Texto»), y la clave es una
+ *   lista propia del papel: una línea por familia de la leyenda, con la
+ *   muestra de su línea y «[sigla] familia (paquete)». La fidelidad al marco
+ *   (letra, márgenes y aire) la juzga papel.spec.ts.
  *   5. El PDF, página a página (su texto, con pdf.ts), desde 1280 y desde 390:
  *      cada página lleva abajo «n / N» con N el total de verdad; la sección 4
  *      y la 6 empiezan página (su título es lo primero de una página que no es
@@ -224,12 +229,13 @@ describe('el informe en Chrome, sobre astro preview', () => {
       );
       assert.ok(siglas.length > 0, 'ningún subrayado');
       assert.deepEqual(siglas.filter((x) => x.siglas === '' || x.despues !== `" [${x.siglas}]"`), [], 'tramos sin su sigla en papel');
-      // Desde el 10.4 (Tanda 4), la sigla va delante del nombre de la familia, detrás de la muestra de su línea.
-      const clave = await p().evaluar<{ sigla: string; antes: string }[]>(
-        `[...document.querySelectorAll('#leyenda .etiqueta-familia')].map((e) => ({ sigla: e.dataset.sigla, antes: getComputedStyle(e, '::before').content }))`,
+      // Desde el 10.4 (Tanda 4), la sigla va delante del nombre de la familia, detrás de la muestra de su línea; desde la 4 bis
+      // (el marco «Informe / A4»), en el texto de cada línea de la clave del papel, una por familia de la leyenda, con su paquete.
+      const clave = await p().evaluar<{ texto: string; muestra: boolean; seVe: boolean }[]>(
+        `[...document.querySelectorAll('#leyenda .clave-papel > li')].map((e) => ({ texto: e.textContent, muestra: e.firstElementChild.classList.contains('muestra-papel'), seVe: e.checkVisibility() }))`,
       );
-      assert.ok(clave.length > 0, 'la clave, vacía');
-      assert.deepEqual(clave.filter((x) => x.sigla === '' || x.antes !== `"[${x.sigla}] "`), [], 'líneas de la clave sin su sigla');
+      assert.equal(clave.length, await p().evaluar<number>(`document.querySelectorAll('#leyenda .tarjeta-familia').length`), 'una línea de la clave por familia de la leyenda');
+      assert.deepEqual(clave.filter((x) => !x.seVe || !x.muestra || !/^\[[^\]]+\] .+ \(.+\)( · solo avisos)?$/.test(x.texto)), [], 'líneas de la clave sin su muestra, su sigla o su paquete');
 
       // Desde el 10.4 (Tanda 4), el nombre de cada entrada va en un <h3> y su id, en data-regla (la dirección de la ficha ya lo lleva).
       const entradas = await p().evaluar<{ id: string; corte: string; ficha: string | null; tras: string | null; texto: string; claro: string | null; alFinal: boolean }[]>(`[...document.querySelectorAll('#senales-informe .entrada-informe')].map((e) => {
@@ -269,8 +275,8 @@ describe('el informe en Chrome, sobre astro preview', () => {
       assert.deepEqual(await numerosEnPapel(), {
         [textos.INFORME_DE_RADIOGRAFIA]: '"1. "',
         [textos.RESULTADO]: '"2. "',
-        [textos.FAMILIAS]: '"3. "',
-        [textos.TU_TEXTO_ANALIZADO]: '"4. "',
+        [textos.CLAVE_DE_FAMILIAS]: '"3. "',
+        [textos.TEXTO_DEL_INFORME]: '"4. "',
         [textos.DESGLOSE]: '"5. "',
         [textos.SENALES_DEL_INFORME]: '"6. "',
         [textos.NOTA_DE_AUTORIA]: '"7. "',
@@ -315,7 +321,7 @@ describe('el informe en Chrome, sobre astro preview', () => {
         // El número de cada página, abajo: «n / N», con N el total de verdad.
         assert.deepEqual(paginas.map((l) => l.at(-1)), paginas.map((_, i) => `${i + 1} / ${n}`), `desde ${ancho}: el número de cada página`);
         // La 4 y la 6 empiezan página: su título es lo primero de una página que no es la primera.
-        for (const titulo of [`4. ${textos.TU_TEXTO_ANALIZADO}`, `6. ${textos.SENALES_DEL_INFORME}`]) {
+        for (const titulo of [`4. ${textos.TEXTO_DEL_INFORME}`, `6. ${textos.SENALES_DEL_INFORME}`]) {
           const donde = paginas.findIndex((l) => l.includes(titulo));
           assert.ok(donde > 0 && paginas[donde]![0] === titulo, `desde ${ancho}: «${titulo}» en la página ${donde + 1}, que empieza por «${paginas[donde]?.[0]}»`);
         }

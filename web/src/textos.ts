@@ -59,9 +59,19 @@ export const analisisDel = (fecha: string): string => `Análisis del ${fecha}`;
 export const paqueteDelInforme = (nombre: string, version: string, propio: boolean): string => `${nombre} ${version}${propio ? ' (propio)' : ''}`;
 export const paquetesDelInforme = (paquetes: readonly string[]): string => `Paquetes: ${paquetes.join(' · ')}`;
 export const SENALES_DEL_INFORME = 'Las señales, regla a regla';
-/** Cuántas señales dio una regla y sus primeros fragmentos, entre comillas; las que no caben, contadas. */
-export const senalesDeLaRegla = (n: number, fragmentos: readonly string[], resto: number): string =>
-  `${n} ${n === 1 ? 'señal' : 'señales'}: ${fragmentos.map((f) => `«${f}»`).join(', ')}${resto > 0 ? ` y ${resto} más` : ''}.`;
+// Desde el 10.4 (Tanda 4 bis), el papel como el marco «Informe / A4» del modelo (decisión de Antonio del 05/10): los
+// títulos de la clave y del texto, cada familia en la clave con su sigla y su paquete, los fragmentos de cada regla y,
+// en el resultado, la línea de cada uno de los otros paquetes.
+export const CLAVE_DE_FAMILIAS = 'Clave de familias';
+export const TEXTO_DEL_INFORME = 'Texto';
+/** Una familia en la clave del papel: «[L] Léxico (RadiografIA)»; la que solo avisa, con «· solo avisos». */
+export const familiaEnLaClave = (sigla: string, familia: string, paquete: string, informativa: boolean): string =>
+  `[${sigla}] ${familia} (${paquete})${informativa ? ' · solo avisos' : ''}`;
+/** Los primeros fragmentos de una regla, entre comillas; los que no caben, contados. */
+export const fragmentosDeLaRegla = (fragmentos: readonly string[], resto: number): string =>
+  `Fragmentos: ${fragmentos.map((f) => `«${f}»`).join(', ')}${resto > 0 ? ` y ${resto} más` : ''}`;
+/** Otro paquete en el resultado del papel: su nombre y su línea de resumen. */
+export const resumenDeOtroPaquete = (paquete: string, resumen: string): string => `${paquete}: ${resumen}`;
 /** Una señal del texto entero, con lo que dice el desglose (ausencia o estadística). */
 export const senalDelTextoEntero = (dice: string | null): string => (dice === null ? 'Del texto entero.' : `Del texto entero: ${dice}.`);
 export const REGLA_PROPIA_SIN_FICHA = 'Regla de un paquete propio: sin página en el catálogo.';

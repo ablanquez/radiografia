@@ -385,18 +385,28 @@ describe('la fidelidad al modelo, sobre astro preview', () => {
         // El de arriba si es igual al de abajo; si no, los dos (y no casa con ningún número).
         margenDeScroll: c.scrollPaddingTop === c.scrollPaddingBottom ? c.scrollPaddingTop : c.scrollPaddingTop + ' / ' + c.scrollPaddingBottom,
         separacionDeParrafos: (() => {
-          // Dos párrafos separados por una línea en blanco, en un mismo trozo de texto que no sea una sigla (aria-hidden): del renglón
-          // del último carácter del primero al del primero del segundo, menos un renglón.
+          // Dos párrafos separados por una línea en blanco, fuera de las siglas (aria-hidden): del renglón del último carácter del
+          // primero al del primero del segundo, menos un renglón. Desde la Tanda 4 bis, cada tanda de saltos de la vista va en su
+          // <span class="salto"> (pintar.ts): los dos caracteres se buscan en los nodos de texto de antes y de después.
+          const nodos = [];
           const w = document.createTreeWalker(e, NodeFilter.SHOW_TEXT);
-          for (let n = w.nextNode(); n !== null; n = w.nextNode()) {
-            if (n.parentElement.closest('[aria-hidden="true"]')) continue;
+          for (let n = w.nextNode(); n !== null; n = w.nextNode()) if (!n.parentElement.closest('[aria-hidden="true"]')) nodos.push(n);
+          const renglon = (n, i) => { const g = document.createRange(); g.setStart(n, i); g.setEnd(n, i + 1); return g.getBoundingClientRect().top; };
+          for (const [j, n] of nodos.entries()) {
             const k = n.data.indexOf('\\n\\n');
             if (k < 0) continue;
-            const antes = n.data.slice(0, k).search(/\\S\\s*$/);
-            const despues = n.data.slice(k).search(/\\S/);
-            if (antes < 0 || despues < 0) continue;
-            const renglon = (i) => { const g = document.createRange(); g.setStart(n, i); g.setEnd(n, i + 1); return g.getBoundingClientRect().top; };
-            return renglon(k + despues) - renglon(antes) - parseFloat(c.lineHeight);
+            let antes = null;
+            for (let a = j; a >= 0 && antes === null; a--) {
+              const i = (a === j ? nodos[a].data.slice(0, k) : nodos[a].data).search(/\\S\\s*$/);
+              if (i >= 0) antes = renglon(nodos[a], i);
+            }
+            let despues = null;
+            for (let d = j; d < nodos.length && despues === null; d++) {
+              const desde = d === j ? k : 0;
+              const i = nodos[d].data.slice(desde).search(/\\S/);
+              if (i >= 0) despues = renglon(nodos[d], desde + i);
+            }
+            if (antes !== null && despues !== null) return despues - antes - parseFloat(c.lineHeight);
           }
           return null;
         })(),

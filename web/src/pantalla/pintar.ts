@@ -62,10 +62,10 @@
  * cabecera (pintarCabeceraDelInforme) y la lista de señales por regla
  * (pintarSenalesDelInforme, con las entradas de informe.ts) se pintan al
  * analizar, del mismo resultado, en bloques que la hoja de index.astro enseña
- * solo en papel; las siglas de familia van en data-siglas de cada tramo y en
- * data-sigla de cada línea de la leyenda (desde el 10.4, Tanda 4, en el nombre
- * de la familia, detrás de la muestra), y la hoja las escribe en papel con
- * ::after y ::before. En la lista, el nombre de una regla incluida enlaza a su
+ * solo en papel; las siglas de familia van en data-siglas de cada tramo, y la
+ * hoja las escribe en papel con ::after (desde el 10.4, Tanda 4 bis, la clave
+ * del papel es una lista propia de la leyenda, con la sigla en su texto). En
+ * la lista, el nombre de una regla incluida enlaza a su
  * ficha con la dirección absoluta, porque en papel se escribe el href tal cual
  * (attr(href)); en el desglose, no.
  * Desde el 10.4 (Tanda 4; DISEÑO §6.5), el informe va por secciones
@@ -278,7 +278,9 @@ function iconoDelOjo(): SVGSVGElement {
  * (Canal), en su propia lista y con «solo avisos»; una familia sin señales,
  * atenuada. [PROPIO] Agrupadas por paquete bajo su nombre: el paquete se dice
  * siempre en texto (8.1), y el modelo, que solo enseña los incluidos, no lo
- * necesitaba. En papel es la clave: la sigla delante de cada una (data-sigla).
+ * necesitaba. En papel (desde el 10.4, Tanda 4 bis, como el marco «Informe /
+ * A4»), las tarjetas no salen: sale la clave, una lista aparte con la muestra
+ * de la línea de cada familia, en tinta, y su sigla, su nombre y su paquete.
  *
  * Cada tarjeta lleva su ojo (función nueva del 10.4): un botón conmutador que
  * oculta o enseña la capa de esa familia en la vista (quien llama, con
@@ -297,10 +299,23 @@ export function pintarLeyenda(
   recuento: ReadonlyMap<string, number>,
   alAlternar: (familia: string, oculta: boolean) => void,
 ): void {
-  const titulo = el('h2', textos.FAMILIAS, 'titulo-seccion');
+  const titulo = el('h2', textos.FAMILIAS);
   titulo.id = 't-familias';
   contenedor.setAttribute('aria-labelledby', titulo.id);
-  contenedor.replaceChildren(titulo, el('p', textos.CLAVE_DE_SIGLAS, 'solo-impresion'));
+  // En papel (10.4, Tanda 4 bis; el marco «Informe / A4»), la sección 3 lleva su título, la línea de las siglas y su
+  // clave: cada familia con la muestra de su línea, en tinta, y «[sigla] familia (paquete)», en el orden de la leyenda.
+  const clave = el('ul', undefined, 'clave-papel solo-impresion');
+  contenedor.replaceChildren(el('h2', textos.CLAVE_DE_FAMILIAS, 'titulo-seccion solo-impresion'), titulo, el('p', textos.CLAVE_DE_SIGLAS, 'solo-impresion siglas-papel'), clave);
+  for (const paquete of [...new Set(indice.familias.map((f) => f.paquete))].filter((p) => activos.has(p))) {
+    const delPaquete = indice.familias.filter((x) => x.paquete === paquete);
+    for (const f of [...delPaquete.filter((x) => !x.informativa), ...delPaquete.filter((x) => x.informativa)]) {
+      const linea = el('li');
+      const muestra = el('span', undefined, `muestra-papel ${f.clase}`);
+      muestra.setAttribute('aria-hidden', 'true');
+      linea.append(muestra, el('span', textos.familiaEnLaClave(indice.siglaDeFamilia.get(f.clave) ?? '', f.nombre, f.paquete, f.informativa)));
+      clave.append(linea);
+    }
+  }
   for (const paquete of [...new Set(indice.familias.map((f) => f.paquete))].filter((p) => activos.has(p))) {
     const grupo = el('div', undefined, 'grupo-familias');
     const puntuan = el('ul', undefined, 'leyenda');
@@ -324,7 +339,6 @@ export function pintarLeyenda(
         alAlternar(f.clave, oculta);
       });
       const etiqueta = el('span', f.informativa ? textos.familiaInformativa(f.nombre, n) : textos.familiaConRecuento(f.nombre, n), 'etiqueta-familia');
-      etiqueta.dataset['sigla'] = indice.siglaDeFamilia.get(f.clave) ?? '';
       tarjeta.append(muestra, etiqueta, ojo);
       (f.informativa ? informativas : puntuan).append(tarjeta);
     }
@@ -377,12 +391,17 @@ export function pintarVista(
   indice: Indice,
   alActivar: (indices: readonly number[]) => void,
 ): void {
-  // El título de la sección 4 del informe, solo en papel (10.4, Tanda 4): el nombre de la vista.
-  contenedor.replaceChildren(el('h2', textos.TU_TEXTO_ANALIZADO, 'titulo-seccion solo-impresion'));
+  // El título de la sección 4 del informe, solo en papel (10.4, Tanda 4; desde la 4 bis, el del marco «Informe / A4»).
+  contenedor.replaceChildren(el('h2', textos.TEXTO_DEL_INFORME, 'titulo-seccion solo-impresion'));
   for (const tramo of partirEnTramos(texto.length, senales)) {
     const trozo = texto.slice(tramo.inicio, tramo.fin);
     if (tramo.senales.length === 0) {
-      contenedor.append(trozo);
+      // Los saltos de línea, cada tanda en su <span class="salto">: en pantalla son el mismo texto (pre-wrap), y en papel
+      // separan los párrafos con el aire del modelo (10.4, Tanda 4 bis; estilos/informe.css).
+      for (const parte of trozo.split(/(\n+)/)) {
+        if (parte.startsWith('\n')) contenedor.append(el('span', parte, 'salto'));
+        else if (parte !== '') contenedor.append(parte);
+      }
       continue;
     }
     const familias = [...new Set(tramo.senales.map((i) => familiaDe(senales[i]!, indice)))];
@@ -568,7 +587,9 @@ function tarjetasQueMasPesan(resultado: Resultado, r: ResultadoDePaquete, indice
  * su tarjeta del desglose (pintarDesglose). Sin ningún paquete con escala, la
  * pastilla lo dice (firmado en la parada 1 del 8.1). Con texto insuficiente,
  * como antes, el aviso y el motivo: en pantalla lo dice el cuadro (pantalla.ts)
- * y este bloque es para el papel.
+ * y este bloque es para el papel. En papel (desde la Tanda 4 bis, como el marco
+ * «Informe / A4»), cierra el resultado la línea de resumen de cada uno de los
+ * otros paquetes, con su nombre delante («Español correcto: 9 avisos…»).
  */
 export function pintarMedidor(contenedor: HTMLElement, resultado: Resultado, vozDe: (paquete: string) => Voz, indice: Indice, nombreDelGenero: string): void {
   // El título de la sección 2 del informe, solo en papel (10.4, Tanda 4).
@@ -579,11 +600,16 @@ export function pintarMedidor(contenedor: HTMLElement, resultado: Resultado, voz
     return;
   }
   const principal = resultado.paquetes.find((x) => x.banda !== null);
+  // En papel (10.4, Tanda 4 bis; el marco «Informe / A4»), los otros paquetes, una línea cada uno con su resumen, al final
+  // del resultado; en pantalla van en su tarjeta del desglose (pintarDesglose).
+  const otros = resultado.paquetes
+    .filter((r) => r !== principal)
+    .flatMap((r) => resumenDelPaquete(resultado, r, vozDe(r.paquete), indice).map((linea) => el('p', textos.resumenDeOtroPaquete(r.paquete, linea), 'solo-impresion otro-en-papel')));
   if (principal === undefined) {
     const pastilla = el('div', undefined, 'pastilla');
     pastilla.append(el('p', textos.SIN_ESCALA, 'frase banda'));
     pastilla.firstElementChild!.setAttribute('tabindex', '-1');
-    contenedor.append(pastilla);
+    contenedor.append(pastilla, ...otros);
     return;
   }
   const voz = vozDe(principal.paquete);
@@ -592,6 +618,7 @@ export function pintarMedidor(contenedor: HTMLElement, resultado: Resultado, voz
   contenedor.append(pastilla);
   if (voz === 'asistente') contenedor.append(tarjetasQueMasPesan(resultado, principal, indice));
   else for (const linea of resumenDelPaquete(resultado, principal, voz, indice)) contenedor.append(el('p', linea, 'resumen'));
+  contenedor.append(...otros);
 }
 
 /** La cabecera del informe, solo para el papel (9.1): título, fecha y hora del análisis, género, palabras y tramo, y los paquetes con su versión. */
@@ -623,8 +650,10 @@ export function pintarCabeceraDelInforme(
  * Desde el 10.4 (Tanda 4; DISEÑO §6.5, el modelo y la decisión de Antonio en la
  * parada 3), la sección 6 del informe: su título; cada entrada, con su nombre
  * (enlazado a su ficha, cuya dirección escribe el papel detrás; la de un
- * paquete propio, sin ficha, con su id), su frase en claro, su familia y su
- * paquete, si solo avisa, sus señales y «Qué hacer»; y al final, en cuerpo
+ * paquete propio, sin ficha, con su id), su frase en claro, si solo avisa,
+ * sus fragmentos y «Qué hacer» (desde la Tanda 4 bis, como el marco «Informe /
+ * A4»: sin la línea de la familia y el paquete, que dicen la clave y el
+ * desglose, y «Fragmentos:» en vez del recuento de señales); y al final, en cuerpo
  * menor, «¿Por qué lo miramos?» con la explicación de cada una y las reglas de
  * contexto (las estadísticas informativas), enteras, con la suya. El informe no
  * pierde nada de lo de antes: cambia el sitio de las explicaciones, y
@@ -649,11 +678,11 @@ export function pintarSenalesDelInforme(contenedor: HTMLElement, resultado: Resu
     const entrada = el('article', undefined, 'entrada-informe');
     entrada.dataset['regla'] = e.reglaId;
     entrada.append(titulo);
-    // La frase en claro, primera línea de la entrada (9.2).
+    // La frase en claro, primera línea de la entrada (9.2); desde la Tanda 4 bis, como el marco del modelo: sin la línea de
+    // la familia y el paquete (los dicen la clave y el desglose), y los fragmentos en vez del recuento de señales.
     if (e.regla?.enClaro !== undefined) entrada.append(el('p', e.regla.enClaro, 'en-claro'));
-    entrada.append(el('p', `${e.familia} · ${e.paquete}`, 'id-regla'));
     if (e.informativa) entrada.append(el('p', textos.INFORMATIVA));
-    if (e.n > 0) entrada.append(el('p', textos.senalesDeLaRegla(e.n, e.fragmentos, e.resto)));
+    if (e.n > 0) entrada.append(el('p', textos.fragmentosDeLaRegla(e.fragmentos, e.resto)));
     for (const s of e.delTextoEntero) entrada.append(el('p', textos.senalDelTextoEntero(lineaDelTextoEntero(s, genero, e.informativa, e.regla))));
     if (e.regla !== undefined) {
       if (conExplicacion) entrada.append(campo(textos.EXPLICACION, e.regla.explicacion));

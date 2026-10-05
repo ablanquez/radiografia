@@ -1,38 +1,47 @@
 /*
  * El informe en papel (encargo 9.1, b; desde el 10.4, Tanda 4, como el DISEÑO
- * §6.5 y el marco «Informe / A4» del modelo): esta misma página impresa, sin
+ * §6.5; desde la Tanda 4 bis, medido contra el marco «Informe / A4» del
+ * modelo, decisión de Antonio del 05/10): esta misma página impresa, sin
  * librerías; «Guardar como PDF» del diálogo de imprimir lo convierte en PDF.
- * Antes iba en el <style> de index.astro; desde la Tanda 4, aquí, como el resto
- * de la hoja de la página. Solo variables de tokens.css.
+ * Solo variables de tokens.css. Las medidas del marco están en
+ * docs/figma/medidas-modelo.json (piezas informe.*) y las compara, en el PDF
+ * que da Chrome, el juez de fidelidad del papel (jueces/papel.spec.ts).
  *
  * Lo de solo papel (.solo-impresion: la cabecera del informe, los títulos de
  * las secciones que en pantalla no tienen título, las líneas de lo que más
- * pesa, la lista de señales, la clave y el pie) está en el DOM desde que se
- * analiza, oculto en pantalla. Sin beforeprint ni afterprint: en la parada 1
- * del 9.1, Emulation.setEmulatedMedia('print') de Chrome no los disparaba y
- * Page.printToPDF sí, y con ellos el juez emulado y el PDF habrían visto cosas
- * distintas. Si no hay resultado, sale el párrafo «No hay análisis que
- * imprimir».
+ * pesa y de los otros paquetes, la clave, la lista de señales y el pie) está
+ * en el DOM desde que se analiza, oculto en pantalla. Sin beforeprint ni
+ * afterprint: en la parada 1 del 9.1, Emulation.setEmulatedMedia('print') de
+ * Chrome no los disparaba y Page.printToPDF sí, y con ellos el juez emulado y
+ * el PDF habrían visto cosas distintas. Si no hay resultado, sale el párrafo
+ * «No hay análisis que imprimir».
  *
  * En papel no van la cabecera ni el pie de la página (el modelo no los lleva:
  * el nombre va en el título de la sección 1), el formulario, el cuadro
  * plegado, los botones, los ojos, la tarjeta, la barra de las pestañas, las
- * tarjetas de lo que más pesa (van en dos líneas) ni «Ver el detalle» plegado
- * (sus cifras van en la cabecera del informe).
+ * tarjetas de lo que más pesa (van en dos líneas) y de las familias (va la
+ * clave) ni «Ver el detalle» plegado (sus cifras van en la cabecera).
  *
- * Las siete secciones del DISEÑO §6.5, numeradas, cada una con su título en
- * Atkinson 14 pt: 1 la cabecera (fecha y hora, palabras y género, paquetes y
- * las cifras del detalle); 2 el resultado (la etiqueta a 16 pt, la frase, lo
- * que más pesa y por dónde empezar); 3 la clave de las familias (la muestra de
- * su línea, en tinta, con su sigla y su nombre); 4 el texto, con la sigla de
- * cada subrayado entre corchetes (salto de página antes); 5 el desglose; 6 las
- * señales, regla a regla (salto de página antes), con la explicación de cada
- * una y las seis reglas de contexto al final, en cuerpo menor (9,5 pt,
- * decisión de Antonio en la parada 3); y 7 la nota de autoría, que cierra la
- * última sección y no queda sola. Literata 11 pt a 1,4 (el DISEÑO; el modelo,
- * 1,45), márgenes de 20 mm arriba y abajo y 18 a los lados, 14 pt entre
- * bloques, y el número de página abajo a la derecha, «n / N», en Atkinson 9 pt
- * (como el modelo; decisión de Antonio en la parada 3).
+ * Las siete secciones del DISEÑO §6.5 y del marco, numeradas, cada una con su
+ * título en Atkinson 14 pt a 1,25 y 0,6 em debajo: 1 la cabecera (fecha y
+ * hora, palabras y género, paquetes y las cifras del detalle), con 0,25 em
+ * entre líneas; 2 el resultado (la etiqueta a 16 pt, la frase, lo que más
+ * pesa, por dónde empezar y la línea de cada uno de los otros paquetes), con
+ * 0,4 em; 3 la clave de las familias (la muestra de su línea, de 32 × 10 en
+ * tinta, a 12 px de «[sigla] familia (paquete)»), con 0,2 em; 4 el texto, con
+ * la sigla de cada subrayado detrás, entre corchetes y a 9 pt, y 14 pt entre
+ * párrafos (salto de página antes); 5 el desglose (cada paquete, su total y
+ * sus familias con viñeta y sus reglas debajo, con 0,3 em); 6 las señales,
+ * regla a regla (salto de página antes): el nombre en Literata negrita con la
+ * dirección de su ficha detrás en Atkinson 9,5 pt e ink-2, la frase, los
+ * fragmentos y «Qué hacer», con 0,3 em entre líneas y 14 pt entre señales, y
+ * al final, en cuerpo menor (9,5 pt, decisión de Antonio en la parada 3), las
+ * explicaciones y las seis reglas de contexto; y 7 la nota de autoría, con su
+ * raya encima, que cierra la última sección y no queda sola. Literata 11 pt a
+ * 1,45 (el del marco: el DISEÑO §6.5 dice 1,4; manda la medida del marco, por
+ * la decisión del 05/10), márgenes de 20 mm arriba y abajo y 18 a los lados,
+ * 14 pt entre bloques, y el número de página abajo a la derecha, «n / N», en
+ * Atkinson 9 pt e ink-2.
  * Los números de las secciones los pone pantalla.ts en data-numero (pintar.ts,
  * numerarSecciones) y la hoja los escribe delante de cada título: no con
  * contadores de CSS, que siguen el orden del documento, y en papel el texto,
@@ -44,6 +53,10 @@
  * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/@page — size: a4 y
  *    margin; Baseline 2024. Sin él, Chrome imprime en carta (visto en la
  *    parada 1 del 9.1).
+ * [DOC] https://drafts.csswg.org/css-page-3/#margin-boxes — las dieciséis
+ *    cajas de margen; una se genera si su content no es none; las de abajo
+ *    (bottom-left, bottom-center y bottom-right) van entre los márgenes de los
+ *    lados, y vertical-align las coloca dentro del margen.
  * [DOC] https://developer.chrome.com/blog/print-margins — «From Chrome 131 you
  *    can use CSS to add content to the margins of pages when they are
  *    printed»; «The predefined page counter contains the current page» y «a
@@ -51,6 +64,14 @@
  *    browser will automatically add some page margin content if there is room
  *    for it to display […]. These automatically generated headers and footers
  *    can be turned off in the print dialog».
+ * [PROPIO] Con alguna caja de margen con contenido en las cuatro de arriba y
+ *    abajo, Chrome no pone su cabecera ni su pie (la fecha, el título y la
+ *    dirección), aunque el diálogo los tenga activados: visto el 05/10 en el
+ *    diálogo de imprimir de Chrome 154 («Predeterminado», con «Encabezados y
+ *    pies de página») y en Page.printToPDF con displayHeaderFooter; con solo
+ *    el número abajo a la derecha, la cabecera salía arriba. La documentación
+ *    no lo dice: lo vigila el juez (jueces/papel.spec.ts). Las demás cajas,
+ *    vacías.
  * [DOC] https://www.w3.org/TR/css-lists-3/ — «An element inherits its initial
  *    set of counters from its parent and preceding sibling», con los valores
  *    del elemento anterior «in tree order»: un contador no sigue order.
@@ -67,12 +88,17 @@
  *    widows (2, el DISEÑO) van como mejora, sin depender de ellos.
  * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/attr
  *    — attr() «can also be used with pseudo-elements»: las siglas detrás de
- *    cada tramo (data-siglas) y delante de cada línea de la clave
- *    (data-sigla), los números de las secciones (data-numero) y la dirección
- *    de la ficha detrás de cada regla de las señales.
+ *    cada tramo (data-siglas), los números de las secciones (data-numero) y
+ *    la dirección de la ficha detrás de cada regla de las señales.
  * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/content
  *    — el contenido generado «is not included in the DOM»: en pantalla no
  *    existe y el texto del usuario no se toca; en el PDF sale como texto.
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/border-style
+ *    — solid, dashed, dotted y double («the sum of the two lines and the space
+ *    between them equals the value of border-width»); no hay ondulada: la de
+ *    Gramática es la de text-decoration-style: wavy («Draws a wavy line»,
+ *    https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/text-decoration-style)
+ *    bajo unos espacios duros.
  * [DOC] https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html — 1.4.1:
  *    «Color is not used as the only visual means of conveying information»:
  *    en papel, la sigla y el paquete en texto, y la clave en tinta.
@@ -93,11 +119,35 @@
   size: A4;
   margin: 20mm 18mm;
 
+  /* El número de página, como el modelo: su caja acaba a 10 mm − 6 px del borde de abajo (Informe.tsx: bottom: M_V / 2 − 6). */
   @bottom-right {
     content: counter(page) ' / ' counter(pages);
+    vertical-align: bottom;
+    padding-bottom: calc(10mm - 6px);
     font-family: var(--tipografia-font-family-ui);
     font-size: 9pt;
+    line-height: 1.45;
     color: var(--color-ink-2);
+  }
+
+  @top-left {
+    content: '';
+  }
+
+  @top-center {
+    content: '';
+  }
+
+  @top-right {
+    content: '';
+  }
+
+  @bottom-left {
+    content: '';
+  }
+
+  @bottom-center {
+    content: '';
   }
 }
 
@@ -105,7 +155,7 @@
   html {
     font-family: var(--tipografia-font-family-texto);
     font-size: 11pt;
-    line-height: 1.4;
+    line-height: 1.45;
     color: var(--color-ink);
   }
 
@@ -115,15 +165,6 @@
     max-width: none;
     margin: 0;
     padding: 0;
-  }
-
-  /*
-   * Lo que va en negrita, en Atkinson, que la página ya cargó: Literata 600 no la usa la pantalla del analizador, y
-   * pedirla al imprimir sería una petición de red después de la carga (jueces/impresion.spec.ts, test 4; visto al
-   * escribir esta hoja: «Font …/fuentes/literata/literata-600.woff2»). Precargarla costaría 46 KB a todos.
-   */
-  :is(h1, h2, h3, h4, h5, strong, b, .estado-tramo) {
-    font-family: var(--tipografia-font-family-ui);
   }
 
   .cabecera,
@@ -141,7 +182,11 @@
   .lo-que-mas-pesa > ol,
   .detalle > summary,
   .detalle > .cifras,
-  .sigla-tramo {
+  .sigla-tramo,
+  #leyenda > h2:not(.titulo-seccion),
+  #leyenda .grupo-familias,
+  .otro-paquete > h2,
+  .otro-paquete > .resumen {
     display: none !important;
   }
 
@@ -150,12 +195,23 @@
     text-decoration: none;
   }
 
-  /* El informe en el orden del DISEÑO: las columnas y el resultado no cuentan (display: contents) y cada sección lleva su orden. */
+  /*
+   * El informe en el orden del DISEÑO: las columnas y el resultado no cuentan (display: contents) y cada sección lleva su orden.
+   * Entre secciones, 14 pt (el hueco del marco) con márgenes y no con gap: impreso desde el móvil, lo que las pestañas se
+   * llevan del desglose va suelto (order: 6), y un gap lo separaría de su título. Ni la 4 ni la 6 lo llevan: empiezan página,
+   * y tras un salto forzado el margen se conserva.
+   */
   .analizador {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 14pt;
+    gap: 0;
+  }
+
+  #resultado :is(#medidor, #leyenda),
+  #desglose,
+  #resultado .pie-informe {
+    margin-top: 14pt;
   }
 
   .columna-texto,
@@ -209,8 +265,36 @@
     content-visibility: visible;
   }
 
+  /*
+   * Todo en el cuerpo del papel, con su color, sin los márgenes, los rellenos, los bordes y los fondos de la pantalla. Lleva un
+   * id (gana a las reglas de la pantalla), y lo de cada sección que va detrás lo lleva también (#resultado, que contiene el
+   * desglose también en los paneles del móvil, o #senales-informe), para ganarle a esta.
+   */
+  :is(#cabecera-informe, #medidor, #leyenda, #vista, #senales-informe, .analizador :is(.detalle, .otro-paquete, .desglose-paquete, .desglose-avisos, .lectura)),
+  :is(#cabecera-informe, #medidor, #leyenda, #vista, #senales-informe, .analizador :is(.detalle, .otro-paquete, .desglose-paquete, .desglose-avisos, .lectura)) :is(div, section, article, p, h2, h3, h4, ul, li, strong, a) {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    font-family: var(--tipografia-font-family-texto);
+    font-size: 11pt;
+    font-weight: 400;
+    line-height: 1.45;
+    letter-spacing: normal;
+    color: var(--color-ink);
+  }
+
+  /* Las negritas del texto, en Literata (la de 600, que precarga el analizador: estilos/recursos.ts). */
+  :is(#senales-informe, #resultado .desglose-paquete, #resultado .desglose-avisos) :is(strong, h3, h3 > a, h4) {
+    font-weight: 700;
+  }
+
   /* Los títulos de las secciones, con su número delante. */
-  .titulo-seccion {
+  .titulo-seccion,
+  :is(#cabecera-informe, #medidor, #leyenda, #vista, #senales-informe) > .titulo-seccion,
+  .analizador .titulo-seccion {
     margin: 0 0 0.6em;
     font-family: var(--tipografia-font-family-ui);
     font-size: 14pt;
@@ -241,104 +325,108 @@
     margin-top: 0.25em;
   }
 
-  /* 2 · El resultado: la etiqueta, la frase, el aviso de texto corto, lo que más pesa y por dónde empezar, una línea cada cosa. */
+  /* 2 · El resultado: la etiqueta, la frase, el aviso de texto corto, lo que más pesa, por dónde empezar y los otros paquetes, una línea cada cosa. */
   #medidor,
   #medidor .pastilla,
   #medidor .lo-que-mas-pesa {
     display: block;
-    padding: 0;
-    border: 0;
-    border-radius: 0;
-    background: none;
   }
 
   #medidor .pastilla > * + *,
   #medidor .pastilla ~ *,
-  #medidor .lo-que-mas-pesa > p + p,
-  #medidor > p + p {
+  #medidor .lo-que-mas-pesa > p + p {
     margin-top: 0.4em;
   }
 
   #medidor .etiqueta {
     font-family: var(--tipografia-font-family-ui);
     font-size: 16pt;
+    font-weight: 700;
     line-height: 1.375;
   }
 
-  #medidor :is(.frase, .aviso-corto, p:not(.estado-tramo)) {
-    font-family: var(--tipografia-font-family-texto);
-    font-size: 11pt;
-    line-height: 1.4;
-  }
-
-  #medidor .aviso-corto {
-    padding-top: 0;
-    border-top: 0;
-  }
-
-  /* 3 · La clave: por paquete, la muestra de la línea de cada familia, en tinta, y «[sigla] nombre». */
-  #leyenda,
-  #leyenda .grupo-familias,
-  #leyenda .leyenda {
+  /* 3 · La clave: la muestra de la línea de cada familia, en tinta, y «[sigla] familia (paquete)», con la línea de las siglas delante. */
+  #leyenda {
     display: block;
-    padding: 0;
   }
 
-  #leyenda .grupo-familias {
-    margin-top: 0.6em;
+  #leyenda .clave-papel {
+    list-style: none;
   }
 
-  #leyenda .grupo-familias h3 {
-    font-family: var(--tipografia-font-family-ui);
-    font-size: 11pt;
-    line-height: 1.4;
-    color: var(--color-ink);
-  }
-
-  #leyenda .tarjeta-familia {
-    gap: var(--espacio-12);
-    min-height: 0;
+  #leyenda .clave-papel > li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     margin-top: 0.2em;
-    padding: 0;
-    border: 0;
-    border-radius: 0;
-    background: none;
     break-inside: avoid;
   }
 
-  #leyenda .tarjeta-familia .muestra {
-    font-size: 11pt;
-    line-height: 1.4;
-    background: none;
-    color: var(--color-ink);
-    text-decoration-color: var(--color-ink);
+  .muestra-papel {
+    position: relative;
+    flex: none;
+    width: 32px;
+    height: 10px;
+    overflow: hidden;
   }
 
-  #leyenda .etiqueta-familia {
-    font-size: 11pt;
-    line-height: 1.4;
-    color: var(--color-ink);
+  /* La línea, centrada en la muestra: la de cada familia con su estilo y su grosor (estilos/familias.css), en tinta. */
+  .muestra-papel::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 0;
+    left: 0;
+    border-top: var(--grosor) var(--estilo) var(--color-ink);
+    transform: translateY(-50%);
   }
 
-  #leyenda .etiqueta-familia[data-sigla]::before {
-    content: '[' attr(data-sigla) '] ';
+  /* Estadística, doble de 1 px, y Ortotipografía, doble discontinua de 1 px: dos bordes con 2 y 3 px entre ellos (como el modelo). */
+  .muestra-papel.fam-estadistica::before {
+    height: 2px;
+    border-top: 1px solid var(--color-ink);
+    border-bottom: 1px solid var(--color-ink);
   }
 
-  /* 4 · El texto, en página nueva, con la sigla de cada subrayado detrás, entre corchetes. */
+  .muestra-papel.fam-ortotipografia::before {
+    height: 3px;
+    border-top: 1px dashed var(--color-ink);
+    border-bottom: 1px dashed var(--color-ink);
+  }
+
+  /* Gramática, ondulada: border-style no tiene onda; la de text-decoration (tachado, que cae en medio), sobre unos espacios duros. */
+  .muestra-papel.fam-gramatica::before {
+    content: '\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0';
+    top: 0;
+    height: 10px;
+    border-top: 0;
+    font-size: 10px;
+    line-height: 10px;
+    white-space: nowrap;
+    text-decoration: line-through wavy var(--color-ink) 1.5px;
+    text-decoration-skip-ink: none;
+    transform: none;
+  }
+
+  /* 4 · El texto, en página nueva, con la sigla de cada subrayado detrás, entre corchetes, y 14 pt entre párrafos (el marco). */
   #vista {
-    max-width: none;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 11pt;
-    line-height: 1.4;
     break-before: page;
+  }
+
+  #vista .salto {
+    display: block;
+    height: 14pt;
+    overflow: hidden;
+    font-size: 0;
+    line-height: 0;
   }
 
   .tramo[data-siglas]::after {
     content: ' [' attr(data-siglas) ']';
     font-family: var(--tipografia-font-family-ui);
     font-size: 9pt;
+    font-weight: 400;
+    color: var(--color-ink);
   }
 
   .capa {
@@ -346,50 +434,43 @@
   }
 
   /*
-   * 5 · El desglose: cada paquete, su total y sus familias con sus reglas. Con «.analizador» y no con «#desglose»: impreso
-   * desde el móvil, sus partes están en los paneles de las pestañas (estilos/pestanas.css, que les pone su recuadro).
+   * 5 · El desglose: cada paquete, su total y sus familias, con viñeta, con sus reglas debajo. Con «#resultado» y no con
+   * «#desglose»: impreso desde el móvil, sus partes están en los paneles de las pestañas (estilos/pestanas.css, que les pone su
+   * recuadro), que van dentro del resultado.
    */
   #desglose,
-  .analizador :is(.otro-paquete, .desglose-paquete, .desglose-avisos, .lectura) {
+  #resultado :is(.otro-paquete, .desglose-paquete, .desglose-avisos, .lectura) {
     display: block;
   }
 
-  /* «Ver el detalle» se queda con su display: el que se lleva Datos en el móvil (sin nada que salga) no sale (estilos/pestanas.css). */
-  .analizador :is(.detalle, .otro-paquete, .desglose-paquete, .desglose-avisos, .lectura) {
-    padding: 0;
-    border: 0;
-    border-radius: 0;
-    font-size: 11pt;
-    line-height: 1.4;
-  }
-
-  .analizador :is(.desglose-paquete, .desglose-avisos, .otro-paquete, .lectura) > * + * {
+  #resultado :is(.desglose-paquete, .desglose-avisos, .lectura) > * + *,
+  #resultado .desglose-avisos {
     margin-top: 0.3em;
   }
 
-  .analizador :is(.otro-paquete, .desglose-avisos) {
-    margin-top: 0.6em;
+  #resultado :is(.otro-paquete, #desglose > .detalle + .detalle) {
+    margin-top: 14pt;
   }
 
-  .analizador :is(.desglose-paquete h3, .otro-paquete > h2, .lectura .etiqueta, .desglose-paquete h4, .desglose-avisos h4) {
+  #resultado :is(.desglose-paquete > h3, .lectura .etiqueta) {
     font-family: var(--tipografia-font-family-ui);
-    font-size: 11pt;
-    line-height: 1.4;
+    font-weight: 700;
   }
 
-  .analizador .lectura .frase {
-    font-family: var(--tipografia-font-family-texto);
-    font-size: 11pt;
-    line-height: 1.4;
+  #resultado :is(.desglose-paquete, .desglose-avisos) > h4 {
+    display: list-item;
+    margin-left: 1.2em;
+    list-style: disc outside;
   }
 
-  .analizador :is(.desglose-paquete, .desglose-avisos) ul {
+  #resultado :is(.desglose-paquete, .desglose-avisos) > :is(ul, .nada) {
+    margin-top: 0;
+    margin-left: 1.2em;
     padding-left: 1.2em;
-    color: var(--color-ink);
-    list-style: circle;
+    list-style: circle outside;
   }
 
-  .analizador :is(.desglose-paquete, .desglose-avisos) li {
+  #resultado :is(.desglose-paquete, .desglose-avisos) li {
     break-inside: avoid;
   }
 
@@ -403,14 +484,8 @@
     margin-top: 14pt;
   }
 
-  .entrada-informe > * + * {
+  #senales-informe .entrada-informe > * + * {
     margin-top: 0.3em;
-  }
-
-  .entrada-informe h3 {
-    font-family: var(--tipografia-font-family-ui);
-    font-size: 1em;
-    line-height: 1.4;
   }
 
   .entrada-informe a[href]::after {
@@ -422,41 +497,27 @@
     word-break: break-all;
   }
 
-  .entrada-informe .en-claro {
-    font-weight: 400;
-  }
-
-  .entrada-informe .id-regla {
-    font-family: var(--tipografia-font-family-ui);
-    font-size: 9.5pt;
-  }
-
   .entrada-informe,
   .explicacion-informe {
     break-inside: avoid;
   }
 
-  .anexo-informe {
+  #senales-informe .anexo-informe,
+  #senales-informe .anexo-informe :is(article, p, h3, strong, a) {
     font-size: 9.5pt;
   }
 
-  .anexo-informe > * + * {
+  #senales-informe .anexo-informe > * + * {
     margin-top: 0.6em;
-  }
-
-  .anexo-informe > h3 {
-    font-family: var(--tipografia-font-family-ui);
-    font-size: 1em;
-    line-height: 1.4;
   }
 
   /* 7 · La nota de autoría: cierra la última sección, con su raya encima, y no queda sola en su página. */
   .pie-informe {
-    margin: 0;
     padding-top: 0.6em;
     border-top: 1px solid var(--color-ink);
     font-family: var(--tipografia-font-family-ui);
     font-size: 10pt;
+    line-height: 1.45;
     break-before: avoid;
   }
 }

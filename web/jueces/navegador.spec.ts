@@ -29,7 +29,9 @@
  *      servidor, por diseño (encargo 6.3). Desde el 10.4 (Tanda 1), con las
  *      fuentes autoalojadas: ni una petición a fonts.googleapis.com ni a
  *      fonts.gstatic.com, antes o después de la marca; las dos caras
- *      precargadas, en la carga inicial; y ninguna cara pedida dos veces. Y
+ *      precargadas, en la carga inicial (desde la Tanda 4 bis, también la
+ *      negrita del papel, que el analizador precarga); y ninguna cara pedida
+ *      dos veces. Y
  *      la carga inicial, solo lo esperado: la página, su JS y su CSS, las
  *      fuentes, los paquetes, y el icono y el manifiesto (Chrome pide el
  *      manifiesto y sus iconos por su cuenta al cargar).
@@ -60,7 +62,7 @@ import { fileURLToPath } from 'node:url';
 import * as textos from '../src/textos.ts';
 import { urlDeRegla } from '../src/catalogo/catalogo.ts';
 import { generosDe } from '../src/pantalla/generos.ts';
-import { FUENTES_PRECARGADAS } from '../src/estilos/recursos.ts';
+import { FUENTES_PRECARGADAS, NEGRITA_DEL_PAPEL } from '../src/estilos/recursos.ts';
 import { EJEMPLOS_PUBLICOS, PAQUETES_DE_PRUEBA, paqueteDePrueba, paquetesIncluidos, TEXTO_DE_TRES_PAQUETES } from './apoyo.ts';
 import { abrirAnalizadorConTestigos, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
 
@@ -247,7 +249,7 @@ describe('el cargador en Chrome, sobre astro preview', () => {
     // Las fuentes, autoalojadas (10.4, Tanda 1): nada de Google Fonts, las dos precargadas sí, y ninguna cara dos veces.
     assert.deepEqual([...carga, ...despues].filter((x) => /^fonts\.(googleapis|gstatic)\.com$/.test(new URL(x.url).hostname)), [], 'peticiones a Google Fonts');
     const fuentes = carga.filter((x) => x.tipo === 'Font').map((x) => new URL(x.url).pathname);
-    for (const ruta of FUENTES_PRECARGADAS) assert.ok(fuentes.includes(`/${ruta}`), `la precarga de ${ruta}: ${fuentes.join(' · ')}`);
+    for (const ruta of [...FUENTES_PRECARGADAS, NEGRITA_DEL_PAPEL]) assert.ok(fuentes.includes(`/${ruta}`), `la precarga de ${ruta}: ${fuentes.join(' · ')}`);
     assert.deepEqual(fuentes.filter((x, i) => fuentes.indexOf(x) !== i), [], 'caras pedidas dos veces (una precarga sin crossorigin no se reutiliza)');
     // Y nada en la carga inicial fuera de lo esperado: la página, su JS y su CSS, las fuentes, los paquetes, y el icono y el manifiesto (10.4).
     const ESPERADAS = [

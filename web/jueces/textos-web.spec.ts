@@ -75,7 +75,10 @@ const MUESTRAS: Readonly<Record<string, readonly unknown[]>> = {
   analisisDel: ['2 de octubre de 2026 a las 16:40'],
   paqueteDelInforme: ['Paquete de prueba', '1.0.0', true],
   paquetesDelInforme: [['RadiografIA 0.1.0', 'Español correcto 0.1.0', 'Paquete de prueba 1.0.0 (propio)']],
-  senalesDeLaRegla: [7, ['okey', 'OK', 'okey', 'oká', 'okey'], 2],
+  // Desde el 10.4 (Tanda 4 bis), el papel como el marco del modelo: los fragmentos de cada regla, la clave y los otros paquetes.
+  fragmentosDeLaRegla: [['okey', 'OK', 'okey', 'oká', 'okey'], 2],
+  familiaEnLaClave: ['C', 'Canal', 'RadiografIA', true],
+  resumenDeOtroPaquete: ['Español correcto', '9 avisos de norma: Mes o día con mayúscula (3) y Pasiva perifrástica con agente (1).'],
   senalDelTextoEntero: ['ausencia: 0 apariciones; señala por debajo de 1'],
   // El lenguaje de calle (encargo 9.2, b): las muestras con los géneros y las cifras que pinta la página.
   generoDesconocido: ['carta'],

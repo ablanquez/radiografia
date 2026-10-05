@@ -31,12 +31,58 @@ interface Objeto {
   flujo: Buffer | null;
 }
 
-/** Un glifo (o un trozo de texto) con el sitio donde empieza, en puntos de la página (y hacia arriba). */
+/** Un glifo (o un trozo de texto) con el sitio donde empieza, en puntos de la página (y hacia arriba), y su letra. */
 interface Trozo {
   x: number;
   y: number;
+  /** Lo que avanza en la página (la suma de los anchos de sus glifos), en puntos. */
+  avance: number;
   texto: string;
+  tamano: number;
+  familia: string;
+  peso: number;
+  color: string;
 }
+
+/**
+ * Un tramo de una línea del PDF: el texto seguido con la misma letra (familia,
+ * peso, tamaño y color), con el sitio donde empieza.
+ */
+export interface TramoDelPdf {
+  /** Desde el borde izquierdo de la página, en px CSS (1 pt = 4/3 px). */
+  x: number;
+  /** Dónde acaba su último glifo, desde el borde izquierdo, en px CSS. */
+  fin: number;
+  texto: string;
+  /** El cuerpo de la letra, en px CSS. */
+  tamano: number;
+  /** La familia y el peso del FontDescriptor de su fuente (Chrome escribe FontFamily y FontWeight). */
+  familia: string;
+  peso: number;
+  /** El color de relleno, como lo da getComputedStyle: «rgb(26, 26, 26)». */
+  color: string;
+}
+
+/** Una línea del PDF: su línea base, desde el borde de arriba de la página, y sus tramos de izquierda a derecha. */
+export interface LineaDelPdf {
+  /** La línea base, desde el borde de arriba de la página, en px CSS. */
+  y: number;
+  /** Dónde empieza su primer glifo que no es un blanco y dónde acaba el último, desde el borde izquierdo, en px CSS. */
+  x: number;
+  fin: number;
+  texto: string;
+  tramos: TramoDelPdf[];
+}
+
+/** Una página del PDF: su tamaño (de su MediaBox) y sus líneas de arriba abajo, todo en px CSS. */
+export interface PaginaDelPdf {
+  ancho: number;
+  alto: number;
+  lineas: LineaDelPdf[];
+}
+
+/** Puntos PDF (1/72 de pulgada) a px CSS (1/96 de pulgada). */
+const PX = 96 / 72;
 
 const por = (m: Matriz, n: Matriz): Matriz => [
   m[0] * n[0] + m[1] * n[2],
@@ -203,6 +249,22 @@ function trozosDe(contenido: Buffer, recursos: string, matriz: Matriz, todos: Ma
   const fuentes = referencias(subdiccionario(recursos, 'Font', todos));
   const formas = referencias(subdiccionario(recursos, 'XObject', todos));
   const mapas = new Map<string, Map<string, string>>();
+  /** La letra de una fuente (familia y peso de su FontDescriptor) y el ancho de sus glifos (§ 9.6.2 y § 9.6.5: /FirstChar, /Widths y /FontMatrix). */
+  const letras = new Map<string, { familia: string; peso: number; ancho: (codigo: number) => number }>();
+  const letraDe = (fuente: string): { familia: string; peso: number; ancho: (codigo: number) => number } => {
+    if (!letras.has(fuente)) {
+      const objeto = todos.get(fuentes.get(fuente) ?? -1);
+      const fd = objeto === undefined ? null : /\/FontDescriptor (\d+) 0 R/.exec(objeto.dic);
+      const descriptor = fd === null ? '' : (todos.get(Number(fd[1]))?.dic ?? '');
+      const familia = /\/FontFamily\s*\(((?:[^()\\]|\\.)*)\)/.exec(descriptor)?.[1]?.replace(/\\(.)/g, '$1') ?? '';
+      // Las fuentes simples, como las Type3 de Skia, dicen el ancho de cada código; las demás (Type0, con /W) no se miden: 0.
+      const primero = Number(/\/FirstChar\s+(\d+)/.exec(objeto?.dic ?? '')?.[1] ?? 0);
+      const anchos = (/\/Widths\s*\[([^\]]*)\]/.exec(objeto?.dic ?? '')?.[1] ?? '').trim().split(/\s+/).filter((x) => x !== '').map(Number);
+      const escala = Number(/\/FontMatrix\s*\[\s*([-\d.]+)/.exec(objeto?.dic ?? '')?.[1] ?? 0.001);
+      letras.set(fuente, { familia, peso: Number(/\/FontWeight\s+(\d+)/.exec(descriptor)?.[1] ?? 0), ancho: (codigo) => (anchos[codigo - primero] ?? 0) * escala });
+    }
+    return letras.get(fuente)!;
+  };
   const mapaDe = (fuente: string): Map<string, string> => {
     if (!mapas.has(fuente)) {
       const objeto = todos.get(fuentes.get(fuente) ?? -1);
@@ -218,16 +280,27 @@ function trozosDe(contenido: Buffer, recursos: string, matriz: Matriz, todos: Ma
   let tm: Matriz = IDENTIDAD;
   let tlm: Matriz = IDENTIDAD;
   let fuente = '';
+  let cuerpo = 0;
   let interlineado = 0;
+  let color = 'rgb(0, 0, 0)';
+  const pilaDeColor: string[] = [];
   let operandos: { tipo: string; valor: string; lista?: string[] }[] = [];
   const n = (k: number): number => Number(operandos[operandos.length - k]!.valor);
+  const rgb = (r: number, g: number, b: number): string => `rgb(${Math.round(r * 255)}, ${Math.round(g * 255)}, ${Math.round(b * 255)})`;
   const escribir = (hex: string): void => {
     const mapa = mapaDe(fuente);
+    const { familia, peso, ancho } = letraDe(fuente);
     const largo = [...mapa.keys()][0]?.length ?? 2;
     let texto = '';
-    for (let i = 0; i < hex.length; i += largo) texto += mapa.get(hex.slice(i, i + largo)) ?? '';
+    let anchoEnTexto = 0;
+    for (let i = 0; i < hex.length; i += largo) {
+      texto += mapa.get(hex.slice(i, i + largo)) ?? '';
+      anchoEnTexto += ancho(parseInt(hex.slice(i, i + largo), 16));
+    }
     const sitio = por(tm, ctm);
-    salida.push({ x: sitio[4], y: sitio[5], texto });
+    // El cuerpo en la página: el de Tf por la escala vertical de la matriz del texto por la de la página (§ 9.4.4); el
+    // avance, el ancho de los glifos por el cuerpo y por la escala horizontal.
+    salida.push({ x: sitio[4], y: sitio[5], avance: anchoEnTexto * cuerpo * Math.hypot(sitio[0], sitio[1]), texto, tamano: cuerpo * Math.hypot(sitio[2], sitio[3]), familia, peso, color });
   };
   const linea = (tx: number, ty: number): void => {
     tlm = por([1, 0, 0, 1, tx, ty], tlm);
@@ -241,9 +314,17 @@ function trozosDe(contenido: Buffer, recursos: string, matriz: Matriz, todos: Ma
     switch (p.valor) {
       case 'q':
         pila.push(ctm);
+        pilaDeColor.push(color);
         break;
       case 'Q':
         ctm = pila.pop() ?? matriz;
+        color = pilaDeColor.pop() ?? color;
+        break;
+      case 'rg':
+        color = rgb(n(3), n(2), n(1));
+        break;
+      case 'g':
+        color = rgb(n(1), n(1), n(1));
         break;
       case 'cm':
         ctm = por([n(6), n(5), n(4), n(3), n(2), n(1)], ctm);
@@ -253,6 +334,7 @@ function trozosDe(contenido: Buffer, recursos: string, matriz: Matriz, todos: Ma
         break;
       case 'Tf':
         fuente = operandos[operandos.length - 2]!.valor;
+        cuerpo = n(1);
         break;
       case 'TL':
         interlineado = n(1);
@@ -300,6 +382,19 @@ function trozosDe(contenido: Buffer, recursos: string, matriz: Matriz, todos: Ma
 
 /** Las páginas del PDF, en orden: por cada una, sus líneas de texto de arriba abajo. */
 export function textoDeLasPaginas(pdf: Buffer): string[][] {
+  return lineasDeLasPaginas(pdf).map((p) => p.lineas.map((l) => l.texto));
+}
+
+/**
+ * Las páginas del PDF, en orden, con su tamaño y sus líneas: dónde va cada una
+ * (su línea base y su primer glifo) y la letra de cada tramo, en px CSS desde
+ * la esquina de arriba a la izquierda, como las cajas de getBoundingClientRect
+ * (desde el 10.4, Tanda 4 bis: el juez de fidelidad del papel).
+ * [DOC] ISO 32000-1:2008, § 9.4.4 (la matriz con que se dibuja un glifo: el
+ *    cuerpo de Tf, por Tm, por la matriz actual), § 9.8.1 (FontDescriptor:
+ *    FontFamily y FontWeight) y § 8.6.8 (rg y g: el color de relleno).
+ */
+export function lineasDeLasPaginas(pdf: Buffer): PaginaDelPdf[] {
   const todos = objetos(pdf);
   const raiz = [...todos.values()].find((o) => /\/Type\s*\/Pages\b/.test(o.dic) && !/\/Parent\s/.test(o.dic));
   if (raiz === undefined) throw new Error('el PDF no tiene árbol de páginas');
@@ -316,18 +411,45 @@ export function textoDeLasPaginas(pdf: Buffer): string[][] {
   return paginas.map((pagina) => {
     const recursos = subdiccionario(pagina.dic, 'Resources', todos);
     const contenidos = /\/Contents\s*\[([^\]]*)\]/.exec(pagina.dic)?.[1] ?? /\/Contents\s+(\d+ 0 R)/.exec(pagina.dic)?.[1] ?? '';
+    // La MediaBox, de la página o heredada de su nodo (§ 7.7.3.4).
+    let caja: string | undefined;
+    for (let nodo: Objeto | undefined = pagina; nodo !== undefined && caja === undefined; nodo = todos.get(Number(/\/Parent (\d+) 0 R/.exec(nodo.dic)?.[1] ?? -1))) {
+      caja = /\/MediaBox\s*\[([^\]]*)\]/.exec(nodo.dic)?.[1];
+    }
+    const [x0, y0, x1, y1] = (caja ?? '0 0 0 0').trim().split(/\s+/).map(Number) as [number, number, number, number];
     const trozos: Trozo[] = [];
     for (const [, num] of contenidos.matchAll(/(\d+) 0 R/g)) {
       const flujo = todos.get(Number(num))?.flujo;
       if (flujo !== null && flujo !== undefined) trozosDe(flujo, recursos, IDENTIDAD, todos, trozos);
     }
     // En líneas: los trozos a la misma altura (±2 puntos), de arriba abajo y, en cada línea, de izquierda a derecha.
-    const lineas: Trozo[][] = [];
+    const grupos: Trozo[][] = [];
     for (const t of [...trozos].sort((a, b) => b.y - a.y)) {
-      const ultima = lineas.at(-1);
+      const ultima = grupos.at(-1);
       if (ultima !== undefined && Math.abs(ultima[0]!.y - t.y) <= 2) ultima.push(t);
-      else lineas.push([t]);
+      else grupos.push([t]);
     }
-    return lineas.map((l) => l.sort((a, b) => a.x - b.x).map((t) => t.texto).join('').trim()).filter((l) => l !== '');
+    const lineas: LineaDelPdf[] = [];
+    const enPx = (x: number): number => Math.round((x - x0) * PX * 100) / 100;
+    for (const grupo of grupos) {
+      // Los tramos, con la x de su primer glifo que no es un blanco: los blancos no cuentan para dónde empieza el texto.
+      // Y su fin, el del último glifo que no es un blanco.
+      const tramos: (TramoDelPdf & { visible: boolean })[] = [];
+      for (const t of grupo.sort((a, b) => a.x - b.x)) {
+        const ultimo = tramos.at(-1);
+        const letra = { tamano: Math.round(t.tamano * PX * 100) / 100, familia: t.familia, peso: t.peso, color: t.color };
+        const blanco = t.texto.trim() === '';
+        const fin = enPx(t.x + t.avance);
+        if (ultimo !== undefined && ultimo.tamano === letra.tamano && ultimo.familia === letra.familia && ultimo.peso === letra.peso && ultimo.color === letra.color) {
+          ultimo.texto += t.texto;
+          if (!ultimo.visible && !blanco) Object.assign(ultimo, { x: enPx(t.x), visible: true });
+          if (!blanco) ultimo.fin = fin;
+        } else tramos.push({ x: enPx(t.x), fin: blanco ? enPx(t.x) : fin, texto: t.texto, ...letra, visible: !blanco });
+      }
+      const visibles = tramos.filter((t) => t.visible).map(({ visible: _, ...t }) => ({ ...t, texto: t.texto.trim() }));
+      if (visibles.length === 0) continue;
+      lineas.push({ y: Math.round((y1 - grupo[0]!.y) * PX * 100) / 100, x: visibles[0]!.x, fin: visibles.at(-1)!.fin, texto: tramos.map((t) => t.texto).join('').trim(), tramos: visibles });
+    }
+    return { ancho: Math.round((x1 - x0) * PX * 100) / 100, alto: Math.round((y1 - y0) * PX * 100) / 100, lineas };
   });
 }

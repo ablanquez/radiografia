@@ -18,12 +18,20 @@
  *    Aquí con la base delante en vez de «/». Sustituyen al `<link rel="icon"
  *    href="data:,">` del 6.2, que solo evitaba que Chrome pidiera un
  *    /favicon.ico que no existía.
+ *
+ * Con `papel` (el analizador, desde el 10.4, Tanda 4 bis), también la negrita
+ * del papel, Literata 600 (NEGRITA_DEL_PAPEL): la usa el informe impreso.
  */
 import { conBarraFinal } from '../pantalla/cargar.ts';
-import { ENLACES_DE_ICONO, FUENTES_PRECARGADAS } from '../estilos/recursos.ts';
+import { ENLACES_DE_ICONO, FUENTES_PRECARGADAS, NEGRITA_DEL_PAPEL } from '../estilos/recursos.ts';
 
+interface Props {
+  papel?: boolean;
+}
+
+const { papel = false } = Astro.props;
 const base = conBarraFinal(import.meta.env.BASE_URL);
 ---
 
-{FUENTES_PRECARGADAS.map((ruta) => <link rel="preload" href={`${base}${ruta}`} as="font" type="font/woff2" crossorigin />)}
+{[...FUENTES_PRECARGADAS, ...(papel ? [NEGRITA_DEL_PAPEL] : [])].map((ruta) => <link rel="preload" href={`${base}${ruta}`} as="font" type="font/woff2" crossorigin />)}
 {ENLACES_DE_ICONO.map(({ href, ...resto }) => <link {...resto} href={`${base}${href}`} />)}
