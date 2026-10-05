@@ -14,18 +14,43 @@
  *    — en params «only strings are supported as values», porque van en la
  *    URL; props «aren't limited to only strings»: la entrada entera del
  *    catálogo va por props.
- * Arriba y abajo, «Volver al catálogo» y «Probar en el analizador».
  * Bajo el nombre, la frase en claro de la regla (encargo 9.2, b; firmada por
  *    Antonio en la parada 1), si la trae.
- * Los ejemplos van en <pre> (con white-space: pre-wrap en el layout): se ven
- *    tal cual, con sus saltos, sus asteriscos y sus almohadillas, que son lo
- *    que las reglas de canal buscan.
+ *
+ * Desde el 10.4 (Tanda 3; DISEÑO §6.4), la del modelo (FichaRegla, medida por
+ * CDP), en una columna de 34em centrada: la pastilla de la familia (la
+ * muestra de su línea, la sigla y «familia · paquete versión»); el nombre,
+ * con el id debajo en ink-2; la frase en claro; y por secciones con su
+ * título, «Qué hacer» (la sugerencia), la explicación, las excepciones,
+ * «Datos de la regla» (paquete, detector, peso, severidad, nivel de evidencia
+ * y origen de la lista, en un recuadro card), las fuentes como enlaces con su
+ * icono de enlace externo, y los ejemplos en recuadros, con el tramo que
+ * dispara la regla marcado con el tinte, la línea y la sigla de su familia
+ * (los tramos, de scripts/tramos-de-ejemplos.ts; las reglas que miran el
+ * texto entero, las de ausencia y las de género no marcan tramo). Abajo,
+ * «Probar en el analizador» (botón principal) y «Volver al catálogo». El
+ * contenido es el de antes del calco (jueces/fichas.spec.ts): también «Cómo
+ * busca», que el modelo no tenía, en su sección, y «Solo aviso: no suma.» en
+ * las que solo avisan. Los ejemplos van tal cual, con sus saltos (pre-wrap),
+ * sus asteriscos y sus almohadillas, que son lo que las reglas de canal
+ * buscan. Los estilos, en estilos/ficha.css.
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/figure
+ *    — «self-contained content, potentially with an optional caption»: cada
+ *    ejemplo, en el suyo.
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dl
+ *    — «a list of groups of terms (specified using the <dt> element) and
+ *    descriptions (provided by <dd> elements)».
+ * El icono de enlace externo es aria-hidden y lleva al lado «(enlace
+ *    externo)» solo para el lector (.solo-lector, base.css), como el modelo.
  */
 import Catalogo from '../../layouts/Catalogo.astro';
 import { parametrosEnLlano, urlDelAnalizador, urlDelCatalogo, type EntradaDelCatalogo } from '../../catalogo/catalogo.ts';
-import { ENTRADAS } from '../../catalogo/paquetes.ts';
+import { trozosDelEjemplo } from '../../catalogo/ejemplos.ts';
+import { ENTRADAS, PAQUETES } from '../../catalogo/paquetes.ts';
 import { nombreDeRegla } from '../../pantalla/humanizar.ts';
+import { indexar } from '../../pantalla/pintar.ts';
 import * as textos from '../../textos.ts';
+import tramosDeEjemplos from '../../catalogo/tramos-de-ejemplos.json';
 
 export function getStaticPaths() {
   return ENTRADAS.map((entrada) => ({ params: { id: entrada.regla.id }, props: { entrada } }));
@@ -39,56 +64,118 @@ const { regla, paquete, familia } = Astro.props.entrada;
 const nombre = nombreDeRegla(regla.id, regla);
 const base = import.meta.env.BASE_URL;
 const peso = new Intl.NumberFormat('es').format(regla.peso);
+const indice = indexar(PAQUETES);
+const clave = `${paquete.nombre}::${familia.id}`;
+const clase = indice.claseDeFamilia.get(clave) ?? '';
+const sigla = indice.siglaDeFamilia.get(clave) ?? '';
+const tramos = (tramosDeEjemplos as Record<string, [number, number][][]>)[regla.id];
+const positivos = regla.ejemplos.positivos.map((e, i) => trozosDelEjemplo(e, tramos?.[i] ?? []));
+const negativos = regla.ejemplos.negativos.map((e) => trozosDelEjemplo(e, []));
+const datos: [string, string][] = [
+  [textos.PAQUETE, textos.paqueteConVersion(paquete.nombre, paquete.version, paquete.descripcion)],
+  [textos.DETECTOR, regla.detector],
+  [textos.PESO, peso],
+  [textos.SEVERIDAD, regla.severidad],
+  [textos.NIVEL_DE_EVIDENCIA, regla.nivelEvidencia],
+  [textos.ORIGEN_DE_LA_LISTA, regla.origenLista ?? textos.SIN_DATO],
+];
 ---
 
 <Catalogo titulo={nombre} clase="ficha">
-  <nav>
-    <a href={urlDelCatalogo(base)}>{textos.VOLVER_AL_CATALOGO}</a> · <a href={urlDelAnalizador(base)}>{textos.PROBAR_EN_EL_ANALIZADOR}</a>
-  </nav>
-  <h1>{nombre}</h1>
-  {regla.enClaro !== undefined && <p class="en-claro">{regla.enClaro}</p>}
-  <p class="id-regla">{regla.id} · {paquete.nombre}</p>
-  {(regla.informativa || familia.informativa) && <p>{textos.INFORMATIVA}</p>}
-  <dl>
-    <dt>{textos.PAQUETE}</dt>
-    <dd>{textos.paqueteConVersion(paquete.nombre, paquete.version, paquete.descripcion)}</dd>
-    <dt>{textos.FAMILIA}</dt>
-    <dd>{familia.nombre}</dd>
-    <dt>{textos.DETECTOR}</dt>
-    <dd>{regla.detector}</dd>
-    <dt>{textos.PESO}</dt>
-    <dd>{peso}</dd>
-    <dt>{textos.SEVERIDAD}</dt>
-    <dd>{regla.severidad}</dd>
-    <dt>{textos.NIVEL_DE_EVIDENCIA}</dt>
-    <dd>{regla.nivelEvidencia}</dd>
-  </dl>
-  <h2>{textos.COMO_BUSCA}</h2>
-  <dl>
-    {
-      parametrosEnLlano(regla).map((p) => (
-        <>
-          <dt>{p.etiqueta}</dt>
-          <dd>{p.codigo ? <code>{p.valor}</code> : p.valor}</dd>
-        </>
-      ))
-    }
-  </dl>
-  <h2>{textos.EXPLICACION}</h2>
-  <p class="texto-largo">{regla.explicacion}</p>
-  <h2>{textos.SUGERENCIA}</h2>
-  <p class="texto-largo">{regla.sugerencia}</p>
-  <h2>{textos.EXCEPCIONES}</h2>
-  {regla.excepciones.length === 0 ? <p>{textos.NINGUNA}</p> : <ul class="texto-largo">{regla.excepciones.map((e) => <li>{e}</li>)}</ul>}
-  <h2>{textos.ORIGEN_DE_LA_LISTA}</h2>
-  <p class="texto-largo">{regla.origenLista ?? textos.SIN_DATO}</p>
-  <h2>{textos.FUENTES}</h2>
-  <ul>{regla.fuente.map((f) => <li><a href={f.url}>{f.titulo}</a></li>)}</ul>
-  <h2>{textos.DONDE_DISPARA}</h2>
-  {regla.ejemplos.positivos.map((e) => <pre class="ejemplo">{e}</pre>)}
-  <h2>{textos.DONDE_NO_DISPARA}</h2>
-  {regla.ejemplos.negativos.map((e) => <pre class="ejemplo">{e}</pre>)}
-  <nav>
-    <a href={urlDelCatalogo(base)}>{textos.VOLVER_AL_CATALOGO}</a> · <a href={urlDelAnalizador(base)}>{textos.PROBAR_EN_EL_ANALIZADOR}</a>
-  </nav>
+  <div class="cabeza-ficha">
+    <p class="pastilla-familia">
+      <span class={`muestra capa ${clase}`} aria-hidden="true">{textos.MUESTRA_DE_SUBRAYADO}</span>
+      <span class={`sigla ${clase}`} aria-hidden="true">{sigla}</span>
+      <span>{textos.lineaDeLaTarjeta(familia.nombre, textos.nombreYVersion(paquete.nombre, paquete.version))}</span>
+    </p>
+    <div class="nombre-ficha">
+      <h1>{nombre}</h1>
+      <p class="id-regla">{regla.id}</p>
+    </div>
+    {regla.enClaro !== undefined && <p class="en-claro">{regla.enClaro}</p>}
+    {(regla.informativa || familia.informativa) && <p class="solo-aviso">{textos.INFORMATIVA}</p>}
+  </div>
+  <section aria-labelledby="ficha-que-hacer">
+    <h2 id="ficha-que-hacer">{textos.QUE_HACER}</h2>
+    <p class="largo">{regla.sugerencia}</p>
+  </section>
+  <section aria-labelledby="ficha-explicacion">
+    <h2 id="ficha-explicacion">{textos.EXPLICACION}</h2>
+    <p class="largo">{regla.explicacion}</p>
+  </section>
+  <section aria-labelledby="ficha-excepciones">
+    <h2 id="ficha-excepciones">{textos.EXCEPCIONES}</h2>
+    {regla.excepciones.length === 0 ? <p class="largo">{textos.NINGUNA}</p> : <ul class="largo">{regla.excepciones.map((e) => <li>{e}</li>)}</ul>}
+  </section>
+  <section aria-labelledby="ficha-datos">
+    <h2 id="ficha-datos">{textos.DATOS_DE_LA_REGLA}</h2>
+    <dl class="datos-ficha">
+      {
+        datos.map(([etiqueta, valor]) => (
+          <>
+            <dt>{textos.conDosPuntos(etiqueta)}</dt>
+            <dd>{valor}</dd>
+          </>
+        ))
+      }
+    </dl>
+  </section>
+  <section aria-labelledby="ficha-como-busca">
+    <h2 id="ficha-como-busca">{textos.COMO_BUSCA}</h2>
+    <dl class="datos-ficha">
+      {
+        parametrosEnLlano(regla).map((p) => (
+          <>
+            <dt>{textos.conDosPuntos(p.etiqueta)}</dt>
+            <dd>{p.codigo ? <code>{p.valor}</code> : p.valor}</dd>
+          </>
+        ))
+      }
+    </dl>
+  </section>
+  <section aria-labelledby="ficha-fuentes">
+    <h2 id="ficha-fuentes">{textos.FUENTES}</h2>
+    <ul class="fuentes">
+      {
+        regla.fuente.map((f) => (
+          <li>
+            <a href={f.url}>
+              <span>{f.titulo}</span>
+              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h4v4M13 3L7 9M11 9.5V13H3V5h3.5"></path></svg>
+              <span class="solo-lector">{textos.ENLACE_EXTERNO}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+  <section aria-labelledby="ficha-dispara">
+    <h2 id="ficha-dispara">{textos.DONDE_DISPARA}</h2>
+    <div class="ejemplos-ficha">
+      {
+        positivos.map((trozos) => (
+          <figure class="ejemplo-ficha">
+            {/* En una línea: el ejemplo va en pre-wrap, y un blanco entre etiquetas se vería y cambiaría el texto. */}
+            <p class="ejemplo">{trozos.map((t) => (t.marcado ? <span class="tramo"><span class={`capa ${clase}`}>{t.texto}</span><span class="sigla-tramo" aria-hidden="true">{sigla}</span></span> : t.texto))}</p>
+          </figure>
+        ))
+      }
+    </div>
+  </section>
+  <section aria-labelledby="ficha-no-dispara">
+    <h2 id="ficha-no-dispara">{textos.DONDE_NO_DISPARA}</h2>
+    <div class="ejemplos-ficha">
+      {
+        negativos.map((trozos) => (
+          <figure class="ejemplo-ficha">
+            <p class="ejemplo">{trozos.map((t) => t.texto)}</p>
+          </figure>
+        ))
+      }
+    </div>
+  </section>
+  <div class="acciones-ficha">
+    <a class="boton-principal" href={urlDelAnalizador(base)}>{textos.PROBAR_EN_EL_ANALIZADOR}</a>
+    <a class="volver" href={urlDelCatalogo(base)}>{textos.VOLVER_AL_CATALOGO}</a>
+  </div>
 </Catalogo>

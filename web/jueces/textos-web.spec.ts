@@ -122,6 +122,9 @@ const MUESTRAS: Readonly<Record<string, readonly unknown[]>> = {
   // El catálogo (10.4, Tanda 3): la línea de datos de una regla, con lo del paquete de muestra, y el botón de los filtros del móvil.
   lineaDeLaRegla: [['disc-marcador-repetido', 'Discurso', 'RadiografIA', 'estructural', 'baja', 'medido en inglés']],
   filtrosMarcados: [2],
+  // La ficha (10.4, Tanda 3): la línea de la pastilla de la familia, con el paquete de muestra, y una etiqueta de sus datos.
+  nombreYVersion: ['RadiografIA', '0.1.0'],
+  conDosPuntos: ['Detector'],
 };
 
 /** El texto visible de la página construida y su placeholder. */

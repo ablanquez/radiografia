@@ -1,0 +1,195 @@
+/*
+ * La ficha de una regla, /reglas/<id>/ (encargo 10.4, Tanda 3; DISEÑO §6.4),
+ * como en el modelo (FichaRegla, medido por CDP): una columna de 34em
+ * centrada, con 32 entre bloques; arriba, a 16, la pastilla de la familia
+ * (redonda, borde line, 6 · 16 · 6 · 12 de margen, la muestra, la sigla y el
+ * texto a 15, a 12), el nombre con el id debajo a 15 en ink-2 (a 4) y la
+ * frase en claro en Literata 18; cada sección con su título a 20 y, a 12, su
+ * texto en Literata 18; los datos en una rejilla de dos columnas (etiqueta en
+ * negrita y valor, a 16 · 8) sobre card con borde line, radio 8 y 16 de
+ * margen; las fuentes como enlaces de 44 de alto con el icono de enlace
+ * externo a 8; los ejemplos en recuadros de borde line, radio 8 y 16 de
+ * margen, a 16 entre sí, con el tramo marcado como en el analizador (el
+ * tinte, la línea y la sigla de su familia, de familias.css) pero sin manejo:
+ * no es un botón; y abajo, «Probar en el analizador», un enlace con el
+ * aspecto del botón principal, y «Volver al catálogo», en negrita, a 16 (en
+ * el móvil, uno debajo de otro y el botón a todo el ancho). Solo variables de
+ * tokens.css.
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/white-space
+ *    — pre-wrap: «Sequences of white space are preserved. Lines are broken at
+ *    newline characters»: los ejemplos, con sus saltos.
+ */
+
+.ficha {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-32);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--medida-columna-texto);
+  margin: 0 auto;
+  padding-bottom: var(--espacio-16);
+  /* Una palabra que no cabe (una dirección, un DOI, una expresión regular) se parte en vez de desbordar: a 320, las 50 fichas. */
+  overflow-wrap: anywhere;
+}
+
+.ficha :is(h1, h2, p, ul, dl, dd, figure) {
+  margin: 0;
+}
+
+.cabeza-ficha {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-16);
+}
+
+.pastilla-familia {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: var(--espacio-12);
+  padding: 6px var(--espacio-16) 6px var(--espacio-12);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radio-redondo);
+  font-size: var(--tipografia-tamano-secundario);
+  line-height: var(--tipografia-interlineado-secundario);
+}
+
+.ficha .muestra {
+  font-family: var(--tipografia-font-family-texto);
+  font-size: var(--tipografia-tamano-cuerpo);
+  line-height: 1;
+}
+
+.nombre-ficha {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+}
+
+.ficha .id-regla,
+.solo-aviso {
+  font-size: var(--tipografia-tamano-secundario);
+  line-height: var(--tipografia-interlineado-secundario);
+  color: var(--color-ink-2);
+}
+
+.cabeza-ficha .en-claro,
+.ficha .largo,
+.ejemplo {
+  font-family: var(--tipografia-font-family-texto);
+  font-size: var(--tipografia-tamano-cuerpo);
+  line-height: var(--tipografia-interlineado-cuerpo);
+  font-weight: 400;
+}
+
+.ficha section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-12);
+}
+
+.ficha ul.largo {
+  padding-left: var(--espacio-24);
+  list-style: disc;
+}
+
+.datos-ficha {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--espacio-8) var(--espacio-16);
+  padding: var(--espacio-16);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radio-tarjeta);
+  background: var(--color-card);
+}
+
+.datos-ficha dt {
+  font-weight: 700;
+}
+
+.datos-ficha dd {
+  min-width: 0;
+}
+
+.fuentes {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  list-style: none;
+}
+
+.fuentes a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-8);
+  min-height: var(--medida-toque);
+}
+
+.fuentes svg {
+  flex-shrink: 0;
+}
+
+/* El título, como elemento flexible, puede estrecharse por debajo de su palabra más larga, que se parte (overflow-wrap de .ficha). */
+.fuentes a > span:first-child {
+  min-width: 0;
+}
+
+.ejemplos-ficha {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-16);
+}
+
+.ejemplo-ficha {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-8);
+  padding: var(--espacio-16);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radio-tarjeta);
+}
+
+.ejemplo {
+  white-space: pre-wrap;
+}
+
+/* El tramo del ejemplo se ve como el del analizador, pero no se toca. */
+.ficha .tramo {
+  cursor: auto;
+}
+
+.acciones-ficha {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--espacio-16);
+}
+
+.acciones-ficha a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: var(--medida-toque);
+  font-weight: 700;
+}
+
+.acciones-ficha .boton-principal {
+  padding: 0 var(--espacio-20);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radio-boton);
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .acciones-ficha {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* Los 48 del botón principal en el móvil (base.css), que la regla de los enlaces de arriba dejaba en 44. */
+  .acciones-ficha .boton-principal {
+    min-height: var(--medida-toque-movil);
+  }
+}

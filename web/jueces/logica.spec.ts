@@ -15,6 +15,7 @@ import { cargarPaquetes, conBarraFinal, FICHEROS } from '../src/pantalla/cargar.
 import { cargarEjemplo, urlDeEjemplo } from '../src/pantalla/ejemplos.ts';
 import { parametrosEnLlano, primeraFrase, reglasDelCatalogo, urlDeRegla, urlDelAnalizador, urlDelCatalogo } from '../src/catalogo/catalogo.ts';
 import { coincide, paraBuscar } from '../src/catalogo/filtro.ts';
+import { trozosDelEjemplo } from '../src/catalogo/ejemplos.ts';
 import { enOrden } from '../src/orden.ts';
 import { indexar } from '../src/pantalla/pintar.ts';
 import { paquetesIncluidos } from './apoyo.ts';
@@ -211,6 +212,19 @@ describe('el catálogo de reglas (encargo 7.1, b)', () => {
     assert.equal(coincide(fila, { ...nada, familias: new Set(['RadiografIA::lexico']) }), false, 'otra familia');
     assert.equal(coincide(fila, { ...nada, severidades: new Set(['media']), detectores: new Set(['estructural']) }), false, 'la severidad sí y el detector no');
     assert.equal(coincide(fila, { ...nada, consulta: 'vaga', severidades: new Set(['media']), detectores: new Set(['patrón', 'estructural']) }), true, 'todo a la vez');
+  });
+
+  test('trozosDelEjemplo (10.4, Tanda 3): el ejemplo en trozos, los de los tramos marcados; sin tramos, uno sin marcar', () => {
+    assert.deepEqual(trozosDelEjemplo('Además, el plan. Además, no.', [[0, 6], [17, 23]]), [
+      { texto: 'Además', marcado: true },
+      { texto: ', el plan. ', marcado: false },
+      { texto: 'Además', marcado: true },
+      { texto: ', no.', marcado: false },
+    ]);
+    // Dos tramos que se pisan: un trozo por cada tramo distinto, todos marcados, y el texto entero sin huecos.
+    const pisados = trozosDelEjemplo('abcdef', [[1, 4], [2, 5]]);
+    assert.deepEqual(pisados.map((t) => [t.texto, t.marcado]), [['a', false], ['b', true], ['cd', true], ['e', true], ['f', false]]);
+    assert.deepEqual(trozosDelEjemplo('Sin tramo.', []), [{ texto: 'Sin tramo.', marcado: false }]);
   });
 
   test('parametrosEnLlano: lo que busca cada detector, en palabras', () => {

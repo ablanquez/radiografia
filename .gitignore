@@ -22,6 +22,11 @@ web/public/paquetes/
 # y de `astro build`. La fuente es el JSON, que sí se versiona.
 web/src/estilos/tokens.css
 
+# Los tramos de los ejemplos de cada regla para las fichas (encargo 10.4, Tanda 3): los
+# escribe web/scripts/tramos-de-ejemplos.ts con el motor antes de `astro dev` y de
+# `astro build`. La fuente son los paquetes, que sí se versionan.
+web/src/catalogo/tramos-de-ejemplos.json
+
 # generated types
 .astro/
 

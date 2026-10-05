@@ -6,8 +6,10 @@
  *      más ni una menos; y el índice, dist/reglas/index.html, con un enlace a
  *      cada una.
  *   2. Cada ficha lleva su id, su nombre, al menos una de sus fuentes como
- *      enlace y sus ejemplos tal cual, cada uno en su <pre>. Desde el 9.2, la
- *      frase en claro de la regla justo bajo el nombre (el <h1>).
+ *      enlace y sus ejemplos tal cual, cada uno en su <pre> (desde el 10.4,
+ *      Tanda 3, en su <p class="ejemplo"> en pre-wrap, con el tramo marcado).
+ *      Desde el 9.2, la frase en claro de la regla justo bajo el nombre (el
+ *      <h1>; desde el 10.4, como en el modelo, bajo el nombre y su id).
  *   3. Los enlaces internos llegan: todo href que empieza por «/» en las
  *      páginas de dist/ (analizador, índice y fichas) apunta a un fichero de
  *      dist/; el analizador enlaza el catálogo en su cabecera; y la URL de
@@ -82,11 +84,13 @@ describe('el catálogo construido', () => {
       const texto = textoVisible(html);
       assert.ok(texto.includes(r.id), `${r.id}: la ficha no lleva su id`);
       assert.ok(r.nombre !== undefined && texto.includes(r.nombre), `${r.id}: la ficha no lleva su nombre «${r.nombre}»`);
-      const bajoElNombre = /<h1>[^<]*<\/h1>\s*<p class="en-claro">([^<]*)<\/p>/.exec(html);
+      // Desde el 10.4 (Tanda 3), como en el modelo: bajo el nombre (el <h1>), el id, y bajo los dos, la frase en claro.
+      const bajoElNombre = /<h1>[^<]*<\/h1>\s*<p class="id-regla">[^<]*<\/p>\s*<\/div>\s*<p class="en-claro">([^<]*)<\/p>/.exec(html);
       assert.equal(bajoElNombre ? decodificar(bajoElNombre[1]!) : null, r.enClaro, `${r.id}: la frase en claro, bajo el nombre`);
       const enlaces = hrefs(html);
       assert.ok(r.fuente.some((f) => enlaces.includes(f.url)), `${r.id}: ninguna de sus fuentes va enlazada`);
-      const ejemplos = [...html.matchAll(/<pre class="ejemplo">([\s\S]*?)<\/pre>/g)].map((m) => decodificar(m[1]!));
+      // Desde el 10.4 (Tanda 3), cada uno en su <p class="ejemplo"> (en pre-wrap), con el tramo marcado: su texto, sin la sigla (aria-hidden) ni las etiquetas.
+      const ejemplos = [...html.matchAll(/<p class="ejemplo">([\s\S]*?)<\/p>/g)].map((m) => decodificar(m[1]!.replace(/<span class="sigla-tramo" aria-hidden="true">[^<]*<\/span>/g, '').replace(/<[^>]*>/g, '')));
       assert.deepEqual(ejemplos, [...r.ejemplos.positivos, ...r.ejemplos.negativos], `${r.id}: los ejemplos de la ficha y los del JSON`);
     }
   });

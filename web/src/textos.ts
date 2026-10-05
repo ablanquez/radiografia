@@ -174,6 +174,13 @@ export const FUENTES = 'Fuentes';
 export const DONDE_DISPARA = 'Ejemplos en los que dispara';
 export const DONDE_NO_DISPARA = 'Ejemplos en los que no dispara';
 export const paqueteConVersion = (nombre: string, version: string, descripcion: string): string => `${nombre} ${version}. ${descripcion}`;
+// La ficha, desde el 10.4 (Tanda 3; DISEÑO §6.4), la del modelo: la línea de la pastilla de su familia (familia · paquete
+// y versión), el título de sus datos, cada etiqueta con sus dos puntos y lo que el lector dice junto al icono de un enlace
+// externo (el icono es aria-hidden).
+export const nombreYVersion = (nombre: string, version: string): string => `${nombre} ${version}`;
+export const DATOS_DE_LA_REGLA = 'Datos de la regla';
+export const conDosPuntos = (etiqueta: string): string => `${etiqueta}:`;
+export const ENLACE_EXTERNO = '(enlace externo)';
 
 // Los parámetros de cada detector, en palabras (catalogo.ts, parametrosEnLlano).
 export const DONDE_MIRA = 'Dónde mira';

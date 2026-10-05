@@ -241,7 +241,7 @@ export async function abrirChrome(): Promise<Pestana> {
   // después de cerrar o tumbar Chrome, y el perfil no se podía borrar (EPERM).
   // [DOC] https://peter.sh/experiments/chromium-command-line-switches/ — --disable-crash-reporter: «Disable crash reporter
   //    for headless. It is enabled by default in official builds».
-  const chrome = spawn(ruta, ['--headless', '--disable-gpu', '--disable-crash-reporter',`--remote-debugging-port=${puerto}`, `--user-data-dir=${perfil}`, 'about:blank'], { stdio: 'ignore' });
+  const chrome = spawn(ruta, ['--headless', '--disable-gpu', '--disable-crash-reporter', `--remote-debugging-port=${puerto}`, `--user-data-dir=${perfil}`, 'about:blank'], { stdio: 'ignore' });
   /** Por qué ya no se puede hablar con Chrome (null mientras se puede); con ello fallan las órdenes en vuelo y las que vengan. */
   let caida: string | null = null;
   const pendientes = new Map<number, { metodo: string; bien: (r: Record<string, unknown>) => void; mal: (e: Error) => void }>();

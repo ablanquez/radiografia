@@ -24,9 +24,10 @@
  *    enlace al analizador, como en el modelo) y el pie con la nota son
  *    Cabecera.astro y Pie.astro; el marco de la página, estilos/marco.css.
  * Desde el 10.4 (Tanda 3), cada página dice la clase de su <main> (clase):
- *    el índice, «catalogo», con estilos/catalogo.css; las familias (la muestra
- *    y la sigla), de estilos/familias.css, y la hoja (el asa y el velo), de
- *    estilos/hoja.css.
+ *    el índice, «catalogo», con estilos/catalogo.css, y la ficha, «ficha», con
+ *    estilos/ficha.css; las familias (la muestra y la sigla), de
+ *    estilos/familias.css, y la hoja (el asa y el velo), de estilos/hoja.css.
+ *    El layout ya no lleva estilos propios.
  */
 import { urlDelAnalizador } from '../catalogo/catalogo.ts';
 import { ANALIZADOR } from '../textos.ts';
@@ -40,6 +41,7 @@ import '../estilos/marco.css';
 import '../estilos/familias.css';
 import '../estilos/hoja.css';
 import '../estilos/catalogo.css';
+import '../estilos/ficha.css';
 
 interface Props {
   /** Lo que va delante de «RadiografIA» en el título de la pestaña. */
@@ -65,42 +67,5 @@ const analizador = urlDelAnalizador(import.meta.env.BASE_URL);
       <slot />
     </main>
     <Pie />
-    <style is:global>
-      .id-regla {
-        font-size: var(--tipografia-tamano-secundario);
-        line-height: var(--tipografia-interlineado-secundario);
-        color: var(--color-ink-2);
-      }
-      .id-regla {
-        margin-top: 0;
-      }
-      .en-claro {
-        font-weight: 600;
-      }
-      /* En la ficha, la frase en claro bajo el nombre es texto largo, como en el modelo. */
-      h1 + .en-claro {
-        font-family: var(--tipografia-font-family-texto);
-        font-size: var(--tipografia-tamano-cuerpo);
-        line-height: var(--tipografia-interlineado-cuerpo);
-        font-weight: 400;
-      }
-      dt {
-        font-weight: 700;
-      }
-      dd {
-        margin: 0 0 0.5rem 0;
-      }
-      code {
-        overflow-wrap: anywhere;
-      }
-      .ejemplo {
-        white-space: pre-wrap;
-        font-family: var(--tipografia-font-family-texto);
-        font-size: var(--tipografia-tamano-cuerpo);
-        line-height: var(--tipografia-interlineado-cuerpo);
-        border-left: 3px solid var(--color-line);
-        padding-left: 0.75rem;
-      }
-    </style>
   </body>
 </html>
