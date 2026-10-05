@@ -13,12 +13,27 @@
  * la de la página) y se juntan en líneas por su altura, de arriba abajo y de
  * izquierda a derecha. Lo que no sabe leer, lo dice (lanza), no lo salta.
  *
+ * Desde el 9.3, también lo que escribe pdfkit (el PDF de «Descargar informe»,
+ * con pdfmake): fuentes Type0 (Identity-H, dos bytes por código) con su
+ * CIDFontType2 y sus anchos en /W y /DW; un /ToUnicode con bfrange de listas,
+ * donde una ligadura va con un espacio dentro del hexadecimal («<0066 0069>»,
+ * fi; sin leerlo, la tabla se corría desde ahí: visto el 05/10); cada trozo
+ * en su BT … Tm … TJ ET, con los ajustes entre glifos dentro del TJ; y el
+ * color con «/DeviceRGB cs … scn». De cada tramo, además, el nombre PostScript
+ * de su fuente (FontName, sin el prefijo del subconjunto): con él, los jueces
+ * saben qué cara es (pdfkit no escribe FontFamily ni FontWeight).
+ *
  * [DOC] ISO 32000-1:2008 (PDF 1.7, la copia que publica Adobe): § 7.3.10
  *    (objetos indirectos, «obj» y «endobj»), § 7.3.8 (flujos, «stream» y
  *    «endstream», /Length y /Filter), § 7.7.3 (árbol de páginas: /Kids en
  *    orden), § 8.3.2 y § 8.4.4 (la matriz actual, cm, q y Q), § 9.4.2 y
  *    § 9.4.3 (Tm, Td, TD, T*, Tj, TJ, ' y "), § 9.10.3 (/ToUnicode: bfchar y
- *    bfrange) y § 8.10 (XObject de forma, Do, /Matrix).
+ *    bfrange) y § 8.10 (XObject de forma, Do, /Matrix); desde el 9.3, § 9.7.4.3
+ *    (/W y /DW de una CIDFont: «c [w1 w2 … wn]» y «cfirst clast w»), § 9.4.3
+ *    (TJ: el número «shall be subtracted from the current horizontal
+ *    coordinate», en milésimas de unidad de texto), § 7.3.4.3 (en un
+ *    hexadecimal, «White-space characters […] shall be ignored») y § 8.6.8
+ *    (cs, sc y scn).
  * [DOC] https://nodejs.org/api/zlib.html — inflateSync: FlateDecode es zlib.
  */
 import { inflateSync } from 'node:zlib';
@@ -35,13 +50,14 @@ interface Objeto {
 interface Trozo {
   x: number;
   y: number;
-  /** Lo que avanza en la página (la suma de los anchos de sus glifos), en puntos. */
+  /** Lo que avanza en la página hasta el final de su último glifo que no es un blanco (la suma de sus anchos), en puntos. */
   avance: number;
   texto: string;
   tamano: number;
   familia: string;
   peso: number;
   color: string;
+  fuente: string;
 }
 
 /**
@@ -61,6 +77,8 @@ export interface TramoDelPdf {
   peso: number;
   /** El color de relleno, como lo da getComputedStyle: «rgb(26, 26, 26)». */
   color: string;
+  /** El nombre PostScript de su fuente (FontName, sin el prefijo del subconjunto): «Literata-12ptSemiBold» (desde el 9.3). */
+  fuente: string;
 }
 
 /** Una línea del PDF: su línea base, desde el borde de arriba de la página, y sus tramos de izquierda a derecha. */
@@ -142,24 +160,55 @@ function subdiccionario(dic: string, clave: string, todos: Map<number, Objeto>):
   throw new Error(`/${clave} sin cerrar`);
 }
 
+/**
+ * Los anchos del /W de una CIDFont, en milésimas, por código (§ 9.7.4.3): «c [w1 w2 … wn]», los de c, c + 1…, y
+ * «cfirst clast w», el mismo para todos.
+ */
+function anchosDeW(dic: string): Map<number, number> {
+  const anchos = new Map<number, number>();
+  const w = /\/W\s*\[/.exec(dic);
+  if (w === null) return anchos;
+  const abre = w.index + w[0].length - 1;
+  let nivel = 0;
+  let fin = abre;
+  for (; fin < dic.length; fin++) {
+    if (dic[fin] === '[') nivel++;
+    else if (dic[fin] === ']' && --nivel === 0) break;
+  }
+  const piezasDeW = [...dic.slice(abre + 1, fin).matchAll(/\[([^\]]*)\]|(-?[\d.]+)/g)];
+  for (let k = 0; k < piezasDeW.length; ) {
+    const primero = Number(piezasDeW[k]![2]);
+    const siguiente = piezasDeW[k + 1]!;
+    if (siguiente[1] !== undefined) {
+      siguiente[1].trim().split(/\s+/).filter((x) => x !== '').forEach((w, j) => anchos.set(primero + j, Number(w)));
+      k += 2;
+    } else {
+      for (let c = primero; c <= Number(siguiente[2]); c++) anchos.set(c, Number(piezasDeW[k + 2]![2]));
+      k += 3;
+    }
+  }
+  return anchos;
+}
+
 /** «/Nombre N 0 R» de un diccionario: nombre → número de objeto. */
 const referencias = (dic: string): Map<string, number> => new Map([...dic.matchAll(/\/([\w.+-]+)\s+(\d+) 0 R/g)].map((m) => [m[1]!, Number(m[2])]));
 
 /** El mapa /ToUnicode de una fuente: código (en hexadecimal) → texto. */
 function aUnicode(cmap: string): Map<string, string> {
-  const texto = (hex: string): string => {
+  const texto = (conBlancos: string): string => {
+    const hex = conBlancos.replace(/\s/g, '');
     const unidades: number[] = [];
     for (let i = 0; i < hex.length; i += 4) unidades.push(parseInt(hex.slice(i, i + 4), 16));
     return String.fromCharCode(...unidades);
   };
   const mapa = new Map<string, string>();
   for (const bloque of cmap.matchAll(/beginbfchar([\s\S]*?)endbfchar/g)) {
-    for (const [, de, a] of bloque[1]!.matchAll(/<([0-9A-Fa-f]+)>\s*<([0-9A-Fa-f]+)>/g)) mapa.set(de!.toUpperCase(), texto(a!));
+    for (const [, de, a] of bloque[1]!.matchAll(/<([0-9A-Fa-f]+)>\s*<([0-9A-Fa-f\s]+)>/g)) mapa.set(de!.toUpperCase(), texto(a!));
   }
   for (const bloque of cmap.matchAll(/beginbfrange([\s\S]*?)endbfrange/g)) {
-    for (const [, de, hasta, a, lista] of bloque[1]!.matchAll(/<([0-9A-Fa-f]+)>\s*<([0-9A-Fa-f]+)>\s*(?:<([0-9A-Fa-f]+)>|\[([^\]]*)\])/g)) {
+    for (const [, de, hasta, a, lista] of bloque[1]!.matchAll(/<([0-9A-Fa-f]+)>\s*<([0-9A-Fa-f]+)>\s*(?:<([0-9A-Fa-f\s]+)>|\[([^\]]*)\])/g)) {
       const [primero, ultimo, largo] = [parseInt(de!, 16), parseInt(hasta!, 16), de!.length];
-      const destinos = lista === undefined ? null : [...lista.matchAll(/<([0-9A-Fa-f]+)>/g)].map((x) => texto(x[1]!));
+      const destinos = lista === undefined ? null : [...lista.matchAll(/<([0-9A-Fa-f\s]+)>/g)].map((x) => texto(x[1]!));
       for (let c = primero; c <= ultimo; c++) {
         const codigo = c.toString(16).toUpperCase().padStart(largo, '0');
         if (destinos !== null) mapa.set(codigo, destinos[c - primero] ?? '');
@@ -174,7 +223,7 @@ function aUnicode(cmap: string): Map<string, string> {
 }
 
 /** Las piezas de un flujo de contenido: números, nombres, cadenas (en hexadecimal), arrays y operadores. */
-function* piezas(contenido: string): Generator<{ tipo: 'numero' | 'nombre' | 'cadena' | 'array' | 'operador'; valor: string; lista?: string[] }> {
+function* piezas(contenido: string): Generator<{ tipo: 'numero' | 'nombre' | 'cadena' | 'array' | 'operador'; valor: string; lista?: string[]; ajuste?: number }> {
   let i = 0;
   const literal = (): string => {
     // ( … ) con escapes y paréntesis anidados, a hexadecimal.
@@ -215,8 +264,9 @@ function* piezas(contenido: string): Generator<{ tipo: 'numero' | 'nombre' | 'ca
       i = fin + 1;
     } else if (c === '(') yield { tipo: 'cadena', valor: literal() };
     else if (c === '[') {
-      // Un array de TJ: sus cadenas (los números de entre medias, que solo separan, no cuentan).
+      // Un array de TJ: sus cadenas y la suma de los números de entre medias (lo que desplazan, en milésimas: § 9.4.3).
       const lista: string[] = [];
+      let ajuste = 0;
       i++;
       while (i < contenido.length && contenido[i] !== ']') {
         if (contenido[i] === '<') {
@@ -224,10 +274,14 @@ function* piezas(contenido: string): Generator<{ tipo: 'numero' | 'nombre' | 'ca
           lista.push(contenido.slice(i + 1, fin).replace(/\s/g, '').toUpperCase());
           i = fin + 1;
         } else if (contenido[i] === '(') lista.push(literal());
-        else i++;
+        else if (/[-+.\d]/.test(contenido[i]!)) {
+          const m = /^[-+]?(\d+\.?\d*|\.\d+)/.exec(contenido.slice(i))![0];
+          ajuste += Number(m);
+          i += m.length;
+        } else i++;
       }
       i++;
-      yield { tipo: 'array', valor: '', lista };
+      yield { tipo: 'array', valor: '', lista, ajuste };
     } else if (c === '/') {
       const m = /^\/[^\s/<>[\]()%{}]+/.exec(contenido.slice(i))![0];
       yield { tipo: 'nombre', valor: m.slice(1) };
@@ -249,19 +303,34 @@ function trozosDe(contenido: Buffer, recursos: string, matriz: Matriz, todos: Ma
   const fuentes = referencias(subdiccionario(recursos, 'Font', todos));
   const formas = referencias(subdiccionario(recursos, 'XObject', todos));
   const mapas = new Map<string, Map<string, string>>();
-  /** La letra de una fuente (familia y peso de su FontDescriptor) y el ancho de sus glifos (§ 9.6.2 y § 9.6.5: /FirstChar, /Widths y /FontMatrix). */
-  const letras = new Map<string, { familia: string; peso: number; ancho: (codigo: number) => number }>();
-  const letraDe = (fuente: string): { familia: string; peso: number; ancho: (codigo: number) => number } => {
+  /**
+   * La letra de una fuente (familia y peso de su FontDescriptor, y su nombre PostScript sin el prefijo del subconjunto) y
+   * el ancho de sus glifos: en las simples, como las Type3 de Skia, /FirstChar, /Widths y /FontMatrix (§ 9.6.2 y
+   * § 9.6.5); en las Type0 de pdfkit, los de su CIDFont, /W y /DW, en milésimas (§ 9.7.4.3; con Identity-H, el código es
+   * el CID).
+   */
+  type Letra = { familia: string; peso: number; fuente: string; ancho: (codigo: number) => number };
+  const letras = new Map<string, Letra>();
+  const letraDe = (fuente: string): Letra => {
     if (!letras.has(fuente)) {
       const objeto = todos.get(fuentes.get(fuente) ?? -1);
-      const fd = objeto === undefined ? null : /\/FontDescriptor (\d+) 0 R/.exec(objeto.dic);
+      const descendiente = objeto === undefined ? null : /\/DescendantFonts\s*\[\s*(\d+) 0 R/.exec(objeto.dic);
+      const cid = descendiente === null ? undefined : todos.get(Number(descendiente[1]));
+      const fd = /\/FontDescriptor (\d+) 0 R/.exec(cid?.dic ?? objeto?.dic ?? '');
       const descriptor = fd === null ? '' : (todos.get(Number(fd[1]))?.dic ?? '');
       const familia = /\/FontFamily\s*\(((?:[^()\\]|\\.)*)\)/.exec(descriptor)?.[1]?.replace(/\\(.)/g, '$1') ?? '';
-      // Las fuentes simples, como las Type3 de Skia, dicen el ancho de cada código; las demás (Type0, con /W) no se miden: 0.
-      const primero = Number(/\/FirstChar\s+(\d+)/.exec(objeto?.dic ?? '')?.[1] ?? 0);
-      const anchos = (/\/Widths\s*\[([^\]]*)\]/.exec(objeto?.dic ?? '')?.[1] ?? '').trim().split(/\s+/).filter((x) => x !== '').map(Number);
-      const escala = Number(/\/FontMatrix\s*\[\s*([-\d.]+)/.exec(objeto?.dic ?? '')?.[1] ?? 0.001);
-      letras.set(fuente, { familia, peso: Number(/\/FontWeight\s+(\d+)/.exec(descriptor)?.[1] ?? 0), ancho: (codigo) => (anchos[codigo - primero] ?? 0) * escala });
+      const nombre = (/\/FontName\s*\/([^\s/<>[\]()]+)/.exec(descriptor)?.[1] ?? '').replace(/^[A-Z]{6}\+/, '');
+      const peso = Number(/\/FontWeight\s+(\d+)/.exec(descriptor)?.[1] ?? 0);
+      if (cid !== undefined) {
+        const porDefecto = Number(/\/DW\s+(\d+)/.exec(cid.dic)?.[1] ?? 1000);
+        const anchos = anchosDeW(cid.dic);
+        letras.set(fuente, { familia, peso, fuente: nombre, ancho: (codigo) => (anchos.get(codigo) ?? porDefecto) / 1000 });
+      } else {
+        const primero = Number(/\/FirstChar\s+(\d+)/.exec(objeto?.dic ?? '')?.[1] ?? 0);
+        const anchos = (/\/Widths\s*\[([^\]]*)\]/.exec(objeto?.dic ?? '')?.[1] ?? '').trim().split(/\s+/).filter((x) => x !== '').map(Number);
+        const escala = Number(/\/FontMatrix\s*\[\s*([-\d.]+)/.exec(objeto?.dic ?? '')?.[1] ?? 0.001);
+        letras.set(fuente, { familia, peso, fuente: nombre, ancho: (codigo) => (anchos[codigo - primero] ?? 0) * escala });
+      }
     }
     return letras.get(fuente)!;
   };
@@ -284,23 +353,30 @@ function trozosDe(contenido: Buffer, recursos: string, matriz: Matriz, todos: Ma
   let interlineado = 0;
   let color = 'rgb(0, 0, 0)';
   const pilaDeColor: string[] = [];
-  let operandos: { tipo: string; valor: string; lista?: string[] }[] = [];
+  let operandos: { tipo: string; valor: string; lista?: string[]; ajuste?: number }[] = [];
   const n = (k: number): number => Number(operandos[operandos.length - k]!.valor);
   const rgb = (r: number, g: number, b: number): string => `rgb(${Math.round(r * 255)}, ${Math.round(g * 255)}, ${Math.round(b * 255)})`;
-  const escribir = (hex: string): void => {
+  /** Un texto de Tj o de TJ; `ajuste`, la suma de los números de su TJ, que se restan al avance (§ 9.4.3). */
+  const escribir = (hex: string, ajuste = 0): void => {
     const mapa = mapaDe(fuente);
-    const { familia, peso, ancho } = letraDe(fuente);
+    const { familia, peso, fuente: nombre, ancho } = letraDe(fuente);
     const largo = [...mapa.keys()][0]?.length ?? 2;
     let texto = '';
-    let anchoEnTexto = 0;
+    let anchoEnTexto = -ajuste / 1000;
+    // Hasta dónde llega el último glifo que no es un blanco: pdfkit escribe cada palabra con su espacio detrás en el mismo
+    // texto, y ese espacio no es tinta (visto el 05/10: una línea «acababa» 2,2 pt después de su última letra).
+    let hastaElUltimoVisible = 0;
     for (let i = 0; i < hex.length; i += largo) {
-      texto += mapa.get(hex.slice(i, i + largo)) ?? '';
+      const caracter = mapa.get(hex.slice(i, i + largo)) ?? '';
+      texto += caracter;
       anchoEnTexto += ancho(parseInt(hex.slice(i, i + largo), 16));
+      if (caracter.trim() !== '') hastaElUltimoVisible = anchoEnTexto;
     }
+    if (texto.trim() !== '') anchoEnTexto = hastaElUltimoVisible;
     const sitio = por(tm, ctm);
     // El cuerpo en la página: el de Tf por la escala vertical de la matriz del texto por la de la página (§ 9.4.4); el
     // avance, el ancho de los glifos por el cuerpo y por la escala horizontal.
-    salida.push({ x: sitio[4], y: sitio[5], avance: anchoEnTexto * cuerpo * Math.hypot(sitio[0], sitio[1]), texto, tamano: cuerpo * Math.hypot(sitio[2], sitio[3]), familia, peso, color });
+    salida.push({ x: sitio[4], y: sitio[5], avance: anchoEnTexto * cuerpo * Math.hypot(sitio[0], sitio[1]), texto, tamano: cuerpo * Math.hypot(sitio[2], sitio[3]), familia, peso, color, fuente: nombre });
   };
   const linea = (tx: number, ty: number): void => {
     tlm = por([1, 0, 0, 1, tx, ty], tlm);
@@ -325,6 +401,12 @@ function trozosDe(contenido: Buffer, recursos: string, matriz: Matriz, todos: Ma
         break;
       case 'g':
         color = rgb(n(1), n(1), n(1));
+        break;
+      // pdfkit: «/DeviceRGB cs r g b scn» (§ 8.6.8); con un operando, gris.
+      case 'sc':
+      case 'scn':
+        if (operandos.length === 3) color = rgb(n(3), n(2), n(1));
+        else if (operandos.length === 1) color = rgb(n(1), n(1), n(1));
         break;
       case 'cm':
         ctm = por([n(6), n(5), n(4), n(3), n(2), n(1)], ctm);
@@ -364,7 +446,7 @@ function trozosDe(contenido: Buffer, recursos: string, matriz: Matriz, todos: Ma
         escribir(operandos[operandos.length - 1]!.valor);
         break;
       case 'TJ':
-        escribir((operandos[operandos.length - 1]!.lista ?? []).join(''));
+        escribir((operandos[operandos.length - 1]!.lista ?? []).join(''), operandos[operandos.length - 1]!.ajuste ?? 0);
         break;
       case 'Do': {
         const forma = todos.get(formas.get(operandos[operandos.length - 1]!.valor) ?? -1);
@@ -378,6 +460,35 @@ function trozosDe(contenido: Buffer, recursos: string, matriz: Matriz, todos: Ma
     }
     operandos = [];
   }
+}
+
+/**
+ * Las fuentes del PDF (desde el 9.3): de cada objeto /Type /Font que no es una
+ * descendiente, su subtipo, su nombre PostScript sin el prefijo del
+ * subconjunto, la familia y el peso de su FontDescriptor (Chrome los escribe;
+ * pdfkit, no) y si lleva dentro el programa de la fuente (FontFile, FontFile2
+ * o FontFile3 en su FontDescriptor o en el de su descendiente: § 9.9). Las
+ * Type3 de Chrome llevan sus glifos como procedimientos, sin programa.
+ */
+export function fuentesDelPdf(pdf: Buffer): { subtipo: string; nombre: string; familia: string; peso: number; incrustada: boolean }[] {
+  const todos = objetos(pdf);
+  const salida: { subtipo: string; nombre: string; familia: string; peso: number; incrustada: boolean }[] = [];
+  for (const o of todos.values()) {
+    if (!/\/Type\s*\/Font\b/.test(o.dic) || /\/Subtype\s*\/CIDFontType[02]\b/.test(o.dic)) continue;
+    const subtipo = /\/Subtype\s*\/(\w+)/.exec(o.dic)?.[1] ?? '';
+    const descendiente = /\/DescendantFonts\s*\[\s*(\d+) 0 R/.exec(o.dic);
+    const conDescriptor = descendiente === null ? o : (todos.get(Number(descendiente[1])) ?? o);
+    const fd = /\/FontDescriptor (\d+) 0 R/.exec(conDescriptor.dic);
+    const descriptor = fd === null ? '' : (todos.get(Number(fd[1]))?.dic ?? '');
+    salida.push({
+      subtipo,
+      nombre: (/\/FontName\s*\/([^\s/<>[\]()]+)/.exec(descriptor)?.[1] ?? /\/BaseFont\s*\/([^\s/<>[\]()]+)/.exec(o.dic)?.[1] ?? '').replace(/^[A-Z]{6}\+/, ''),
+      familia: /\/FontFamily\s*\(((?:[^()\\]|\\.)*)\)/.exec(descriptor)?.[1]?.replace(/\\(.)/g, '$1') ?? '',
+      peso: Number(/\/FontWeight\s+(\d+)/.exec(descriptor)?.[1] ?? 0),
+      incrustada: /\/FontFile[23]?\s+\d+ 0 R/.test(descriptor),
+    });
+  }
+  return salida;
 }
 
 /** Las páginas del PDF, en orden: por cada una, sus líneas de texto de arriba abajo. */
@@ -437,10 +548,10 @@ export function lineasDeLasPaginas(pdf: Buffer): PaginaDelPdf[] {
       const tramos: (TramoDelPdf & { visible: boolean })[] = [];
       for (const t of grupo.sort((a, b) => a.x - b.x)) {
         const ultimo = tramos.at(-1);
-        const letra = { tamano: Math.round(t.tamano * PX * 100) / 100, familia: t.familia, peso: t.peso, color: t.color };
+        const letra = { tamano: Math.round(t.tamano * PX * 100) / 100, familia: t.familia, peso: t.peso, color: t.color, fuente: t.fuente };
         const blanco = t.texto.trim() === '';
         const fin = enPx(t.x + t.avance);
-        if (ultimo !== undefined && ultimo.tamano === letra.tamano && ultimo.familia === letra.familia && ultimo.peso === letra.peso && ultimo.color === letra.color) {
+        if (ultimo !== undefined && ultimo.tamano === letra.tamano && ultimo.familia === letra.familia && ultimo.peso === letra.peso && ultimo.color === letra.color && ultimo.fuente === letra.fuente) {
           ultimo.texto += t.texto;
           if (!ultimo.visible && !blanco) Object.assign(ultimo, { x: enPx(t.x), visible: true });
           if (!blanco) ultimo.fin = fin;
