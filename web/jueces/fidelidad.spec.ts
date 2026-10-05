@@ -36,6 +36,15 @@
  *   7. En el móvil, la pastilla compacta, las pestañas y la hoja (abierta
  *      después de haber abierto la tarjeta en escritorio: así cazó este juez
  *      el fallo de docs/BITACORA.md, 2026-10-04).
+ *   8. Desde la Tanda 3, el catálogo (la misma pestaña, en /reglas/): a
+ *      1280, sin resultados (Gramática y alta, como el modelo), a 820, a 390 y
+ *      con la hoja de filtros abierta.
+ *   9. La ficha de Conector repetido (la del modelo), a 1280 y a 390.
+ * Lo que no se compara, y por qué, va junto a cada pieza: medidas que el
+ * modelo da por su marco (la barra de scroll del móvil), por sus datos de
+ * muestra (fuentes de una línea) o al revés que el encargo (el botón
+ * principal en el móvil: 44 en la ficha y en la hoja de filtros del modelo,
+ * 48 en el encargo 10.4 y en la web).
  *
  * [DOC] https://developer.mozilla.org/en-US/docs/Web/API/Window/getComputedStyle
  *    — «the resolved values of all CSS properties of an element».
@@ -172,6 +181,78 @@ const HOJA: readonly Caso[] = [
   { clave: 'movil.hoja.cuerpo', selector: '#tarjeta .cuerpo-tarjeta', propiedades: ['relleno'] },
   { clave: 'movil.hoja.siguiente', selector: '#tarjeta .navegacion-reglas button', propiedades: ['alto', 'ancho'] },
 ];
+/** Tanda 3: el catálogo (la regla del modelo, Conector repetido, y la que solo avisa, Negrita de Markdown) y la ficha. */
+const LI_CONECTOR = '#reglas > li:has(a[href$="/disc-marcador-repetido/"])';
+const LI_NEGRITA = '#reglas > li:has(a[href$="/canal-negrita-markdown/"])';
+const MUESTRA: readonly Propiedad[] = ['familia', 'tamano', 'fondo', 'decoracion', 'decoEstilo', 'decoColor', 'radio'];
+const CATALOGO: readonly Caso[] = [
+  { clave: 'escritorio.catalogo.titulo', selector: '.catalogo h1', propiedades: [...TIPO, 'texto'] },
+  { clave: 'escritorio.catalogo.presentacion', selector: '.presentacion', propiedades: [...TIPO, 'ancho', 'texto'] },
+  { clave: 'escritorio.catalogo.buscador.etiqueta', selector: 'label[for="buscar"]', propiedades: [...TIPO, 'texto'] },
+  { clave: 'escritorio.catalogo.buscador', selector: '#buscar', propiedades: ['alto', 'radio', 'bordeArriba', 'relleno', 'ancho'] },
+  { clave: 'escritorio.catalogo.familia', selector: '.grupos-filtros > fieldset', propiedades: ['ancho'] },
+  { clave: 'escritorio.catalogo.detector', selector: '.otros-filtros > fieldset:first-child', propiedades: ['ancho'] },
+  { clave: 'escritorio.catalogo.severidad', selector: '.otros-filtros > fieldset:last-child', propiedades: ['ancho'] },
+  { clave: 'escritorio.catalogo.leyenda', selector: '.grupos-filtros > fieldset legend', propiedades: [...TIPO, 'texto'] },
+  { clave: 'escritorio.catalogo.casilla', selector: '.grupos-filtros > fieldset label', propiedades: ['tamano', 'peso', 'color', 'alto'] },
+  { clave: 'escritorio.catalogo.casilla.muestra', selector: '.grupos-filtros > fieldset label .muestra', propiedades: MUESTRA },
+  { clave: 'escritorio.catalogo.quitar', selector: '#quitar-filtros', propiedades: [...BOTON, 'texto'] },
+  { clave: 'escritorio.catalogo.recuento', selector: '#recuento', propiedades: [...TIPO, 'texto'] },
+  { clave: 'escritorio.catalogo.regla', selector: LI_CONECTOR, propiedades: ['fondo', 'bordeArriba', 'radio', 'relleno', 'ancho'] },
+  { clave: 'escritorio.catalogo.regla.muestra', selector: `${LI_CONECTOR} .muestra`, propiedades: MUESTRA },
+  { clave: 'escritorio.catalogo.regla.sigla', selector: `${LI_CONECTOR} .sigla`, propiedades: ['tamano', 'peso', 'bordeArriba', 'ancho', 'alto', 'texto'] },
+  { clave: 'escritorio.catalogo.regla.nombre', selector: `${LI_CONECTOR} h2 a`, propiedades: [...TIPO, 'decoracion', 'texto'] },
+  { clave: 'escritorio.catalogo.regla.frase', selector: `${LI_CONECTOR} .en-claro`, propiedades: [...TIPO, 'texto'] },
+  // Sin el texto: la línea de la web lleva además la familia y la severidad.
+  { clave: 'escritorio.catalogo.regla.datos', selector: `${LI_CONECTOR} .datos`, propiedades: TIPO },
+  { clave: 'escritorio.catalogo.informativa', selector: LI_NEGRITA, propiedades: ['fondo', 'bordeArriba'] },
+  { clave: 'escritorio.catalogo.informativa.frase', selector: `${LI_NEGRITA} .en-claro`, propiedades: ['color'] },
+];
+const CATALOGO_SIN: readonly Caso[] = [
+  { clave: 'escritorio.catalogo.sin', selector: '#sin-reglas', propiedades: ['fondo', 'bordeArriba', 'radio', 'relleno'] },
+  { clave: 'escritorio.catalogo.sin.texto', selector: '#sin-reglas p', propiedades: [...TIPO, 'texto'] },
+];
+const CATALOGO_TABLETA: readonly Caso[] = [
+  { clave: 'tableta.catalogo.familia', selector: '.grupos-filtros > fieldset', propiedades: ['ancho'] },
+  { clave: 'tableta.catalogo.detector', selector: '.otros-filtros > fieldset:first-child', propiedades: ['ancho'] },
+];
+const CATALOGO_MOVIL: readonly Caso[] = [
+  { clave: 'movil.catalogo.filtros', selector: '#abrir-filtros', propiedades: [...BOTON, 'texto'] },
+  // Sin el ancho: el marco del móvil del modelo pinta su barra de scroll y la tarjeta mide 343 en vez de 358.
+  { clave: 'movil.catalogo.regla', selector: LI_CONECTOR, propiedades: ['relleno'] },
+];
+const HOJA_FILTROS: readonly Caso[] = [
+  { clave: 'movil.catalogo.hoja', selector: '#panel-filtros', propiedades: ['fondo', 'bordeArriba', 'radio', 'ancho', 'altoMaximo'] },
+  { clave: 'movil.catalogo.hoja.asa', selector: '#panel-filtros .asa', propiedades: ['alto', 'ancho'] },
+  { clave: 'movil.catalogo.hoja.titulo', selector: '#titulo-filtros', propiedades: [...TIPO, 'texto'] },
+  { clave: 'movil.catalogo.hoja.cerrar', selector: '#panel-filtros .cerrar', propiedades: ['ancho', 'alto'] },
+  { clave: 'movil.catalogo.hoja.acciones', selector: '#panel-filtros .acciones-filtros', propiedades: ['bordeArriba', 'relleno'] },
+  // Sin el alto: el modelo deja «Aplicar» en 44, y la web, en los 48 del botón principal en el móvil (encargo 10.4, Tanda 1).
+  { clave: 'movil.catalogo.hoja.aplicar', selector: '#aplicar-filtros', propiedades: ['fondo', 'ancho', 'texto'] },
+];
+const FICHA: readonly Caso[] = [
+  { clave: 'escritorio.ficha', selector: '.ficha', propiedades: ['ancho'] },
+  // Sin el radio: los dos son redondos del todo, pero el modelo lo escribe infinito (3.35544e+07px) y la web, 9999px.
+  { clave: 'escritorio.ficha.pastilla', selector: '.pastilla-familia', propiedades: ['bordeArriba', 'relleno', 'tamano'] },
+  { clave: 'escritorio.ficha.pastilla.muestra', selector: '.pastilla-familia .muestra', propiedades: MUESTRA },
+  { clave: 'escritorio.ficha.nombre', selector: '.ficha h1', propiedades: [...TIPO, 'texto'] },
+  { clave: 'escritorio.ficha.id', selector: '.nombre-ficha .id-regla', propiedades: [...TIPO, 'texto'] },
+  { clave: 'escritorio.ficha.frase', selector: '.cabeza-ficha .en-claro', propiedades: [...TIPO, 'texto'] },
+  { clave: 'escritorio.ficha.seccion', selector: '#ficha-que-hacer', propiedades: [...TIPO, 'texto'] },
+  { clave: 'escritorio.ficha.seccion.texto', selector: 'section[aria-labelledby="ficha-que-hacer"] p', propiedades: [...TIPO, 'texto'] },
+  { clave: 'escritorio.ficha.datos', selector: '.datos-ficha', propiedades: ['fondo', 'bordeArriba', 'radio', 'relleno'] },
+  { clave: 'escritorio.ficha.datos.etiqueta', selector: '.datos-ficha dt', propiedades: TIPO },
+  // Sin el alto: las fuentes del modelo son de una línea y las de verdad, de varias (el mínimo de 44 lo mira ficha-pantalla.spec.ts).
+  { clave: 'escritorio.ficha.fuente', selector: '.fuentes a', propiedades: ['tamano', 'color', 'decoracion'] },
+  { clave: 'escritorio.ficha.ejemplo', selector: '.ejemplo-ficha', propiedades: ['bordeArriba', 'radio', 'relleno', 'ancho'] },
+  { clave: 'escritorio.ficha.ejemplo.texto', selector: '.ejemplo', propiedades: TIPO },
+  { clave: 'escritorio.ficha.ejemplo.tramo', selector: '.ejemplo .capa', propiedades: CAPA },
+  { clave: 'escritorio.ficha.ejemplo.sigla', selector: '.ejemplo .sigla-tramo', propiedades: ['tamano', 'color', 'alineacion', 'texto'] },
+  { clave: 'escritorio.ficha.probar', selector: '.acciones-ficha .boton-principal', propiedades: [...BOTON, 'texto'] },
+  { clave: 'escritorio.ficha.volver', selector: '.acciones-ficha .volver', propiedades: ['peso', 'color', 'decoracion', 'alto', 'texto'] },
+];
+// Sin el alto: el modelo deja el botón en 44, y la web, en los 48 del botón principal en el móvil (encargo 10.4, Tanda 1).
+const FICHA_MOVIL: readonly Caso[] = [{ clave: 'movil.ficha.probar', selector: '.acciones-ficha .boton-principal', propiedades: ['ancho'] }];
 const TABLETA: readonly Caso[] = [{ clave: 'tableta.cabecera', selector: '.cabecera', propiedades: ['desdeElMarco'] }];
 const MOVIL: readonly Caso[] = [
   { clave: 'movil.cabecera', selector: '.cabecera', propiedades: ['desdeElMarco', 'bordeAbajo'] },
@@ -186,7 +267,7 @@ const px = (v: unknown): number => Number.parseFloat(String(v));
 
 /**
  * Un color calculado en canales de 0 a 255 y su alfa: getComputedStyle da rgb() y rgba(), y color(srgb …) para lo que
- * sale de un color-mix (el tinte del modelo); null si no es ninguno de esos.
+ * sale de un color-mix (el tinte del modelo), y oklab() (desde la Tanda 3, abajo); null si no es ninguno de esos.
  * [DOC] https://www.w3.org/TR/css-color-4/#serializing-color-values — rgb()/rgba() para sRGB y color() para los
  *    colores en un espacio con nombre, como srgb.
  */
@@ -196,6 +277,40 @@ function canales(v: unknown): number[] | null {
   if (rgb) return [px(rgb[1]), px(rgb[2]), px(rgb[3]), rgb[4] === undefined ? 1 : px(rgb[4])];
   const srgb = /^color\(srgb ([\d.]+) ([\d.]+) ([\d.]+)(?: \/ ([\d.]+))?\)$/.exec(t);
   if (srgb) return [px(srgb[1]) * 255, px(srgb[2]) * 255, px(srgb[3]) * 255, srgb[4] === undefined ? 1 : px(srgb[4])];
+  // Desde la Tanda 3, oklab(): así da el modelo un color con opacidad de Tailwind (el borde ink-2 al 50 % de la regla
+  // que solo avisa). Con el código de muestra de CSS Color 4, sus matrices tal cual: OKLab_to_XYZ (OKLab → LMS, al cubo,
+  // → XYZ D65), XYZ_to_lin_sRGB y gam_sRGB (https://www.w3.org/TR/css-color-4/, «Sample code for Color Conversions»).
+  const oklab = /^oklab\(([-\d.e]+) ([-\d.e]+) ([-\d.e]+)(?: \/ ([\d.]+))?\)$/.exec(t);
+  if (oklab) {
+    const por = (m: number[][], x: number[]): number[] => m.map((fila) => fila.reduce((suma, c, i) => suma + c * x[i]!, 0));
+    const lab = [px(oklab[1]), px(oklab[2]), px(oklab[3])];
+    const lms = por(
+      [
+        [1, 0.3963377773761749, 0.2158037573099136],
+        [1, -0.1055613458156586, -0.0638541728258133],
+        [1, -0.0894841775298119, -1.2914855480194092],
+      ],
+      lab,
+    ).map((c) => c ** 3);
+    const xyz = por(
+      [
+        [1.2268798758459243, -0.5578149944602171, 0.2813910456659647],
+        [-0.0405757452148008, 1.112286803280317, -0.0717110580655164],
+        [-0.0763729366746601, -0.4214933324022432, 1.5869240198367816],
+      ],
+      lms,
+    );
+    const lineal = por(
+      [
+        [12831 / 3959, -329 / 214, -1974 / 3959],
+        [-851781 / 878810, 1648619 / 878810, 36519 / 878810],
+        [705 / 12673, -2585 / 12673, 705 / 667],
+      ],
+      xyz,
+    );
+    const gamma = (c: number): number => (Math.abs(c) > 0.0031308 ? Math.sign(c) * (1.055 * Math.abs(c) ** (1 / 2.4) - 0.055) : 12.92 * c);
+    return [...lineal.map((c) => gamma(c) * 255), oklab[4] === undefined ? 1 : px(oklab[4])];
+  }
   return null;
 }
 
@@ -215,7 +330,12 @@ function diferencias(caso: Caso, web: Medida, modelo: Medida): string[] {
     } else if (p === 'bordeArriba' || p === 'bordeAbajo' || p === 'bordeIzquierdo') {
       const [ga, ...ra] = String(a).split(' ');
       const [gb, ...rb] = String(b).split(' ');
-      igual = Math.abs(px(ga) - px(gb)) <= 1 && ra.join(' ') === rb.join(' ');
+      // El grosor con ±1, el estilo igual y el color como los demás colores (desde la Tanda 3: el modelo lo da a veces en oklab()).
+      const [ea, ...ca] = ra;
+      const [eb, ...cb] = rb;
+      const [colA, colB] = [canales(ca.join(' ')), canales(cb.join(' '))];
+      const mismoColor = ca.join(' ') === cb.join(' ') || (colA !== null && colB !== null && colA.every((x, i) => Math.abs(x - colB[i]!) <= (i === 3 ? 0.01 : 1)));
+      igual = Math.abs(px(ga) - px(gb)) <= 1 && ea === eb && mismoColor;
     } else igual = a === b;
     return igual ? [] : [`${caso.clave} · ${p}: web ${JSON.stringify(a)}, modelo ${JSON.stringify(b)}`];
   });
@@ -279,7 +399,7 @@ describe('la fidelidad al modelo, sobre astro preview', () => {
   test('1 · el fichero de medidas es del prototipo y trae cada pieza que se juzga; la que no sale del prototipo dice de qué apartado del DISEÑO sale', () => {
     const json = JSON.parse(readFileSync(MEDIDAS, 'utf8')) as { url: string; medidas: Record<string, Record<string, unknown>> };
     assert.match(json.url, /^https:\/\/[\w-]+\.figma\.site\/$/, 'la URL del prototipo publicado');
-    const claves = [...ESCRITORIO, VISTA, VISTA_PARRAFOS, ...TABLETA, ...MOVIL, ...RESULTADO, ...TARJETA, ...MOVIL_RESULTADO, ...HOJA].map((c) => c.clave);
+    const claves = [...ESCRITORIO, VISTA, VISTA_PARRAFOS, ...TABLETA, ...MOVIL, ...RESULTADO, ...TARJETA, ...MOVIL_RESULTADO, ...HOJA, ...CATALOGO, ...CATALOGO_SIN, ...CATALOGO_TABLETA, ...CATALOGO_MOVIL, ...HOJA_FILTROS, ...FICHA, ...FICHA_MOVIL].map((c) => c.clave);
     assert.deepEqual(claves.filter((c) => !(c in json.medidas)), [], 'piezas que el fichero no trae');
     const sinProcedencia = Object.entries(json.medidas)
       .filter(([, m]) => ('origen' in m ? !/^DISEÑO-RADIOGRAFIA\.md §\d/.test(String(m.origen)) || typeof m.nota !== 'string' || !/no del prototipo/.test(m.nota) : typeof m.pantalla !== 'string' || typeof m.selector !== 'string'))
@@ -354,5 +474,51 @@ describe('la fidelidad al modelo, sobre astro preview', () => {
     const hoja = await juzgar(HOJA);
     await pestana.evaluar(`document.querySelector('#tarjeta .cerrar').click()`);
     assert.deepEqual([...resultado, ...hoja], []);
+  });
+
+  /** La misma pestaña, a otra página de la web (desde la Tanda 3: el catálogo y la ficha). */
+  const ir = async (ruta: string): Promise<void> => {
+    const pestana = await p();
+    await pestana.cdp('Page.navigate', { url: sesion!.url + ruta });
+    await pestana.hasta(`location.pathname === '/${ruta}' && document.readyState === 'complete'`, `la página /${ruta}`);
+  };
+  /** El ancho, ya asentado en el catálogo: el recuento, junto al botón «Filtros» en el móvil y junto a «Quitar filtros» fuera. */
+  const anchoDelCatalogo = async (ancho: number): Promise<void> => {
+    await anchoDe(ancho);
+    await (await p()).hasta(`document.getElementById('recuento').parentElement.classList.contains('${ancho <= 768 ? 'barra-filtros' : 'acciones-filtros'}')`, `el catálogo a ${ancho}`);
+  };
+
+  test('8 · el catálogo a 1280, sin resultados, a 820, a 390 y con la hoja de filtros, como el del modelo', async () => {
+    const pestana = await p();
+    // Sin barras de scroll, como el marco de ancho fijo del modelo: con la barra clásica de Windows, el catálogo, que es
+    // largo, mediría 15 px menos de ancho que la ventana (1137 en vez de 1152). Se restablecen al acabar el 9.
+    // [DOC] https://chromedevtools.github.io/devtools-protocol/tot/Emulation/#method-setScrollbarsHidden — «Whether
+    //    scrollbars should be always hidden» (experimental).
+    await pestana.cdp('Emulation.setScrollbarsHidden', { hidden: true });
+    await ir('reglas/');
+    await anchoDelCatalogo(1280);
+    const escritorio = await juzgar(CATALOGO);
+    // Sin resultados, como el modelo: Gramática y severidad alta.
+    await pestana.evaluar(`(() => { document.querySelector('#panel-filtros input[value="Español correcto::gramatica"]').click(); document.querySelector('#panel-filtros input[value="alta"]').click(); })()`);
+    const sin = await juzgar(CATALOGO_SIN);
+    await pestana.evaluar(`document.getElementById('quitar-filtros').click()`);
+    await anchoDelCatalogo(820);
+    const tableta = await juzgar(CATALOGO_TABLETA);
+    await anchoDelCatalogo(390);
+    const movil = await juzgar(CATALOGO_MOVIL);
+    await pestana.evaluar(`document.getElementById('abrir-filtros').click()`);
+    const hoja = await juzgar(HOJA_FILTROS);
+    await pestana.evaluar(`document.querySelector('#panel-filtros .cerrar').click()`);
+    assert.deepEqual([...escritorio, ...sin, ...tableta, ...movil, ...hoja], []);
+  });
+
+  test('9 · la ficha de Conector repetido a 1280 y a 390, como la del modelo', async () => {
+    await ir('reglas/disc-marcador-repetido/');
+    await anchoDe(1280);
+    const escritorio = await juzgar(FICHA);
+    await anchoDe(390);
+    const movil = await juzgar(FICHA_MOVIL);
+    await (await p()).cdp('Emulation.setScrollbarsHidden', { hidden: false });
+    assert.deepEqual([...escritorio, ...movil], []);
   });
 });

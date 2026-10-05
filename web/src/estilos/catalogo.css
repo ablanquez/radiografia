@@ -293,8 +293,11 @@
     padding: 0 var(--espacio-16);
   }
 
+  /* La X, de 44 × 44 como la del modelo (el botón de base.css le daba 20 de margen interior a cada lado: 60 de ancho). */
   .hoja .cerrar {
+    width: var(--medida-toque);
     margin-right: calc(-1 * var(--espacio-8));
+    padding: 0;
     border: 0;
     background: none;
   }

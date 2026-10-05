@@ -13,8 +13,10 @@
  *    todo lo operable; anillo de 2 px en el acento con 2 px de separación
  *    (DISEÑO §7; meta 2.4.13).
  * [DOC] https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html
- *    — 2.5.8; DISEÑO §2: 44 × 44 para los controles importantes (2.5.5), 48
- *    de alto el botón principal en móvil.
+ *    — 2.5.8; DISEÑO §2: 44 × 44 para los controles importantes (2.5.5). Los
+ *    48 de alto del botón principal en el móvil, del encargo 10.4 (Tanda 1:
+ *    «botones de 44 px (48 en móvil a todo el ancho)»), no del DISEÑO, que
+ *    pide ≥ 44 (§6.2): corregida la cita en la Tanda 3.
  * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Selectors/:focus-visible
  *    — aplica cuando el elemento tiene el foco y el navegador «determines via
  *    heuristics that the focus should be made evident»: con el teclado sí,

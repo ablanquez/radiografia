@@ -18,7 +18,8 @@
  * el desplazamiento de la línea, la alineación, el borde izquierdo y el alto
  * máximo. Desde la Tanda 3, entre las piezas del DISEÑO, la separación de los
  * párrafos de la vista: una línea en blanco (decisión de Antonio en la parada
- * 2; el modelo la tenía en 16).
+ * 2; el modelo la tenía en 16); y las del catálogo (sus tres tamaños, sin
+ * resultados y la hoja de filtros del móvil) y de la ficha.
  *
  * Cada pieza se mide en el marco de su tamaño (escritorio 1280, tableta 820,
  * móvil 390): el modelo pinta cada pantalla en un marco de ancho fijo
@@ -125,6 +126,57 @@ const PIEZAS: readonly { clave: string; pantalla: string; selector: string }[] =
   { clave: 'movil.hoja.raya', pantalla: 'tarjeta-regla/movil', selector: '[data-capa="asa"] span' },
   { clave: 'movil.hoja.cuerpo', pantalla: 'tarjeta-regla/movil', selector: '[data-capa="hoja-inferior"] > div:last-child' },
   { clave: 'movil.hoja.siguiente', pantalla: 'tarjeta-regla/movil', selector: '[data-capa="hoja-inferior"] [data-capa="navegacion-reglas"] button' },
+  // Tanda 3: el catálogo (sus tres tamaños, sin resultados y la hoja de filtros del móvil) y la ficha.
+  { clave: 'escritorio.catalogo.titulo', pantalla: 'catalogo/escritorio', selector: '[data-capa="catalogo"] h1' },
+  { clave: 'escritorio.catalogo.presentacion', pantalla: 'catalogo/escritorio', selector: '[data-capa="catalogo"] h1 + p' },
+  { clave: 'escritorio.catalogo.buscador.etiqueta', pantalla: 'catalogo/escritorio', selector: '[data-capa="buscador"] label' },
+  { clave: 'escritorio.catalogo.buscador', pantalla: 'catalogo/escritorio', selector: '#buscar-reglas' },
+  { clave: 'escritorio.catalogo.familia', pantalla: 'catalogo/escritorio', selector: '[data-capa="filtro – Familia"]' },
+  { clave: 'escritorio.catalogo.detector', pantalla: 'catalogo/escritorio', selector: '[data-capa="filtro – Detector"]' },
+  { clave: 'escritorio.catalogo.severidad', pantalla: 'catalogo/escritorio', selector: '[data-capa="filtro – Severidad"]' },
+  { clave: 'escritorio.catalogo.leyenda', pantalla: 'catalogo/escritorio', selector: '[data-capa="filtro – Familia"] legend' },
+  { clave: 'escritorio.catalogo.casilla', pantalla: 'catalogo/escritorio', selector: '[data-capa="filtro – Familia"] label' },
+  { clave: 'escritorio.catalogo.casilla.muestra', pantalla: 'catalogo/escritorio', selector: '[data-capa="filtro – Familia"] label .subrayado' },
+  { clave: 'escritorio.catalogo.quitar', pantalla: 'catalogo/escritorio', selector: '[data-capa="acciones-filtros"] [data-capa="boton-secundario"]' },
+  { clave: 'escritorio.catalogo.recuento', pantalla: 'catalogo/escritorio', selector: '[data-capa="recuento"]' },
+  { clave: 'escritorio.catalogo.regla', pantalla: 'catalogo/escritorio', selector: '[data-capa="regla – Conector repetido (D)"]' },
+  { clave: 'escritorio.catalogo.regla.muestra', pantalla: 'catalogo/escritorio', selector: '[data-capa="regla – Conector repetido (D)"] .subrayado' },
+  { clave: 'escritorio.catalogo.regla.sigla', pantalla: 'catalogo/escritorio', selector: '[data-capa="regla – Conector repetido (D)"] [data-capa="sigla-D"]' },
+  { clave: 'escritorio.catalogo.regla.nombre', pantalla: 'catalogo/escritorio', selector: '[data-capa="regla – Conector repetido (D)"] a' },
+  { clave: 'escritorio.catalogo.regla.frase', pantalla: 'catalogo/escritorio', selector: '[data-capa="regla – Conector repetido (D)"] > div:last-child > p:first-of-type' },
+  { clave: 'escritorio.catalogo.regla.datos', pantalla: 'catalogo/escritorio', selector: '[data-capa="regla – Conector repetido (D)"] > div:last-child > p:last-of-type' },
+  { clave: 'escritorio.catalogo.informativa', pantalla: 'catalogo/escritorio', selector: '[data-capa="regla – Negrita de Markdown (C)"]' },
+  { clave: 'escritorio.catalogo.informativa.frase', pantalla: 'catalogo/escritorio', selector: '[data-capa="regla – Negrita de Markdown (C)"] > div:last-child > p:first-of-type' },
+  { clave: 'escritorio.catalogo.sin', pantalla: 'catalogo-sin-resultados/escritorio', selector: '[data-capa="sin-resultados"]' },
+  { clave: 'escritorio.catalogo.sin.texto', pantalla: 'catalogo-sin-resultados/escritorio', selector: '[data-capa="sin-resultados"] p' },
+  { clave: 'tableta.catalogo.familia', pantalla: 'catalogo/tableta', selector: '[data-capa="filtro – Familia"]' },
+  { clave: 'tableta.catalogo.detector', pantalla: 'catalogo/tableta', selector: '[data-capa="filtro – Detector"]' },
+  { clave: 'movil.catalogo.filtros', pantalla: 'catalogo/movil', selector: '[data-capa="barra-filtros"] [data-capa="boton-secundario"]' },
+  { clave: 'movil.catalogo.regla', pantalla: 'catalogo/movil', selector: '[data-capa="regla – Conector repetido (D)"]' },
+  { clave: 'movil.catalogo.hoja', pantalla: 'catalogo-filtros/movil', selector: '[data-capa="hoja-inferior"]' },
+  { clave: 'movil.catalogo.hoja.asa', pantalla: 'catalogo-filtros/movil', selector: '[data-capa="hoja-inferior"] [data-capa="asa"]' },
+  { clave: 'movil.catalogo.hoja.titulo', pantalla: 'catalogo-filtros/movil', selector: '#t-hoja-filtros' },
+  { clave: 'movil.catalogo.hoja.cerrar', pantalla: 'catalogo-filtros/movil', selector: '[data-capa="hoja-inferior"] [data-capa="boton-cerrar"]' },
+  { clave: 'movil.catalogo.hoja.acciones', pantalla: 'catalogo-filtros/movil', selector: '[data-capa="hoja-inferior"] [data-capa="acciones-filtros"]' },
+  { clave: 'movil.catalogo.hoja.aplicar', pantalla: 'catalogo-filtros/movil', selector: '[data-capa="hoja-inferior"] [data-capa="boton-principal"]' },
+  { clave: 'escritorio.ficha', pantalla: 'ficha-regla/escritorio', selector: '[data-capa="ficha-regla"]' },
+  { clave: 'escritorio.ficha.pastilla', pantalla: 'ficha-regla/escritorio', selector: '[data-capa="pastilla-familia"]' },
+  { clave: 'escritorio.ficha.pastilla.muestra', pantalla: 'ficha-regla/escritorio', selector: '[data-capa="pastilla-familia"] .subrayado' },
+  { clave: 'escritorio.ficha.nombre', pantalla: 'ficha-regla/escritorio', selector: '[data-capa="ficha-regla"] h1' },
+  { clave: 'escritorio.ficha.id', pantalla: 'ficha-regla/escritorio', selector: '[data-capa="ficha-regla"] h1 + p' },
+  { clave: 'escritorio.ficha.frase', pantalla: 'ficha-regla/escritorio', selector: '[data-capa="ficha-regla"] > div:first-child > p:last-child' },
+  { clave: 'escritorio.ficha.seccion', pantalla: 'ficha-regla/escritorio', selector: '[data-capa="seccion – Qué hacer"] h2' },
+  { clave: 'escritorio.ficha.seccion.texto', pantalla: 'ficha-regla/escritorio', selector: '[data-capa="seccion – Qué hacer"] p' },
+  { clave: 'escritorio.ficha.datos', pantalla: 'ficha-regla/escritorio', selector: '[data-capa="seccion – Datos de la regla"] dl' },
+  { clave: 'escritorio.ficha.datos.etiqueta', pantalla: 'ficha-regla/escritorio', selector: '[data-capa="seccion – Datos de la regla"] dt' },
+  { clave: 'escritorio.ficha.fuente', pantalla: 'ficha-regla/escritorio', selector: '[data-capa="seccion – Fuentes"] a' },
+  { clave: 'escritorio.ficha.ejemplo', pantalla: 'ficha-regla/escritorio', selector: '[data-capa="ejemplo – Positivo"]' },
+  { clave: 'escritorio.ficha.ejemplo.texto', pantalla: 'ficha-regla/escritorio', selector: '[data-capa="ejemplo – Positivo"] p' },
+  { clave: 'escritorio.ficha.ejemplo.tramo', pantalla: 'ficha-regla/escritorio', selector: '[data-capa="ejemplo – Positivo"] .subrayado' },
+  { clave: 'escritorio.ficha.ejemplo.sigla', pantalla: 'ficha-regla/escritorio', selector: '[data-capa="ejemplo – Positivo"] p > span[aria-hidden="true"]' },
+  { clave: 'escritorio.ficha.probar', pantalla: 'ficha-regla/escritorio', selector: '[data-capa="acciones"] [data-capa="boton-principal"]' },
+  { clave: 'escritorio.ficha.volver', pantalla: 'ficha-regla/escritorio', selector: '[data-capa="acciones"] a' },
+  { clave: 'movil.ficha.probar', pantalla: 'ficha-regla/movil', selector: '[data-capa="acciones"] [data-capa="boton-principal"]' },
 ];
 
 /**

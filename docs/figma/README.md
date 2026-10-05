@@ -37,8 +37,9 @@ la web real es `web/` (Astro). Esto es la fuente del calco (10.4).
   script las escribe con su apartado y su nota. Desde la Tanda 2, las del
   analizador (formulario, resultado, tramos, tarjeta de regla, pestañas y
   hoja), y también el estilo, el grosor, el color y el desplazamiento de
-  la línea, la alineación, el borde izquierdo y el alto máximo; 77 piezas
-  desde la Tanda 3.
+  la línea, la alineación, el borde izquierdo y el alto máximo; desde la
+  Tanda 3, también el catálogo (sus tres tamaños, sin resultados y la hoja
+  de filtros del móvil) y la ficha: 127 piezas.
 - `fuentes.md` y `subconjunto-unicode.txt` — la ficha de las fuentes
   autoalojadas (origen, versiones, huellas, Reserved Font Name, comandos y
   cifras de la decisión) y la lista de caracteres del recorte (10.4,
