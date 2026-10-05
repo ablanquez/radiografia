@@ -37,6 +37,20 @@
  *    [DOC] https://rolldown.rs/reference/OutputOptions.comments — `legal`:
  *    «Comments that contain @license, @preserve or start with //! or /*!».
  *
+ * vite.plugins: avisosDePdfmake — desde el 9.3 (firmado por Antonio en la
+ *    parada previa: el aviso viaja dentro del JS, como con Ajv), el trozo de
+ *    JS de pdfmake, que la página carga al pulsar «Descargar informe», lleva
+ *    en cabecera, como comentario legal «/*!», los avisos de licencia de las
+ *    76 piezas que van dentro de node_modules/pdfmake/build/pdfmake.js
+ *    (web/terceros/pdfmake/avisos.txt, que escribe a mano
+ *    scripts/avisos-de-pdfmake.ts): el build de pdfmake solo trae cinco
+ *    líneas «/*!», y comments.legal (arriba) las conserva tal cual, sin
+ *    añadir las demás. Lo vigila el juez 10 de jueces/construccion.spec.ts.
+ *    En dev no hace falta: Vite sirve pdfmake preempaquetado (optimizeDeps)
+ *    y la licencia es cosa de lo que se publica.
+ *    [DOC] https://vite.dev/guide/api-plugin#universal-hooks — transform:
+ *    «Can be used to transform individual modules».
+ *
  * security.csp — la Content-Security-Policy de las páginas publicadas
  *    (encargo 8.1, b; firmada en la parada 1): connect-src 'self' (ningún
  *    fetch, XHR, WebSocket ni sendBeacon a otro origen) y form-action 'self'
@@ -102,10 +116,22 @@ const cspPrimero = {
   },
 };
 
+/** @type {import('vite').Plugin} */
+const avisosDePdfmake = {
+  name: 'radiografia-avisos-de-pdfmake',
+  transform(codigo, id) {
+    if (!/[\\/]node_modules[\\/]pdfmake[\\/]build[\\/]pdfmake\.js$/.test(id)) return null;
+    const avisos = readFileSync(new URL('./terceros/pdfmake/avisos.txt', import.meta.url), 'utf8').replace(/\r\n/g, '\n');
+    if (avisos.includes('*/')) throw new Error('terceros/pdfmake/avisos.txt lleva «*/»: cerraría el comentario');
+    return { code: `/*!\n${avisos}\n*/\n${codigo}`, map: null };
+  },
+};
+
 export default defineConfig({
   integrations: [cspPrimero],
   security: { csp: { directives: ["connect-src 'self'", "form-action 'self'"] } },
   vite: {
+    plugins: [avisosDePdfmake],
     optimizeDeps: { include: ['@radiografia/motor/navegador'] },
     build: { rolldownOptions: { output: { comments: { legal: true } } } },
   },

@@ -79,6 +79,8 @@ const MUESTRAS: Readonly<Record<string, readonly unknown[]>> = {
   fragmentosDeLaRegla: [['okey', 'OK', 'okey', 'oká', 'okey'], 2],
   familiaEnLaClave: ['C', 'Canal', 'RadiografIA', true],
   resumenDeOtroPaquete: ['Español correcto', '9 avisos de norma: Mes o día con mayúscula (3) y Pasiva perifrástica con agente (1).'],
+  // La descarga del PDF (9.3): el motivo, el de un fallo de red al pedir una cara.
+  informeNoPreparado: ['literata/literata-400.woff: 404'],
   senalDelTextoEntero: ['ausencia: 0 apariciones; señala por debajo de 1'],
   // El lenguaje de calle (encargo 9.2, b): las muestras con los géneros y las cifras que pinta la página.
   generoDesconocido: ['carta'],

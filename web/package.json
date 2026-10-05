@@ -20,7 +20,8 @@
   },
   "dependencies": {
     "@radiografia/motor": "*",
-    "astro": "7.3.5"
+    "astro": "7.3.5",
+    "pdfmake": "0.3.11"
   },
   "devDependencies": {
     "@types/node": "^24.19.0",

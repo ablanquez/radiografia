@@ -69,8 +69,12 @@
  *    tableta y el móvil la vista pasa a ese mismo sitio (pantalla/pestanas.ts);
  *    en el escritorio se queda en la columna del texto. Sin order de CSS.
  * El botón «Descargar informe» (encargo 9.1, b; firmado en la parada 1),
- *    type="button" y desactivado hasta el primer resultado: abre el diálogo de
- *    imprimir (pantalla.ts), donde se elige «Guardar como PDF».
+ *    type="button" y desactivado hasta el primer resultado; el del final del
+ *    resultado, activo. Hasta el 9.3 abrían el diálogo de imprimir; desde el
+ *    9.3 (decisión de Antonio del 05/10) generan y descargan el PDF en el
+ *    navegador (pantalla/descarga.ts), y cada uno lleva detrás su línea de
+ *    estado (role="status", oculta mientras está vacía) para decir por qué no
+ *    hay PDF. El papel, con Ctrl+P o el menú Imprimir.
  * La hoja de impresión (encargo 9.1, b; firmada en la parada 1): el informe
  *    es esta misma página en papel, sin librerías. Hasta la Tanda 3 del 10.4,
  *    en este <style>; desde la Tanda 4 (DISEÑO §6.5 y el modelo), en
@@ -158,6 +162,7 @@ const icono = `${conBarraFinal(import.meta.env.BASE_URL)}${ICONO_DE_CABECERA}`;
           <div class="acciones-formulario">
             <button id="analizar" class="boton-principal" type="submit" disabled>Pon tu texto a contraluz</button>
             <button id="informe" type="button" disabled>{DESCARGAR_INFORME}</button>
+            <p id="estado-informe" class="estado-descarga" role="status" hidden></p>
           </div>
           <p id="aviso-paquetes" role="status"></p>
           <details id="paquetes" class="paquetes">
@@ -197,6 +202,7 @@ const icono = `${conBarraFinal(import.meta.env.BASE_URL)}${ICONO_DE_CABECERA}`;
           <div class="acciones-resultado">
             <button id="descargar" class="boton-principal" type="button">{DESCARGAR_INFORME}</button>
             <button id="otro" type="button">{ANALIZAR_OTRO_TEXTO}</button>
+            <p id="estado-descarga" class="estado-descarga" role="status" hidden></p>
           </div>
           <div id="senales-informe" class="solo-impresion" hidden></div>
           <p id="pie-informe" class="solo-impresion pie-informe">{NOTA_DE_AUTORIA}</p>

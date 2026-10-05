@@ -37,12 +37,11 @@
  *      informe (con la fecha y la hora del análisis) y la lista de señales,
  *      que la hoja de impresión de index.astro enseña solo en papel. Imprime
  *      el último análisis pintado, y su cabecera dice cuál. El botón
- *      «Descargar informe» se activa con el primer resultado y abre el diálogo
- *      de imprimir; si los paquetes cambian después, sigue activo e imprime
- *      ese último resultado.
- *      [DOC] https://developer.mozilla.org/en-US/docs/Web/API/Window/print —
- *      «Opens the print dialog to print the current document»; «This method
- *      will block while the print dialog is open».
+ *      «Descargar informe» se activa con el primer resultado; si los paquetes
+ *      cambian después, sigue activo y da ese último resultado. Desde el 9.3
+ *      (decisión de Antonio del 05/10), genera y descarga el PDF en el
+ *      navegador (descarga.ts), del mismo análisis que el papel; el papel
+ *      queda para Ctrl+P y el menú Imprimir, que no se tocan.
  *      [DOC] https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat
  *      — dateStyle y timeStyle, «long» y «short»; la zona horaria, «the
  *      runtime's time zone».
@@ -112,6 +111,8 @@ import { activos, leerPaquetePropio } from './propios.ts';
 import { recuentoDeFamilias, type Voz } from './lectura.ts';
 import { crearTarjeta } from './tarjeta.ts';
 import { crearPestanas } from './pestanas.ts';
+import { callarDescarga, engancharDescarga } from './descarga.ts';
+import type { Analisis } from './modelo-informe.ts';
 
 function elemento<T extends HTMLElement>(id: string): T {
   const e = document.getElementById(id);
@@ -149,9 +150,12 @@ const senalesDelInforme = elemento<HTMLDivElement>('senales-informe');
 const pieDelInforme = elemento<HTMLParagraphElement>('pie-informe');
 const fechaDelAnalisis = new Intl.DateTimeFormat('es', { dateStyle: 'long', timeStyle: 'short' });
 const botonDelInforme = elemento<HTMLButtonElement>('informe');
-botonDelInforme.addEventListener('click', () => window.print());
-const descargar = elemento<HTMLButtonElement>('descargar');
-descargar.addEventListener('click', () => window.print());
+const estadoDelInforme = elemento<HTMLParagraphElement>('estado-informe');
+const estadoDeLaDescarga = elemento<HTMLParagraphElement>('estado-descarga');
+/** El último análisis pintado, para el PDF (9.3): null sin resultado. */
+let analisis: Analisis | null = null;
+engancharDescarga(botonDelInforme, estadoDelInforme, () => analisis, () => analisis !== null);
+engancharDescarga(elemento<HTMLButtonElement>('descargar'), estadoDeLaDescarga, () => analisis, () => true);
 const plegado = elemento<HTMLDivElement>('plegado');
 const textoPlegado = elemento<HTMLParagraphElement>('texto-plegado');
 const hueco = elemento<HTMLParagraphElement>('hueco-resultado');
@@ -189,6 +193,8 @@ elemento<HTMLButtonElement>('otro').addEventListener('click', () => {
   hueco.hidden = false;
   avisarInsuficiente(null);
   hayResultado = false;
+  analisis = null;
+  for (const estado of [estadoDelInforme, estadoDeLaDescarga]) callarDescarga(estado);
   botonDelInforme.hidden = false;
   botonDelInforme.disabled = true;
   avisoDePaquetes.textContent = '';
@@ -206,7 +212,8 @@ function analizarYPintar(paquetes: readonly Paquete[], indice: Indice, vozDe: (p
     const r = analizar(elTexto, paquetes, { genero: elGenero });
     // Lo que las pestañas del móvil se llevaron vuelve a su sitio antes de pintar encima.
     pestanas.devolver();
-    pintarCabeceraDelInforme(cabeceraDelInforme, r, paquetes, indice, fechaDelAnalisis.format(new Date()), nombreDeGenero(elGenero));
+    const fecha = fechaDelAnalisis.format(new Date());
+    pintarCabeceraDelInforme(cabeceraDelInforme, r, paquetes, indice, fecha, nombreDeGenero(elGenero));
     pintarMedidor(medidor, r, vozDe, indice, nombreDeGenero(elGenero));
     pintarSenalesDelInforme(senalesDelInforme, r, elTexto, indice, import.meta.env.BASE_URL, location.href);
     const hayAnalisis = r.tramo !== 'insuficiente';
@@ -238,6 +245,8 @@ function analizarYPintar(paquetes: readonly Paquete[], indice: Indice, vozDe: (p
     hueco.hidden = hayAnalisis;
     avisarInsuficiente(hayAnalisis ? null : r.palabrasProsa);
     hayResultado = true;
+    analisis = { resultado: r, texto: elTexto, paquetes, indice, vozDe, fecha, nombreDelGenero: nombreDeGenero(elGenero), ocultas, base: import.meta.env.BASE_URL, direccion: location.href };
+    for (const estado of [estadoDelInforme, estadoDeLaDescarga]) callarDescarga(estado);
     botonDelInforme.disabled = false;
     botonDelInforme.hidden = hayAnalisis;
     avisoDePaquetes.textContent = '';

@@ -457,6 +457,15 @@
   gap: var(--espacio-12);
 }
 
+/* La línea de estado de «Descargar informe» (9.3): debajo de los botones, en su propia línea; vacía, oculta (descarga.ts). */
+.estado-descarga {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: var(--tipografia-tamano-secundario);
+  line-height: var(--tipografia-interlineado-secundario);
+  color: var(--color-ink);
+}
+
 .acciones-resultado button:not(.boton-principal):hover {
   background: var(--color-card);
 }

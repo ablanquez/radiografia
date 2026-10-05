@@ -41,6 +41,13 @@
  *      uno antes de moverlo, y aquí se compara con la de dist/). Hasta el
  *      10.4 se admitía delante <link rel="icon" href="data:,">; ya no hace
  *      falta ninguna excepción.
+ *  10. Desde el 9.3 (firmado por Antonio en la parada previa: el aviso viaja
+ *      dentro del JS, como con Ajv), el trozo de JS de dist/ que lleva pdfmake
+ *      lleva entero web/terceros/pdfmake/avisos.txt, con una pieza por paquete
+ *      de web/terceros/pdfmake/paquetes.json (lo escribe
+ *      scripts/avisos-de-pdfmake.ts y lo pone astro.config.mjs), y
+ *      THIRD-PARTY-NOTICES § 1.8 tiene una fila por pieza, con su versión y su
+ *      licencia, y ninguna más. Ningún otro JS de dist/ lleva pdfmake.
  *
  * El build, memorizado y con la telemetría apagada, y astro preview son los
  * de apoyo.ts (los comparte con textos-web.spec.ts y catalogo.spec.ts).
@@ -122,6 +129,30 @@ describe('la web construida', () => {
     const conValidador = jsDeDist().filter(({ texto }) => texto.includes('ucs2length'));
     assert.ok(conValidador.length > 0, 'ningún JS de dist/ lleva el validador standalone');
     for (const { ruta, texto } of conValidador) assert.ok(texto.replace(/\r\n/g, '\n').includes(licencia), `${ruta} no lleva el LICENSE de ajv entero`);
+  });
+
+  test('10 · el trozo de JS de pdfmake lleva entero el aviso de cada pieza que va dentro, y § 1.8 del NOTICES es su lista', () => {
+    construir();
+    const avisos = readFileSync(new URL('../terceros/pdfmake/avisos.txt', import.meta.url), 'utf8').replace(/\r\n/g, '\n');
+    const paquetes = JSON.parse(readFileSync(new URL('../terceros/pdfmake/paquetes.json', import.meta.url), 'utf8')) as { paquete: string; version: string; licencia: string }[];
+    assert.deepEqual(
+      paquetes.filter((x) => !avisos.includes(`=== ${x.paquete} ${x.version} · ${x.licencia}`)).map((x) => x.paquete),
+      [],
+      'piezas de paquetes.json sin su aviso en avisos.txt',
+    );
+    assert.equal([...avisos.matchAll(/^=== /gm)].length, paquetes.length, 'avisos de más en avisos.txt');
+    // pdfmake, por un nombre de su código que la minificación no cambia: el método de su impresora.
+    const conPdfmake = jsDeDist().filter(({ texto }) => texto.includes('createPdfKitDocument'));
+    assert.equal(conPdfmake.length, 1, `los JS de dist/ con pdfmake: ${conPdfmake.map((x) => x.ruta).join(', ')}`);
+    // Línea a línea y sin la sangría: el empaquetador se la quita a cada línea de un comentario (visto el 05/10: el
+    // «              2016-2026 liborm85» del LICENSE de pdfmake llega como «2016-2026 liborm85»).
+    const sinSangria = (texto: string): string => texto.replace(/\r\n/g, '\n').replace(/^[ \t]+/gm, '').trim();
+    assert.ok(sinSangria(conPdfmake[0]!.texto).includes(sinSangria(avisos)), `${conPdfmake[0]!.ruta} no lleva avisos.txt entero`);
+    const notices = readFileSync(new URL('../../THIRD-PARTY-NOTICES.md', import.meta.url), 'utf8').replace(/\r\n/g, '\n');
+    const seccion = /^### 1\.8 · [^\n]*\n([\s\S]*?)(?=^#{2,3} |(?![\s\S]))/m.exec(notices)?.[1] ?? '';
+    assert.ok(seccion !== '', 'el NOTICES no tiene § 1.8');
+    const filas = [...seccion.matchAll(/^\| `([^`]+)` \| ([^|]+?) \| ([^|]+?) \|/gm)].map((m) => `${m[1]} ${m[2]!.trim()} ${m[3]!.trim()}`);
+    assert.deepEqual(filas.sort(), paquetes.map((x) => `${x.paquete} ${x.version} ${x.licencia}`).sort(), 'las filas de § 1.8 frente a paquetes.json');
   });
 
   test('7 · dist/ejemplos/ lleva los dos textos de ejemplo y los dos paquetes de prueba, byte a byte los de public/ejemplos/, en UTF-8 sin BOM y con \\n', async () => {

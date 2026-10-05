@@ -4,10 +4,11 @@ La licencia Apache 2.0 cubre **el código y los paquetes de reglas** de Radiogra
 lo ajeno**, que conserva sus propias condiciones. Aquí está, una por una, con lo que sabemos y lo
 que no.
 
-> ℹ️ **Estado a 04/10/2026.** Lo ajeno es software, datos y dos fuentes tipográficas. Software (§ 1): **siete**
+> ℹ️ **Estado a 05/10/2026.** Lo ajeno es software, datos y dos fuentes tipográficas. Software (§ 1): **ocho**
 > dependencias declaradas en los dos workspaces, [`motor/package.json`](motor/package.json) y
-> [`web/package.json`](web/package.json) —dos de ejecución y cinco de desarrollo—, el árbol que
-> arrastran y **un fichero de código ajeno incorporado** al repositorio (§ 1.5). Datos (§ 2):
+> [`web/package.json`](web/package.json) —tres de ejecución y cinco de desarrollo—, el árbol que
+> arrastran, **un fichero de código ajeno incorporado** al repositorio (§ 1.5) y lo que va dentro de
+> pdfmake, que viaja al navegador al pulsar «Descargar informe» (§ 1.8). Datos (§ 2):
 > las carpetas de [`data/`](data/), **aparte del código Apache 2.0**, cada una con su licencia
 > al lado. Fuentes (§ 2.4): Literata y Atkinson Hyperlegible Next, OFL 1.1, autoalojadas en
 > [`web/public/fuentes/`](web/public/fuentes/) con su `OFL.txt` al lado.
@@ -37,6 +38,7 @@ otro workspace y no es de terceros.
 |---|---|---|---|
 | `ajv` | 8.20.0 | MIT | (motor) El validador de JSON Schema: comprueba cada paquete de reglas contra `motor/esquema/` (clase `Ajv2020`, draft 2020-12), en vivo en Node y, en build, genera el validador standalone |
 | `astro` | 7.3.5 | MIT | (web) El marco de la web estática: compila `web/src/pages/` a HTML y, con Vite 8 y Rolldown, empaqueta el script de la página. Fijada exacta (encargo 6.2). Sus binarios, en § 1.4 |
+| `pdfmake` | 0.3.11 | MIT | (web) Genera en el navegador el PDF de «Descargar informe» (encargo 9.3, decisión de Antonio del 05/10), con pdfkit y fontkit dentro. Fijada exacta. Lo que lleva dentro, en § 1.8 |
 
 > **Lo que viajará al navegador — y lo que no.** `ajv` entero **no** viajará: el navegador
 > llevará `motor/dist/validador.standalone.js`, la función de validación que
@@ -62,6 +64,19 @@ otro workspace y no es de terceros.
 > motor, el validador y los ayudantes que escribe el empaquetador: en el build de la web
 > (02/10/2026), el JS no lleva código de Vite ni de Astro.
 >
+> **`pdfmake` viaja al navegador, pero no con la página** (encargo 9.3). Su build para navegador,
+> `node_modules/pdfmake/build/pdfmake.js`, va en un trozo de JS aparte que la página carga solo al
+> pulsar «Descargar informe» (`web/src/pantalla/generar-pdf.ts`, con `import()`): unos 1,09 MB,
+> unos 359 KB con gzip (build del 05/10/2026). Ese fichero lleva dentro, ya empaquetados por pdfmake,
+> **setenta y seis piezas** de terceros: pdfkit, fontkit, los polyfills que añadió su build y el
+> arranque de webpack (la lista, en § 1.8). **Su aviso viaja dentro del trozo**, como el de Ajv:
+> [`web/astro.config.mjs`](web/astro.config.mjs) le pone en cabecera, como comentario legal
+> `/*! … */`, el texto de la licencia de cada pieza
+> ([`web/terceros/pdfmake/avisos.txt`](web/terceros/pdfmake/avisos.txt), que escribe a mano
+> `web/scripts/avisos-de-pdfmake.ts`); lo vigila el juez 10 de
+> [`web/jueces/construccion.spec.ts`](web/jueces/construccion.spec.ts). El build de pdfmake solo
+> trae cinco de esos avisos, en una línea cada uno.
+>
 > ⚠️ **Aquí estuvo `es-compromise` 0.3.1** (MIT, etiquetado gramatical), del 29/09 hasta el cierre
 > del encargo 3.3: se midió contra UD Spanish-AnCora, no llegó al umbral y se retiró con su capa
 > y su lista de pronombres. La medida, en
@@ -82,29 +97,39 @@ No se distribuyen: no viajan al navegador. Se listan igualmente, una a una.
 `@types/node` pasó de 24.19.0 a 24.19.1 el 02/10/2026, al regenerar el lock en la raíz (encargo
 6.2): es un parche de tipos dentro del rango `^24.19.0` que declaran los dos workspaces.
 
-**Mirado una a una:** el `LICENSE` de cada una de las siete declaradas, abierto en
+**Mirado una a una:** el `LICENSE` de cada una de las ocho declaradas, abierto en
 `node_modules/`, dice lo mismo que su campo `license`: MIT (Evgeny Poberezkin) en `ajv`; Apache
 License 2.0 en `typescript`; MIT (Microsoft Corporation) en `@types/node` y en las dos bases de
 `@tsconfig`; MIT (Evan Wallace) en el `LICENSE.md` de `esbuild` (29/09/2026); MIT (Fred K.
-Schott) en `astro` (02/10/2026).
+Schott) en `astro` (02/10/2026); MIT (bpampuch, 2014-2015, y liborm85, 2016-2026) en `pdfmake`
+(05/10/2026).
 
 ### 1.3 · El árbol transitivo — existe, y no se lista aquí
 
-Las siete declaradas arrastran **doscientas noventa** dependencias transitivas en el lock. No se
+Las ocho declaradas arrastran **trescientas once** dependencias transitivas en el lock. No se
 enumeran una a una aquí: la lista que manda es [`package-lock.json`](package-lock.json), el de la
 raíz, versionado precisamente para eso (desde el encargo 6.2 hay uno solo, para los dos
 workspaces). Cada entrada trae su versión, su origen y su licencia. No cuentan la raíz, las
 carpetas de los workspaces ni sus enlaces en `node_modules/`.
 
-⚠️ **De esas doscientas noventa, en esta máquina se instalan ciento ochenta y nueve.** El resto
-son opcionales que npm **solo instala en el sistema que les toca**:
+⚠️ **De esas trescientas once, en esta máquina se instalan doscientas once.** El resto son
+opcionales que npm **solo instala en el sistema que les toca**:
 
 - **91 binarios de otros sistemas**: 25 de esbuild, 14 de Rolldown, 13 de sharp y 10 de su
   libvips, 10 de lightningcss, 9 del compilador de Astro, 8 de satteri,
   `@img/sharp-webcontainers-wasm32` y `fsevents` (solo macOS). Los de Windows de 64 bits, en
   § 1.4.
-- **10 piezas de WebAssembly de reserva** (`@emnapi/*`, `@napi-rs/wasm-runtime`,
-  `@tybys/wasm-util`, `@img/sharp-wasm32` y `tslib`), para los sistemas sin binario nativo.
+- **9 piezas de WebAssembly de reserva** (`@emnapi/*`, `@napi-rs/wasm-runtime`,
+  `@tybys/wasm-util` y `@img/sharp-wasm32`), para los sistemas sin binario nativo. `tslib`, que
+  hasta el 9.3 era una de ellas, ahora se instala: la pide `@swc/helpers`, que llega con fontkit
+  (pdfmake).
+
+Con pdfmake (encargo 9.3) entraron en el lock veintiuna (`pdfmake` es declarada y no cuenta):
+`pdfkit`, `fontkit`, `linebreak`, `xmldoc`, `restructure`, `unicode-properties` (con su copia de
+`base64-js`), `unicode-trie` (con su copia de `pako`), `brotli` (con otra de `base64-js`), `dfa`,
+`clone`, `png-js`, `js-md5`, `pako`, `base64-js`, `browserify-zlib`, `@noble/hashes`,
+`@noble/ciphers` y `@swc/helpers`. Otras que usa (`sax`, `tslib`, `tiny-inflate`,
+`fast-deep-equal`) ya estaban en el árbol.
 
 `npm ls --all` enseña los que faltan como `UNMET OPTIONAL DEPENDENCY`, y es lo esperado.
 
@@ -114,12 +139,12 @@ npm ls --all                    # el árbol entero
 ```
 
 **El reparto de licencias del árbol transitivo, leído del `package-lock.json` de la raíz el
-02/10/2026:**
+05/10/2026:**
 
 | Licencia | Paquetes |
 |---|---|
-| MIT | 221 |
-| Apache-2.0 | 16 |
+| MIT | 239 |
+| Apache-2.0 | 17 |
 | MPL-2.0 | 12 |
 | LGPL-3.0-or-later | 10 |
 | ISC | 8 |
@@ -131,7 +156,9 @@ npm ls --all                    # el árbol entero
 | Apache-2.0 AND LGPL-3.0-or-later AND MIT | 1 |
 | Python-2.0 | 1 |
 | 0BSD | 1 |
-| **Total** | **290** |
+| (MIT AND Zlib) | 1 |
+| sin campo `license` (`png-js`: su `LICENSE` es MIT) | 1 |
+| **Total** | **311** |
 
 ⚠️ **Dos licencias que no son permisivas, y por qué no obligan aquí.** Las dos llegan con
 `astro` y son **herramientas de build: no se distribuyen ni viajan al navegador** (el JS de la
@@ -195,24 +222,142 @@ la cabecera, el resto es el original.
   (`subrayar`, `sublunar`) y en `tungsteno`.
 - Empaquetado para navegador sin minificar: **16.215 bytes** (esbuild, 29/09, antes de copiarlo).
 
-### 1.6 · La que no es MIT
+### 1.6 · Las que no son MIT
 
 | Paquete | Licencia | Qué tiene de distinto |
 |---|---|---|
 | `fast-uri` 3.1.8 (la trae `ajv`) | **BSD-3-Clause** | Permisiva. Pide conservar su aviso de copyright y su lista de condiciones al redistribuir, también en binario. Y prohíbe usar el nombre de sus autores para promocionar lo derivado. Hoy no se redistribuye: no está dentro del validador empaquetado (§ 1.1) |
+| `sax` (dentro de pdfmake, § 1.8) | **BlueOak-1.0.0** | Permisiva (Blue Oak Model License 1.0.0). Pide que quien la reciba tenga el texto de la licencia o su dirección. Va dentro del trozo de pdfmake con su texto entero |
+| `@swc/helpers` (dentro de pdfmake, § 1.8) | **Apache-2.0** | Permisiva, con concesión de patentes. Pide dar la licencia y un fichero NOTICE si lo trae: no lo trae. Va dentro del trozo de pdfmake con su texto entero |
+| `pako` (dentro de pdfmake, § 1.8) | **(MIT AND Zlib)** | Las dos permisivas. La Zlib pide no tergiversar el origen y marcar las versiones modificadas. Va con su texto entero |
+| `ieee754` (dentro de pdfmake, § 1.8) | **BSD-3-Clause** | Como `fast-uri`: conservar el aviso y las condiciones al redistribuir, y no usar el nombre de sus autores. Va con su texto entero |
+| `inherits` (dentro de pdfmake, § 1.8) | **ISC** | Permisiva, equivalente a la MIT. Va con su texto entero |
+| `tslib` (dentro de pdfmake, § 1.8) | **0BSD** | Permisiva, sin condición de aviso. Va con su texto entero |
+| `qr.js` (copiado en pdfmake, `src/qrEnc.js`) | **Dominio público; CC0 donde no se reconozca** | Sin condiciones. Va con su cabecera |
+| `png-js` (dentro de pdfmake, § 1.8) | **sin campo `license`**; su `LICENSE`, MIT | El campo falta en su `package.json`; su fichero dice «MIT License Copyright (c) 2017 Devon Govett». Va con su texto entero |
 
 ### 1.7 · Resumen de compatibilidad
 
-**Las seis declaradas son MIT o Apache-2.0**, y el código incorporado, MIT: permisivas, sin
-copyleft, compatibles con la Apache 2.0 de este proyecto sin condición añadida. En el árbol
-transitivo, treinta son MIT y una BSD-3-Clause (§ 1.6). Nada bloquea.
+**Las ocho declaradas son MIT o Apache-2.0**, y el código incorporado, MIT: permisivas, sin
+copyleft, compatibles con la Apache 2.0 de este proyecto sin condición añadida. Lo que va dentro
+de pdfmake (§ 1.8) es MIT salvo lo de § 1.6: BlueOak, Apache-2.0, Zlib, BSD-3-Clause, ISC, 0BSD
+y dominio público, todas permisivas, y todas viajan con su texto. El árbol entero, en § 1.3.
+Nada bloquea.
 
 > **Y lo que este documento no garantiza:** el reparto de § 1.3 sale del campo `license` que
-> cada paquete declara en el `package-lock.json`. **Las seis declaradas sí se han abierto una a
+> cada paquete declara en el `package-lock.json`. **Las ocho declaradas sí se han abierto una a
 > una.** De las transitivas instaladas se miró la primera línea de cada `LICENSE` el 29/09 y
 > coincide con su campo; `@esbuild/win32-x64` no trae `LICENSE` (§ 1.4); de los veinticinco
 > binarios de esbuild que no se instalan aquí solo consta lo que dice el lock. El texto entero de
 > cada una **NO CONSTA** como leído.
+
+
+### 1.8 · Lo que va dentro del trozo de pdfmake
+
+El PDF de «Descargar informe» (encargo 9.3) lo genera en el navegador `pdfmake` (§ 1.1) con
+`node_modules/pdfmake/build/pdfmake.js`, su build para navegador, que ya lleva dentro, empaquetado
+por webpack, todo lo que necesita. Va en un trozo de JS aparte, que se carga al pulsar el botón.
+Qué piezas lleva sale del mapa de fuentes de ese fichero (`build/pdfmake.js.map`): **setenta y
+seis**, una fila por pieza. Las escribe `web/scripts/avisos-de-pdfmake.ts` en
+[`web/terceros/pdfmake/paquetes.json`](web/terceros/pdfmake/paquetes.json), con el texto de la
+licencia de cada una en [`web/terceros/pdfmake/avisos.txt`](web/terceros/pdfmake/avisos.txt), que
+viaja entero en cabecera del trozo (§ 1.1). Que esta tabla, `paquetes.json`, `avisos.txt` y el
+trozo de `dist/` digan lo mismo lo vigila el juez 10 de
+[`web/jueces/construccion.spec.ts`](web/jueces/construccion.spec.ts).
+
+- **La versión que va de verdad dentro NO CONSTA.** pdfmake no publica su lockfile: ni el paquete
+  lo trae ni su repositorio en la etiqueta 0.3.11 (`raw.githubusercontent.com/bpampuch/pdfmake/0.3.11/package-lock.json`:
+  404, el 05/10/2026). La versión de la tabla es la del árbol que instala RadiografIA, si la pieza
+  está en él, o la última publicada en npm el 05/10/2026, si no (los polyfills que añadió el build
+  de pdfmake); el texto de la licencia es el de esa versión.
+- **Tres no traen texto de licencia**: `brotli`, `dfa` y `fontkit`, las tres de Devon Govett.
+  Su `package.json` dice MIT, y ni el paquete ni su repositorio traen el fichero (comprobado el
+  05/10/2026: 404 en `LICENSE`, `LICENSE.md` y `license`). En `avisos.txt` va eso, con su autor.
+  El de `base64-js` 0.0.8, que el paquete tampoco trae, sale de su repositorio.
+- **Lo que no viene de un paquete**: el código de pdfmake (MIT), con dos piezas ajenas copiadas en
+  él, svg-to-pdfkit (MIT, con su `LICENSE` en `src/3rd-party/`) y qr.js (en su cabecera:
+  dominio público y, donde no se reconozca, CC0); y el arranque de webpack (MIT).
+- **`@parcel/node-resolver-core`** es un fichero vacío (`lib/_empty.js`, «"use strict";») que
+  linebreak lleva en su build.
+
+| Pieza | Versión | Licencia | De dónde, la versión | El texto |
+|---|---|---|---|---|
+| `pdfmake` | 0.3.11 | MIT | la de pdfmake | `LICENSE` |
+| `@noble/ciphers` | 1.3.0 | MIT | la del árbol instalado | `LICENSE` |
+| `@noble/hashes` | 1.8.0 | MIT | la del árbol instalado | `LICENSE` |
+| `@parcel/node-resolver-core` | 3.7.4 | MIT | la última de npm (05/10) | `LICENSE` |
+| `@swc/helpers` | 0.5.23 | Apache-2.0 | la del árbol instalado | `LICENSE` |
+| `assert` | 2.1.0 | MIT | la última de npm (05/10) | `LICENSE` |
+| `available-typed-arrays` | 1.0.7 | MIT | la última de npm (05/10) | `LICENSE` |
+| `base64-js` | 0.0.8 | MIT | la del árbol instalado | el LICENSE de su repositorio (el paquete no lo trae) |
+| `brotli` | 1.3.3 | MIT | la del árbol instalado | sin texto de licencia (véase abajo) |
+| `browserify-zlib` | 0.2.0 | MIT | la del árbol instalado | `LICENSE` |
+| `buffer` | 6.0.3 | MIT | la última de npm (05/10) | `LICENSE` |
+| `call-bind` | 1.0.9 | MIT | la última de npm (05/10) | `LICENSE` |
+| `call-bind-apply-helpers` | 1.0.2 | MIT | la última de npm (05/10) | `LICENSE` |
+| `call-bound` | 1.0.4 | MIT | la última de npm (05/10) | `LICENSE` |
+| `clone` | 2.1.2 | MIT | la del árbol instalado | `LICENSE` |
+| `core-js` | 3.50.0 | MIT | la última de npm (05/10) | `LICENSE` |
+| `define-data-property` | 1.1.4 | MIT | la última de npm (05/10) | `LICENSE` |
+| `define-properties` | 1.2.1 | MIT | la última de npm (05/10) | `LICENSE` |
+| `dfa` | 1.2.0 | MIT | la del árbol instalado | sin texto de licencia (véase abajo) |
+| `dunder-proto` | 1.0.1 | MIT | la última de npm (05/10) | `LICENSE` |
+| `es-define-property` | 1.0.1 | MIT | la última de npm (05/10) | `LICENSE` |
+| `es-errors` | 1.3.0 | MIT | la última de npm (05/10) | `LICENSE` |
+| `es-object-atoms` | 1.1.2 | MIT | la última de npm (05/10) | `LICENSE` |
+| `events` | 3.3.0 | MIT | la última de npm (05/10) | `LICENSE` |
+| `expose-loader` | 5.0.1 | MIT | la última de npm (05/10) | `LICENSE` |
+| `fast-deep-equal` | 3.1.3 | MIT | la del árbol instalado | `LICENSE` |
+| `file-saver` | 2.0.5 | MIT | la última de npm (05/10) | `LICENSE.md` |
+| `fontkit` | 2.0.4 | MIT | la del árbol instalado | sin texto de licencia (véase abajo) |
+| `for-each` | 0.3.5 | MIT | la última de npm (05/10) | `LICENSE` |
+| `function-bind` | 1.1.2 | MIT | la última de npm (05/10) | `LICENSE` |
+| `generator-function` | 2.0.1 | MIT | la última de npm (05/10) | `LICENSE.md` |
+| `get-intrinsic` | 1.3.0 | MIT | la última de npm (05/10) | `LICENSE` |
+| `get-proto` | 1.0.1 | MIT | la última de npm (05/10) | `LICENSE` |
+| `gopd` | 1.2.0 | MIT | la última de npm (05/10) | `LICENSE` |
+| `has-property-descriptors` | 1.0.2 | MIT | la última de npm (05/10) | `LICENSE` |
+| `has-symbols` | 1.1.0 | MIT | la última de npm (05/10) | `LICENSE` |
+| `has-tostringtag` | 1.0.2 | MIT | la última de npm (05/10) | `LICENSE` |
+| `hasown` | 2.0.4 | MIT | la última de npm (05/10) | `LICENSE` |
+| `ieee754` | 1.2.1 | BSD-3-Clause | la última de npm (05/10) | `LICENSE` |
+| `inherits` | 2.0.4 | ISC | la última de npm (05/10) | `LICENSE` |
+| `is-arguments` | 1.2.0 | MIT | la última de npm (05/10) | `LICENSE` |
+| `is-callable` | 1.2.7 | MIT | la última de npm (05/10) | `LICENSE` |
+| `is-generator-function` | 1.1.2 | MIT | la última de npm (05/10) | `LICENSE` |
+| `is-nan` | 1.3.2 | MIT | la última de npm (05/10) | `LICENSE` |
+| `is-regex` | 1.2.1 | MIT | la última de npm (05/10) | `LICENSE` |
+| `is-typed-array` | 1.1.15 | MIT | la última de npm (05/10) | `LICENSE` |
+| `js-md5` | 0.8.3 | MIT | la del árbol instalado | `LICENSE.txt` |
+| `linebreak` | 1.1.0 | MIT | la del árbol instalado | `LICENSE` |
+| `math-intrinsics` | 1.1.0 | MIT | la última de npm (05/10) | `LICENSE` |
+| `object-is` | 1.1.6 | MIT | la última de npm (05/10) | `LICENSE` |
+| `object-keys` | 1.1.1 | MIT | la última de npm (05/10) | `LICENSE` |
+| `object.assign` | 4.1.7 | MIT | la última de npm (05/10) | `LICENSE` |
+| `pako` | 1.0.11 | (MIT AND Zlib) | la del árbol instalado | `LICENSE` |
+| `pdfkit` | 0.19.1 | MIT | la del árbol instalado | `LICENSE` |
+| `png-js` | 1.1.0 | NO CONSTA en package.json; LICENSE: MIT License | la del árbol instalado | `LICENSE` |
+| `possible-typed-array-names` | 1.1.0 | MIT | la última de npm (05/10) | `LICENSE` |
+| `process` | 0.11.10 | MIT | la última de npm (05/10) | `LICENSE` |
+| `readable-stream` | 4.7.0 | MIT | la última de npm (05/10) | `LICENSE` |
+| `restructure` | 3.0.2 | MIT | la del árbol instalado | `LICENSE` |
+| `safe-buffer` | 5.2.1 | MIT | la última de npm (05/10) | `LICENSE` |
+| `safe-regex-test` | 1.1.0 | MIT | la última de npm (05/10) | `LICENSE` |
+| `sax` | 1.6.1 | BlueOak-1.0.0 | la del árbol instalado | `LICENSE.md` |
+| `set-function-length` | 1.2.2 | MIT | la última de npm (05/10) | `LICENSE` |
+| `stream-browserify` | 3.0.0 | MIT | la última de npm (05/10) | `LICENSE` |
+| `string_decoder` | 1.3.0 | MIT | la última de npm (05/10) | `LICENSE` |
+| `tiny-inflate` | 1.0.3 | MIT | la del árbol instalado | `LICENSE` |
+| `tslib` | 2.8.1 | 0BSD | la del árbol instalado | `LICENSE.txt` |
+| `unicode-properties` | 1.4.1 | MIT | la del árbol instalado | `LICENSE` |
+| `unicode-trie` | 2.0.0 | MIT | la del árbol instalado | `LICENSE` |
+| `util` | 0.12.5 | MIT | la última de npm (05/10) | `LICENSE` |
+| `util-deprecate` | 1.0.2 | MIT | la última de npm (05/10) | `LICENSE` |
+| `which-typed-array` | 1.1.24 | MIT | la última de npm (05/10) | `LICENSE` |
+| `xmldoc` | 2.0.3 | MIT | la del árbol instalado | `LICENSE` |
+| `svg-to-pdfkit (copiado en pdfmake, src/3rd-party)` | 0.3.11 | MIT | la de pdfmake | `src/3rd-party/svg-to-pdfkit/LICENSE` |
+| `qr.js (copiado en pdfmake, src/qrEnc.js)` | 0.3.11 | dominio público; CC0 donde no se reconozca | la de pdfmake | `src/qrEnc.js (cabecera)` |
+| `webpack (su arranque: webpack/bootstrap y webpack/runtime)` | 5.111.1 | MIT | la última de npm (05/10) | `LICENSE` |
 
 ---
 

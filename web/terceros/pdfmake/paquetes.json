@@ -1,0 +1,534 @@
+[
+  {
+    "paquete": "pdfmake",
+    "version": "0.3.11",
+    "licencia": "MIT",
+    "origen": "pdfmake",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "@noble/ciphers",
+    "version": "1.3.0",
+    "licencia": "MIT",
+    "origen": "árbol",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "@noble/hashes",
+    "version": "1.8.0",
+    "licencia": "MIT",
+    "origen": "árbol",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "@parcel/node-resolver-core",
+    "version": "3.7.4",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "@swc/helpers",
+    "version": "0.5.23",
+    "licencia": "Apache-2.0",
+    "origen": "árbol",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "assert",
+    "version": "2.1.0",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "available-typed-arrays",
+    "version": "1.0.7",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "base64-js",
+    "version": "0.0.8",
+    "licencia": "MIT",
+    "origen": "árbol",
+    "fichero": "https://raw.githubusercontent.com/beatgammit/base64-js/HEAD/LICENSE"
+  },
+  {
+    "paquete": "brotli",
+    "version": "1.3.3",
+    "licencia": "MIT",
+    "origen": "árbol",
+    "fichero": null
+  },
+  {
+    "paquete": "browserify-zlib",
+    "version": "0.2.0",
+    "licencia": "MIT",
+    "origen": "árbol",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "buffer",
+    "version": "6.0.3",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "call-bind",
+    "version": "1.0.9",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "call-bind-apply-helpers",
+    "version": "1.0.2",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "call-bound",
+    "version": "1.0.4",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "clone",
+    "version": "2.1.2",
+    "licencia": "MIT",
+    "origen": "árbol",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "core-js",
+    "version": "3.50.0",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "define-data-property",
+    "version": "1.1.4",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "define-properties",
+    "version": "1.2.1",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "dfa",
+    "version": "1.2.0",
+    "licencia": "MIT",
+    "origen": "árbol",
+    "fichero": null
+  },
+  {
+    "paquete": "dunder-proto",
+    "version": "1.0.1",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "es-define-property",
+    "version": "1.0.1",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "es-errors",
+    "version": "1.3.0",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "es-object-atoms",
+    "version": "1.1.2",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "events",
+    "version": "3.3.0",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "expose-loader",
+    "version": "5.0.1",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "fast-deep-equal",
+    "version": "3.1.3",
+    "licencia": "MIT",
+    "origen": "árbol",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "file-saver",
+    "version": "2.0.5",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE.md"
+  },
+  {
+    "paquete": "fontkit",
+    "version": "2.0.4",
+    "licencia": "MIT",
+    "origen": "árbol",
+    "fichero": null
+  },
+  {
+    "paquete": "for-each",
+    "version": "0.3.5",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "function-bind",
+    "version": "1.1.2",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "generator-function",
+    "version": "2.0.1",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE.md"
+  },
+  {
+    "paquete": "get-intrinsic",
+    "version": "1.3.0",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "get-proto",
+    "version": "1.0.1",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "gopd",
+    "version": "1.2.0",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "has-property-descriptors",
+    "version": "1.0.2",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "has-symbols",
+    "version": "1.1.0",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "has-tostringtag",
+    "version": "1.0.2",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "hasown",
+    "version": "2.0.4",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "ieee754",
+    "version": "1.2.1",
+    "licencia": "BSD-3-Clause",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "inherits",
+    "version": "2.0.4",
+    "licencia": "ISC",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "is-arguments",
+    "version": "1.2.0",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "is-callable",
+    "version": "1.2.7",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "is-generator-function",
+    "version": "1.1.2",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "is-nan",
+    "version": "1.3.2",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "is-regex",
+    "version": "1.2.1",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "is-typed-array",
+    "version": "1.1.15",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "js-md5",
+    "version": "0.8.3",
+    "licencia": "MIT",
+    "origen": "árbol",
+    "fichero": "LICENSE.txt"
+  },
+  {
+    "paquete": "linebreak",
+    "version": "1.1.0",
+    "licencia": "MIT",
+    "origen": "árbol",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "math-intrinsics",
+    "version": "1.1.0",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "object-is",
+    "version": "1.1.6",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "object-keys",
+    "version": "1.1.1",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "object.assign",
+    "version": "4.1.7",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "pako",
+    "version": "1.0.11",
+    "licencia": "(MIT AND Zlib)",
+    "origen": "árbol",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "pdfkit",
+    "version": "0.19.1",
+    "licencia": "MIT",
+    "origen": "árbol",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "png-js",
+    "version": "1.1.0",
+    "licencia": "NO CONSTA en package.json; LICENSE: MIT License",
+    "origen": "árbol",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "possible-typed-array-names",
+    "version": "1.1.0",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "process",
+    "version": "0.11.10",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "readable-stream",
+    "version": "4.7.0",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "restructure",
+    "version": "3.0.2",
+    "licencia": "MIT",
+    "origen": "árbol",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "safe-buffer",
+    "version": "5.2.1",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "safe-regex-test",
+    "version": "1.1.0",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "sax",
+    "version": "1.6.1",
+    "licencia": "BlueOak-1.0.0",
+    "origen": "árbol",
+    "fichero": "LICENSE.md"
+  },
+  {
+    "paquete": "set-function-length",
+    "version": "1.2.2",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "stream-browserify",
+    "version": "3.0.0",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "string_decoder",
+    "version": "1.3.0",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "tiny-inflate",
+    "version": "1.0.3",
+    "licencia": "MIT",
+    "origen": "árbol",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "tslib",
+    "version": "2.8.1",
+    "licencia": "0BSD",
+    "origen": "árbol",
+    "fichero": "LICENSE.txt"
+  },
+  {
+    "paquete": "unicode-properties",
+    "version": "1.4.1",
+    "licencia": "MIT",
+    "origen": "árbol",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "unicode-trie",
+    "version": "2.0.0",
+    "licencia": "MIT",
+    "origen": "árbol",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "util",
+    "version": "0.12.5",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "util-deprecate",
+    "version": "1.0.2",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "which-typed-array",
+    "version": "1.1.24",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "xmldoc",
+    "version": "2.0.3",
+    "licencia": "MIT",
+    "origen": "árbol",
+    "fichero": "LICENSE"
+  },
+  {
+    "paquete": "svg-to-pdfkit (copiado en pdfmake, src/3rd-party)",
+    "version": "0.3.11",
+    "licencia": "MIT",
+    "origen": "pdfmake",
+    "fichero": "src/3rd-party/svg-to-pdfkit/LICENSE"
+  },
+  {
+    "paquete": "qr.js (copiado en pdfmake, src/qrEnc.js)",
+    "version": "0.3.11",
+    "licencia": "dominio público; CC0 donde no se reconozca",
+    "origen": "pdfmake",
+    "fichero": "src/qrEnc.js (cabecera)"
+  },
+  {
+    "paquete": "webpack (su arranque: webpack/bootstrap y webpack/runtime)",
+    "version": "5.111.1",
+    "licencia": "MIT",
+    "origen": "npm",
+    "fichero": "LICENSE"
+  }
+]

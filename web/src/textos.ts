@@ -78,6 +78,11 @@ export const REGLA_PROPIA_SIN_FICHA = 'Regla de un paquete propio: sin página e
 export const CLAVE_DE_SIGLAS = 'En el texto, detrás de cada subrayado, va entre corchetes la sigla de su familia.';
 export const NOTA_DE_AUTORIA = 'RadiografIA analiza estilo; no demuestra autoría.';
 export const SIN_INFORME = 'No hay análisis que imprimir: pega un texto y pulsa «Pon tu texto a contraluz».';
+// La descarga del PDF (encargo 9.3; firmados por Antonio en la parada previa): el botón mientras se prepara, el motivo si
+// falla y, con texto insuficiente, por qué no hay PDF.
+export const PREPARANDO_EL_INFORME = 'Preparando el informe…';
+export const informeNoPreparado = (motivo: string): string => `No se ha podido preparar el informe: ${motivo}.`;
+export const SIN_INFORME_QUE_DESCARGAR = 'Con menos de 100 palabras no hay informe que descargar.';
 
 // Los textos de ejemplo (ejemplos.ts).
 export const ejemploNoCargado = (url: string, motivo: string): string => `No se ha podido cargar el ejemplo ${url}: ${motivo}.`;
