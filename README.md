@@ -1204,6 +1204,17 @@ género “Noticia” de 300 a 599 palabras», con su total y los percentiles.
   disparar la regla y cada negativo no. El esquema está en
   [`motor/esquema/`](motor/esquema/).
 - **Catálogo público** con una página por regla.
+  - En los ejemplos de cada ficha, el tramo que señala la regla va marcado
+    con el estilo de su familia, como en el analizador. Lo calcula el motor
+    antes de construir la web: `web/scripts/tramos-de-ejemplos.ts` corre en
+    `predev` y `prebuild`, y su salida
+    (`web/src/catalogo/tramos-de-ejemplos.json`) no se versiona.
+  - **Por qué ese script importa `motor/src/` por su ruta** (`texto.ts` y
+    `analisis.ts`): las funciones que necesita no están en los `exports` del
+    motor. Vale porque es un script del build de la web y corre en Node. Al
+    navegador no llega nada de él: la ficha no lleva JavaScript.
+  - Marcan tramo 35 reglas. Las otras 15 no tienen tramo que marcar: son
+    las que miran el texto entero, las de ausencia y las de género.
 - **Informe PDF** desde la propia página.
 - **Las reglas se editan en Git.** No hay CMS.
 
