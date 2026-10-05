@@ -185,7 +185,7 @@ const PIEZAS: readonly { clave: string; pantalla: string; selector: string }[] =
  * ni selector, para que el juez de fidelidad las mida igual y nadie las tome
  * por medidas del prototipo.
  */
-const DEL_DISENO: Readonly<Record<string, { origen: string; nota: string } & Partial<Record<'ancho' | 'alto' | 'separacionDeParrafos', number>>>> = {
+const DEL_DISENO: Readonly<Record<string, { origen: string; nota: string } & Partial<Record<'ancho' | 'alto' | 'separacionDeParrafos' | 'margenDeScroll', number>>>> = {
   'escritorio.cabecera.icono': {
     origen: 'DISEÑO-RADIOGRAFIA.md §8',
     nota: 'Del DISEÑO, no del prototipo (el modelo no tiene icono en la cabecera): el icono (c) a 56 px en escritorio, la altura del bloque nombre + eslogan; corregido por Antonio al ver la Tanda 1 (04/10, cb89407).',
@@ -203,6 +203,18 @@ const DEL_DISENO: Readonly<Record<string, { origen: string; nota: string } & Par
     origen: 'DISEÑO-RADIOGRAFIA.md §5',
     nota: 'Del DISEÑO, no del prototipo (el modelo separaba los párrafos de la vista con 16 px): la vista respeta los saltos del texto (white-space: pre-wrap) y una línea en blanco entre párrafos mide un renglón de Literata 18 a 1,5, 27 px; es la legibilidad del DISEÑO, decidido por Antonio en la parada 2 de la Tanda 2 (04/10).',
     separacionDeParrafos: 27,
+  },
+  // La caja de la columna del resultado con scroll propio (desde la Tanda 3), con resultado; su contenido son las piezas escritorio.pastilla y demás, a 360.
+  'escritorio.columna-resultado': {
+    origen: 'DISEÑO-RADIOGRAFIA.md §6.1',
+    nota: 'Del DISEÑO, no del prototipo (en el modelo la columna no tiene scroll propio): con scroll propio (decisión de Antonio en la parada 2, DISEÑO §6.1), la caja mide su contenido, 360 como en el modelo, más el sitio del anillo de foco a cada lado (2 + 2 px, para que no se corte) y el carril de la barra de scroll clásica (15 px en el Chrome de Windows de los jueces): 383. Con barras superpuestas (macOS, iOS) no hay carril y mide 368. Aceptado por Antonio en la parada 3 (05/10).',
+    ancho: 383,
+  },
+  // El margen de scroll del anillo de foco (desde la Tanda 3), arriba y abajo, en la ventana y en la columna del resultado.
+  'escritorio.margen-de-scroll': {
+    origen: 'DISEÑO-RADIOGRAFIA.md §7',
+    nota: 'Del DISEÑO, no del prototipo (el modelo no se recorre con el tabulador): al tabular, el navegador desplaza lo justo para que se vea el elemento, no su anillo de foco (2 px a 2 px, DISEÑO §7), y el anillo se salía 4 px por el borde; la ventana y la columna del resultado dejan arriba y abajo el sitio del anillo, 4 px (scroll-padding-block). Aceptado por Antonio en la parada 3 (05/10).',
+    margenDeScroll: 4,
   },
 };
 

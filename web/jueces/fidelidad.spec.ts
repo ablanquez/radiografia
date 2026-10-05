@@ -30,7 +30,11 @@
  *      la tenía en 16), medida con el texto humano, que los separa así.
  *   4. A 820 (tableta) y a 390 (móvil), lo que cambia con el tamaño: los
  *      márgenes, la cabecera compacta y el botón principal.
- *   5. El resultado de combinacion-real a 1280, pieza a pieza.
+ *   5. El resultado de combinacion-real a 1280, pieza a pieza; y desde la
+ *      Tanda 4, del DISEÑO (aceptado por Antonio en la parada 3), la caja de
+ *      la columna con scroll propio (383: 360 de contenido, el sitio del
+ *      anillo de foco y el carril de la barra) y el margen de scroll del
+ *      anillo (4 px), en la ventana y en la columna.
  *   6. La tarjeta de regla abierta sobre el primer «Además», con su tramo
  *      activo.
  *   7. En el móvil, la pastilla compacta, las pestañas y la hoja (abierta
@@ -83,6 +87,7 @@ type Propiedad =
   | 'altoMaximo'
   | 'desdeElMarco'
   | 'separacionDeParrafos'
+  | 'margenDeScroll'
   | 'texto';
 type Medida = Partial<Record<Propiedad, unknown>>;
 interface Caso {
@@ -150,6 +155,11 @@ const RESULTADO: readonly Caso[] = [
   { clave: 'escritorio.capa.sintaxis', selector: '#vista .tramo > .capa.fam-sintaxis', propiedades: CAPA },
   { clave: 'escritorio.capa.gramatica', selector: '#vista .tramo > .capa.fam-gramatica', propiedades: CAPA },
   { clave: 'escritorio.capa.lexico', selector: '#vista .tramo > .capa.fam-lexico', propiedades: CAPA },
+  // Desde la Tanda 4, del DISEÑO (aceptado por Antonio en la parada 3): la caja de la columna con scroll propio, con el carril de la barra
+  // clásica (la del Chrome de los jueces, en Windows), y el sitio del anillo de foco al desplazar, en la ventana y en la columna.
+  { clave: 'escritorio.columna-resultado', selector: '#columna-resultado', propiedades: ['ancho'] },
+  { clave: 'escritorio.margen-de-scroll', selector: 'html', propiedades: ['margenDeScroll'] },
+  { clave: 'escritorio.margen-de-scroll', selector: '#columna-resultado', propiedades: ['margenDeScroll'] },
 ];
 /** Tanda 2: la tarjeta de regla abierta sobre el primer «Además», a 1280. */
 const TARJETA: readonly Caso[] = [
@@ -322,7 +332,7 @@ function diferencias(caso: Caso, web: Medida, modelo: Medida): string[] {
     let igual: boolean;
     if (p === 'interletrado') igual = Math.abs(px(a) / px(web.tamano) - px(b) / px(modelo.tamano)) <= 0.01;
     else if (p === 'relleno') igual = (a as string[]).every((x, i) => Math.abs(px(x) - px((b as string[])[i])) <= 1);
-    else if (['tamano', 'interlineado', 'ancho', 'alto', 'desdeElMarco', 'radio', 'decoGrosor', 'decoDesplazamiento', 'separacionDeParrafos'].includes(p)) igual = Math.abs(px(a) - px(b)) <= 1;
+    else if (['tamano', 'interlineado', 'ancho', 'alto', 'desdeElMarco', 'radio', 'decoGrosor', 'decoDesplazamiento', 'separacionDeParrafos', 'margenDeScroll'].includes(p)) igual = Math.abs(px(a) - px(b)) <= 1;
     else if (['color', 'fondo', 'decoColor'].includes(p) && a !== b) {
       // Dos maneras de escribir el mismo color (rgb() y color(srgb …)): el mismo con un margen de una unidad por canal y 0,01 de alfa.
       const [ca, cb] = [canales(a), canales(b)];
@@ -372,6 +382,8 @@ describe('la fidelidad al modelo, sobre astro preview', () => {
         bordeArriba: borde('top'), bordeAbajo: borde('bottom'), bordeIzquierdo: borde('left'), radio: c.borderRadius, altoMaximo: c.maxHeight,
         relleno: [c.paddingTop, c.paddingRight, c.paddingBottom, c.paddingLeft],
         ancho: r.width, alto: r.height, desdeElMarco: r.left,
+        // El de arriba si es igual al de abajo; si no, los dos (y no casa con ningún número).
+        margenDeScroll: c.scrollPaddingTop === c.scrollPaddingBottom ? c.scrollPaddingTop : c.scrollPaddingTop + ' / ' + c.scrollPaddingBottom,
         separacionDeParrafos: (() => {
           // Dos párrafos separados por una línea en blanco, en un mismo trozo de texto que no sea una sigla (aria-hidden): del renglón
           // del último carácter del primero al del primero del segundo, menos un renglón.
@@ -408,7 +420,7 @@ describe('la fidelidad al modelo, sobre astro preview', () => {
     assert.deepEqual(sinProcedencia, [], 'piezas sin pantalla y selector del prototipo, o sin apartado del DISEÑO y nota');
     assert.deepEqual(
       Object.keys(json.medidas).filter((c) => 'origen' in json.medidas[c]!),
-      ['escritorio.cabecera.icono', 'movil.cabecera.icono', 'escritorio.vista.parrafos'],
+      ['escritorio.cabecera.icono', 'movil.cabecera.icono', 'escritorio.vista.parrafos', 'escritorio.columna-resultado', 'escritorio.margen-de-scroll'],
       'las piezas que vienen del DISEÑO y no del prototipo',
     );
   });

@@ -33,13 +33,16 @@ la web real es `web/` (Astro). Esto es la fuente del calco (10.4).
   Las piezas con `origen` no son del prototipo sino del DISEÑO, que manda
   (el icono (c) de la cabecera, 56/48 px, §8; desde la Tanda 3, la
   separación de los párrafos de la vista, una línea en blanco de 27 px,
-  §5, decidida por Antonio en la parada 2: el modelo la tenía en 16): el
-  script las escribe con su apartado y su nota. Desde la Tanda 2, las del
+  §5, decidida por Antonio en la parada 2: el modelo la tenía en 16; desde la
+  Tanda 4, la caja de la columna del resultado con scroll propio, 383 px
+  con el carril de la barra, §6.1, y el margen de scroll del anillo de
+  foco, 4 px, §7, aceptados por Antonio en la parada 3): el script las
+  escribe con su apartado y su nota. Desde la Tanda 2, las del
   analizador (formulario, resultado, tramos, tarjeta de regla, pestañas y
   hoja), y también el estilo, el grosor, el color y el desplazamiento de
   la línea, la alineación, el borde izquierdo y el alto máximo; desde la
   Tanda 3, también el catálogo (sus tres tamaños, sin resultados y la hoja
-  de filtros del móvil) y la ficha: 127 piezas.
+  de filtros del móvil) y la ficha: 129 piezas.
 - `fuentes.md` y `subconjunto-unicode.txt` — la ficha de las fuentes
   autoalojadas (origen, versiones, huellas, Reserved Font Name, comandos y
   cifras de la decisión) y la lista de caracteres del recorte (10.4,
