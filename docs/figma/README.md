@@ -24,6 +24,12 @@ la web real es `web/` (Astro). Esto es la fuente del calco (10.4).
   `$extensions` (`com.github.ablanquez.radiografia`, §5.2.3). El
   `$type: "string"` del estilo de línea de cada familia, que venía de
   Make, no es un tipo de la especificación; se deja como estaba.
+  **Cambio del 05/10** (10.4, Tanda 5, DISEÑO §4): Puntuación y formato
+  pasa de `#009e73` a `#009988` (paleta vibrant de Paul Tol), con sus dos
+  tintes recalculados, porque en deuteranopía quedaba a 4,02 de CIEDE2000
+  de Ortotipografía (Machado 2009, el juez de contraste); viene del DISEÑO,
+  no del prototipo, y `guidelines.md`, lo que leyó Make, sigue con el de
+  entonces.
 - `medidas-modelo.json` — las medidas del prototipo publicado (fuente,
   tamaño, interlineado, colores calculados, bordes, radios, rellenos y
   cajas de cada pieza, en sus tres tamaños), tomadas por CDP con
