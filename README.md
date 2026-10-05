@@ -608,13 +608,15 @@ análisis es el informe.
   secciones en orden con los saltos del papel, ninguna señal partida (con el
   texto de prueba y con los dos ejemplos), el mismo texto que el papel, el
   calco al marco del modelo (±1 px), nuestras fuentes incrustadas y las
-  mismas caras que el papel, lo mismo que el papel con un paquete propio, que
-  con menos de 100 palabras no hay PDF, que Ctrl+P no se toca y que no se pide
-  nada fuera del propio sitio;
+  mismas caras que el papel, lo mismo que el papel con un paquete propio, el
+  aire de lo que el marco no mide (el final de la sección 6) como en el papel,
+  que con menos de 100 palabras no hay PDF, que Ctrl+P no se toca y que no se
+  pide nada fuera del propio sitio;
 - [`web/jueces/papel.spec.ts`](web/jueces/papel.spec.ts) e
   [`impresion.spec.ts`](web/jueces/impresion.spec.ts), el papel: el calco al
-  marco, la hoja sin análisis, lo que sale y lo que no, y que imprimir no
-  pide nada a la red;
+  marco, la hoja sin análisis, que cada regla de la hoja de impresión se
+  aplique de verdad (que ninguna quede pisada por otra), lo que sale y lo que
+  no, y que imprimir no pide nada a la red;
 - el juez 10 de [`construccion.spec.ts`](web/jueces/construccion.spec.ts),
   que el trozo de pdfmake lleva dentro el aviso de licencia de cada pieza que
   empaqueta (THIRD-PARTY-NOTICES § 1.8).
