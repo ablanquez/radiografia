@@ -102,8 +102,10 @@ body.con-pestanas[data-pestana='reglas'] .pie {
 /*
  * En papel no hay pestañas (encargo 10.4, Tanda 2): si se imprime desde el móvil, con los bloques repartidos, los
  * paneles no cuentan (display: contents, también el oculto) y cada parte del desglose lleva el orden del desglose en
- * el informe (index.astro); «Ver el detalle», que en Datos solo lleva las cifras (en papel van en la cabecera), no sale.
- * Visto por el juez de impresión: sin esto, lo de una pestaña oculta no salía en el papel.
+ * el informe (estilos/informe.css); «Ver el detalle», que en Datos solo lleva las cifras (en papel van en la cabecera),
+ * no sale. Visto por el juez de impresión: sin esto, lo de una pestaña oculta no salía en el papel. Desde la Tanda 4,
+ * en el 6, detrás del 5 del desglose: lo que queda en él es el título de la sección, y los paneles van antes en el
+ * documento (dentro del resultado, detrás del medidor).
  */
 @media print {
   .barra-pestanas {
@@ -118,7 +120,7 @@ body.con-pestanas[data-pestana='reglas'] .pie {
   #desglose-reglas,
   #desglose-avisos,
   .panel-pestana > .otro-paquete {
-    order: 5;
+    order: 6;
   }
 
   .panel-pestana > .detalle {

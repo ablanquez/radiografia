@@ -11,7 +11,9 @@
  *   3. Las entradas de la lista (entradasDelInforme): una por regla que dio
  *      alguna señal, con tramo o del texto entero; en el orden del desglose
  *      (paquete, familia, regla); con cuántas señales, hasta 5 fragmentos y
- *      cuántas no caben; las informativas, marcadas.
+ *      cuántas no caben; las informativas, marcadas; y desde el 10.4 (Tanda 4),
+ *      las de contexto (las estadísticas informativas, que el informe pone al
+ *      final, en cuerpo menor), marcadas también.
  *
  * [DOC] https://nodejs.org/api/test.html — node:test.
  */
@@ -21,7 +23,7 @@ import type { Paquete } from '@radiografia/motor/navegador';
 import { entradasDelInforme, fragmento } from '../src/pantalla/informe.ts';
 import { indexar } from '../src/pantalla/pintar.ts';
 import { enOrden } from '../src/orden.ts';
-import { motorDelNavegador, paqueteDePrueba, paquetesIncluidos, TEXTO_DE_TRES_PAQUETES } from './apoyo.ts';
+import { motorDelNavegador, paqueteDePrueba, paquetesIncluidos, TEXTO_DE_COMBINACION_REAL, TEXTO_DE_TRES_PAQUETES } from './apoyo.ts';
 
 /** Un paquete hecho de Español correcto con otro nombre y su familia de gramática llamada «Léxico». */
 function conLexico(nombre: string): Paquete {
@@ -86,6 +88,16 @@ describe('las entradas de la lista de señales', () => {
     const nivel = entradas.find((e) => e.reglaId === 'prueba-a-nivel-de');
     assert.deepEqual(nivel && [nivel.paquete, nivel.familia, nivel.n, nivel.fragmentos, nivel.informativa], ['Paquete de prueba', 'Pruebas', 1, ['A nivel de'], false]);
     assert.equal(entradas.find((e) => e.reglaId === 'prueba-okey')?.informativa, true, 'la informativa, marcada');
+  });
+
+  test('las de contexto (10.4, Tanda 4): las reglas de las señales informativas del texto entero, y solo ellas', async () => {
+    const { analizar } = await motorDelNavegador();
+    const paquetes = paquetesIncluidos();
+    const r = analizar(TEXTO_DE_COMBINACION_REAL, paquetes, { genero: 'general' });
+    const entradas = entradasDelInforme(r, TEXTO_DE_COMBINACION_REAL, indexar(paquetes));
+    assert.deepEqual(entradas.filter((e) => e.deContexto).map((e) => e.reglaId).sort(), [...new Set(r.contexto.map((s) => s.reglaId))].sort());
+    assert.equal(entradas.filter((e) => e.deContexto).length, 6, 'las seis estadísticas informativas');
+    assert.ok(entradas.filter((e) => e.deContexto).every((e) => e.n === 0 && e.informativa && e.delTextoEntero.length > 0), 'sin tramo, informativas y del texto entero');
   });
 
   test('en el orden del desglose: paquete, familia y regla, alfabéticas por su nombre', async () => {

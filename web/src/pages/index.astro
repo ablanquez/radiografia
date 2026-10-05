@@ -72,51 +72,9 @@
  *    type="button" y desactivado hasta el primer resultado: abre el diálogo de
  *    imprimir (pantalla.ts), donde se elige «Guardar como PDF».
  * La hoja de impresión (encargo 9.1, b; firmada en la parada 1): el informe
- *    es esta misma página en papel, sin librerías; «Guardar como PDF» del
- *    diálogo de imprimir lo convierte en PDF. Va en este mismo <style>: Astro
- *    pone su hash en el style-src de la CSP (0 violaciones al imprimir, visto
- *    en la parada 1).
- *    [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Media_queries/Printing
- *    — «The print media type sets the styles for printed media»; lo que no va
- *    al papel, con display: none («#header, #footer, #nav»).
- *    · Lo de solo papel (.solo-impresion: la cabecera del informe, la lista de
- *      señales, la clave, el pie y el párrafo de sin análisis) está en el DOM
- *      desde que se analiza, oculto en pantalla. Sin beforeprint ni
- *      afterprint: en la parada 1, Emulation.setEmulatedMedia('print') de
- *      Chrome no los disparaba y Page.printToPDF sí, y con ellos el juez
- *      emulado y el PDF habrían visto cosas distintas.
- *    · En papel no van el formulario, la navegación, el panel (lo sustituye la
- *      lista de señales) ni la línea de datos del medidor (la repite la
- *      cabecera del informe). Los <details> de las reglas propias, plegados.
- *      Desde el 9.2, tampoco «Ver el detalle» del medidor: plegado no se ve, y
- *      sus cifras van en la cabecera del informe.
- *    · Si no hay resultado, el párrafo «No hay análisis que imprimir».
- *    [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/@page — size: a4 y
- *    margin; Baseline 2024. Sin él, Chrome imprime en carta (visto en la
- *    parada 1).
- *    [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/break-inside —
- *    avoid: «Avoids any break (page, column, or region) from being inserted
- *    within the principal box»; Baseline desde enero de 2019. En cada entrada
- *    de la lista, cada línea del desglose y el medidor; break-after: avoid en
- *    los títulos.
- *    [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/orphans
- *    — «Limited availability… not Baseline» (Firefox no lo tiene): orphans y
- *    widows van como mejora, sin depender de ellos.
- *    [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/attr
- *    — attr() «can also be used with pseudo-elements»; Baseline desde julio
- *    de 2015. Las siglas de familia detrás de cada tramo (data-siglas) y
- *    delante de cada línea de la leyenda (data-sigla), y la dirección de la
- *    ficha detrás de cada regla de la lista de señales.
- *    [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/content
- *    — el contenido generado «is not included in the DOM»: en pantalla no
- *    existe y el texto del usuario no se toca; en el PDF sale como texto
- *    (visto en la parada 1).
- *    [DOC] https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html —
- *    1.4.1: «Color is not used as the only visual means of conveying
- *    information»: en papel, la sigla y el paquete en texto.
- *    [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/print-color-adjust
- *    — exact solo en los subrayados y las muestras, sin depender de ello:
- *    «there isn't any guarantee that print-color-adjust will do anything».
+ *    es esta misma página en papel, sin librerías. Hasta la Tanda 3 del 10.4,
+ *    en este <style>; desde la Tanda 4 (DISEÑO §6.5 y el modelo), en
+ *    estilos/informe.css, con sus porqués.
  */
 import { urlDelCatalogo } from '../catalogo/catalogo.ts';
 import {
@@ -152,6 +110,7 @@ import '../estilos/resultado.css';
 import '../estilos/hoja.css';
 import '../estilos/tarjeta.css';
 import '../estilos/pestanas.css';
+import '../estilos/informe.css';
 
 const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
 ---
@@ -234,7 +193,7 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
             <button id="otro" type="button">{ANALIZAR_OTRO_TEXTO}</button>
           </div>
           <div id="senales-informe" class="solo-impresion" hidden></div>
-          <p class="solo-impresion pie-informe">{NOTA_DE_AUTORIA}</p>
+          <p id="pie-informe" class="solo-impresion pie-informe">{NOTA_DE_AUTORIA}</p>
         </section>
         <p class="solo-impresion sin-informe">{SIN_INFORME}</p>
       </div>
@@ -276,134 +235,6 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
       }
       .en-claro {
         font-weight: 600;
-      }
-      .solo-impresion {
-        display: none;
-      }
-      @page {
-        size: A4;
-        margin: 2cm;
-      }
-      @media print {
-        :root {
-          font-size: 11pt;
-        }
-        body {
-          max-width: none;
-          padding: 0;
-        }
-        header nav,
-        .pie,
-        #formulario,
-        #plegado,
-        #hueco-resultado,
-        .acciones-resultado,
-        .ojo,
-        #tarjeta,
-        .titulo-desglose,
-        #medidor .datos,
-        .detalle > summary,
-        .detalle > .cifras {
-          display: none !important;
-        }
-        /*
-         * El informe en el orden del 9.1 (cabecera, resultado, clave, texto,
-         * desglose, señales y pie) aunque en pantalla el texto vaya en la
-         * columna de la izquierda: en papel las columnas no cuentan (display:
-         * contents) y cada bloque lleva su orden. El desglose va plegado en
-         * «Ver el detalle»: en papel se enseña sin abrirlo.
-         * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Selectors/::details-content
-         *    — «represents the expandable/collapsible contents of a <details>
-         *    element»; cerrado, lleva content-visibility: hidden, que se puede
-         *    cambiar. Baseline 2025.
-         */
-        .analizador {
-          display: flex;
-          flex-direction: column;
-        }
-        .columna-texto,
-        .columna-resultado,
-        #resultado:not([hidden]) {
-          display: contents;
-        }
-        #cabecera-informe {
-          order: 1;
-        }
-        #medidor {
-          order: 2;
-        }
-        #leyenda {
-          order: 3;
-        }
-        #vista {
-          order: 4;
-        }
-        #desglose {
-          order: 5;
-        }
-        #senales-informe {
-          order: 6;
-        }
-        .pie-informe {
-          order: 7;
-        }
-        .sin-informe {
-          order: 8;
-        }
-        .detalle::details-content {
-          content-visibility: visible;
-        }
-        .solo-impresion:not([hidden]) {
-          display: block;
-        }
-        #resultado:not([hidden]) ~ .sin-informe {
-          display: none;
-        }
-        .titulo-informe {
-          font-size: 1.4rem;
-          font-weight: 700;
-        }
-        .vista {
-          line-height: 2;
-          border: none;
-          padding: 0;
-        }
-        .tramo[data-siglas]::after {
-          content: ' [' attr(data-siglas) ']';
-          font-size: 0.75em;
-        }
-        /* En papel, la sigla va entre corchetes (::after): la voladita de la pantalla, fuera. */
-        .sigla-tramo {
-          display: none;
-        }
-        .leyenda li[data-sigla]::before {
-          content: '[' attr(data-sigla) '] ';
-        }
-        .capa,
-        .muestra {
-          print-color-adjust: exact;
-        }
-        #senales-informe a[href]::after {
-          content: ' (' attr(href) ')';
-          font-weight: normal;
-          word-break: break-all;
-        }
-        #medidor,
-        #desglose li,
-        .entrada-informe {
-          break-inside: avoid;
-        }
-        h2,
-        h3,
-        h4,
-        h5 {
-          break-after: avoid;
-        }
-        p,
-        li {
-          orphans: 3;
-          widows: 3;
-        }
       }
     </style>
   </body>

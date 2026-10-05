@@ -105,6 +105,7 @@ import {
   pintarProblemas,
   pintarSenalesDelInforme,
   pintarVista,
+  numerarSecciones,
   type Indice,
 } from './pintar.ts';
 import { activos, leerPaquetePropio } from './propios.ts';
@@ -145,6 +146,7 @@ const erroresPropio = elemento<HTMLDivElement>('errores-propio');
 const avisoDePaquetes = elemento<HTMLParagraphElement>('aviso-paquetes');
 const cabeceraDelInforme = elemento<HTMLDivElement>('cabecera-informe');
 const senalesDelInforme = elemento<HTMLDivElement>('senales-informe');
+const pieDelInforme = elemento<HTMLParagraphElement>('pie-informe');
 const fechaDelAnalisis = new Intl.DateTimeFormat('es', { dateStyle: 'long', timeStyle: 'short' });
 const botonDelInforme = elemento<HTMLButtonElement>('informe');
 botonDelInforme.addEventListener('click', () => window.print());
@@ -228,6 +230,8 @@ function analizarYPintar(paquetes: readonly Paquete[], indice: Indice, vozDe: (p
       pintarVista(vista, elTexto, r.senales, indice, (indices) => tarjeta.abrir(indices));
       pintarDesglose(desglose, r, paquetes, indice, import.meta.env.BASE_URL, vozDe, nombreDeGenero(elGenero));
     }
+    // Los números de las secciones del informe, las que salen en papel, en su orden (10.4, Tanda 4).
+    numerarSecciones([...[cabeceraDelInforme, medidor, leyenda, vista, desglose, senalesDelInforme].map((parte) => parte.querySelector<HTMLElement>(':scope > .titulo-seccion')), pieDelInforme]);
     problemas.hidden = true;
     resultado.hidden = false;
     resultado.classList.toggle('insuficiente', !hayAnalisis);

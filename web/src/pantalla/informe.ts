@@ -20,7 +20,9 @@
  *     señales, sus primeros fragmentos y cuántos no caben, y las del texto
  *     entero, que el desglose ya sabe decir.
  *     [PROPIO, firmado] Hasta 5 fragmentos por regla, de hasta 80 caracteres
- *     (fragmento), y «y N más».
+ *     (fragmento), y «y N más». Desde el 10.4 (Tanda 4; DISEÑO §6.5), cada
+ *     entrada dice si es de contexto (las estadísticas informativas, que el
+ *     informe pone al final, en cuerpo menor).
  */
 import type { Paquete, Resultado } from '@radiografia/motor/navegador';
 import { enOrden } from '../orden.ts';
@@ -73,6 +75,8 @@ export interface EntradaDelInforme {
   resto: number;
   /** Las señales del texto entero (ausencias y estadísticas). */
   delTextoEntero: SenalDelTextoEntero[];
+  /** Una regla de contexto: sus señales del texto entero son informativas (resultado.contexto, las estadísticas que no suman). */
+  deContexto: boolean;
 }
 
 export function entradasDelInforme(resultado: Resultado, texto: string, indice: Indice): EntradaDelInforme[] {
@@ -95,6 +99,7 @@ export function entradasDelInforme(resultado: Resultado, texto: string, indice: 
         fragmentos: [],
         resto: 0,
         delTextoEntero: [],
+        deContexto: false,
       };
       porRegla.set(clave, e);
     }
@@ -106,7 +111,12 @@ export function entradasDelInforme(resultado: Resultado, texto: string, indice: 
     if (e.fragmentos.length < FRAGMENTOS_POR_REGLA) e.fragmentos.push(fragmento(texto.slice(s.inicio, s.fin)));
     else e.resto += 1;
   }
-  for (const s of [...resultado.senalesTexto, ...resultado.contexto]) entrada(s.paquete, s.reglaId).delTextoEntero.push(s);
+  for (const s of resultado.senalesTexto) entrada(s.paquete, s.reglaId).delTextoEntero.push(s);
+  for (const s of resultado.contexto) {
+    const e = entrada(s.paquete, s.reglaId);
+    e.delTextoEntero.push(s);
+    e.deContexto = true;
+  }
   const posicion = new Map(resultado.paquetes.map((p, i) => [p.paquete, i]));
   return enOrden([...porRegla.values()], (e) => [posicion.get(e.paquete) ?? 0, e.familia, e.nombre]);
 }

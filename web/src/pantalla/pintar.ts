@@ -63,10 +63,14 @@
  * (pintarSenalesDelInforme, con las entradas de informe.ts) se pintan al
  * analizar, del mismo resultado, en bloques que la hoja de index.astro enseña
  * solo en papel; las siglas de familia van en data-siglas de cada tramo y en
- * data-sigla de cada línea de la leyenda, y la hoja las escribe en papel con
+ * data-sigla de cada línea de la leyenda (desde el 10.4, Tanda 4, en el nombre
+ * de la familia, detrás de la muestra), y la hoja las escribe en papel con
  * ::after y ::before. En la lista, el nombre de una regla incluida enlaza a su
  * ficha con la dirección absoluta, porque en papel se escribe el href tal cual
  * (attr(href)); en el desglose, no.
+ * Desde el 10.4 (Tanda 4; DISEÑO §6.5), el informe va por secciones
+ * numeradas: cada parte pinta el título de la suya (los que la pantalla no
+ * tiene, solo para el papel) y numerarSecciones les pone el número.
  *
  * El lenguaje de calle (encargo 9.2, b; firmado por Antonio en la parada 1),
  * con las frases de lectura.ts: el medidor da por paquete la etiqueta y la
@@ -90,7 +94,7 @@ import type { ProblemaDeCarga } from './cargar.ts';
 import { parametrosEnLlano, urlDeRegla } from '../catalogo/catalogo.ts';
 import { enOrden, type ClaveDeOrden } from '../orden.ts';
 import { nombreDeRegla } from './humanizar.ts';
-import { entradasDelInforme, repartirSiglas } from './informe.ts';
+import { entradasDelInforme, repartirSiglas, type EntradaDelInforme } from './informe.ts';
 import { cifrasDelPaquete, detalleDelPaquete, etiquetaDelPaquete, generoEnCalle, lineaDelTextoEntero, loQueMasPesa, motivoNoMirada, motivoSinComparar, palabrasDelTexto, resumenDelPaquete, type Voz } from './lectura.ts';
 import { partirEnTramos } from './tramos.ts';
 import { capasVisibles, claseDeFamilia } from './familias.ts';
@@ -293,7 +297,7 @@ export function pintarLeyenda(
   recuento: ReadonlyMap<string, number>,
   alAlternar: (familia: string, oculta: boolean) => void,
 ): void {
-  const titulo = el('h2', textos.FAMILIAS);
+  const titulo = el('h2', textos.FAMILIAS, 'titulo-seccion');
   titulo.id = 't-familias';
   contenedor.setAttribute('aria-labelledby', titulo.id);
   contenedor.replaceChildren(titulo, el('p', textos.CLAVE_DE_SIGLAS, 'solo-impresion'));
@@ -304,7 +308,6 @@ export function pintarLeyenda(
     for (const f of indice.familias.filter((x) => x.paquete === paquete)) {
       const n = recuento.get(f.clave) ?? 0;
       const tarjeta = el('li', undefined, `tarjeta-familia ${f.clase}${n === 0 ? ' atenuada' : ''}`);
-      tarjeta.dataset['sigla'] = indice.siglaDeFamilia.get(f.clave) ?? '';
       tarjeta.dataset['familia'] = f.clave;
       const muestra = el('span', textos.MUESTRA_DE_SUBRAYADO, `muestra capa ${f.clase}`);
       muestra.setAttribute('aria-hidden', 'true');
@@ -320,7 +323,9 @@ export function pintarLeyenda(
         tarjeta.classList.toggle('oculta', oculta);
         alAlternar(f.clave, oculta);
       });
-      tarjeta.append(muestra, el('span', f.informativa ? textos.familiaInformativa(f.nombre, n) : textos.familiaConRecuento(f.nombre, n), 'etiqueta-familia'), ojo);
+      const etiqueta = el('span', f.informativa ? textos.familiaInformativa(f.nombre, n) : textos.familiaConRecuento(f.nombre, n), 'etiqueta-familia');
+      etiqueta.dataset['sigla'] = indice.siglaDeFamilia.get(f.clave) ?? '';
+      tarjeta.append(muestra, etiqueta, ojo);
       (f.informativa ? informativas : puntuan).append(tarjeta);
     }
     grupo.append(el('h3', paquete), puntuan);
@@ -372,7 +377,8 @@ export function pintarVista(
   indice: Indice,
   alActivar: (indices: readonly number[]) => void,
 ): void {
-  contenedor.replaceChildren();
+  // El título de la sección 4 del informe, solo en papel (10.4, Tanda 4): el nombre de la vista.
+  contenedor.replaceChildren(el('h2', textos.TU_TEXTO_ANALIZADO, 'titulo-seccion solo-impresion'));
   for (const tramo of partirEnTramos(texto.length, senales)) {
     const trozo = texto.slice(tramo.inicio, tramo.fin);
     if (tramo.senales.length === 0) {
@@ -545,6 +551,11 @@ function tarjetasQueMasPesan(resultado: Resultado, r: ResultadoDePaquete, indice
     lista.append(motivo);
   });
   seccion.append(lista);
+  // En papel (10.4, Tanda 4; DISEÑO §6.5 y el modelo), en dos líneas: las tarjetas no salen.
+  seccion.append(
+    el('p', textos.loQueMasPesa(pesa.reglas.map((x) => textos.parteDelResumen(x.nombre, x.cola))), 'solo-impresion'),
+    ...(pesa.empiezaPor === null ? [] : [el('p', textos.empiezaPor(pesa.empiezaPor), 'solo-impresion')]),
+  );
   return seccion;
 }
 
@@ -560,7 +571,8 @@ function tarjetasQueMasPesan(resultado: Resultado, r: ResultadoDePaquete, indice
  * y este bloque es para el papel.
  */
 export function pintarMedidor(contenedor: HTMLElement, resultado: Resultado, vozDe: (paquete: string) => Voz, indice: Indice, nombreDelGenero: string): void {
-  contenedor.replaceChildren();
+  // El título de la sección 2 del informe, solo en papel (10.4, Tanda 4).
+  contenedor.replaceChildren(el('h2', textos.RESULTADO, 'titulo-seccion solo-impresion'));
   if (resultado.tramo === 'insuficiente') {
     const primero = resultado.paquetes[0]?.puntuacion;
     contenedor.append(el('p', textos.TEXTO_INSUFICIENTE, 'estado-tramo'), el('p', primero?.motivo ?? ''), el('p', palabrasDelTexto(resultado, nombreDelGenero), 'datos'));
@@ -595,7 +607,7 @@ export function pintarCabeceraDelInforme(
   // En papel, «Ver el detalle» no se despliega (9.2): sus cifras van aquí, las de cada paquete con escala.
   const cifras = resultado.tramo === 'insuficiente' ? [] : resultado.paquetes.filter((r) => r.banda !== null).flatMap((r) => cifrasDelPaquete(resultado, r));
   contenedor.replaceChildren(
-    el('p', textos.INFORME_DE_RADIOGRAFIA, 'titulo-informe'),
+    el('h2', textos.INFORME_DE_RADIOGRAFIA, 'titulo-seccion'),
     el('p', textos.analisisDel(fecha)),
     el('p', palabrasDelTexto(resultado, nombreDelGenero)),
     el('p', textos.paquetesDelInforme(delInforme)),
@@ -605,41 +617,77 @@ export function pintarCabeceraDelInforme(
 
 /**
  * La lista de señales del informe, solo para el papel (9.1): una entrada por
- * regla (informe.ts) con su nombre, su familia y su paquete, sus señales, su
- * explicación y su sugerencia. Con «texto insuficiente» no hay señales, y la
- * lista no se pinta. `direccion` es la de la página (location.href): con ella
- * se escribe absoluto el enlace a la ficha.
+ * regla (informe.ts). Con «texto insuficiente» no hay señales, y la lista no se
+ * pinta. `direccion` es la de la página (location.href): con ella se escribe
+ * absoluto el enlace a la ficha.
+ * Desde el 10.4 (Tanda 4; DISEÑO §6.5, el modelo y la decisión de Antonio en la
+ * parada 3), la sección 6 del informe: su título; cada entrada, con su nombre
+ * (enlazado a su ficha, cuya dirección escribe el papel detrás; la de un
+ * paquete propio, sin ficha, con su id), su frase en claro, su familia y su
+ * paquete, si solo avisa, sus señales y «Qué hacer»; y al final, en cuerpo
+ * menor, «¿Por qué lo miramos?» con la explicación de cada una y las reglas de
+ * contexto (las estadísticas informativas), enteras, con la suya. El informe no
+ * pierde nada de lo de antes: cambia el sitio de las explicaciones, y
+ * «Sugerencia» pasa a «Qué hacer», como en la tarjeta y en la ficha.
  */
 export function pintarSenalesDelInforme(contenedor: HTMLElement, resultado: Resultado, texto: string, indice: Indice, base: string, direccion: string): void {
   const entradas = resultado.tramo === 'insuficiente' ? [] : entradasDelInforme(resultado, texto, indice);
   contenedor.replaceChildren();
   contenedor.hidden = entradas.length === 0;
   if (entradas.length === 0) return;
-  contenedor.append(el('h3', textos.SENALES_DEL_INFORME));
-  for (const e of entradas) {
+  const genero = generoEnCalle(resultado.genero).conArticulo;
+  const entradaDe = (e: EntradaDelInforme, conExplicacion: boolean): HTMLElement => {
     const propia = indice.propios.has(e.paquete);
-    const titulo = el('h4');
+    const titulo = el('h3');
     if (propia) {
-      titulo.append(e.nombre);
+      titulo.append(e.nombre, ` (${e.reglaId})`);
     } else {
       const enlace = el('a', e.nombre);
       enlace.href = new URL(urlDeRegla(base, e.reglaId), direccion).href;
       titulo.append(enlace);
     }
-    titulo.append(` (${e.reglaId})`);
     const entrada = el('article', undefined, 'entrada-informe');
+    entrada.dataset['regla'] = e.reglaId;
     entrada.append(titulo);
     // La frase en claro, primera línea de la entrada (9.2).
     if (e.regla?.enClaro !== undefined) entrada.append(el('p', e.regla.enClaro, 'en-claro'));
     entrada.append(el('p', `${e.familia} · ${e.paquete}`, 'id-regla'));
     if (e.informativa) entrada.append(el('p', textos.INFORMATIVA));
     if (e.n > 0) entrada.append(el('p', textos.senalesDeLaRegla(e.n, e.fragmentos, e.resto)));
-    const genero = generoEnCalle(resultado.genero).conArticulo;
     for (const s of e.delTextoEntero) entrada.append(el('p', textos.senalDelTextoEntero(lineaDelTextoEntero(s, genero, e.informativa, e.regla))));
-    if (e.regla !== undefined) entrada.append(campo(textos.EXPLICACION, e.regla.explicacion), campo(textos.SUGERENCIA, e.regla.sugerencia));
+    if (e.regla !== undefined) {
+      if (conExplicacion) entrada.append(campo(textos.EXPLICACION, e.regla.explicacion));
+      entrada.append(campo(textos.QUE_HACER, e.regla.sugerencia));
+    }
     if (propia) entrada.append(el('p', textos.REGLA_PROPIA_SIN_FICHA));
-    contenedor.append(entrada);
+    return entrada;
+  };
+  const principales = entradas.filter((e) => !e.deContexto);
+  const deContexto = entradas.filter((e) => e.deContexto);
+  contenedor.append(el('h2', textos.SENALES_DEL_INFORME, 'titulo-seccion'), ...principales.map((e) => entradaDe(e, false)));
+  const anexo = el('div', undefined, 'anexo-informe');
+  const explicadas = principales.filter((e) => e.regla !== undefined);
+  if (explicadas.length > 0) anexo.append(el('h3', textos.POR_QUE_LO_MIRAMOS));
+  for (const e of explicadas) {
+    const explicacion = el('p', undefined, 'explicacion-informe');
+    explicacion.dataset['regla'] = e.reglaId;
+    explicacion.append(el('strong', `${e.nombre}: `), e.regla!.explicacion);
+    anexo.append(explicacion);
   }
+  if (deContexto.length > 0) anexo.append(el('h3', textos.LO_QUE_SE_NOTA), ...deContexto.map((e) => entradaDe(e, true)));
+  if (anexo.childElementCount > 0) contenedor.append(anexo);
+}
+
+/**
+ * Los números de las secciones del informe (10.4, Tanda 4; DISEÑO §6.5): los
+ * títulos que salen en papel, en el orden del papel (null, los que no salen),
+ * numerados de 1 en adelante en data-numero, que la hoja de impresión escribe
+ * delante de cada uno (estilos/informe.css: no con contadores de CSS, que
+ * siguen el orden del documento).
+ */
+export function numerarSecciones(titulos: readonly (HTMLElement | null)[]): void {
+  let n = 0;
+  for (const titulo of titulos) if (titulo !== null) titulo.dataset['numero'] = String(++n);
 }
 
 /** Una línea de una lista: texto y nodos (el enlace de la regla). */
@@ -783,7 +831,8 @@ export function pintarDesglose(
     if (avisos !== null) detalle.append(avisos);
     return detalle;
   };
-  contenedor.replaceChildren();
+  // El título de la sección 5 del informe, solo en papel (10.4, Tanda 4).
+  contenedor.replaceChildren(el('h2', textos.DESGLOSE, 'titulo-seccion solo-impresion'));
   const principal = resultado.paquetes.find((x) => x.banda !== null);
   for (const r of principal === undefined ? resultado.paquetes : [principal, ...resultado.paquetes.filter((x) => x !== principal)]) {
     const cabecera = paquetes[resultado.paquetes.indexOf(r)]!.cabecera;

@@ -22,10 +22,21 @@
  *   2. Page.printToPDF (preferCSSPageSize, sin fondos, como el navegador por
  *      defecto): empieza por %PDF-, tiene de 2 a 20 páginas por /Type /Page
  *      (las mismas que /Count) y su MediaBox es A4.
- *   5. Desde el 10.4 (Tanda 4; docs/BITACORA.md, 2026-10-05: impreso desde el
- *      escritorio, el PDF perdía su final, y el 2 daba verde porque solo
- *      contaba páginas): el texto del PDF (pdf.ts), desde 1280 y desde 390,
- *      acaba con la nota de autoría.
+ *   Desde el 10.4 (Tanda 4; DISEÑO §6.5, el modelo y las decisiones de Antonio
+ *   en la parada 3), el informe por secciones numeradas: en el 3, con texto
+ *   insuficiente, la 1, la 2 y la nota con el 3; en el 1, las siete, con su
+ *   número delante del título; la sigla de la clave, delante del nombre de la
+ *   familia; cada señal, con su nombre en un <h3> (su id, en data-regla) y
+ *   «Qué hacer»; la explicación de cada una, al final, en «¿Por qué lo
+ *   miramos?», y las seis de contexto, enteras y con la suya, detrás, todo en
+ *   cuerpo menor (9,5 pt).
+ *   5. El PDF, página a página (su texto, con pdf.ts), desde 1280 y desde 390:
+ *      cada página lleva abajo «n / N» con N el total de verdad; la sección 4
+ *      y la 6 empiezan página (su título es lo primero de una página que no es
+ *      la primera); ninguna señal se parte (su nombre y su «Qué hacer», en la
+ *      misma página); y el PDF acaba con la nota de autoría, acompañada en su
+ *      página (docs/BITACORA.md, 2026-10-05: impreso desde el escritorio, el
+ *      PDF perdía su final, y el 2 daba verde porque solo contaba páginas).
  *   4. La red: cero peticiones después de la carga inicial y ningún intento
  *      bloqueado por la CSP, también al emular la impresión e imprimir.
  *
@@ -57,6 +68,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import * as textos from '../src/textos.ts';
 import { motorDelNavegador, paquetesIncluidos, TEXTO_DE_COMBINACION_REAL } from './apoyo.ts';
+import { nombreDeRegla } from '../src/pantalla/humanizar.ts';
 import { abrirAnalizadorConTestigos, ANCHO_ASENTADO, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
 import { textoDeLasPaginas } from './pdf.ts';
 
@@ -97,6 +109,13 @@ describe('el informe en Chrome, sobre astro preview', () => {
     }
   }
 
+  /** Con la impresión ya emulada: el número que el papel escribe delante de cada título de sección que sale, y de la nota del pie. */
+  async function numerosEnPapel(): Promise<Record<string, string>> {
+    return p().evaluar(
+      `Object.fromEntries([...document.querySelectorAll('.titulo-seccion, .pie-informe')].filter((t) => t.checkVisibility()).map((t) => [t.textContent, getComputedStyle(t, '::before').content]))`,
+    );
+  }
+
   /** El PDF que da Chrome desde ese ancho, como texto: por página, sus líneas de arriba abajo (pdf.ts). */
   async function pdfDesde(ancho: number): Promise<string[][]> {
     await p().cdp('Emulation.setDeviceMetricsOverride', { width: ancho, height: 900, deviceScaleFactor: 1, mobile: ancho < 769 });
@@ -135,6 +154,13 @@ describe('el informe en Chrome, sobre astro preview', () => {
       '#senales-informe': false,
     });
     assert.ok((await p().evaluar<string>(`document.getElementById('medidor').textContent`)).includes(textos.TEXTO_INSUFICIENTE));
+    // Desde el 10.4 (Tanda 4): las secciones que salen, numeradas seguidas; la nota cierra con el 3.
+    await p().cdp('Emulation.setEmulatedMedia', { media: 'print' });
+    try {
+      assert.deepEqual(await numerosEnPapel(), { [textos.INFORME_DE_RADIOGRAFIA]: '"1. "', [textos.RESULTADO]: '"2. "', [textos.NOTA_DE_AUTORIA]: '"3. "' });
+    } finally {
+      await p().cdp('Emulation.setEmulatedMedia', { media: '' });
+    }
   });
 
   test('1 · bajo media print: ni el formulario ni la navegación ni el panel; el informe entero, con siglas, clave, lista y pie', async () => {
@@ -182,7 +208,8 @@ describe('el informe en Chrome, sobre astro preview', () => {
       '.pie-informe': true,
     });
 
-    const cabecera = await p().evaluar<string[]>(`[...document.querySelectorAll('#cabecera-informe p')].map((x) => x.textContent)`);
+    // Desde el 10.4 (Tanda 4), el título del informe es el <h2> de su sección 1.
+    const cabecera = await p().evaluar<string[]>(`[...document.querySelectorAll('#cabecera-informe > *')].map((x) => x.textContent)`);
     const versiones = paquetesIncluidos().map((x) => textos.paqueteDelInforme(x.cabecera.nombre, x.cabecera.version, false));
     assert.equal(cabecera[0], textos.INFORME_DE_RADIOGRAFIA);
     assert.match(cabecera[1] ?? '', /^Análisis del \d{1,2} de [a-z]+ de \d{4} a las \d{1,2}:\d{2}$/, 'la fecha y la hora del análisis');
@@ -197,29 +224,57 @@ describe('el informe en Chrome, sobre astro preview', () => {
       );
       assert.ok(siglas.length > 0, 'ningún subrayado');
       assert.deepEqual(siglas.filter((x) => x.siglas === '' || x.despues !== `" [${x.siglas}]"`), [], 'tramos sin su sigla en papel');
+      // Desde el 10.4 (Tanda 4), la sigla va delante del nombre de la familia, detrás de la muestra de su línea.
       const clave = await p().evaluar<{ sigla: string; antes: string }[]>(
-        `[...document.querySelectorAll('#leyenda li')].map((li) => ({ sigla: li.dataset.sigla, antes: getComputedStyle(li, '::before').content }))`,
+        `[...document.querySelectorAll('#leyenda .etiqueta-familia')].map((e) => ({ sigla: e.dataset.sigla, antes: getComputedStyle(e, '::before').content }))`,
       );
       assert.ok(clave.length > 0, 'la clave, vacía');
       assert.deepEqual(clave.filter((x) => x.sigla === '' || x.antes !== `"[${x.sigla}] "`), [], 'líneas de la clave sin su sigla');
 
-      const entradas = await p().evaluar<{ id: string; corte: string; ficha: string | null; tras: string | null; texto: string; claro: string | null }[]>(`[...document.querySelectorAll('#senales-informe .entrada-informe')].map((e) => {
-        const a = e.querySelector('h4 a');
-        return { id: /\\(([^()]+)\\)$/.exec(e.querySelector('h4').textContent)?.[1] ?? '', corte: getComputedStyle(e).breakInside, ficha: a?.getAttribute('href') ?? null, tras: a ? getComputedStyle(a, '::after').content : null, texto: e.textContent, claro: e.querySelector('h4 + p.en-claro')?.textContent ?? null };
+      // Desde el 10.4 (Tanda 4), el nombre de cada entrada va en un <h3> y su id, en data-regla (la dirección de la ficha ya lo lleva).
+      const entradas = await p().evaluar<{ id: string; corte: string; ficha: string | null; tras: string | null; texto: string; claro: string | null; alFinal: boolean }[]>(`[...document.querySelectorAll('#senales-informe .entrada-informe')].map((e) => {
+        const a = e.querySelector('h3 a');
+        return { id: e.dataset.regla, corte: getComputedStyle(e).breakInside, ficha: a?.getAttribute('href') ?? null, tras: a ? getComputedStyle(a, '::after').content : null, texto: e.textContent, claro: e.querySelector('h3 + p.en-claro')?.textContent ?? null, alFinal: e.closest('.anexo-informe') !== null };
       })`);
+      const explicaciones = await p().evaluar<Record<string, string>>(
+        `Object.fromEntries([...document.querySelectorAll('#senales-informe .anexo-informe > .explicacion-informe')].map((e) => [e.dataset.regla, e.textContent]))`,
+      );
       const { analizar: analizarEnNode } = await motorDelNavegador();
       const r = analizarEnNode(TEXTO_DE_COMBINACION_REAL, paquetesIncluidos(), { genero: 'general' });
       const conSenal = [...new Set([...r.senales, ...r.senalesTexto, ...r.contexto].map((s) => s.reglaId))].sort();
       assert.deepEqual(entradas.map((e) => e.id).sort(), conSenal, 'una entrada por regla con señales');
       const url = sesion!.url;
-      const claros = new Map(paquetesIncluidos().flatMap((x) => x.reglas).map((x) => [x.id, x.enClaro]));
+      const reglas = new Map(paquetesIncluidos().flatMap((x) => x.reglas).map((x) => [x.id, x]));
+      const deContexto = new Set(r.contexto.map((s) => s.reglaId));
+      assert.equal(deContexto.size, 6, 'las seis reglas de contexto (las estadísticas informativas)');
       for (const e of entradas) {
-        assert.equal(e.claro, claros.get(e.id), `${e.id}: la frase en claro, primera línea de su entrada`);
+        const regla = reglas.get(e.id)!;
+        assert.equal(e.claro, regla.enClaro, `${e.id}: la frase en claro, primera línea de su entrada`);
         assert.equal(e.corte, 'avoid', `${e.id}: break-inside`);
         assert.equal(e.ficha, `${url}reglas/${e.id}/`, `${e.id}: la dirección absoluta de su ficha`);
         assert.equal(e.tras, `" (${url}reglas/${e.id}/)"`, `${e.id}: la dirección, escrita en papel`);
-        assert.ok(e.texto.includes(textos.EXPLICACION) && e.texto.includes(textos.SUGERENCIA), `${e.id}: sin explicación o sin sugerencia`);
+        // Desde el 10.4 (Tanda 4; DISEÑO §6.5): «Qué hacer» en cada entrada; la explicación de cada una, al final, en «¿Por qué lo
+        // miramos?»; y las de contexto, enteras y con la suya, también al final. Ninguna se queda sin explicación ni sin sugerencia.
+        assert.ok(e.texto.includes(`${textos.QUE_HACER}: ${regla.sugerencia}`), `${e.id}: sin «Qué hacer»`);
+        assert.equal(e.alFinal, deContexto.has(e.id), `${e.id}: al final, las de contexto y solo ellas`);
+        if (deContexto.has(e.id)) assert.ok(e.texto.includes(`${textos.EXPLICACION}: ${regla.explicacion}`), `${e.id}: sin su explicación`);
+        else assert.equal(explicaciones[e.id], `${nombreDeRegla(e.id, regla)}: ${regla.explicacion}`, `${e.id}: su explicación, al final`);
       }
+      assert.deepEqual(
+        await p().evaluar(`[...document.querySelectorAll('.anexo-informe > h3')].map((h) => h.textContent).concat(getComputedStyle(document.querySelector('.anexo-informe')).fontSize)`),
+        [textos.POR_QUE_LO_MIRAMOS, textos.LO_QUE_SE_NOTA, '12.6667px'],
+        'el final, en cuerpo menor (9,5 pt)',
+      );
+      // Las siete secciones, numeradas en el orden del papel.
+      assert.deepEqual(await numerosEnPapel(), {
+        [textos.INFORME_DE_RADIOGRAFIA]: '"1. "',
+        [textos.RESULTADO]: '"2. "',
+        [textos.FAMILIAS]: '"3. "',
+        [textos.TU_TEXTO_ANALIZADO]: '"4. "',
+        [textos.DESGLOSE]: '"5. "',
+        [textos.SENALES_DEL_INFORME]: '"6. "',
+        [textos.NOTA_DE_AUTORIA]: '"7. "',
+      });
     } finally {
       await p().cdp('Emulation.setEmulatedMedia', { media: '' });
     }
@@ -244,13 +299,36 @@ describe('el informe en Chrome, sobre astro preview', () => {
     assert.ok(Math.abs(Number(caja[1]) - A4.ancho) < 0.5 && Math.abs(Number(caja[2]) - A4.alto) < 0.5, `MediaBox ${caja[1]} × ${caja[2]}, y A4 es ${A4.ancho} × ${A4.alto}`);
   });
 
-  test('5 · el PDF, desde 1280 y desde 390, acaba con la nota de autoría', async (t) => {
+  test('5 · el PDF, página a página, desde 1280 y desde 390: el número de cada página, la 4 y la 6 empiezan página, ninguna señal se parte y el final está, con la nota acompañada', async (t) => {
     await arrancar();
+    const entradas = await p().evaluar<{ id: string; nombre: string; queHacer: string }[]>(`[...document.querySelectorAll('#senales-informe .entrada-informe')].map((e) => ({
+      id: e.dataset.regla,
+      nombre: e.querySelector('h3').textContent,
+      queHacer: [...e.querySelectorAll('p')].find((x) => x.textContent.startsWith(${JSON.stringify(`${textos.QUE_HACER}: `)}))?.textContent.slice(0, 40) ?? '',
+    }))`);
+    assert.ok(entradas.length > 10, `${entradas.length} entradas en las señales`);
     try {
       for (const ancho of [1280, 390]) {
         const paginas = await pdfDesde(ancho);
-        t.diagnostic(`desde ${ancho}: ${paginas.length} páginas; la última acaba en «${paginas.at(-1)?.at(-1)}»`);
-        assert.equal(paginas.at(-1)?.at(-1), textos.NOTA_DE_AUTORIA, `desde ${ancho}: la nota, al final del PDF`);
+        const n = paginas.length;
+        t.diagnostic(`desde ${ancho}: ${n} páginas; la última acaba en «${paginas.at(-1)?.at(-2)}»`);
+        // El número de cada página, abajo: «n / N», con N el total de verdad.
+        assert.deepEqual(paginas.map((l) => l.at(-1)), paginas.map((_, i) => `${i + 1} / ${n}`), `desde ${ancho}: el número de cada página`);
+        // La 4 y la 6 empiezan página: su título es lo primero de una página que no es la primera.
+        for (const titulo of [`4. ${textos.TU_TEXTO_ANALIZADO}`, `6. ${textos.SENALES_DEL_INFORME}`]) {
+          const donde = paginas.findIndex((l) => l.includes(titulo));
+          assert.ok(donde > 0 && paginas[donde]![0] === titulo, `desde ${ancho}: «${titulo}» en la página ${donde + 1}, que empieza por «${paginas[donde]?.[0]}»`);
+        }
+        // Ninguna señal se parte: su nombre (con la dirección de su ficha detrás) y su «Qué hacer», en la misma página.
+        const partidas = entradas.filter((e) => {
+          const nombre = paginas.findIndex((l) => l.some((x) => x.startsWith(`${e.nombre} (`)));
+          return nombre < 0 || !paginas[nombre]!.some((x) => x.startsWith(e.queHacer));
+        });
+        assert.deepEqual(partidas.map((e) => e.id), [], `desde ${ancho}: señales partidas entre dos páginas (o que no están)`);
+        // El final está: la nota de autoría, la última línea, y no sola en su página.
+        const ultima = paginas.at(-1)!;
+        assert.equal(ultima.at(-2), `7. ${textos.NOTA_DE_AUTORIA}`, `desde ${ancho}: la nota, al final del PDF`);
+        assert.ok(ultima.length > 2, `desde ${ancho}: la nota, acompañada en su página`);
       }
     } finally {
       await p().cdp('Emulation.setDeviceMetricsOverride', { width: 1280, height: 900, deviceScaleFactor: 1, mobile: false });
