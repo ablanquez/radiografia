@@ -14,6 +14,21 @@
 
 ---
 
+## [2026-10-05] 🔴 ABIERTA — En el papel, la sección 5 («Desglose») arranca al pie de una página y se parte; el juez de fidelidad del papel no lo ve
+
+**Categoría:** jueces web / impresión
+**Síntoma:** en el PDF de Antonio (docs/informes/Informe002.pdf, Chrome con «Predeterminado»), «5. Desglose» en la página 2 con línea base en 768 y el resto en la 3. En el PDF del juez (combinacion-real, Page.printToPDF desde 1280 y desde 390): «p2 y 872: «5. Desglose», tras «objetivos.» (y 831)»; la página 2 acaba en «Importancia inflada: 1 vez · 3,08 puntos» (y 1041), la 3 empieza por «Estadística: 0» y la 4 lleva una sola línea («Símbolo de moneda antepuesto: 1 vez · 3,», y 92) antes de «6. Las señales…» en la 5. En el marco «Informe / A4» medido, informe.s5.titulo está arriba de su página: `{"pagina":3,"arriba":75.58,"base":92.58}` (el paginador del modelo, Informe.tsx `paginar`, no parte bloques, y la sección 5 entera es uno).
+**⭐ Qué dio verde mientras el fallo estaba vivo:** web/jueces/papel.spec.ts, el juez de fidelidad del papel, ejecutado en el clon de trabajo de HEAD e7bf911 (la web, igual que 7425712) antes de tocar nada, salida en scratchpad c108/papel-head.txt:
+`✔ 2 · desde 1280: A4, el número de cada página como el del marco, nada fuera del área, y la primera línea de las páginas 1, 4 y 6 donde en el marco (636.0119ms)`
+`✔ 3 · desde 1280: cada pieza del marco en su línea del PDF, con su letra y el aire de la línea de antes (609.2691ms)`
+`✔ 2 · desde 390: …` y `✔ 3 · desde 390: …` iguales; `ℹ tests 8` `ℹ pass 8` `ℹ fail 0`. La pieza del juez: ``{ clave: 'informe.s5.titulo', linea: (x) => x === `5. ${textos.DESGLOSE}` }`` (sin «antes»). En la verificación en clon limpio de 7425712, web 229/229.
+**Cómo se cazó:** usuario (Antonio, al imprimir con «Predeterminado» en la parada 4 bis)
+**Causa raíz:** ⏳ PENDIENTE
+**Arreglo aplicado:** ⏳ PENDIENTE
+**Commit:** ⏳ PENDIENTE
+**Ley que sale de aquí:** SIN LEY TODAVÍA
+**Traza:** web/jueces/papel.spec.ts (test 2: las páginas que empiezan por un título; PIEZAS, informe.s5.titulo), web/src/estilos/informe.css (#desglose), docs/figma/medidas-modelo.json (informe.s5.titulo); desde a18bac8 (Tanda 4 bis).
+
 ## [2026-10-05] ✅ CERRADA — Impreso desde el escritorio, el PDF del informe pierde su final y la nota de autoría
 
 **Categoría:** jueces web / impresión
