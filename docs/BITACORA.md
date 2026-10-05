@@ -14,6 +14,24 @@
 
 ---
 
+## [2026-10-05] 🔴 ABIERTA — Impreso desde el escritorio, el PDF del informe pierde su final y la nota de autoría
+
+**Categoría:** jueces web / impresión
+**Síntoma:** con combinacion-real impreso desde 1280 (Page.printToPDF), el PDF de 46e5962 acaba en «Mes o día con mayúscula», sin «Símbolo de moneda antepuesto» ni «RadiografIA analiza estilo; no demuestra autoría.». En fb0ec23, 76ef465 y 51aadab acaba con la nota (13 páginas cada uno, clon limpio). Desde 390 sale entero. En el árbol de la Tanda 4, el pie nuevo dice «10 / 11» en la última página de un PDF de 10.
+**⭐ Qué dio verde mientras el fallo estaba vivo:** jueces/impresion.spec.ts, en la verificación en clon limpio de 46e5962 (web 217/217):
+```
+  ✔ 1 · bajo media print: ni el formulario ni la navegación ni el panel; el informe entero, con siglas, clave, lista y pie (920.0268ms)
+  ✔ 2 · Page.printToPDF: un PDF que empieza por %PDF-, de 2 a 20 páginas, en A4 (654.6862ms)
+  ℹ PDF: 553183 bytes, 13 páginas, MediaBox 594.95996 × 841.91998
+```
+Y el final de ese PDF (clon de 46e5962, PyMuPDF): `Sugerencia: Escríbelo con minúscula: «el lunes 3 de marzo».` como última línea; en fb0ec23, `RadiografIA analiza estilo; no demuestra autoría.`
+**Cómo se cazó:** ojo humano (las páginas del PDF de la Tanda 4 pasadas a imagen para compararlas con el modelo: «10 / 11» en la última)
+**Causa raíz:** ⏳ PENDIENTE
+**Arreglo aplicado:** ⏳ PENDIENTE
+**Commit:** ⏳ PENDIENTE
+**Ley que sale de aquí:** SIN LEY TODAVÍA
+**Traza:** web/src/pantalla/pestanas.ts (ajustar, con matchMedia de 768 y de 1023; 46e5962), web/jueces/impresion.spec.ts (tests 1 y 2), Page.printToPDF desde 1280.
+
 ## [2026-10-05] ✅ CERRADA — Un fichero de jueces que termina sus tests no sale si su `astro preview` se queda vivo
 
 **Categoría:** arnés de los jueces (Chrome por CDP)
