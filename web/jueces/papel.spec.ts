@@ -56,6 +56,18 @@
  *      diálogo de verdad (Chrome 154 con ventana, por CDP, el 05/10): con
  *      «Predeterminado», como el marco; con «Ninguno», el texto en x = 68 y la
  *      primera línea de las páginas 1 y 2 en y = 92.
+ *   7. La hoja de impresión, regla a regla, en el DOM con la impresión
+ *      emulada (PISADAS): cada declaración de dentro de un `@media print`
+ *      gana en alguno de los elementos a los que se aplica, desde 1280 o
+ *      desde 390, con resultado o sin él (lo que se pisa a propósito gana en
+ *      alguno de los tres: el relleno de «Ninguno» del 6 solo pisa al de
+ *      body cuando la ventana es más ancha que el área de la página, y la
+ *      hoja sin resultado solo se oculta con resultado). Lo que el marco no
+ *      mide no lo juzga el 3; esto mira que la hoja haga lo que dice. Desde
+ *      la parada 4 ter del 9.3: `.anexo-informe { margin-top: 14pt }` la
+ *      pisaba la regla que quita los márgenes de la pantalla, que lleva id, y
+ *      el papel salía sin ese aire con los jueces en verde
+ *      (docs/BITACORA.md, 2026-10-05).
  *
  * Tolerancia, la del encargo: ±1 px en posiciones y distancias (Chrome deja
  * cada línea base en un píxel entero: ±0,5 en cada una), ±0,05 px en el
@@ -93,6 +105,66 @@ import { TEXTO_DE_COMBINACION_REAL } from './apoyo.ts';
 import { abrirAnalizadorConTestigos, ANCHO_ASENTADO, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
 import { cerca, comoElMarco, letra, medidasDelMarco, PAGINA, PIEZAS, piezasComoElMarco } from './marco-a4.ts';
 import { lineasDeLasPaginas, type PaginaDelPdf } from './pdf.ts';
+
+/**
+ * Para el 7, se evalúa en la página con la impresión emulada: cada declaración de las reglas de la hoja de impresión (las de
+ * dentro de un `@media print`), selector a selector, con si gana en alguno de los elementos a los que se aplica. Gana si el
+ * valor calculado del elemento es el mismo que con esa declaración puesta en su atributo style, que le gana a cualquier
+ * regla sin !important. Los selectores que no se aplican a ningún elemento no salen. No se miran: las de !important, las
+ * que se escriben con var() en un atajo (sus propiedades no tienen valor que leer en el CSSOM), los pseudoelementos
+ * (querySelectorAll no los da) ni @page.
+ */
+const PISADAS = `(() => {
+  const reglas = [];
+  const recoger = (lista, enPapel) => {
+    for (const r of lista) {
+      if (r instanceof CSSMediaRule) recoger(r.cssRules, enPapel || r.media.mediaText === 'print');
+      else if (r instanceof CSSStyleRule && enPapel) reglas.push(r);
+    }
+  };
+  for (const hoja of document.styleSheets) recoger(hoja.cssRules, false);
+  const vistas = [];
+  for (const regla of reglas) {
+    const selectores = [];
+    let hondo = 0;
+    let desde = 0;
+    const st = regla.selectorText;
+    for (let i = 0; i < st.length; i++) {
+      if (st[i] === '(') hondo++;
+      else if (st[i] === ')') hondo--;
+      else if (st[i] === ',' && hondo === 0) {
+        selectores.push(st.slice(desde, i).trim());
+        desde = i + 1;
+      }
+    }
+    selectores.push(st.slice(desde).trim());
+    for (const selector of selectores) {
+      let elementos;
+      try {
+        elementos = [...document.querySelectorAll(selector)];
+      } catch {
+        continue;
+      }
+      if (elementos.length === 0) continue;
+      for (const propiedad of regla.style) {
+        const valor = regla.style.getPropertyValue(propiedad);
+        if (valor === '' || regla.style.getPropertyPriority(propiedad) === 'important') continue;
+        const gana = elementos.some((el) => {
+          const antes = getComputedStyle(el).getPropertyValue(propiedad);
+          const suyo = el.style.getPropertyValue(propiedad);
+          const prioridad = el.style.getPropertyPriority(propiedad);
+          el.style.setProperty(propiedad, valor);
+          const conLaSuya = getComputedStyle(el).getPropertyValue(propiedad);
+          if (suyo === '') el.style.removeProperty(propiedad);
+          else el.style.setProperty(propiedad, suyo, prioridad);
+          return antes === conLaSuya;
+        });
+        vistas.push([selector.replace(/\\s+/g, ' ') + ' { ' + propiedad + ': ' + valor + ' }', gana]);
+      }
+    }
+  }
+  return vistas;
+})()`;
 
 describe('el papel, como el marco «Informe / A4» del modelo', () => {
   let sesion: AnalizadorConTestigos | undefined;
@@ -298,5 +370,32 @@ describe('el papel, como el marco «Informe / A4» del modelo', () => {
     } finally {
       await p().cdp('Emulation.setEmulatedMedia', { media: '' });
     }
+  });
+
+  test('7 · la hoja de impresión: cada declaración gana en algún elemento al que se aplica, desde 1280 o desde 390, con resultado o sin él', async (t) => {
+    await preparar();
+    /** Cada declaración de la hoja, con la impresión emulada, y si ha ganado en algún elemento (las que no se aplican a ninguno, fuera). */
+    const vistas = new Map<string, boolean>();
+    const leer = async (que: string, antes = '', despues = ''): Promise<void> => {
+      await p().cdp('Emulation.setEmulatedMedia', { media: 'print' });
+      try {
+        const leidas = await p().evaluar<[string, boolean][]>(`(() => { ${antes}; try { return ${PISADAS}; } finally { ${despues}; } })()`);
+        t.diagnostic(`${que}: ${leidas.length} declaraciones, ${leidas.filter(([, gana]) => !gana).length} pisadas`);
+        for (const [clave, gana] of leidas) vistas.set(clave, (vistas.get(clave) ?? false) || gana);
+      } finally {
+        await p().cdp('Emulation.setEmulatedMedia', { media: '' });
+      }
+    };
+    try {
+      await leer('desde 1280, con resultado');
+      await anchoDe(390);
+      await leer('desde 390, con resultado');
+      await anchoDe(1280);
+      await leer('desde 1280, sin resultado', `document.getElementById('resultado').hidden = true`, `document.getElementById('resultado').hidden = false`);
+    } finally {
+      await anchoDe(1280);
+    }
+    assert.ok(vistas.size > 100, `${vistas.size} declaraciones leídas`);
+    assert.deepEqual([...vistas].filter(([, gana]) => !gana).map(([clave]) => clave), [], 'declaraciones de la hoja de impresión que no ganan en ningún elemento');
   });
 });

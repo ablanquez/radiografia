@@ -48,6 +48,13 @@
  *  11. La red: después de la carga inicial, solo el trozo de JS de pdfmake y
  *      las cinco caras del PDF, del mismo origen y cada una una vez; ninguna
  *      violación de la CSP.
+ *  12. Lo que el marco no mide, como el papel: el aire de «¿Por qué lo
+ *      miramos?» y de «Lo que se nota en el conjunto» al final de la sección 6,
+ *      desde la línea de antes y hasta la de después, ±1 px, donde ninguno de
+ *      los dos PDF empieza o acaba página. Va antes del 11, que cuenta la red
+ *      de todos. Desde la parada 4 ter: el papel perdía los 14 pt de antes del
+ *      anexo, y la página 8 del PDF empezaba por otra línea que la del papel,
+ *      con los jueces en verde (docs/BITACORA.md, 2026-10-05).
  *
  * [DOC] https://chromedevtools.github.io/devtools-protocol/tot/Browser/#method-setDownloadBehavior
  *    — «allow»: «Allow all downloads»; downloadPath; eventsEnabled: «Whether
@@ -67,7 +74,7 @@ import { EJEMPLOS } from '../src/pantalla/ejemplos.ts';
 import { FUENTES_DEL_PDF, METRICAS } from '../src/pantalla/informe-pdf.ts';
 import { EJEMPLOS_PUBLICOS, PAQUETES_DE_PRUEBA, TEXTO_DE_COMBINACION_REAL, TEXTO_DE_TRES_PAQUETES } from './apoyo.ts';
 import { abrirAnalizadorConTestigos, ANCHO_ASENTADO, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
-import { comoElMarco, familiaDe, medidasDelMarco, piezasComoElMarco } from './marco-a4.ts';
+import { cerca, comoElMarco, familiaDe, medidasDelMarco, piezasComoElMarco } from './marco-a4.ts';
 import { fuentesDelPdf, lineasDeLasPaginas, type PaginaDelPdf } from './pdf.ts';
 import { caraDe, tablasDeWoff } from './woff2.ts';
 
@@ -99,6 +106,25 @@ function diferenciaDeTexto(paginas: readonly PaginaDelPdf[], papel: readonly Pag
   const donde = k < 0 ? Math.min(delPdf.length, delPapel.length) : k;
   const contexto = (texto: string[]): string => texto.slice(Math.max(0, donde - 40), donde + 40).join('');
   return `en el carácter ${donde}, «${contexto(delPdf)}» en el PDF y «${contexto(delPapel)}» en el papel (${delPdf.length} y ${delPapel.length} caracteres)`;
+}
+
+/**
+ * El aire de una línea de la sección 6 (la primera con ese texto desde «6. …»; «Lo que se nota en el conjunto» es también un
+ * apartado del desglose): de la línea base de la de antes a la suya, y de la suya a la de después, en px; null donde empieza
+ * o acaba página. Null si no está.
+ */
+function aireEnLaSeccion6(paginas: readonly PaginaDelPdf[], texto: string): { antes: number | null; despues: number | null } | null {
+  const seccion = `6. ${textos.SENALES_DEL_INFORME}`;
+  const desde = paginas.findIndex((pg) => pg.lineas[0]?.texto === seccion);
+  for (const pg of paginas.slice(Math.max(desde, 0))) {
+    // Sin la última línea de cada página, que es su número.
+    const lineas = pg.lineas.slice(0, -1);
+    const k = lineas.findIndex((l) => l.texto === texto);
+    if (desde < 0 || k < 0) continue;
+    const [antes, suya, despues] = [lineas[k - 1], lineas[k]!, lineas[k + 1]];
+    return { antes: antes === undefined ? null : suya.y - antes.y, despues: despues === undefined ? null : despues.y - suya.y };
+  }
+  return null;
 }
 
 /** Lo que se descargó y lo que había en la página: el PDF, el del papel desde el mismo ancho y las señales del informe. */
@@ -346,6 +372,27 @@ describe('el PDF de «Descargar informe»', () => {
     assert.ok(todo.includes(textos.REGLA_PROPIA_SIN_FICHA), 'las señales del propio dicen que no tienen ficha');
     assert.equal(diferenciaDeTexto(paginas, papel), null, 'el texto del PDF frente al del papel');
     assert.deepEqual(partidas(paginas, lista), [], 'señales partidas entre dos páginas (o que no están)');
+  });
+
+  test('12 · lo que el marco no mide, como el papel: el aire de «¿Por qué lo miramos?» y de «Lo que se nota en el conjunto» al final de la sección 6, desde la línea de antes y hasta la de después', async (t) => {
+    const diferencias: string[] = [];
+    const ver = (a: { antes: number | null; despues: number | null }): string => `${a.antes?.toFixed(2) ?? '(empieza página)'} antes y ${a.despues?.toFixed(2) ?? '(acaba página)'} después`;
+    for (const [ancho, d] of await combinacionReal()) {
+      for (const titulo of [textos.POR_QUE_LO_MIRAMOS, textos.LO_QUE_SE_NOTA]) {
+        const [enPdf, enPapel] = [aireEnLaSeccion6(d.paginas, titulo), aireEnLaSeccion6(d.papel, titulo)];
+        if (enPdf === null || enPapel === null) {
+          diferencias.push(`desde ${ancho}: «${titulo}» no está en la sección 6 ${enPdf === null ? 'del PDF' : 'del papel'}`);
+          continue;
+        }
+        t.diagnostic(`desde ${ancho}, «${titulo}»: en el PDF, ${ver(enPdf)}; en el papel, ${ver(enPapel)}`);
+        // Donde uno de los dos empieza o acaba página no hay aire que comparar: los cortes pueden ser otros (el 5).
+        for (const lado of ['antes', 'despues'] as const) {
+          const [x, y] = [enPdf[lado], enPapel[lado]];
+          if (x !== null && y !== null && !cerca(x, y)) diferencias.push(`desde ${ancho}, «${titulo}», ${lado}: ${x.toFixed(2)} en el PDF y ${y.toFixed(2)} en el papel`);
+        }
+      }
+    }
+    assert.deepEqual(diferencias, []);
   });
 
   test('11 · la red: después de la carga inicial, solo el trozo de pdfmake y las cinco caras, del mismo origen y una vez cada una; y ninguna violación de la CSP', async (t) => {

@@ -534,7 +534,7 @@
   }
 
   #senales-informe > .entrada-informe + .entrada-informe,
-  .anexo-informe {
+  #senales-informe > .anexo-informe {
     margin-top: 14pt;
   }
 
