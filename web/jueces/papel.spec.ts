@@ -31,6 +31,15 @@
  *      el espacio entre secciones, párrafos y señales.
  *   4. La clave: la muestra de la línea de cada familia, de 32 × 10, centrada
  *      con su texto, con el estilo y el grosor del marco, en tinta.
+ *   5. Sin resultado (va antes de analizar; DISEÑO §6.5, decisión de Antonio
+ *      del 05/10): imprimir no se bloquea, y sale una sola página A4 con el
+ *      icono (c) a 96 px, «RadiografIA» y el mensaje de que no hay análisis,
+ *      con la letra del DISEÑO, y nada más (ni número ni cabecera o pie de
+ *      Chrome); los tres, centrados (±2 px) a lo ancho y el bloque a lo alto
+ *      del área de la página. Las cajas, en el DOM con la impresión emulada y
+ *      la ventana del tamaño del área (que es el papel lo dice la línea base
+ *      del nombre, la misma en el DOM y en el PDF); y sin red: el icono es el
+ *      de la cabecera, ya cargado.
  *
  * Tolerancia, la del encargo: ±1 px en posiciones y distancias (Chrome deja
  * cada línea base en un píxel entero: ±0,5 en cada una), ±0,05 px en el
@@ -78,7 +87,7 @@ interface Pieza {
   tamano: string;
   peso: string;
   interlineado: string;
-  color: string;
+  color?: string;
   ancho: number;
   alto: number;
   relleno: string[];
@@ -140,6 +149,58 @@ describe('el papel, como el marco «Informe / A4» del modelo', () => {
 
   after(async () => {
     await sesion?.cerrar();
+  });
+
+  test('5 · sin resultado (antes de analizar): una sola página A4 con el icono, el nombre y el mensaje, centrados, y nada más', async (t) => {
+    sesion = await (arranque ??= abrirAnalizadorConTestigos());
+    assert.equal(analizado, false, 'este juez va antes de analizar');
+    const m = medidas();
+    await anchoDe(1280);
+    // El PDF: una página, con sus dos líneas y nada más (ni el número ni la cabecera o el pie de Chrome), cada una con la letra del
+    // DISEÑO y centrada a lo ancho de la página.
+    const { data } = (await p().cdp('Page.printToPDF', { preferCSSPageSize: true, printBackground: false, displayHeaderFooter: true })) as { data: string };
+    const paginas = lineasDeLasPaginas(Buffer.from(data, 'base64'));
+    assert.equal(paginas.length, 1, 'sin resultado, una sola página');
+    const [nombre, mensaje] = paginas[0]!.lineas;
+    assert.deepEqual(paginas[0]!.lineas.map((l) => l.texto), ['RadiografIA', textos.SIN_INFORME], 'el nombre y el mensaje, y nada más');
+    const diferencias = [...letra('nombre', nombre!, 0, m['informe.sin-resultado.nombre']!), ...letra('mensaje', mensaje!, 0, m['informe.sin-resultado.mensaje']!)];
+    for (const [cual, l] of [['nombre', nombre!], ['mensaje', mensaje!]] as const) {
+      if (!cerca((l.x + l.fin) / 2, paginas[0]!.ancho / 2, 2)) diferencias.push(`${cual}: su centro en x ${((l.x + l.fin) / 2).toFixed(2)}, y el de la página ${(paginas[0]!.ancho / 2).toFixed(2)}`);
+    }
+    // El DOM, con la impresión emulada y la ventana del tamaño del área de la página (A4 menos los márgenes): las cajas del icono,
+    // el nombre y el mensaje; la del icono, de 96 × 96. Que es el papel lo dice la línea base del nombre, la misma que en el PDF.
+    const area = { ancho: Math.round(PAGINA.ancho - 2 * PAGINA.lado), alto: Math.round(PAGINA.alto - 2 * PAGINA.arriba) };
+    await p().cdp('Emulation.setDeviceMetricsOverride', { width: area.ancho, height: area.alto, deviceScaleFactor: 1, mobile: false });
+    await p().cdp('Emulation.setEmulatedMedia', { media: 'print' });
+    try {
+      const cajas = await p().evaluar<{ icono: number[]; nombre: number[]; mensaje: number[]; cargado: boolean; base: number }>(`(() => {
+        const caja = (s) => { const r = document.querySelector(s).getBoundingClientRect(); return [r.left, r.top, r.width, r.height]; };
+        const n = document.querySelector('.nombre-sin-informe');
+        const marca = document.createElement('span');
+        marca.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline';
+        n.prepend(marca);
+        const base = marca.getBoundingClientRect().bottom;
+        marca.remove();
+        const icono = document.querySelector('.icono-sin-informe');
+        return { icono: caja('.icono-sin-informe'), nombre: caja('.nombre-sin-informe'), mensaje: caja('.hoja-sin-informe .sin-informe'), cargado: icono.complete && icono.naturalWidth > 0, base };
+      })()`);
+      t.diagnostic(`área ${area.ancho} × ${area.alto}; icono ${cajas.icono.map((x) => x.toFixed(1)).join(', ')}; nombre ${cajas.nombre.map((x) => x.toFixed(1)).join(', ')}; mensaje ${cajas.mensaje.map((x) => x.toFixed(1)).join(', ')}`);
+      if (!cajas.cargado) diferencias.push('el icono no está cargado');
+      const icono = m['informe.sin-resultado.icono']!;
+      if (!cerca(cajas.icono[2]!, icono.ancho) || !cerca(cajas.icono[3]!, icono.alto)) diferencias.push(`el icono: ${cajas.icono[2]} × ${cajas.icono[3]}, y el DISEÑO ${icono.ancho} × ${icono.alto}`);
+      for (const [cual, [x, , ancho]] of Object.entries({ icono: cajas.icono, nombre: cajas.nombre, mensaje: cajas.mensaje })) {
+        if (!cerca(x! + ancho! / 2, area.ancho / 2, 2)) diferencias.push(`${cual}: su centro en x ${(x! + ancho! / 2).toFixed(2)}, y el del área ${area.ancho / 2}`);
+      }
+      const centro = (cajas.icono[1]! + cajas.mensaje[1]! + cajas.mensaje[3]!) / 2;
+      if (!cerca(centro, area.alto / 2, 2)) diferencias.push(`el bloque: su centro en y ${centro.toFixed(2)}, y el del área ${area.alto / 2}`);
+      if (!cerca(cajas.base + PAGINA.arriba, nombre!.y)) diferencias.push(`el nombre: línea base en ${(cajas.base + PAGINA.arriba).toFixed(2)} en el DOM y en ${nombre!.y} en el PDF`);
+    } finally {
+      await p().cdp('Emulation.setEmulatedMedia', { media: '' });
+      await anchoDe(1280);
+    }
+    assert.deepEqual(diferencias, []);
+    // Y nada de red al imprimir la hoja: el icono es el de la cabecera, ya cargado.
+    assert.deepEqual(sesion.despues, [], 'peticiones después de la carga inicial');
   });
 
   test('1 · el fichero trae las piezas del marco que se juzgan, con su página', () => {
@@ -286,7 +347,8 @@ function letra(nombre: string, linea: LineaDelPdf, tramo: number, marco: Pieza):
   if (familiaDe(t.familia) !== marco.familia) fuera.push(`${nombre}: familia ${t.familia}, en el marco ${marco.familia}`);
   if (t.peso !== pesoPintado(marco.familia, Number(marco.peso))) fuera.push(`${nombre}: peso ${t.peso}, en el marco ${marco.peso}`);
   if (!cerca(t.tamano, px(marco.tamano), 0.05)) fuera.push(`${nombre}: cuerpo ${t.tamano}, en el marco ${marco.tamano}`);
-  if (t.color !== marco.color) fuera.push(`${nombre}: color ${t.color}, en el marco ${marco.color}`);
+  // El color, si la pieza lo dice (las del DISEÑO, solo lo que el DISEÑO fija).
+  if (marco.color !== undefined && t.color !== marco.color) fuera.push(`${nombre}: color ${t.color}, en el marco ${marco.color}`);
   return fuera;
 }
 

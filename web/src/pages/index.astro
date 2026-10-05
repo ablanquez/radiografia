@@ -74,9 +74,14 @@
  * La hoja de impresión (encargo 9.1, b; firmada en la parada 1): el informe
  *    es esta misma página en papel, sin librerías. Hasta la Tanda 3 del 10.4,
  *    en este <style>; desde la Tanda 4 (DISEÑO §6.5 y el modelo), en
- *    estilos/informe.css, con sus porqués.
+ *    estilos/informe.css, con sus porqués. Sin resultado (desde la Tanda 4
+ *    bis; DISEÑO §6.5, decisión de Antonio del 05/10), la hoja de imprimir
+ *    lleva el icono (c), el nombre y el mensaje de que no hay análisis: el
+ *    icono es el de la cabecera, la misma imagen, que ya está cargada.
  */
 import { urlDelCatalogo } from '../catalogo/catalogo.ts';
+import { conBarraFinal } from '../pantalla/cargar.ts';
+import { ICONO_DE_CABECERA } from '../estilos/recursos.ts';
 import {
   ANALIZAR_OTRO_TEXTO,
   AQUI_VERAS_EL_RESULTADO,
@@ -113,6 +118,7 @@ import '../estilos/pestanas.css';
 import '../estilos/informe.css';
 
 const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
+const icono = `${conBarraFinal(import.meta.env.BASE_URL)}${ICONO_DE_CABECERA}`;
 ---
 
 <html lang="es">
@@ -195,7 +201,11 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
           <div id="senales-informe" class="solo-impresion" hidden></div>
           <p id="pie-informe" class="solo-impresion pie-informe">{NOTA_DE_AUTORIA}</p>
         </section>
-        <p class="solo-impresion sin-informe">{SIN_INFORME}</p>
+        <div class="solo-impresion hoja-sin-informe">
+          <img class="icono-sin-informe" src={icono} alt="" width="96" height="96" />
+          <p class="nombre-sin-informe">RadiografIA</p>
+          <p class="sin-informe">{SIN_INFORME}</p>
+        </div>
       </div>
     </main>
     <div id="tarjeta" class="tarjeta-regla" role="dialog" aria-labelledby="titulo-tarjeta" hidden></div>

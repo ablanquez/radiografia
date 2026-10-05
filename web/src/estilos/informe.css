@@ -13,8 +13,9 @@
  * en el DOM desde que se analiza, oculto en pantalla. Sin beforeprint ni
  * afterprint: en la parada 1 del 9.1, Emulation.setEmulatedMedia('print') de
  * Chrome no los disparaba y Page.printToPDF sí, y con ellos el juez emulado y
- * el PDF habrían visto cosas distintas. Si no hay resultado, sale el párrafo
- * «No hay análisis que imprimir».
+ * el PDF habrían visto cosas distintas. Si no hay resultado, imprimir no se
+ * bloquea: sale una sola página con el icono, el nombre y «No hay análisis que
+ * imprimir…», centrados (desde la Tanda 4 bis; antes, solo el párrafo).
  *
  * En papel no van la cabecera ni el pie de la página (el modelo no los lleva:
  * el nombre va en el título de la sección 1), el formulario, el cuadro
@@ -151,6 +152,13 @@
   }
 }
 
+/* La hoja sin resultado, una sola página sin número (DISEÑO §6.5: «nada más en la hoja»). */
+@page sin-informe {
+  @bottom-right {
+    content: none;
+  }
+}
+
 @media print {
   html {
     font-family: var(--tipografia-font-family-texto);
@@ -249,7 +257,7 @@
     order: 8;
   }
 
-  .sin-informe {
+  .hoja-sin-informe {
     order: 9;
   }
 
@@ -257,8 +265,47 @@
     display: block;
   }
 
-  #resultado:not([hidden]) ~ .sin-informe {
+  #resultado:not([hidden]) ~ .hoja-sin-informe {
     display: none;
+  }
+
+  /*
+   * Sin resultado (DISEÑO §6.5, decisión de Antonio del 05/10): una sola página, en su página con nombre (sin número), con el
+   * icono (c) a 96 px, «RadiografIA» en Atkinson 700 a 24 pt y el mensaje en Literata 12 pt e ink-2, centrados en horizontal
+   * y en vertical en el área de la página (100vh: al imprimir, el alto del área de la página). [PROPIO] 12 pt del icono al
+   * nombre y 6 pt del nombre al mensaje.
+   */
+  .solo-impresion.hoja-sin-informe:not([hidden]) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    page: sin-informe;
+    text-align: center;
+  }
+
+  .icono-sin-informe {
+    width: 96px;
+    height: 96px;
+    margin-bottom: 12pt;
+  }
+
+  .nombre-sin-informe {
+    margin: 0 0 6pt;
+    font-family: var(--tipografia-font-family-ui);
+    font-size: 24pt;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--color-ink);
+  }
+
+  .hoja-sin-informe .sin-informe {
+    margin: 0;
+    font-family: var(--tipografia-font-family-texto);
+    font-size: 12pt;
+    line-height: 1.45;
+    color: var(--color-ink-2);
   }
 
   .detalle::details-content {
