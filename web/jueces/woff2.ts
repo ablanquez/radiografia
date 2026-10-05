@@ -26,8 +26,29 @@
  *    (numGroups y SequentialMapGroup: startCharCode, endCharCode,
  *    startGlyphID); «character codes that do not correspond to any glyph in
  *    the font should be mapped to glyph index 0».
+ *
+ * Desde el 9.3 (las caras del PDF de «Descargar informe», en WOFF 1.0: con
+ * WOFF2 no las incrusta pdfkit), también las tablas de un WOFF 1.0, y de una
+ * fuente, sus nombres, su peso y si es itálica: lo que el juez de las fuentes
+ * compara entre la cara del PDF y la de la web, y el del PDF entre los nombres
+ * del PDF y las caras.
+ * [DOC] https://www.w3.org/TR/WOFF/ — cabecera de 44 bytes (signature
+ *    0x774F4646 «wOFF», flavor, length, numTables UInt16, reserved,
+ *    totalSfntSize, majorVersion, minorVersion, metaOffset, metaLength,
+ *    metaOrigLength, privOffset, privLength); cada TableDirectoryEntry, de 20
+ *    bytes: tag, offset, compLength, origLength y origChecksum; «If
+ *    compLength is less than origLength, the data is compressed […] using
+ *    the "compress2" function of zlib», y si son iguales, va sin comprimir.
+ * [DOC] https://learn.microsoft.com/en-us/typography/opentype/spec/name —
+ *    version, count, storageOffset y NameRecord (platformID, encodingID,
+ *    languageID, nameID, length, stringOffset); Windows (3) en UTF-16BE.
+ *    nameID 1 la familia, 2 el estilo, 6 el nombre PostScript, 16 la
+ *    familia tipográfica.
+ * [DOC] https://learn.microsoft.com/en-us/typography/opentype/spec/os2 —
+ *    usWeightClass (UInt16 en el byte 4) y fsSelection (UInt16 en el byte
+ *    62; el bit 0, ITALIC).
  */
-import { brotliDecompressSync } from 'node:zlib';
+import { brotliDecompressSync, inflateSync } from 'node:zlib';
 
 const ETIQUETAS = [
   'cmap', 'head', 'hhea', 'hmtx', 'maxp', 'name', 'OS/2', 'post', 'cvt ', 'fpgm', 'glyf', 'loca', 'prep', 'CFF ', 'VORG', 'EBDT',
@@ -129,4 +150,49 @@ export function codigosDeCmap(cmap: Buffer): Set<number> {
     throw new Error(`subtabla cmap de formato ${formato}: este lector solo lee los formatos 4 y 12`);
   }
   return codigos;
+}
+
+/** Las tablas de un WOFF 1.0, descomprimidas (desde el 9.3). */
+export function tablasDeWoff(fichero: Buffer): Map<string, Buffer> {
+  if (fichero.readUInt32BE(0) !== 0x774f4646) throw new Error('no es un WOFF 1.0: la firma no es «wOFF»');
+  const numTables = fichero.readUInt16BE(12);
+  const tablas = new Map<string, Buffer>();
+  for (let i = 0; i < numTables; i++) {
+    const e = 44 + i * 20;
+    const etiqueta = fichero.toString('latin1', e, e + 4);
+    const [desde, comprimida, original] = [fichero.readUInt32BE(e + 4), fichero.readUInt32BE(e + 8), fichero.readUInt32BE(e + 12)];
+    const datos = fichero.subarray(desde, desde + comprimida);
+    const tabla = comprimida < original ? inflateSync(datos) : datos;
+    if (tabla.length !== original) throw new Error(`la tabla ${etiqueta} mide ${tabla.length} bytes y el directorio dice ${original}`);
+    tablas.set(etiqueta, tabla);
+  }
+  return tablas;
+}
+
+/** Los nombres de la tabla name, por nameID, de sus registros de Windows (3) en inglés de EE. UU. (0x409), en UTF-16BE. */
+export function nombresDe(name: Buffer): Map<number, string> {
+  const count = name.readUInt16BE(2);
+  const almacen = name.readUInt16BE(4);
+  const nombres = new Map<number, string>();
+  for (let i = 0; i < count; i++) {
+    const r = 6 + i * 12;
+    const [plataforma, , idioma, id, largo, desde] = [0, 2, 4, 6, 8, 10].map((k) => name.readUInt16BE(r + k)) as [number, number, number, number, number, number];
+    if (plataforma !== 3 || idioma !== 0x409) continue;
+    const bytes = Buffer.from(name.subarray(almacen + desde, almacen + desde + largo));
+    nombres.set(id, bytes.swap16().toString('utf16le'));
+  }
+  return nombres;
+}
+
+/** La cara de una fuente: su nombre PostScript (name 6), su familia (la tipográfica, name 16, o la de name 1), su peso (OS/2) y si es itálica (OS/2 fsSelection, bit 0). */
+export function caraDe(tablas: Map<string, Buffer>): { postscript: string; familia: string; peso: number; italica: boolean; variable: boolean } {
+  const nombres = nombresDe(tablas.get('name')!);
+  const os2 = tablas.get('OS/2')!;
+  return {
+    postscript: nombres.get(6) ?? '',
+    familia: nombres.get(16) ?? nombres.get(1) ?? '',
+    peso: os2.readUInt16BE(4),
+    italica: (os2.readUInt16BE(62) & 1) === 1,
+    variable: tablas.has('fvar'),
+  };
 }

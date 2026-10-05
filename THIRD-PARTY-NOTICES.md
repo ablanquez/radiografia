@@ -301,6 +301,11 @@ completa (origen, versiones, comandos, cifras de la decisión) está en
 | `literata-400.woff2` | Literata 400 | `Literata[opsz,wght].ttf`, versión 3.103, sha256 `b41138c9373112f32abb589cc22e8674b06ed4048b0c513be922bdd26f274440` | The Literata Project Authors | **OFL-1.1** | peso fijado en 400; eje óptico acotado de 7-72 a 12-20; recorte; WOFF2 | `247ae9904f2b541c7c2f2b3cbb9fec3ec4ff1f38bbad256e799f3775a85e96fe` |
 | `literata-400-italica.woff2` | Literata 400 itálica | `Literata-Italic[opsz,wght].ttf`, versión 3.103, sha256 `d483dfaeba9cbf4ce71d32a52ee65df82f7e35b15fff8d1011cdb242d1fcd465` | The Literata Project Authors | **OFL-1.1** | peso fijado en 400; eje óptico acotado de 7-72 a 12-20; recorte; WOFF2 | `07c13facde53915a4b94ecc0cbe514d31aa14aa8cc1cb824d15fcaa7d140575d` |
 | `literata-600.woff2` | Literata 600 | `Literata[opsz,wght].ttf`, versión 3.103, sha256 `b41138c9373112f32abb589cc22e8674b06ed4048b0c513be922bdd26f274440` | The Literata Project Authors | **OFL-1.1** | peso fijado en 600; eje óptico acotado de 7-72 a 12-20; recorte; WOFF2 | `b4b5b88df63606d3f22622109b6ba1596ad14449d8f93e821dd4dda8d5965858` |
+| `atkinson-hyperlegible-next-400.woff` | Atkinson Hyperlegible Next 400, para el PDF | `atkinson-hyperlegible-next.woff2` (arriba) | The Atkinson Hyperlegible Next Project Authors | **OFL-1.1** | peso fijado en 400; WOFF 1.0 | `b7733690f3a941340ddc8ab8cf83b25eb8274931d85dc0cfbdaeb0776a05ea28` |
+| `atkinson-hyperlegible-next-700.woff` | Atkinson Hyperlegible Next 700, para el PDF | `atkinson-hyperlegible-next.woff2` (arriba) | The Atkinson Hyperlegible Next Project Authors | **OFL-1.1** | peso fijado en 700; WOFF 1.0 | `560aeebc3f10a9e7568836dd4dc212a7d4afc1a68c9f162f832dd912285eda0e` |
+| `literata-400.woff` | Literata 400, para el PDF | `literata-400.woff2` (arriba) | The Literata Project Authors | **OFL-1.1** | eje óptico fijado en 12, el de por defecto; WOFF 1.0 | `e91ebeefec4205c46336496e618cedacc30d424699f73be6d86b7f2aa1bcc5b3` |
+| `literata-400-italica.woff` | Literata 400 itálica, para el PDF | `literata-400-italica.woff2` (arriba) | The Literata Project Authors | **OFL-1.1** | eje óptico fijado en 12, el de por defecto; WOFF 1.0 | `7f51b815b68e63350bf4683195f63705611a85fea14bce1d1d1d94be09d12657` |
+| `literata-600.woff` | Literata 600, para el PDF | `literata-600.woff2` (arriba) | The Literata Project Authors | **OFL-1.1** | eje óptico fijado en 12, el de por defecto; WOFF 1.0 | `6b6315c245ef4850b1a350bebd19749e1010451acc87f01f1aca98bb09f37161` |
 
 - **Licencia**: SIL Open Font License 1.1, con su texto entero en
   [`web/public/fuentes/literata/OFL.txt`](web/public/fuentes/literata/OFL.txt) y
@@ -311,9 +316,22 @@ completa (origen, versiones, comandos, cifras de la decisión) está en
 - **Reserved Font Name: ninguna de las dos lo declara** (su línea de copyright no lleva la
   cláusula). El recorte es una versión modificada (OFL-FAQ 2.6) y, sin RFN, puede conservar el
   nombre (FAQ 5.6): las familias no se renombran.
-- **Metadatos**: cada woff2 conserva su tabla `name` entera, con el copyright (0), la licencia
+- **Metadatos**: cada woff2 y cada woff conserva en su tabla `name` el copyright (0), la licencia
   (13) y su URL (14), como pide la FAQ 2.4.
+- **Las caras del PDF** (encargo 9.3, decisión de Antonio del 05/10): el botón «Descargar informe»
+  genera el PDF en el navegador con pdfmake, que incrusta las fuentes con pdfkit y fontkit. Son
+  las cinco `.woff` de la tabla, WOFF 1.0 sacados de los woff2 de la web, con el mismo recorte;
+  estáticas, porque pdfmake no aplica los ejes de una variable (Atkinson, en 400 y en 700;
+  Literata, con su eje óptico fijado en el de por defecto, 12, que es el que pintaría igualmente).
+  **No en WOFF2: fontkit no los incrusta.** Es su issue
+  [#201](https://github.com/foliojs/fontkit/issues/201), abierto: «Subset of woff2 ttf fonts with
+  transformed glyf/loca table does not work»; en pdfmake, el
+  [#2734](https://github.com/bpampuch/pdfmake/issues/2734), cerrado como de terceros: «It needs to
+  be fixed in fontkit». Medido el 05/10 con pdfmake 0.3.11 y los WOFF2 de Literata y Atkinson de
+  Fontsource: «RangeError: Offset is outside the bounds of the DataView». La ficha, en
+  [`docs/figma/fuentes.md`](docs/figma/fuentes.md).
 - **Herramienta**: fontTools 4.66.1 (MIT), fuera del repositorio; no es dependencia del proyecto.
 - **Viaja al navegador**: sí. Atkinson y Literata 400 se precargan; la itálica y la 600, cuando
-  algo las pide.
-- Una fila por woff2 y un woff2 por fila, con su huella: lo vigila `web/jueces/fuentes.spec.ts`.
+  algo las pide. Las cinco del PDF, solo al pulsar «Descargar informe».
+- Una fila por fichero (woff2 y woff) y un fichero por fila, con su huella: lo vigila
+  `web/jueces/fuentes.spec.ts`.

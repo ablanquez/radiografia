@@ -143,6 +143,67 @@ Decisión:
 Primera visita al analizador: Atkinson + Literata 400 + Literata 400
 itálica, 113.828 bytes. Las cuatro caras en disco: 160.252 bytes.
 
+## Para el PDF (encargo 9.3)
+
+El botón «Descargar informe» genera el PDF en el navegador con pdfmake 0.3.11
+(decisión de Antonio del 05/10), que incrusta las fuentes con pdfkit y
+fontkit. Usa cinco caras, firmadas por Antonio: Literata 400, 400 itálica y
+600 y Atkinson 400 y 700, en **WOFF 1.0**, sacadas de los woff2 de la web, con
+el mismo recorte. Viven al lado de los woff2, con su huella en
+`THIRD-PARTY-NOTICES.md` § 2.4, y se piden al mismo origen solo al pulsar el
+botón.
+
+- **No en WOFF2: fontkit no los incrusta.** [DOC]
+  https://github.com/foliojs/fontkit/issues/201 (abierto): «Subset of woff2
+  ttf fonts with transformed glyf/loca table does not work»; «when
+  subsetting, the original untransformed, loca table is used to get the glyf
+  table offset leading to extraneous or empty glyph data». En pdfmake,
+  https://github.com/bpampuch/pdfmake/issues/2734, cerrado como de terceros:
+  «It needs to be fixed in fontkit». Medido el 05/10 con pdfmake 0.3.11 y los
+  WOFF2 de Literata y Atkinson de Fontsource: «RangeError: Offset is outside
+  the bounds of the DataView»; con WOFF 1.0 y con TTF, bien.
+- **Estáticas.** pdfmake no aplica los ejes de una fuente variable: medido el
+  05/10 con la Literata variable declarada como normal y como negrita, el
+  texto sale igual en las dos (la instancia por defecto). Por eso Atkinson va
+  en dos instancias, 400 y 700, y Literata con su eje óptico fijado en el de
+  por defecto, 12: es la instancia que pdfkit pintaría con el eje dentro, con
+  los mismos glifos, avances y contornos (comparados con fontTools), y pesa
+  un 32 % menos (las tres, 179.384 bytes con el eje y 122.000 sin él). En
+  papel, Chrome pone el eje óptico en el tamaño en px (14,67 a 11 pt): las
+  letras del PDF son las de 12.
+- **Los nombres** son los de la web, porque la tabla `name` es la misma:
+  `Literata-12pt`, `LiterataItalic-12ptItalic` y `Literata-12ptSemiBold`; las
+  de Atkinson, con `--update-name-table`, `AtkinsonHyperlegibleNext-Regular`
+  y `AtkinsonHyperlegibleNext-Bold`. Es el nombre que el PDF escribe de cada
+  fuente incrustada: lo leen los jueces.
+
+| Fichero | Bytes | Sale de |
+|---|---|---|
+| `literata/literata-400.woff` | 38.944 | `literata-400.woff2`, opsz fijado en 12 |
+| `literata/literata-400-italica.woff` | 39.980 | `literata-400-italica.woff2`, opsz fijado en 12 |
+| `literata/literata-600.woff` | 43.076 | `literata-600.woff2`, opsz fijado en 12 |
+| `atkinson-hyperlegible-next/atkinson-hyperlegible-next-400.woff` | 19.948 | `atkinson-hyperlegible-next.woff2`, wght fijado en 400 |
+| `atkinson-hyperlegible-next/atkinson-hyperlegible-next-700.woff` | 20.772 | `atkinson-hyperlegible-next.woff2`, wght fijado en 700 |
+
+Las cinco, 162.720 bytes. Las órdenes, desde la raíz del repositorio y con la
+misma herramienta de arriba; con `--no-recalc-timestamp`, dos pasadas dan los
+mismos bytes (comprobado el 05/10):
+
+```
+fonttools varLib.instancer --no-recalc-timestamp web/public/fuentes/literata/literata-400.woff2 opsz=drop -o literata-400.ttf
+fonttools ttLib --no-recalc-timestamp --flavor woff -o web/public/fuentes/literata/literata-400.woff literata-400.ttf
+(y lo mismo para literata-400-italica y literata-600)
+fonttools varLib.instancer --no-recalc-timestamp --update-name-table web/public/fuentes/atkinson-hyperlegible-next/atkinson-hyperlegible-next.woff2 wght=400 -o atkinson-400.ttf
+fonttools ttLib --no-recalc-timestamp --flavor woff -o web/public/fuentes/atkinson-hyperlegible-next/atkinson-hyperlegible-next-400.woff atkinson-400.ttf
+(y lo mismo con wght=700)
+```
+
+- [DOC] https://fonttools.readthedocs.io/en/latest/varLib/instancer.html —
+  «AXIS=drop»: el eje, en su valor por defecto, y fuera; `--update-name-table`
+  pone los nombres de estilo con la tabla STAT.
+- [DOC] https://www.w3.org/TR/WOFF/ — WOFF 1.0: cada tabla comprimida con
+  zlib.
+
 ## Cómo se sirven
 
 - `web/src/estilos/fuentes.css`: un `@font-face` por cara, `font-display:
