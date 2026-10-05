@@ -109,23 +109,29 @@ que es otro paquete.
 | Discurso | #882255 | 8,73 | 8,01 | continuo 3 px | D |
 | Sintaxis | #D55E00 | 3,87 | 3,55 | discontinuo 2 px | S |
 | Estadística | #332288 | 12,17 | 11,17 | doble 1 px | E |
-| Puntuación y formato | #009E73 | 3,42 | 3,14 | punteado 3 px | P |
+| Puntuación y formato | #009988 | 3,55 | 3,26 | punteado 3 px | P |
 | Canal (informativa) | #117733 | 5,66 | 5,19 | punteado 1 px, gris si se desactiva | C |
 | Gramática (Español correcto) | #AA4499 | 5,26 | 4,83 | ondulado 2 px | G |
 | Ortotipografía (Español correcto) | #CC6677 | 3,66 | 3,36 | doble discontinuo | O |
 
 Reglas: el tono **nunca** va solo (1.4.1): cada tramo lleva estilo de
 línea propio y, en papel y al tocar, su sigla; cada tarjeta lleva el
-nombre en texto. **Cambio de Antonio (04/10, al ver el modelo)**: el
+nombre en texto. **Cambio del 05/10 (tanda 5, simulador de daltonismo)**:
+Puntuación y formato pasa de #009E73 a **#009988** (Tol vibrant) porque en
+deuteranopía quedaba a 4,02 de CIEDE2000 de Ortotipografía (Machado 2009
+sobre RGB lineal); con el nuevo, el peor par de la paleta queda por
+encima de 6 en los tres tipos; el acta lista los pares por debajo de 10 y
+qué los distingue (estilo de línea y sigla). Los dos de menor contraste
+(Puntuación 3,55 y Ortotipografía 3,66) no se usan como texto, solo como
+línea. **Cambio de Antonio (04/10, al ver el modelo)**: el
 subrayado solo le parece poco visible; el tramo lleva además un **fondo
 suave tipo rotulador** (color-mix 14 % del color de la familia sobre
 blanco; la tinta sigue siendo ink, contraste > 12:1) y la línea con su
 estilo debajo. El fondo es lo que se ve; la línea y la sigla son lo que
-distingue (solapes, daltonismo, papel). En papel el fondo no cuenta. Los dos de menor contraste (Puntuación 3,42 y
-Ortotipografía 3,66) no se usan como texto, solo como línea. Paquetes
-propios: el color del hueco libre o el gris, siempre discontinuo (8.1).
-Pendiente antes de fijar: pasar la paleta por un simulador de daltonismo
-(Coblis o Sim Daltonism) y anotar el resultado en el acta de contraste.
+distingue (solapes, daltonismo, papel). En papel el fondo no cuenta.
+Paquetes propios: el color del hueco libre o el gris, siempre discontinuo
+(8.1). El simulador de daltonismo ya está en el juez (tanda 5) y su
+resultado va en el acta.
 
 ## 5 · Tipografía
 
@@ -279,7 +285,9 @@ ink-2): en papel por `@page @bottom-right` (donde el navegador no tenga
 cajas de margen, no sale); en el PDF por el pie de pdfmake. Sin color
 imprescindible: la sigla y el estilo de línea distinguen las familias. En
 el PDF, la doble discontinua de Ortotipografía se dibuja como discontinua
-fina (pdfmake no la tiene) y la sigla [O] la distingue. Si en el diálogo
+fina (pdfmake no la tiene) y la sigla [O] la distingue; un tramo con varias
+familias lleva solo la línea de la primera (pdfmake no superpone
+decoraciones) y todas sus siglas (05/10). Si en el diálogo
 de Chrome se elige «Márgenes: Ninguno», la hoja pone los márgenes por
 dentro y el número de página desaparece; el README lo advierte.
 
