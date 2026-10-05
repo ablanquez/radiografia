@@ -1,8 +1,8 @@
 # PLAN — 005 RadiografIA
 
-Estado a 03/10/2026: **FIRMADO por Antonio el 29/09/2026**, publicado en
+Estado a 05/10/2026: **FIRMADO por Antonio el 29/09/2026**, publicado en
 `73ef265`. **PUNTOS 1, 2 y 3 CERRADOS el 29/09; 4 el 30/09; 5 el 01/10; 6,
-7 y 8 el 02/10; 9 y la ampliación 9.2 el 03/10.** Se tacha lo hecho y
+7 y 8 el 02/10; 9 y 9.2 el 03/10; 9.3 y 10 el 05/10.** Se tacha lo hecho y
 lo nuevo se añade en su punto, y solo por decisión de Antonio.
 
 Origen: BRAINSTORMING (1), 28-29/09/2026, y las decisiones de Antonio
@@ -740,11 +740,11 @@ Astro, sin diseño todavía: funciona, no luce.
       (juez de Chrome lo vigila); catálogo e informe con la frase en
       claro. Visto por Antonio con los tres textos (03/10). Pendiente para
       el DISEÑO: dónde y cómo destaca la etiqueta; pestañas
-- [ ] **9.3 — Descarga directa del PDF (decisión de Antonio del 05/10, al
-      ver el informe en el calco)**: «No quiero imprimir, quiero guardar en
+- [x] **9.3 — Descarga directa del PDF (decisión de Antonio del 05/10, al
+      ver el informe en el calco; HECHA el 05/10)**: «No quiero imprimir, quiero guardar en
       PDF». El botón genera el PDF en el navegador con pdfmake (MIT; con
       pdfkit), cargado bajo demanda al pulsar, con Literata y Atkinson
-      incrustadas (subconjuntos TTF), calcado al marco «Informe · A4» del
+      incrustadas (subconjuntos WOFF v1: fontkit no lee WOFF2), calcado al marco «Informe · A4» del
       modelo (secciones, márgenes 20/18, tamaños, clave con muestra de
       línea, siglas, «n / N»); juez que compara el texto del PDF con el
       resultado y con el informe de papel; NOTICES; nada sale del
@@ -817,8 +817,25 @@ checklist fija, en escritorio y a 390 px, sin capturas (derechos), en
       Design por MCP; la copia como capas queda opcional)
 - [x] Logo: candidatos SVG, Antonio elige, `PROCEDENCIA.md`, favicon
       cableado
-- [ ] Calco por tandas al Astro existente, cada una vista en Chrome
-- [ ] Contraste AA verificado con acta. **PUNTO 10 CERRADO**
+- [x] Calco por tandas al Astro existente, cada una vista en Chrome (10.4,
+      04-05/10, cinco tandas más la 4 bis y la 9.3, todas vistas por Antonio
+      en Chrome, iPhone e iPad: base (fuentes autoalojadas con subsetting,
+      tokens → CSS, icono, cabecera), analizador (dos columnas / una /
+      pestañas; pastilla, tarjetas, familias con ojo, tarjeta anclada con
+      Anterior/Siguiente, hoja inferior; `span role="button"` porque Chrome
+      fuerza `<button>` a inline-block), catálogo y ficha, informe en
+      papel calcado al marco A4 con hoja «sin resultado» y descarga
+      directa del PDF con pdfmake (9.3); juez de fidelidad contra el
+      prototipo medido por CDP; 12 bitácoras, todas cerradas)
+- [x] Contraste AA verificado con acta (05/10:
+      `docs/acta-contraste-y-accesibilidad.md`: 40 pares reales y 941
+      textos; simulador de daltonismo Machado 2009 + CIEDE2000 en el juez
+      → Puntuación y formato pasó a #009988 (el peor par queda en 6,01
+      lineal / 6,17 con gamma); jueces de 320 px, pulsación (enlaces del
+      catálogo a 44 px en móvil) y árbol de accesibilidad; huecos
+      declarados: lector de pantalla real, accesibilidad del PDF, zoom
+      200 %, forced-colors, hover, pulsación en tableta). **PUNTO 10
+      CERRADO (05/10)**
 
 ## 11 — Despliegue y cierre
 

@@ -5,16 +5,19 @@ El ejecutor reporta descubrimientos; no toca este fichero.
 
 ---
 
-## ESTADO ACTUAL — 3 de octubre de 2026
+## ESTADO ACTUAL — 5 de octubre de 2026
 
-**⭐ PUNTOS 1-9 CERRADOS (29/09-03/10) Y 9.2 «LENGUAJE DE CALLE» HECHA.
-LA V1 FUNCIONA ENTERA Y SE ENTIENDE, SIN ESTÉTICA.** Analizador con
-etiqueta y frase en claro (textos de Antonio), resumen de dos líneas,
-`enClaro` en las 50 reglas, panel reordenado y sin vocabulario del motor;
-catálogo, cargador e informe PDF al día. dist/ 973 KB. **npm test raíz:
-motor 909 (902 verde, 2 saltados, 5 todo) + web 99/99** (Chrome
-necesario); tipos limpios. Seis bitácoras, todas cerradas. **Siguiente:
-punto 10, estética, con ocho apuntes de Antonio ya en el plan.**
+**⭐ PUNTOS 1-10 CERRADOS (29/09-05/10). LA V1 ESTÁ TERMINADA; FALTA
+PUBLICARLA (11).** La web es el modelo de Figma: fuentes autoalojadas
+(Literata + Atkinson, subconjuntos), tokens DTCG → CSS, analizador en tres
+tamaños con pastilla, tarjetas, familias con ojo, tramos tipo rotulador,
+tarjeta anclada y hoja inferior, catálogo y fichas, informe en papel
+calcado al marco A4 y **descarga directa del PDF** con pdfmake (también en
+iPhone e iPad); acta de contraste y accesibilidad con simulador de
+daltonismo. **npm test raíz: motor 909 (899 verde en clon, 5 saltados, 5
+todo) + web 258/258** (Chrome necesario); tipos limpios. 12 bitácoras,
+todas cerradas. 74 commits locales pendientes de push al cerrar este
+punto. **Siguiente: punto 11, despliegue en Hostinger y release 1.0.0.**
 
 ## 1 · Identidad
 
@@ -36,6 +39,13 @@ punto 10, estética, con ocho apuntes de Antonio ya en el plan.**
   el catálogo (que se genera en build) solo por `./validacion` y
   `./validador`, para no arrastrar silabea.cjs al SSR de dev; los paquetes
   se sirven desde `public/` y se validan con el standalone al cargar.
+  **Desde el 10.4 (05/10)**: fuentes autoalojadas en `web/public/fuentes/`
+  (Literata y Atkinson Hyperlegible Next, OFL, subconjuntos woff2 para la
+  web y WOFF v1 para el PDF); tokens de `docs/figma/tokens.json` →
+  `tokens.css` por script; la única librería del navegador es **pdfmake
+  0.3.11** (MIT, con pdfkit), en un trozo aparte de 1,09 MB que solo se
+  carga al pulsar «Descargar informe», con el aviso de licencias dentro
+  del JS y 76 piezas en el NOTICES.
 - **Motor** (`motor/`, paquete npm propio, se prueba sin Astro): JSON
   Schema 2020-12; Ajv 8 (`Ajv2020`) en Node para jueces y para generar el
   validador standalone; `node --test` sobre `.ts` sin transpilar (type
@@ -65,13 +75,8 @@ antes del verde, push = despliegue, bitácora por la skill
 ## 4 · El plan
 
 `PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1, 2 y 3 (29/09), 4 (30/09),
-5 (01/10), 6, 7 y 8 (02/10), 9 y 9.2 (03/10). Abierto: el 10 (03/10:
-prospección `ux-benchmark.md`, informe del módulo, `DISEÑO-RADIOGRAFIA.md`
-firmado como punto de partida, `docs/figma/guidelines.md` y
-`docs/figma/prompts.md` listos). **Siguiente paso (04/10)**: Antonio abre
-Figma Make, pega guidelines.md, Claude Opus 5.5 + Plan mode, Prompt 0 y
-después 1→6 pantalla a pantalla; Claude lee las capas por MCP; retoques con
-Gemini 3.8 Flash; Prompt 7 tokens; Prompt 8 logo opcional.
+5 (01/10), 6, 7 y 8 (02/10), 9 y 9.2 (03/10), 9.3 y 10 (05/10). Abierto:
+el 11.
 
 ## 5 · Decisiones
 
@@ -423,7 +428,7 @@ Gemini 3.8 Flash; Prompt 7 tokens; Prompt 8 logo opcional.
   diálogo de imprimir no sirve en iPhone ni iPad y «no quiero imprimir,
   quiero guardar en PDF». Por tanto: (1) el botón «Descargar informe»
   genera y descarga el PDF en el navegador con pdfmake cargado al pulsar,
-  con las fuentes incrustadas (subconjuntos TTF), calcado al marco
+  con las fuentes incrustadas (subconjuntos WOFF v1), calcado al marco
   «Informe · A4» del modelo (nueva casilla 9.3; sustituye al «CSS +
   window.print()» del 29/09 en el alcance); (2) imprimir no se bloquea:
   sin resultado sale una página con el icono (c) y «RadiografIA»
@@ -432,9 +437,46 @@ Gemini 3.8 Flash; Prompt 7 tokens; Prompt 8 logo opcional.
   del calco se quedó en la estructura: sin márgenes, sin «n / N», clave
   con «Abc» en vez de muestra de línea, menos aire; se rehace como tanda
   4 bis con juez de fidelidad del papel); (3) Ctrl+P no se intercepta.
+- 04-05/10 — **Decisiones del calco (10.4)**: tokens.json ampliado con lo
+  que Make tenía en @theme (aviso de error, sombra, columna 34em, 360 px,
+  toque 44, sigla en círculo, impresión en pt); fuentes de google/fonts
+  sin RFN, subsetting con fontTools (Literata 955 → 44 KB), Atkinson
+  variable, eje óptico 12-20; CSP movida detrás de <meta charset> por una
+  integración de build; icono (c) a 56/48 px; `span role="button"` para
+  el tramo (Chrome fuerza `<button>` a inline-block: tres arreglos fallidos
+  hasta medirlo en el DOM); columna de resultado con scroll propio; orden
+  del documento = visual en tableta y móvil (la vista se mueve); familias
+  por paquete y alfabéticas; ojo con aria-pressed; Anterior/Siguiente;
+  paquetes propios en gris discontinuo (cambio sobre el 8.1); medidas del
+  prototipo por CDP en medidas-modelo.json con juez de fidelidad
+  (±1 px); el papel calcado al marco A4 (márgenes, «n / N» por @page,
+  clave con muestra de línea, saltos antes de 4, 5 y 6, hoja «sin
+  resultado» centrada; «Márgenes: Ninguno» en Chrome anula @page); el
+  PDF con pdfmake 0.3.11 + pdfkit, WOFF v1 (fontkit no lee WOFF2), chunk
+  de 1,09 MB cargado al pulsar, aviso de licencias dentro del JS, 76
+  piezas en el NOTICES, pageBreakBefore en vez de unbreakable (issue
+  207), tinte y línea de la primera familia en solapes; Literata 600 por
+  document.fonts.load al pintar el resultado (declarada en el juez de
+  red); Puntuación y formato a #009988 por el simulador; enlaces del
+  catálogo a 44 px en móvil; `--test-timeout` y cancelación limpia de
+  CDP si Chrome cae. Bitácoras 7-12: hoja estrecha tras abrir en
+  escritorio, dos cuelgues del arnés, el PDF perdía su final al imprimir
+  desde escritorio, la sección 5 partida, el anexo sin aire.
 
 ## 6 · Cabos abiertos
 
+- Del 10.4: el árbol de trabajo tiene `node_modules` ilegible (EPERM en
+  node_modules/astro tras el apagón del 04/10; ni borrar ni renombrar como
+  administrador; chkdsk pendiente): Claude Code trabaja en
+  F:\_clones-005\trabajo y sirve el 4400 desde F:\_clones-005\servidor;
+  los clones se borran cuando el árbol esté sano. Huecos del acta: lector
+  de pantalla real (NVDA / VoiceOver), accesibilidad del PDF descargado,
+  zoom 200 % y espaciado de texto, forced-colors, estados hover,
+  pulsación en tableta. El tokens.json viaja entero dentro del chunk de
+  pdfmake (6,7 KB de descripciones). guidelines.md de Make conserva el
+  verde antiguo de Puntuación (es lo que leyó Make). Para el 11: la CSP
+  puede pasar a cabecera HTTP y sobraría la integración; Hostinger no
+  ejecuta el CLI (Desplázame versiona dist).
 - De la 9.2: motor/src cambió también en validar.spec.ts y
   standalone.spec.ts (recuento exacto de fixtures, 42 → 44): inevitable;
   las reglas propias sin `enClaro` no la enseñan (el paquete de prueba no
