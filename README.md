@@ -562,9 +562,11 @@ Next, incrustadas.
 sitio: el trozo de JS de pdfmake (unos 1,09 MB; unos 359 KB comprimido con
 gzip) y las cinco caras del PDF (162.720 bytes, en WOFF). La página no
 engorda por ello: sin pulsar, no se pide. Con el texto de prueba de la
-combinación de los dos paquetes salen 11 páginas y unos 165 KB, en menos de
-un segundo la primera vez y en unas siete décimas las siguientes (medido en Chrome
-headless, el 05/10/2026). Mientras se prepara, el botón dice «Preparando el
+combinación de los dos paquetes salen 11 páginas y unos 165 KB, del clic a
+la descarga en algo más de un segundo la primera vez y en algo menos las
+siguientes; depende del ordenador (en el de desarrollo, en Chrome headless, el
+05/10/2026: de 1,26 a 1,39 s la primera vez y de 0,82 a 1,06 s las siguientes,
+en tres tandas de tres). Mientras se prepara, el botón dice «Preparando el
 informe…».
 
 **Cuando no hay PDF.** Con menos de 100 palabras no hay informe que
