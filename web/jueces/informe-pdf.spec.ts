@@ -39,7 +39,13 @@
  *      página (firmado: con el texto de las cinco claves, que es
  *      combinacion-real, el del marco; y aquí, además, los ejemplos).
  *   9. Ctrl+P no se intercepta: un keydown de Ctrl+P no lleva preventDefault.
- *  10. La red: después de la carga inicial, solo el trozo de JS de pdfmake y
+ *  10. Con un paquete propio (el de prueba del cargador, con el texto de los
+ *      tres paquetes): sus reglas, en el desglose con su línea, sin su ficha
+ *      completa, como en papel (la hoja solo abre los <details> de «Ver el
+ *      detalle»; el de cada regla propia sale cerrado: visto el 05/10); sus
+ *      señales, con su id detrás del nombre y diciendo que no tienen página
+ *      en el catálogo; el mismo texto que el papel; y ninguna señal partida.
+ *  11. La red: después de la carga inicial, solo el trozo de JS de pdfmake y
  *      las cinco caras del PDF, del mismo origen y cada una una vez; ninguna
  *      violación de la CSP.
  *
@@ -55,10 +61,11 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import * as textos from '../src/textos.ts';
 import { EJEMPLOS } from '../src/pantalla/ejemplos.ts';
 import { FUENTES_DEL_PDF, METRICAS } from '../src/pantalla/informe-pdf.ts';
-import { TEXTO_DE_COMBINACION_REAL } from './apoyo.ts';
+import { EJEMPLOS_PUBLICOS, PAQUETES_DE_PRUEBA, TEXTO_DE_COMBINACION_REAL, TEXTO_DE_TRES_PAQUETES } from './apoyo.ts';
 import { abrirAnalizadorConTestigos, ANCHO_ASENTADO, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
 import { comoElMarco, familiaDe, medidasDelMarco, piezasComoElMarco } from './marco-a4.ts';
 import { fuentesDelPdf, lineasDeLasPaginas, type PaginaDelPdf } from './pdf.ts';
@@ -83,6 +90,16 @@ const conCaras = (paginas: readonly PaginaDelPdf[]): PaginaDelPdf[] =>
 
 /** El texto de un PDF sin los blancos, sin la última línea de cada página (su número). */
 const sinBlancos = (paginas: readonly PaginaDelPdf[]): string => paginas.flatMap((p) => p.lineas.slice(0, -1).map((l) => l.texto)).join('').replace(/\s/g, '');
+
+/** Dónde difieren el texto del PDF y el del papel, sin los blancos y sin los números de página; null si en ninguna parte. */
+function diferenciaDeTexto(paginas: readonly PaginaDelPdf[], papel: readonly PaginaDelPdf[]): string | null {
+  const [delPdf, delPapel] = [[...sinBlancos(paginas)], [...sinBlancos(papel)]];
+  const k = delPdf.findIndex((x, i) => x !== delPapel[i]);
+  if (k < 0 && delPdf.length === delPapel.length) return null;
+  const donde = k < 0 ? Math.min(delPdf.length, delPapel.length) : k;
+  const contexto = (texto: string[]): string => texto.slice(Math.max(0, donde - 40), donde + 40).join('');
+  return `en el carácter ${donde}, «${contexto(delPdf)}» en el PDF y «${contexto(delPapel)}» en el papel (${delPdf.length} y ${delPapel.length} caracteres)`;
+}
 
 /** Lo que se descargó y lo que había en la página: el PDF, el del papel desde el mismo ancho y las señales del informe. */
 interface Descarga {
@@ -149,11 +166,15 @@ describe('el PDF de «Descargar informe»', () => {
       nombre: e.querySelector('h3').textContent,
       queHacer: [...e.querySelectorAll('p')].find((x) => x.textContent.startsWith(${JSON.stringify(`${textos.QUE_HACER}: `)}))?.textContent.slice(0, 40) ?? '',
     }))`);
-  /** Las señales partidas entre dos páginas de un PDF (o que no están): su nombre y su «Qué hacer», en páginas distintas. */
+  /**
+   * Las señales partidas entre dos páginas de un PDF (o que no están): su nombre y su «Qué hacer», en páginas distintas.
+   * El nombre, con la dirección de su ficha detrás; el de una regla de un paquete propio, que no tiene ficha, solo (su
+   * título en la página ya lleva su id).
+   */
   const partidas = (paginas: readonly PaginaDelPdf[], lista: readonly { nombre: string; queHacer: string }[]): string[] =>
     lista
       .filter((e) => {
-        const donde = paginas.findIndex((pg) => pg.lineas.some((l) => l.texto.startsWith(`${e.nombre} (`)));
+        const donde = paginas.findIndex((pg) => pg.lineas.some((l) => l.texto === e.nombre || l.texto.startsWith(`${e.nombre} (`)));
         return donde < 0 || !paginas[donde]!.lineas.some((l) => l.texto.startsWith(e.queHacer));
       })
       .map((e) => e.nombre);
@@ -246,12 +267,7 @@ describe('el PDF de «Descargar informe»', () => {
   });
 
   test('5 · su texto es el del papel, carácter a carácter sin los blancos y sin los números de página', async () => {
-    for (const [ancho, d] of await combinacionReal()) {
-      const [delPdf, delPapel] = [[...sinBlancos(d.paginas)], [...sinBlancos(d.papel)]];
-      const k = delPdf.findIndex((x, i) => x !== delPapel[i]);
-      const contexto = (texto: string[]): string => texto.slice(Math.max(0, k - 40), k + 40).join('');
-      assert.ok(k < 0 && delPdf.length === delPapel.length, `desde ${ancho}: en el carácter ${k}, «${contexto(delPdf)}» en el PDF y «${contexto(delPapel)}» en el papel (${delPdf.length} y ${delPapel.length} caracteres)`);
-    }
+    for (const [ancho, d] of await combinacionReal()) assert.equal(diferenciaDeTexto(d.paginas, d.papel), null, `desde ${ancho}`);
   });
 
   test('6 · calcado al marco «Informe / A4»: el número de cada página, la primera línea de cada sección que empieza página y cada pieza con su letra y su aire', async (t) => {
@@ -311,7 +327,28 @@ describe('el PDF de «Descargar informe»', () => {
     assert.equal(interceptado, false);
   });
 
-  test('10 · la red: después de la carga inicial, solo el trozo de pdfmake y las cinco caras, del mismo origen y una vez cada una; y ninguna violación de la CSP', async (t) => {
+  test('10 · con un paquete propio: sus reglas en el desglose y sus señales con su id y «sin página en el catálogo», el mismo texto que el papel y ninguna señal partida', async (t) => {
+    await abrir();
+    const { root } = (await p().cdp('DOM.getDocument')) as { root: { nodeId: number } };
+    const { nodeId } = (await p().cdp('DOM.querySelector', { nodeId: root.nodeId, selector: '#paquete-propio' })) as { nodeId: number };
+    await p().cdp('DOM.setFileInputFiles', { nodeId, files: [fileURLToPath(new URL(PAQUETES_DE_PRUEBA.valido, EJEMPLOS_PUBLICOS))] });
+    await p().hasta(`document.getElementById('propios').childElementCount > 0`, 'el paquete propio, cargado');
+    await analizar(TEXTO_DE_TRES_PAQUETES);
+    const lista = await senales();
+    const { pdf } = await descargar('descargar');
+    const { data } = (await p().cdp('Page.printToPDF', { preferCSSPageSize: true, printBackground: false })) as { data: string };
+    const [paginas, papel] = [lineasDeLasPaginas(pdf), lineasDeLasPaginas(Buffer.from(data, 'base64'))];
+    t.diagnostic(`${paginas.length} páginas; el papel, ${papel.length}`);
+    const propio = JSON.parse(readFileSync(new URL(PAQUETES_DE_PRUEBA.valido, EJEMPLOS_PUBLICOS), 'utf8')) as { cabecera: { nombre: string; version: string }; reglas: { id: string }[] };
+    const todo = paginas.flatMap((pg) => pg.lineas.map((l) => l.texto)).join(' ');
+    assert.ok(todo.includes(`${propio.cabecera.nombre} ${propio.cabecera.version}`), `el desglose de «${propio.cabecera.nombre}»`);
+    assert.ok(propio.reglas.some((r) => todo.includes(`(${r.id})`)), 'una señal del propio, con su id detrás del nombre');
+    assert.ok(todo.includes(textos.REGLA_PROPIA_SIN_FICHA), 'las señales del propio dicen que no tienen ficha');
+    assert.equal(diferenciaDeTexto(paginas, papel), null, 'el texto del PDF frente al del papel');
+    assert.deepEqual(partidas(paginas, lista), [], 'señales partidas entre dos páginas (o que no están)');
+  });
+
+  test('11 · la red: después de la carga inicial, solo el trozo de pdfmake y las cinco caras, del mismo origen y una vez cada una; y ninguna violación de la CSP', async (t) => {
     await abrir();
     const { despues, url } = sesion!;
     t.diagnostic(`después de la marca: ${despues.map((x) => x.url.replace(url, '/')).join(' · ') || 'nada'}`);
