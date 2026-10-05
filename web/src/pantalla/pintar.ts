@@ -92,10 +92,11 @@ import type { Paquete, Resultado } from '@radiografia/motor/navegador';
 import * as textos from '../textos.ts';
 import type { ProblemaDeCarga } from './cargar.ts';
 import { parametrosEnLlano, urlDeRegla } from '../catalogo/catalogo.ts';
-import { enOrden, type ClaveDeOrden } from '../orden.ts';
+import { enOrden } from '../orden.ts';
 import { nombreDeRegla } from './humanizar.ts';
-import { entradasDelInforme, repartirSiglas, type EntradaDelInforme } from './informe.ts';
-import { cifrasDelPaquete, detalleDelPaquete, etiquetaDelPaquete, generoEnCalle, lineaDelTextoEntero, loQueMasPesa, motivoNoMirada, motivoSinComparar, palabrasDelTexto, resumenDelPaquete, type Voz } from './lectura.ts';
+import { repartirSiglas } from './informe.ts';
+import { detalleDelPaquete, etiquetaDelPaquete, loQueMasPesa, palabrasDelTexto, resumenDelPaquete, type Voz } from './lectura.ts';
+import { cabeceraEnDatos, claveEnDatos, desgloseDelPaquete, senalesEnDatos, type ApartadoDelDesglose, type SenalEnDatos } from './modelo-informe.ts';
 import { partirEnTramos } from './tramos.ts';
 import { capasVisibles, claseDeFamilia } from './familias.ts';
 
@@ -118,8 +119,6 @@ function campo(nombre: string, valor: string): HTMLParagraphElement {
   return p;
 }
 
-const formato = new Intl.NumberFormat('es', { maximumFractionDigits: 2 });
-const cifra = (x: number): string => formato.format(x);
 const pesoEnCifra = new Intl.NumberFormat('es');
 
 /**
@@ -304,17 +303,15 @@ export function pintarLeyenda(
   contenedor.setAttribute('aria-labelledby', titulo.id);
   // En papel (10.4, Tanda 4 bis; el marco «Informe / A4»), la sección 3 lleva su título, la línea de las siglas y su
   // clave: cada familia con la muestra de su línea, en tinta, y «[sigla] familia (paquete)», en el orden de la leyenda.
+  // Desde el 9.3, la clave sale de modelo-informe.ts, como la del PDF.
   const clave = el('ul', undefined, 'clave-papel solo-impresion');
   contenedor.replaceChildren(el('h2', textos.CLAVE_DE_FAMILIAS, 'titulo-seccion solo-impresion'), titulo, el('p', textos.CLAVE_DE_SIGLAS, 'solo-impresion siglas-papel'), clave);
-  for (const paquete of [...new Set(indice.familias.map((f) => f.paquete))].filter((p) => activos.has(p))) {
-    const delPaquete = indice.familias.filter((x) => x.paquete === paquete);
-    for (const f of [...delPaquete.filter((x) => !x.informativa), ...delPaquete.filter((x) => x.informativa)]) {
-      const linea = el('li');
-      const muestra = el('span', undefined, `muestra-papel ${f.clase}`);
-      muestra.setAttribute('aria-hidden', 'true');
-      linea.append(muestra, el('span', textos.familiaEnLaClave(indice.siglaDeFamilia.get(f.clave) ?? '', f.nombre, f.paquete, f.informativa)));
-      clave.append(linea);
-    }
+  for (const f of claveEnDatos(indice, activos)) {
+    const linea = el('li');
+    const muestra = el('span', undefined, `muestra-papel ${f.clase}`);
+    muestra.setAttribute('aria-hidden', 'true');
+    linea.append(muestra, el('span', f.texto));
+    clave.append(linea);
   }
   for (const paquete of [...new Set(indice.familias.map((f) => f.paquete))].filter((p) => activos.has(p))) {
     const grupo = el('div', undefined, 'grupo-familias');
@@ -630,16 +627,8 @@ export function pintarCabeceraDelInforme(
   fecha: string,
   nombreDelGenero: string,
 ): void {
-  const delInforme = paquetes.map(({ cabecera }) => textos.paqueteDelInforme(cabecera.nombre, cabecera.version, indice.propios.has(cabecera.nombre)));
-  // En papel, «Ver el detalle» no se despliega (9.2): sus cifras van aquí, las de cada paquete con escala.
-  const cifras = resultado.tramo === 'insuficiente' ? [] : resultado.paquetes.filter((r) => r.banda !== null).flatMap((r) => cifrasDelPaquete(resultado, r));
-  contenedor.replaceChildren(
-    el('h2', textos.INFORME_DE_RADIOGRAFIA, 'titulo-seccion'),
-    el('p', textos.analisisDel(fecha)),
-    el('p', palabrasDelTexto(resultado, nombreDelGenero)),
-    el('p', textos.paquetesDelInforme(delInforme)),
-    ...cifras.map((linea) => el('p', linea)),
-  );
+  // Desde el 9.3, sus líneas salen de modelo-informe.ts, como las del PDF.
+  contenedor.replaceChildren(el('h2', textos.INFORME_DE_RADIOGRAFIA, 'titulo-seccion'), ...cabeceraEnDatos(resultado, paquetes, indice, fecha, nombreDelGenero).map((linea) => el('p', linea)));
 }
 
 /**
@@ -660,19 +649,18 @@ export function pintarCabeceraDelInforme(
  * «Sugerencia» pasa a «Qué hacer», como en la tarjeta y en la ficha.
  */
 export function pintarSenalesDelInforme(contenedor: HTMLElement, resultado: Resultado, texto: string, indice: Indice, base: string, direccion: string): void {
-  const entradas = resultado.tramo === 'insuficiente' ? [] : entradasDelInforme(resultado, texto, indice);
+  // Desde el 9.3, lo que dice cada entrada sale de modelo-informe.ts, como el PDF.
+  const senales = senalesEnDatos(resultado, texto, indice, base, direccion);
   contenedor.replaceChildren();
-  contenedor.hidden = entradas.length === 0;
-  if (entradas.length === 0) return;
-  const genero = generoEnCalle(resultado.genero).conArticulo;
-  const entradaDe = (e: EntradaDelInforme, conExplicacion: boolean): HTMLElement => {
-    const propia = indice.propios.has(e.paquete);
+  contenedor.hidden = senales === null;
+  if (senales === null) return;
+  const entradaDe = (e: SenalEnDatos): HTMLElement => {
     const titulo = el('h3');
-    if (propia) {
+    if (e.ficha === null) {
       titulo.append(e.nombre, ` (${e.reglaId})`);
     } else {
       const enlace = el('a', e.nombre);
-      enlace.href = new URL(urlDeRegla(base, e.reglaId), direccion).href;
+      enlace.href = e.ficha;
       titulo.append(enlace);
     }
     const entrada = el('article', undefined, 'entrada-informe');
@@ -680,30 +668,19 @@ export function pintarSenalesDelInforme(contenedor: HTMLElement, resultado: Resu
     entrada.append(titulo);
     // La frase en claro, primera línea de la entrada (9.2); desde la Tanda 4 bis, como el marco del modelo: sin la línea de
     // la familia y el paquete (los dicen la clave y el desglose), y los fragmentos en vez del recuento de señales.
-    if (e.regla?.enClaro !== undefined) entrada.append(el('p', e.regla.enClaro, 'en-claro'));
-    if (e.informativa) entrada.append(el('p', textos.INFORMATIVA));
-    if (e.n > 0) entrada.append(el('p', textos.fragmentosDeLaRegla(e.fragmentos, e.resto)));
-    for (const s of e.delTextoEntero) entrada.append(el('p', textos.senalDelTextoEntero(lineaDelTextoEntero(s, genero, e.informativa, e.regla))));
-    if (e.regla !== undefined) {
-      if (conExplicacion) entrada.append(campo(textos.EXPLICACION, e.regla.explicacion));
-      entrada.append(campo(textos.QUE_HACER, e.regla.sugerencia));
-    }
-    if (propia) entrada.append(el('p', textos.REGLA_PROPIA_SIN_FICHA));
+    for (const linea of e.lineas) entrada.append('etiqueta' in linea ? campo(linea.etiqueta, linea.texto) : el('p', linea.texto, linea.enClaro === true ? 'en-claro' : undefined));
     return entrada;
   };
-  const principales = entradas.filter((e) => !e.deContexto);
-  const deContexto = entradas.filter((e) => e.deContexto);
-  contenedor.append(el('h2', textos.SENALES_DEL_INFORME, 'titulo-seccion'), ...principales.map((e) => entradaDe(e, false)));
+  contenedor.append(el('h2', textos.SENALES_DEL_INFORME, 'titulo-seccion'), ...senales.principales.map(entradaDe));
   const anexo = el('div', undefined, 'anexo-informe');
-  const explicadas = principales.filter((e) => e.regla !== undefined);
-  if (explicadas.length > 0) anexo.append(el('h3', textos.POR_QUE_LO_MIRAMOS));
-  for (const e of explicadas) {
+  if (senales.porQue.length > 0) anexo.append(el('h3', textos.POR_QUE_LO_MIRAMOS));
+  for (const e of senales.porQue) {
     const explicacion = el('p', undefined, 'explicacion-informe');
     explicacion.dataset['regla'] = e.reglaId;
-    explicacion.append(el('strong', `${e.nombre}: `), e.regla!.explicacion);
+    explicacion.append(el('strong', `${e.nombre}: `), e.texto);
     anexo.append(explicacion);
   }
-  if (deContexto.length > 0) anexo.append(el('h3', textos.LO_QUE_SE_NOTA), ...deContexto.map((e) => entradaDe(e, true)));
+  if (senales.deContexto.length > 0) anexo.append(el('h3', textos.LO_QUE_SE_NOTA), ...senales.deContexto.map(entradaDe));
   if (anexo.childElementCount > 0) contenedor.append(anexo);
 }
 
@@ -761,8 +738,7 @@ export function pintarDesglose(
    * paquete propio no tiene ficha en /reglas/: la línea entera es el resumen de
    * un <details> con su ficha completa (firmado en la parada 1 del 8.1).
    */
-  const deRegla = (paquete: string, id: string, dice: string | null): Linea => {
-    const resto = dice === null || dice === '' ? '' : `: ${dice}`;
+  const deRegla = (paquete: string, id: string, resto: string): Linea => {
     const regla = indice.reglas.get(clave(paquete, id));
     const cabecera = indice.cabeceras.get(paquete);
     if (!indice.propios.has(paquete) || regla === undefined || cabecera === undefined) return [enlaceARegla(indice, base, paquete, id), resto];
@@ -770,70 +746,21 @@ export function pintarDesglose(
     desplegable.append(el('summary', `${nombreDeRegla(id, regla)}${resto}`), ...fichaCompleta(regla, cabecera));
     return [desplegable];
   };
-  /** El orden de una regla en el desglose, el del catálogo: el nombre de su familia y el suyo (orden.ts). */
-  const nombresDeFamilia = new Map(indice.familias.map((f) => [f.clave, f.nombre]));
-  const ordenDeRegla = (paquete: string, id: string): ClaveDeOrden => {
-    const regla = indice.reglas.get(clave(paquete, id));
-    return [nombresDeFamilia.get(clave(paquete, regla?.familia ?? '')) ?? '', nombreDeRegla(id, regla)];
-  };
-  const genero = generoEnCalle(resultado.genero).conArticulo;
-  const reglaDe = (paquete: string, id: string) => indice.reglas.get(clave(paquete, id));
   /**
    * El desglose de un paquete en dos partes (desde el 10.4: en el móvil van a dos pestañas, Reglas y Datos): sus
    * familias y sus reglas con lo que se nota en el conjunto; y solo avisos, sin textos con los que comparar y no
-   * miradas (null si no hay nada de eso).
+   * miradas (null si no hay nada de eso). Desde el 9.3, lo que dice sale de modelo-informe.ts, como el PDF.
    */
   const desgloseDe = (r: ResultadoDePaquete, cabecera: Paquete['cabecera']): [HTMLElement, HTMLElement | null] => {
-    const p = r.puntuacion;
+    const d = desgloseDelPaquete(resultado, r, cabecera, indice);
+    const lineas = (a: ApartadoDelDesglose): HTMLElement[] =>
+      a.nada !== null ? [el('h4', a.titulo), el('p', a.nada, 'nada')] : apartado(a.titulo, a.lineas.map((x) => deRegla(x.paquete, x.id, x.resto)));
     const seccion = el('section', undefined, 'desglose-paquete');
-    seccion.append(el('h3', `${r.paquete} ${cabecera.version}`));
-    if (r.banda === null) seccion.append(el('p', cabecera.descripcion, 'descripcion'));
-    seccion.append(el('p', p.total === null ? (p.motivo ?? '') : textos.totalEnClaro(cifra(p.total))));
-    const enOrdenDeRegla = <T>(lista: readonly T[], id: (x: T) => string): T[] => enOrden(lista, (x) => ordenDeRegla(r.paquete, id(x)));
-    for (const f of enOrden(p.familias.filter((x) => !x.informativa), (x) => [x.nombre])) {
-      // Las reglas informativas de una familia que puntúa (las de contexto de Estadística) van aparte, abajo.
-      const conSenal = enOrdenDeRegla(f.reglas.filter((x) => x.n > 0 && !x.informativa), (x) => x.id);
-      seccion.append(
-        ...apartado(
-          `${f.nombre}: ${cifra(f.total)}`,
-          conSenal.map((x) => {
-            // Las que restan lo dicen: un rasgo humano (9.2: «rasgo humano: resta», no «atenuante»).
-            const resta = (reglaDe(r.paquete, x.id)?.peso ?? 0) < 0 ? ` · ${textos.RASGO_HUMANO}` : '';
-            return deRegla(r.paquete, x.id, `${textos.vecesYPuntos(x.n, cifra(x.contribucion))}${resta}`);
-          }),
-        ),
-      );
-      if (conSenal.length === 0) seccion.append(el('h4', `${f.nombre}: ${cifra(f.total)}`), el('p', textos.NINGUNA_SENAL, 'nada'));
-    }
-    seccion.append(
-      ...apartado(
-        textos.LO_QUE_SE_NOTA,
-        enOrdenDeRegla(resultado.senalesTexto.filter((s) => s.paquete === r.paquete), (s) => s.reglaId).map((s) =>
-          deRegla(r.paquete, s.reglaId, lineaDelTextoEntero(s, genero, false, reglaDe(r.paquete, s.reglaId))),
-        ),
-      ),
-    );
-    const porRegla = new Map<string, number>();
-    const informativas: { id: string; linea: Linea }[] = [];
-    for (const s of p.informativas) {
-      if ('inicio' in s) porRegla.set(s.reglaId, (porRegla.get(s.reglaId) ?? 0) + 1);
-      else informativas.push({ id: s.reglaId, linea: deRegla(r.paquete, s.reglaId, lineaDelTextoEntero(s, genero, true, reglaDe(r.paquete, s.reglaId))) });
-    }
-    for (const [id, n] of porRegla) informativas.push({ id, linea: deRegla(r.paquete, id, textos.veces(n)) });
+    seccion.append(el('h3', d.titulo));
+    if (d.descripcion !== null) seccion.append(el('p', d.descripcion, 'descripcion'));
+    seccion.append(el('p', d.total), ...d.apartados.flatMap(lineas));
     const avisos = el('section', undefined, 'desglose-avisos');
-    avisos.append(
-      ...apartado(textos.INFORMATIVAS_EN_EL_DESGLOSE, enOrdenDeRegla(informativas, (x) => x.id).map((x) => x.linea)),
-      ...apartado(
-        textos.SIN_TEXTOS_PARA_COMPARAR,
-        enOrdenDeRegla(resultado.sinCalibracion.filter((s) => s.paquete === r.paquete), (s) => s.reglaId).map((s) => deRegla(r.paquete, s.reglaId, motivoSinComparar(s.motivo))),
-      ),
-      ...apartado(
-        textos.NO_MIRADAS,
-        enOrdenDeRegla(resultado.noAplicadas.filter((s) => s.paquete === r.paquete), (s) => s.reglaId).map((s) =>
-          deRegla(r.paquete, s.reglaId, motivoNoMirada(reglaDe(r.paquete, s.reglaId), s.motivo)),
-        ),
-      ),
-    );
+    avisos.append(...d.avisos.flatMap(lineas));
     return [seccion, avisos.childElementCount > 0 ? avisos : null];
   };
   /**
