@@ -28,6 +28,12 @@
  *   7. Ninguna petición de red después de la carga, y ninguna violación de la
  *      CSP.
  *   8. A 320, ninguna de las fichas desborda a lo ancho (WCAG 1.4.10).
+ *   9. Desde la Tanda 4 (Antonio en la parada 3: «dicho en la ficha donde no
+ *      hay tramo»), en el HTML de las 50 fichas: cada una marca tramos en sus
+ *      ejemplos o dice bajo su título por qué no, y nunca las dos cosas; el
+ *      porqué, el de su regla (la estadística mira el texto entero, la de
+ *      ausencia señala lo que falta, la de género depende del tipo de texto):
+ *      35 marcan, 13 miran el texto entero y 2 señalan lo que falta.
  *
  * [DOC] https://www.w3.org/WAI/WCAG22/Understanding/info-and-relationships.html
  *    — 1.3.1: lo que el icono dice (enlace externo), también en texto para el
@@ -209,5 +215,23 @@ describe('la ficha de una regla en Chrome, sobre astro preview', () => {
       if (ancho > 320) desbordan.push(`${regla.id}: ${ancho}`);
     }
     assert.deepEqual(desbordan, []);
+  });
+
+  test('9 · cada ficha marca tramos en sus ejemplos o dice bajo su título por qué no, y el porqué es el de su regla', async () => {
+    const cuenta: Record<string, number> = {};
+    const mal: string[] = [];
+    for (const { regla } of entradas) {
+      const html = await (await fetch(`${sesion!.url}reglas/${regla.id}/`)).text();
+      const seccion = /<section aria-labelledby="ficha-dispara">([\s\S]*?)<\/section>/.exec(html)?.[1] ?? '';
+      const marca = seccion.includes('class="tramo"');
+      const dice = /<h2 id="ficha-dispara">[^<]*<\/h2>\s*<p class="sin-tramo">([^<]*)<\/p>/.exec(seccion)?.[1] ?? null;
+      const porque = regla.detector === 'estadístico' ? 'textoEntero' : 'ausencia' in regla.parametros && regla.parametros.ausencia === true ? 'ausencia' : regla.generos !== undefined ? 'genero' : null;
+      const clave = porque ?? 'marca';
+      cuenta[clave] = (cuenta[clave] ?? 0) + 1;
+      if (marca === (dice !== null)) mal.push(`${regla.id}: ${marca ? 'marca y lo dice' : 'ni marca ni lo dice'}`);
+      else if (porque === null ? dice !== null || !marca : dice !== textos.SIN_TRAMO[porque]) mal.push(`${regla.id}: dice «${dice}», y es ${porque ?? 'de las que marcan'}`);
+    }
+    assert.deepEqual(mal, []);
+    assert.deepEqual(cuenta, { marca: 35, textoEntero: 13, ausencia: 2 });
   });
 });

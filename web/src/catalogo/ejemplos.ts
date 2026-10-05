@@ -6,8 +6,28 @@
  * parte, sin DOM, la juzga logica.spec.ts. Los trozos los parte
  * partirEnTramos, la misma función que parte la vista del analizador: dos
  * señales que se pisan dan un trozo marcado por cada tramo distinto.
+ *
+ * Las reglas cuyos ejemplos no llevan tramo, y por qué (sinTramo, desde la
+ * Tanda 4: Antonio en la parada 3, «dicho en la ficha donde no hay tramo»),
+ * las mismas que deja aparte el juez de los ejemplos del motor
+ * (motor/src/ejemplos.spec.ts): las estadísticas miran el texto entero; las
+ * de ausencia señalan lo que falta; las que van por género dependen del tipo
+ * de texto. El script de los tramos no las calcula y la ficha lo dice.
  */
+import type { Paquete } from '@radiografia/motor/navegador';
+import type { SIN_TRAMO } from '../textos.ts';
 import { partirEnTramos } from '../pantalla/tramos.ts';
+
+/** Por qué una regla no marca tramo en sus ejemplos: la clave de su frase en textos.ts. */
+export type SinTramo = keyof typeof SIN_TRAMO;
+
+/** Por qué los ejemplos de la regla no llevan tramo marcado; null si lo llevan. */
+export function sinTramo(regla: Pick<Paquete['reglas'][number], 'detector' | 'parametros' | 'generos'>): SinTramo | null {
+  if (regla.detector === 'estadístico') return 'textoEntero';
+  if ('ausencia' in regla.parametros && regla.parametros.ausencia === true) return 'ausencia';
+  if (regla.generos !== undefined) return 'genero';
+  return null;
+}
 
 /** Un trozo del ejemplo: su texto y si va marcado. */
 export interface TrozoDelEjemplo {

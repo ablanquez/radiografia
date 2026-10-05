@@ -15,7 +15,7 @@ import { cargarPaquetes, conBarraFinal, FICHEROS } from '../src/pantalla/cargar.
 import { cargarEjemplo, urlDeEjemplo } from '../src/pantalla/ejemplos.ts';
 import { parametrosEnLlano, primeraFrase, reglasDelCatalogo, urlDeRegla, urlDelAnalizador, urlDelCatalogo } from '../src/catalogo/catalogo.ts';
 import { coincide, paraBuscar } from '../src/catalogo/filtro.ts';
-import { trozosDelEjemplo } from '../src/catalogo/ejemplos.ts';
+import { sinTramo, trozosDelEjemplo } from '../src/catalogo/ejemplos.ts';
 import { enOrden } from '../src/orden.ts';
 import { indexar } from '../src/pantalla/pintar.ts';
 import { paquetesIncluidos } from './apoyo.ts';
@@ -225,6 +225,17 @@ describe('el catálogo de reglas (encargo 7.1, b)', () => {
     const pisados = trozosDelEjemplo('abcdef', [[1, 4], [2, 5]]);
     assert.deepEqual(pisados.map((t) => [t.texto, t.marcado]), [['a', false], ['b', true], ['cd', true], ['e', true], ['f', false]]);
     assert.deepEqual(trozosDelEjemplo('Sin tramo.', []), [{ texto: 'Sin tramo.', marcado: false }]);
+  });
+
+  test('sinTramo (10.4, Tanda 4): las estadísticas miran el texto entero; las de ausencia, lo que falta; las de género, el tipo de texto; las demás marcan tramo', () => {
+    const reglas = paquetesIncluidos().flatMap((p) => p.reglas);
+    const cuenta = new Map<string, number>();
+    for (const r of reglas) cuenta.set(String(sinTramo(r)), (cuenta.get(String(sinTramo(r))) ?? 0) + 1);
+    assert.deepEqual(Object.fromEntries(cuenta), { null: 35, textoEntero: 13, ausencia: 2 }, 'las 50 reglas de los incluidos');
+    assert.ok(reglas.filter((r) => r.detector === 'estadístico').every((r) => sinTramo(r) === 'textoEntero'), 'las estadísticas, todas');
+    // Las dos de ausencia van también por género: manda la ausencia. Una que solo va por género, la de género.
+    const patron = reglas.find((r) => r.detector === 'patrón' && sinTramo(r) === null)!;
+    assert.equal(sinTramo({ ...patron, generos: ['opinion'] }), 'genero');
   });
 
   test('parametrosEnLlano: lo que busca cada detector, en palabras', () => {

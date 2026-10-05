@@ -68,7 +68,8 @@
 }
 
 .ficha .id-regla,
-.solo-aviso {
+.solo-aviso,
+.sin-tramo {
   font-size: var(--tipografia-tamano-secundario);
   line-height: var(--tipografia-interlineado-secundario);
   color: var(--color-ink-2);

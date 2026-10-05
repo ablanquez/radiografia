@@ -27,7 +27,9 @@
  * icono de enlace externo, y los ejemplos en recuadros, con el tramo que
  * dispara la regla marcado con el tinte, la línea y la sigla de su familia
  * (los tramos, de scripts/tramos-de-ejemplos.ts; las reglas que miran el
- * texto entero, las de ausencia y las de género no marcan tramo). Abajo,
+ * texto entero, las de ausencia y las de género no marcan tramo, y desde la
+ * Tanda 4 lo dicen bajo el título de sus ejemplos, en ink-2, con su porqué:
+ * catalogo/ejemplos.ts, sinTramo). Abajo,
  * «Probar en el analizador» (botón principal) y «Volver al catálogo». El
  * contenido es el de antes del calco (jueces/fichas.spec.ts): también «Cómo
  * busca», que el modelo no tenía, en su sección, y «Solo aviso: no suma.» en
@@ -45,7 +47,7 @@
  */
 import Catalogo from '../../layouts/Catalogo.astro';
 import { parametrosEnLlano, urlDelAnalizador, urlDelCatalogo, type EntradaDelCatalogo } from '../../catalogo/catalogo.ts';
-import { trozosDelEjemplo } from '../../catalogo/ejemplos.ts';
+import { sinTramo, trozosDelEjemplo } from '../../catalogo/ejemplos.ts';
 import { ENTRADAS, PAQUETES } from '../../catalogo/paquetes.ts';
 import { nombreDeRegla } from '../../pantalla/humanizar.ts';
 import { indexar } from '../../pantalla/pintar.ts';
@@ -71,6 +73,7 @@ const sigla = indice.siglaDeFamilia.get(clave) ?? '';
 const tramos = (tramosDeEjemplos as Record<string, [number, number][][]>)[regla.id];
 const positivos = regla.ejemplos.positivos.map((e, i) => trozosDelEjemplo(e, tramos?.[i] ?? []));
 const negativos = regla.ejemplos.negativos.map((e) => trozosDelEjemplo(e, []));
+const porQueSinTramo = sinTramo(regla);
 const datos: [string, string][] = [
   [textos.PAQUETE, textos.paqueteConVersion(paquete.nombre, paquete.version, paquete.descripcion)],
   [textos.DETECTOR, regla.detector],
@@ -151,6 +154,7 @@ const datos: [string, string][] = [
   </section>
   <section aria-labelledby="ficha-dispara">
     <h2 id="ficha-dispara">{textos.DONDE_DISPARA}</h2>
+    {porQueSinTramo !== null && <p class="sin-tramo">{textos.SIN_TRAMO[porQueSinTramo]}</p>}
     <div class="ejemplos-ficha">
       {
         positivos.map((trozos) => (

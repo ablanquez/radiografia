@@ -173,6 +173,12 @@ export const NINGUNA = 'Ninguna.';
 export const FUENTES = 'Fuentes';
 export const DONDE_DISPARA = 'Ejemplos en los que dispara';
 export const DONDE_NO_DISPARA = 'Ejemplos en los que no dispara';
+// Por qué los ejemplos de una regla no llevan tramo marcado (10.4, Tanda 4; catalogo/ejemplos.ts, sinTramo).
+export const SIN_TRAMO = {
+  textoEntero: 'Esta regla mide el texto entero: en sus ejemplos no hay un tramo que marcar.',
+  ausencia: 'Esta regla señala lo que falta: en sus ejemplos no hay un tramo que marcar.',
+  genero: 'Esta regla depende del tipo de texto: sus ejemplos van sin tramo marcado.',
+} as const;
 export const paqueteConVersion = (nombre: string, version: string, descripcion: string): string => `${nombre} ${version}. ${descripcion}`;
 // La ficha, desde el 10.4 (Tanda 3; DISEÑO §6.4), la del modelo: la línea de la pastilla de su familia (familia · paquete
 // y versión), el título de sus datos, cada etiqueta con sus dos puntos y lo que el lector dice junto al icono de un enlace

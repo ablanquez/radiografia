@@ -11,7 +11,9 @@
  * (motor/src/ejemplos.spec.ts): analizar() no aplica las reglas a un texto de
  * menos de 100 palabras, y los ejemplos son frases. Con las mismas que ese
  * juez deja aparte, sin tramo: las estadísticas (miran el texto entero), las
- * de ausencia (señalan lo que falta) y las que van por género.
+ * de ausencia (señalan lo que falta) y las que van por género (desde la
+ * Tanda 4, con sinTramo de src/catalogo/ejemplos.ts, la que usa la ficha
+ * para decir por qué no hay tramo).
  *
  * El script importa esos dos módulos del motor por su ruta (motor/src/), no
  * por el paquete: no están en los «exports» de motor/package.json, y el motor
@@ -31,6 +33,7 @@ import { analizarTexto } from '../../motor/src/texto.ts';
 import { detectar } from '../../motor/src/analisis.ts';
 import type { Paquete } from '../../motor/src/paquete.ts';
 import { FICHEROS } from '../src/pantalla/cargar.ts';
+import { sinTramo } from '../src/catalogo/ejemplos.ts';
 
 const ORIGEN = new URL('../../paquetes/', import.meta.url);
 const SALIDA = new URL('../src/catalogo/tramos-de-ejemplos.json', import.meta.url);
@@ -40,7 +43,7 @@ const tramos: Record<string, [number, number][][]> = {};
 for (const fichero of FICHEROS) {
   const paquete = JSON.parse(readFileSync(new URL(fichero, ORIGEN), 'utf8')) as Paquete;
   for (const regla of paquete.reglas) {
-    if (regla.detector === 'estadístico' || regla.parametros.ausencia === true || regla.generos !== undefined) continue;
+    if (sinTramo(regla) !== null) continue;
     tramos[regla.id] = regla.ejemplos.positivos.map((ejemplo) => detectar(regla, analizarTexto(ejemplo)).map((s): [number, number] => [s.inicio, s.fin]));
   }
 }
