@@ -8,6 +8,11 @@ modelado en Figma Make hecho (seis pantallas en 1280/820/390, informe A4,
 tokens.json, icono); tres cambios de Antonio sobre el borrador, ya
 incorporados: fondo suave tipo rotulador en los tramos (§4), tableta como
 tercer tamaño (§6) y el tramo como `<span role="button">` (§6.1).**
+**05/10/2026: cambios de Antonio al ver el calco: orden del documento en
+tableta y móvil (§6.1), columna de resultado con scroll propio (§6.1),
+icono de cabecera a 56/48 px (§8), el papel calcado al marco A4 con hoja
+«sin resultado» centrada y salto antes del desglose, y descarga directa
+del PDF en lugar del diálogo de imprimir (§6.5).**
 Fuentes: `docs/investigacion/
 informes/diseno-modulo.md` (doctrina, 03/10), `docs/investigacion/
 ux-benchmark.md` (prospección, 03/10) y los nueve apuntes de Antonio del
@@ -234,32 +239,49 @@ negativos en bloques con el estilo de subrayado de la familia aplicado al
 tramo que la dispara; «Probar en el analizador» y «Volver al catálogo».
 Igual en móvil, apilado.
 
-### 6.5 Informe (papel)
+### 6.5 Informe
 
-Secciones numeradas con título [apunte 6]: 1 cabecera (fecha y hora,
-género, palabras, paquetes, cifras del detalle); 2 resultado (pastilla,
-frase, lo que más pesa, empieza por); 3 clave de familias (sigla + estilo
-de línea + nombre, en tinta); 4 texto completo con subrayados y siglas
-(salto de página antes); 5 desglose; 6 señales regla a regla (salto antes;
-nombre, frase en claro, fragmentos, sugerencia, URL de la ficha; la
-explicación larga y las seis reglas de contexto al final, en cuerpo menor);
-7 nota de autoría, que cierra la última sección en vez de ir sola. A4,
-márgenes 20 mm · 18 mm, Literata 11 pt en el cuerpo, títulos de sección en
-Atkinson 14 pt, etiqueta del resultado 16 pt, pie 10 pt, URL 9,5 pt,
-siglas 9 pt (tamaños del modelo, 04/10), interlineado 1,4, orphans/widows
-2, `break-inside: avoid` por regla [CONVENCIÓN del informe]. Número de
-página «n / N» abajo a la derecha (Atkinson 9 pt, ink-2) por `@page
-@bottom-right` con counter(page)/counter(pages) (añadido 05/10, como el
-modelo; donde el navegador no soporte las cajas de margen, no sale). Sin
-color imprescindible. **Imprimir sin resultado** (Antonio, 05/10): una
-sola página A4 con el icono (c) a 96 px y «RadiografIA» (Atkinson 700,
-24 pt) centrados en horizontal y en vertical, y debajo, en Literata 12 pt
-e ink-2, «No hay análisis que imprimir: pega un texto y pulsa «Pon tu
-texto a contraluz».»; nada más en la hoja. Imprimir no se bloquea: sin
-resultado sale esa hoja; con resultado, solo el informe. **Descarga del
-PDF** (9.3, 05/10): el botón genera el PDF en el navegador con pdfmake,
-calcado a este mismo marco; el papel (Ctrl+P / menú Imprimir) sigue
-saliendo igual.
+Dos salidas, calcadas al marco «Informe · A4» del modelo (medido el
+05/10 y guardado en `docs/figma/medidas-modelo.json`):
+
+- **Descarga** (botón «Descargar informe»; decisión de Antonio del 05/10,
+  casilla 9.3): el PDF se genera en el navegador con pdfmake, cargado al
+  pulsar, con nuestras fuentes incrustadas; funciona igual en PC, tableta y
+  móvil (en iOS se abre en el visor y desde ahí se guarda). Sustituye al
+  «CSS de impresión + window.print()» del 29/09: el diálogo de imprimir no
+  sirve en iPhone ni iPad.
+- **Papel** (Ctrl+P o menú Imprimir, que no se bloquean): la hoja de
+  impresión da el mismo informe. **Sin resultado**, sale una sola página
+  con el icono (c) a 96 px y «RadiografIA» (Atkinson 700, 24 pt) centrados
+  en horizontal y en vertical y, debajo, en Literata 12 pt e ink-2, «No
+  hay análisis que imprimir: pega un texto y pulsa «Pon tu texto a
+  contraluz».»; nada más en la hoja.
+
+**Estructura**, en los dos casos [apunte 6]: 1 cabecera (fecha y hora del
+análisis, género, palabras, paquetes, cifras del detalle); 2 resultado
+(etiqueta, frase, lo que más pesa, empieza por, la línea de Español
+correcto); 3 clave de familias (muestra de línea en tinta + sigla + nombre);
+4 texto completo con subrayados y «[sigla]» tras cada tramo; 5 desglose; 6
+señales regla a regla (nombre con URL, frase en claro, fragmentos, qué
+hacer; la explicación larga y las seis reglas de contexto al final, en
+cuerpo menor); 7 nota de autoría, que cierra la última sección en vez de
+ir sola. **Saltos de página antes de la 4, la 5 y la 6** (1-3 juntas en
+la primera; el salto de la 5 se añadió el 05/10 al ver que el desglose
+arrancaba al pie de una página y se partía); ninguna señal partida.
+
+**Medidas**: A4, márgenes 20 mm arriba y abajo y 18 mm a los lados;
+Literata 11 pt en el cuerpo (600 en las negritas); títulos de sección en
+Atkinson 14 pt; etiqueta del resultado 16 pt; pie 10 pt; URL 9,5 pt; siglas
+9 pt (tamaños del modelo, 04/10); interlineado 1,45 (el del marco medido el
+05/10); orphans/widows 2; `break-inside: avoid` por regla [CONVENCIÓN del
+informe]. Número de página «n / N» abajo a la derecha (Atkinson 9 pt,
+ink-2): en papel por `@page @bottom-right` (donde el navegador no tenga
+cajas de margen, no sale); en el PDF por el pie de pdfmake. Sin color
+imprescindible: la sigla y el estilo de línea distinguen las familias. En
+el PDF, la doble discontinua de Ortotipografía se dibuja como discontinua
+fina (pdfmake no la tiene) y la sigla [O] la distingue. Si en el diálogo
+de Chrome se elige «Márgenes: Ninguno», la hoja pone los márgenes por
+dentro y el número de página desaparece; el README lo advierte.
 
 ## 7 · Componentes y estados
 
