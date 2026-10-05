@@ -12,6 +12,36 @@
  * tests, no en un before(): si revienta ahí, node --test dice «fail 0» con
  * los tests «cancelled» (visto en el 8.1; docs/BITACORA.md, 2026-09-29).
  *
+ * Desde el 10.4 (Tanda 3; docs/BITACORA.md, 2026-10-05), dos cuelgues
+ * cerrados. Si Chrome o su conexión caen (el proceso sale, el WebSocket se
+ * cierra), cada orden en vuelo falla con el motivo, las que vengan después
+ * fallan en el acto, y hasta() falla con él en vez de esperar su límite: antes
+ * la orden no terminaba nunca y node --test se quedaba colgado sin decir
+ * nada. Y el cierre de abrirConTestigos cierra el preview aunque cerrar Chrome
+ * falle (el borrado del perfil temporal daba EPERM en Windows con algún
+ * proceso de Chrome aún vivo): un preview vivo deja el proceso del fichero sin
+ * salir. Al cerrar, en Windows se mata el árbol entero de Chrome (taskkill,
+ * como Puppeteer: sus hijos retenían el perfil más de 5 s), se espera a que
+ * salga y se reintenta borrar su perfil hasta 5 s sin bloquear; si Windows
+ * aún lo retiene (visto el 05/10: «acceso denegado» minutos después, sin
+ * ningún proceso de Chrome vivo; quién lo retiene NO CONSTA), se avisa en la
+ * salida y se sigue, y la próxima apertura barre los de más de una hora.
+ * Chrome arranca sin su informe de fallos, cuyo proceso también retenía el
+ * perfil.
+ * De respaldo, el script de test de web
+ * lleva --test-timeout (package.json): 60 s, más de seis veces el test más
+ * lento en verde (9,2 s, el primero de base.spec.ts, con el build, en un clon
+ * del 04/10) y más que el fallo más lento visto, una espera de hasta() de 30
+ * s agotada (37,9 s); la suite entera, unos 2 minutos.
+ * [DOC] https://nodejs.org/api/child_process.html#event-exit — «The 'exit'
+ *    event is emitted after the child process ends».
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/close_event
+ *    — «The close event is fired when a connection with a WebSocket is
+ *    closed».
+ * [DOC] https://nodejs.org/api/cli.html#--test-timeout — «A number of
+ *    milliseconds the test execution will fail after»; también corta un
+ *    after() que no termina (visto el 05/10 en una prueba mínima).
+ *
  * Dónde está Chrome: la variable de entorno CHROME o la ruta de instalación de
  * Chrome en Windows, macOS o Linux. Si no está, abrirChrome lanza un error y
  * el juez FALLA: no se salta (firmado en la parada 1).
@@ -29,8 +59,8 @@
  * [DOC] https://nodejs.org/docs/latest-v24.x/api/globals.html — WebSocket:
  *    «Stable», «No longer experimental: v22.4.0».
  */
-import { spawn } from 'node:child_process';
-import { existsSync, mkdtempSync, rmSync } from 'node:fs';
+import { execFileSync, spawn } from 'node:child_process';
+import { existsSync, mkdtempSync, readdirSync, rmSync, statSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import * as textos from '../src/textos.ts';
@@ -74,6 +104,13 @@ export interface Pestana {
 }
 
 const esperar = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
+
+/**
+ * Cuánto se reintenta borrar el perfil temporal de Chrome al cerrarlo (ms). Medido el 05/10 tras tumbar Chrome con
+ * Browser.crash, cinco veces: se soltó entre 40 y 365 ms, al primer o al segundo intento; con rmSync y sus maxRetries
+ * fallaba en el acto con EPERM.
+ */
+const BORRAR_PERFIL = 5_000;
 
 /** Una petición de red que vio un testigo: su tipo (Document, Script, Fetch, WebSocket…) y su dirección. */
 export interface Peticion {
@@ -158,28 +195,104 @@ export async function abrirConTestigos(ruta: string, lista: string, que: string)
       carga,
       despues,
       violaciones: () => abierta.evaluar<string[]>('window.__violaciones'),
+      // El preview se cierra aunque cerrar Chrome falle: vivo, el proceso del fichero no sale (docs/BITACORA.md, 2026-10-05).
       cerrar: async () => {
-        await abierta.cerrar();
-        preview.cerrar();
+        try {
+          await abierta.cerrar();
+        } finally {
+          preview.cerrar();
+        }
       },
     };
   } catch (fallo) {
-    await pestana?.cerrar();
-    preview.cerrar();
+    try {
+      await pestana?.cerrar();
+    } finally {
+      preview.cerrar();
+    }
     throw fallo;
   }
 }
 
 /** Chrome headless con un perfil temporal y una pestaña en blanco, conectada por CDP. */
+/**
+ * Los perfiles temporales que dejó otra ejecución porque Windows no los soltó a tiempo (cerrarChrome lo avisa): los de
+ * más de una hora, que ya no son de nadie. Lo que aún no se deje borrar se queda para la próxima.
+ */
+function barrerPerfilesViejos(): void {
+  const viejo = Date.now() - 60 * 60 * 1000;
+  for (const nombre of readdirSync(tmpdir())) {
+    if (!nombre.startsWith('radiografia-chrome-')) continue;
+    const ruta = join(tmpdir(), nombre);
+    try {
+      if (statSync(ruta).mtimeMs < viejo) rmSync(ruta, { recursive: true, force: true });
+    } catch {
+      // Aún retenido: se intenta en la próxima apertura.
+    }
+  }
+}
+
 export async function abrirChrome(): Promise<Pestana> {
+  barrerPerfilesViejos();
   const ruta = rutaDeChrome();
   const puerto = await puertoLibre();
   const perfil = mkdtempSync(join(tmpdir(), 'radiografia-chrome-'));
-  const chrome = spawn(ruta, ['--headless', '--disable-gpu', `--remote-debugging-port=${puerto}`, `--user-data-dir=${perfil}`, 'about:blank'], { stdio: 'ignore' });
+  // Sin el informe de fallos (desde el 10.4, Tanda 3): su proceso, crashpad, guardaba ficheros del perfil temporal abiertos
+  // después de cerrar o tumbar Chrome, y el perfil no se podía borrar (EPERM).
+  // [DOC] https://peter.sh/experiments/chromium-command-line-switches/ — --disable-crash-reporter: «Disable crash reporter
+  //    for headless. It is enabled by default in official builds».
+  const chrome = spawn(ruta, ['--headless', '--disable-gpu', '--disable-crash-reporter',`--remote-debugging-port=${puerto}`, `--user-data-dir=${perfil}`, 'about:blank'], { stdio: 'ignore' });
+  /** Por qué ya no se puede hablar con Chrome (null mientras se puede); con ello fallan las órdenes en vuelo y las que vengan. */
+  let caida: string | null = null;
+  const pendientes = new Map<number, { metodo: string; bien: (r: Record<string, unknown>) => void; mal: (e: Error) => void }>();
+  const caer = (motivo: string): void => {
+    if (caida !== null) return;
+    caida = motivo;
+    for (const { metodo, mal } of pendientes.values()) mal(new Error(`${metodo}: ${motivo}`));
+    pendientes.clear();
+  };
+  const salio = new Promise<void>((listo) =>
+    chrome.once('exit', (codigo, senal) => {
+      caer(`Chrome se cerró (código ${codigo}, señal ${senal})`);
+      listo();
+    }),
+  );
   const cerrarChrome = async (): Promise<void> => {
-    chrome.kill();
-    await esperar(500);
-    rmSync(perfil, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
+    caer('la pestaña se cerró');
+    // En Windows, el árbol entero con taskkill: chrome.kill() solo mata el proceso del navegador, y sus hijos siguen vivos
+    // un rato con el perfil abierto (visto el 05/10: más de 5 s). Si taskkill falla (o Chrome ya salió), chrome.kill().
+    // [DOC] https://github.com/puppeteer/puppeteer/blob/main/packages/browsers/src/launch.ts — kill(): en win32,
+    //    «taskkill /pid ${pid} /T /F», y si falla, el kill de Node, que «delays killing of all child processes».
+    let arbol = false;
+    if (process.platform === 'win32' && chrome.exitCode === null && chrome.signalCode === null) {
+      try {
+        execFileSync('taskkill', ['/pid', String(chrome.pid), '/T', '/F'], { stdio: 'ignore' });
+        arbol = true;
+      } catch {
+        arbol = false;
+      }
+    }
+    if (!arbol) chrome.kill();
+    // Hasta que sale el proceso de Chrome (5 s como mucho); sus hijos sueltan el perfil poco después: se reintenta, sin
+    // bloquear, hasta BORRAR_PERFIL ms, y si no se suelta, el cierre falla diciéndolo.
+    await Promise.race([salio, esperar(5_000)]);
+    const desde = Date.now();
+    for (let intento = 1; ; intento++) {
+      try {
+        rmSync(perfil, { recursive: true, force: true });
+        return;
+      } catch (fallo) {
+        const codigo = (fallo as NodeJS.ErrnoException).code ?? '';
+        if (!['EPERM', 'EBUSY', 'ENOTEMPTY'].includes(codigo)) throw fallo;
+        if (Date.now() - desde > BORRAR_PERFIL) {
+          // Se avisa en la salida y no se lanza: el perfil retenido es cosa de Windows, no de la web, y lanzar aquí dejaba
+          // sin cerrar lo que venía detrás (el preview). Lo barre la próxima apertura (barrerPerfilesViejos).
+          process.emitWarning(`no se pudo borrar el perfil temporal de Chrome (${perfil}) en ${Date.now() - desde} ms y ${intento} intentos (${codigo}): se queda en el temporal`);
+          return;
+        }
+        await esperar(100);
+      }
+    }
   };
   try {
     let pagina: { webSocketDebuggerUrl: string } | undefined;
@@ -198,22 +311,30 @@ export async function abrirChrome(): Promise<Pestana> {
       ws.addEventListener('open', listo, { once: true });
       ws.addEventListener('error', mal, { once: true });
     });
+    ws.addEventListener('close', (ev) => caer(`la conexión con Chrome se cerró (código ${ev.code})`));
+    ws.addEventListener('error', () => caer('la conexión con Chrome falló'));
     let siguiente = 0;
-    const pendientes = new Map<number, (m: Mensaje) => void>();
     const oyentes: ((metodo: string, parametros: Record<string, unknown>) => void)[] = [];
     ws.addEventListener('message', (ev) => {
       const m = JSON.parse(String(ev.data)) as Mensaje;
       if (m.id !== undefined) {
-        pendientes.get(m.id)?.(m);
+        const pendiente = pendientes.get(m.id);
         pendientes.delete(m.id);
+        if (pendiente === undefined) return;
+        if (m.error !== undefined) pendiente.mal(new Error(`${pendiente.metodo}: ${JSON.stringify(m.error)}`));
+        else pendiente.bien(m.result ?? {});
       } else if (m.method !== undefined) {
         for (const oyente of oyentes) oyente(m.method, m.params ?? {});
       }
     });
     const cdp: Pestana['cdp'] = (metodo, parametros = {}) =>
       new Promise((bien, mal) => {
+        if (caida !== null) {
+          mal(new Error(`${metodo}: ${caida}`));
+          return;
+        }
         const id = ++siguiente;
-        pendientes.set(id, (m) => (m.error !== undefined ? mal(new Error(`${metodo}: ${JSON.stringify(m.error)}`)) : bien(m.result ?? {})));
+        pendientes.set(id, { metodo, bien, mal });
         ws.send(JSON.stringify({ id, method: metodo, params: parametros }));
       });
     const evaluar = async <T>(expresion: string): Promise<T> => {
@@ -231,12 +352,18 @@ export async function abrirChrome(): Promise<Pestana> {
       hasta: async (expresion, que, limite = 30_000) => {
         const final = Date.now() + limite;
         while (Date.now() < final) {
-          if (await evaluar<boolean>(expresion).catch(() => false)) return;
+          // Una expresión que aún falla es un «todavía no»; Chrome caído, no: se dice el motivo ya.
+          const lista = await evaluar<boolean>(expresion).catch((fallo: unknown) => {
+            if (caida !== null) throw fallo;
+            return false;
+          });
+          if (lista) return;
           await esperar(100);
         }
         throw new Error(`no llegó: ${que}`);
       },
       cerrar: async () => {
+        caer('la pestaña se cerró');
         ws.close();
         await cerrarChrome();
       },
