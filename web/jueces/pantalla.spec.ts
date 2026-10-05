@@ -23,7 +23,9 @@
  *      percentil, que solo quedan dentro de «Ver el detalle», plegado.
  *   4. Con 150 palabras (las primeras del ejemplo humano, cortado por
  *      palabras), el aviso de texto corto debajo de la etiqueta y la frase.
- *   5. La red, en cero después de la carga inicial.
+ *   5. La red: después de la carga inicial, nada más que lo que se pide a
+ *      propósito al pintar un resultado (desde el 9.3, punto 8: la negrita
+ *      del papel, una vez; chrome.ts, AL_PINTAR_UN_RESULTADO).
  *
  * [DOC] https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/innerText
  *    — «represents the rendered text content of a node and its descendants»;
@@ -39,7 +41,7 @@ import * as textos from '../src/textos.ts';
 import { etiquetaDelPaquete, loQueMasPesa, resumenDelPaquete } from '../src/pantalla/lectura.ts';
 import { indexar } from '../src/pantalla/pintar.ts';
 import { EJEMPLOS_PUBLICOS, motorDelNavegador, paquetesIncluidos, TEXTO_DE_COMBINACION_REAL } from './apoyo.ts';
-import { abrirAnalizadorConTestigos, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
+import { abrirAnalizadorConTestigos, sinLasDelResultado, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
 
 /** Las palabras del motor que no pueden verse en el analizador (firmado en la parada 1 del 9.2). */
 const DEL_MOTOR = /informativa|atenuante|no aplicadas|noAplicadas|tramo|(?<!\p{L})p9[59](?!\d)|percentil/giu;
@@ -163,11 +165,11 @@ describe('el lenguaje de calle en Chrome, sobre astro preview', () => {
     ]);
   });
 
-  test('5 · cero peticiones de red después de la carga inicial', async (t) => {
+  test('5 · después de la carga inicial, solo la negrita del papel al pintar un resultado', async (t) => {
     await arrancar();
-    const { despues } = sesion!;
+    const { despues, url } = sesion!;
     t.diagnostic(`después de la marca (${despues.length}): ${despues.length === 0 ? 'ninguna' : despues.map((x) => `${x.tipo} ${x.url}`).join(' · ')}`);
-    assert.deepEqual(despues, []);
+    assert.deepEqual(sinLasDelResultado(despues, url), []);
     assert.deepEqual(await sesion!.violaciones(), []);
   });
 });

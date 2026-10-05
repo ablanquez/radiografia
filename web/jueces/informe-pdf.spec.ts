@@ -47,7 +47,9 @@
  *      en el catálogo; el mismo texto que el papel; y ninguna señal partida.
  *  11. La red: después de la carga inicial, solo el trozo de JS de pdfmake y
  *      las cinco caras del PDF, del mismo origen y cada una una vez; ninguna
- *      violación de la CSP.
+ *      violación de la CSP. Además, lo que se pide a propósito al pintar un
+ *      resultado (desde el 9.3, punto 8: la negrita del papel, una vez;
+ *      chrome.ts, AL_PINTAR_UN_RESULTADO).
  *  12. Lo que el marco no mide, como el papel: el aire de «¿Por qué lo
  *      miramos?» y de «Lo que se nota en el conjunto» al final de la sección 6,
  *      desde la línea de antes y hasta la de después, ±1 px, donde ninguno de
@@ -73,7 +75,7 @@ import * as textos from '../src/textos.ts';
 import { EJEMPLOS } from '../src/pantalla/ejemplos.ts';
 import { FUENTES_DEL_PDF, METRICAS } from '../src/pantalla/informe-pdf.ts';
 import { EJEMPLOS_PUBLICOS, PAQUETES_DE_PRUEBA, TEXTO_DE_COMBINACION_REAL, TEXTO_DE_TRES_PAQUETES } from './apoyo.ts';
-import { abrirAnalizadorConTestigos, ANCHO_ASENTADO, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
+import { abrirAnalizadorConTestigos, ANCHO_ASENTADO, sinLasDelResultado, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
 import { cerca, comoElMarco, familiaDe, medidasDelMarco, piezasComoElMarco } from './marco-a4.ts';
 import { fuentesDelPdf, lineasDeLasPaginas, type PaginaDelPdf } from './pdf.ts';
 import { caraDe, tablasDeWoff } from './woff2.ts';
@@ -397,8 +399,10 @@ describe('el PDF de «Descargar informe»', () => {
 
   test('11 · la red: después de la carga inicial, solo el trozo de pdfmake y las cinco caras, del mismo origen y una vez cada una; y ninguna violación de la CSP', async (t) => {
     await abrir();
-    const { despues, url } = sesion!;
-    t.diagnostic(`después de la marca: ${despues.map((x) => x.url.replace(url, '/')).join(' · ') || 'nada'}`);
+    const { url } = sesion!;
+    t.diagnostic(`después de la marca: ${sesion!.despues.map((x) => x.url.replace(url, '/')).join(' · ') || 'nada'}`);
+    // Sin lo que se pide a propósito al pintar un resultado (desde el 9.3, punto 8: la negrita del papel; chrome.ts).
+    const despues = sinLasDelResultado(sesion!.despues, url);
     const fuera = despues.filter((x) => !x.url.startsWith(url) || !(/^_astro\/[\w.-]+\.js$/.test(x.url.slice(url.length)) || /^fuentes\/[\w/-]+\.woff$/.test(x.url.slice(url.length))));
     assert.deepEqual(fuera, [], 'peticiones que no son el trozo de pdfmake ni las caras del PDF');
     const caras = despues.filter((x) => x.url.endsWith('.woff')).map((x) => x.url.slice(url.length)).sort();

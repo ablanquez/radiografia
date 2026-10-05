@@ -476,7 +476,8 @@ completa (origen, versiones, comandos, cifras de la decisión) está en
   Fontsource: «RangeError: Offset is outside the bounds of the DataView». La ficha, en
   [`docs/figma/fuentes.md`](docs/figma/fuentes.md).
 - **Herramienta**: fontTools 4.66.1 (MIT), fuera del repositorio; no es dependencia del proyecto.
-- **Viaja al navegador**: sí. Atkinson y Literata 400 se precargan; la itálica y la 600, cuando
-  algo las pide. Las cinco del PDF, solo al pulsar «Descargar informe».
+- **Viaja al navegador**: sí. Atkinson y Literata 400 se precargan; la itálica, cuando algo la
+  pide, y la 600, al pintar un resultado (la negrita del papel). Las cinco del PDF, solo al
+  pulsar «Descargar informe».
 - Una fila por fichero (woff2 y woff) y un fichero por fila, con su huella: lo vigila
   `web/jueces/fuentes.spec.ts`.

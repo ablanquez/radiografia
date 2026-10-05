@@ -68,6 +68,17 @@
  *      pisaba la regla que quita los márgenes de la pantalla, que lleva id, y
  *      el papel salía sin ese aire con los jueces en verde
  *      (docs/BITACORA.md, 2026-10-05).
+ *   8. La negrita del papel, Literata 600, ya cargada en el momento en que
+ *      el resultado deja de estar oculto (el primer análisis de la página):
+ *      su FontFace, «loaded», y document.fonts.check, verdadero. Desde el 9.3
+ *      (punto 8, decisión de Antonio del 05/10) no se precarga: se pide al
+ *      pintar un resultado, y el resultado no se enseña hasta tenerla. Lo
+ *      que se juzga es lo que el diálogo de imprimir de Chrome necesita: no
+ *      espera a las fuentes web, y sin la cara cargada deja sin pintar el
+ *      texto en negrita (visto el 05/10 en Chrome 154: «Discurso: 28,69»
+ *      desaparece). printToPDF sí espera, y por eso el 3 no lo ve. Se mira
+ *      el estado de la cara, además de check(), que da verdadero si ninguna
+ *      cara coincide.
  *
  * Tolerancia, la del encargo: ±1 px en posiciones y distancias (Chrome deja
  * cada línea base en un píxel entero: ±0,5 en cada una), ±0,05 px en el
@@ -76,8 +87,8 @@
  * («Literata 12pt» es la Literata del eje óptico de 12, docs/figma/fuentes.md).
  * El peso de Literata en negrita: el modelo pide 700 y carga 400 y 600 (su
  * index.css, de Google Fonts), así que pinta la de 600 (la más cercana por
- * debajo, CSS Fonts 4, § 5.2); la web, igual, con la 600 que precarga el
- * analizador.
+ * debajo, CSS Fonts 4, § 5.2); la web, igual, con la 600 que el analizador
+ * pide al pintar un resultado (el 8).
  *
  * Lo que el marco no tiene y no se compara: el contenido. El marco es de
  * muestra (su orden de señales, sus fragmentos de relleno, «tipo:» por
@@ -96,11 +107,15 @@
  *    equal to the desired weight are checked in ascending order followed by
  *    weights below the desired weight in descending order».
  * [DOC] https://chromedevtools.github.io/devtools-protocol/tot/Emulation/#method-setEmulatedMedia
+ * [DOC] https://drafts.csswg.org/css-font-loading/ — § 3.3, check(): «If font
+ *    face list is empty, or all fonts in the font face list either have a
+ *    status attribute of "loaded" or are system fonts, return true».
  * [DOC] https://nodejs.org/api/test.html — node:test.
  */
 import { after, describe, test } from 'node:test';
 import assert from 'node:assert/strict';
 import * as textos from '../src/textos.ts';
+import { CARA_DE_LA_NEGRITA } from '../src/estilos/recursos.ts';
 import { TEXTO_DE_COMBINACION_REAL } from './apoyo.ts';
 import { abrirAnalizadorConTestigos, ANCHO_ASENTADO, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
 import { cerca, comoElMarco, letra, medidasDelMarco, PAGINA, PIEZAS, piezasComoElMarco } from './marco-a4.ts';
@@ -175,13 +190,23 @@ describe('el papel, como el marco «Informe / A4» del modelo', () => {
     assert.ok(sesion, 'Chrome no llegó a abrirse');
     return sesion.pestana;
   };
-  /** El analizador con combinacion-real ya analizado. */
+  /**
+   * El analizador con combinacion-real ya analizado. Es el primer análisis de la página: para el 8, apunta en
+   * window.__negritaAlEnsenar cómo estaba la negrita del papel en el momento en que el resultado deja de estar oculto.
+   */
   async function preparar(): Promise<void> {
     sesion = await (arranque ??= abrirAnalizadorConTestigos());
     if (analizado) return;
     await anchoDe(1280);
     await p().evaluar(`(() => {
-      document.getElementById('resultado').hidden = true;
+      const resultado = document.getElementById('resultado');
+      resultado.hidden = true;
+      new MutationObserver((cambios, observador) => {
+        if (resultado.hidden) return;
+        const cara = [...document.fonts].find((f) => f.family.replace(/["']/g, '') === 'Literata' && f.weight === '600');
+        window.__negritaAlEnsenar = { estado: cara?.status ?? null, check: document.fonts.check(${JSON.stringify(CARA_DE_LA_NEGRITA)}) };
+        observador.disconnect();
+      }).observe(resultado, { attributes: true, attributeFilter: ['hidden'] });
       document.getElementById('texto').value = ${JSON.stringify(TEXTO_DE_COMBINACION_REAL)};
       document.getElementById('analizar').click();
     })()`);
@@ -397,5 +422,11 @@ describe('el papel, como el marco «Informe / A4» del modelo', () => {
     }
     assert.ok(vistas.size > 100, `${vistas.size} declaraciones leídas`);
     assert.deepEqual([...vistas].filter(([, gana]) => !gana).map(([clave]) => clave), [], 'declaraciones de la hoja de impresión que no ganan en ningún elemento');
+  });
+
+  test('8 · la negrita del papel (Literata 600), ya cargada cuando aparece el resultado, antes de que se pueda imprimir', async () => {
+    await preparar();
+    const vista = await p().evaluar<{ estado: string | null; check: boolean } | null>('window.__negritaAlEnsenar ?? null');
+    assert.deepEqual(vista, { estado: 'loaded', check: true }, 'la cara de Literata 600 y document.fonts.check, al quitarse el hidden del resultado');
   });
 });

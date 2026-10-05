@@ -74,8 +74,9 @@
  *   [DOC] https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus
  *   — por defecto, «the browser will scroll the element into view».
  *
- * Sin red salvo los fetch de los paquetes incluidos y de los ejemplos: el
- * paquete propio se lee del fichero, en el navegador (lo demuestra
+ * Sin red salvo los fetch de los paquetes incluidos y de los ejemplos y, desde
+ * el 9.3, la negrita del papel al pintar el primer resultado: el paquete
+ * propio se lee del fichero, en el navegador (lo demuestra
  * jueces/navegador.spec.ts). Sin librerías de UI. Las cadenas de la interfaz,
  * en web/src/textos.ts (encargo 6.3, b); la de `elemento` no lo es: es un
  * fallo de programación que va a la consola.
@@ -113,6 +114,7 @@ import { crearTarjeta } from './tarjeta.ts';
 import { crearPestanas } from './pestanas.ts';
 import { callarDescarga, engancharDescarga } from './descarga.ts';
 import type { Analisis } from './modelo-informe.ts';
+import { CARA_DE_LA_NEGRITA } from '../estilos/recursos.ts';
 
 function elemento<T extends HTMLElement>(id: string): T {
   const e = document.getElementById(id);
@@ -205,9 +207,14 @@ elemento<HTMLButtonElement>('otro').addEventListener('click', () => {
 /** true si lo analizado salió bien y está pintado: cambiar los paquetes lo deja atrás. */
 let hayResultado = false;
 
-function analizarYPintar(paquetes: readonly Paquete[], indice: Indice, vozDe: (paquete: string) => Voz): void {
+async function analizarYPintar(paquetes: readonly Paquete[], indice: Indice, vozDe: (paquete: string) => Voz): Promise<void> {
   const elTexto = texto.value;
   const elGenero = genero.value;
+  // La negrita del papel, Literata 600, antes de pintar el resultado (9.3, punto 8: decisión de Antonio del 05/10): el
+  // diálogo de imprimir de Chrome no espera a las fuentes web, y sin la cara cargada deja sin pintar el texto en negrita del
+  // informe (visto el 05/10 en Chrome 154). Es la petición que se espera después de la carga (jueces/chrome.ts,
+  // AL_PINTAR_UN_RESULTADO), una vez por visita: ya cargada, se resuelve en el acto. Si no llega, se pinta igual.
+  await document.fonts.load(CARA_DE_LA_NEGRITA).catch(() => []);
   try {
     const r = analizar(elTexto, paquetes, { genero: elGenero });
     // Lo que las pestañas del móvil se llevaron vuelve a su sitio antes de pintar encima.
@@ -388,8 +395,8 @@ if (carga.paquetes === null) {
   }
   estado.textContent = textos.paquetesCargados(incluidos.map((p) => `${p.cabecera.nombre} ${p.cabecera.version}`));
   estado.classList.add('solo-lector');
-  formulario.addEventListener('submit', (e) => {
+  formulario.addEventListener('submit', async (e) => {
     e.preventDefault();
-    analizarYPintar(losActivos(), indice, vozDe);
+    await analizarYPintar(losActivos(), indice, vozDe);
   });
 }

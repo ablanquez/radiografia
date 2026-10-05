@@ -214,6 +214,15 @@ fonttools ttLib --no-recalc-timestamp --flavor woff -o web/public/fuentes/atkins
 - `web/src/componentes/Recursos.astro`: precarga de Atkinson y Literata 400,
   con `crossorigin` (sin él, la precarga no se reutiliza y la cara se pide
   dos veces: el juez de red lo comprueba).
+- `web/src/pantalla/pantalla.ts`: la negrita del papel, Literata 600, se pide
+  con `document.fonts.load` al pintar un resultado, antes de enseñarlo (9.3,
+  punto 8, decisión de Antonio del 05/10). El diálogo de imprimir de Chrome no
+  espera a las fuentes web: sin la cara cargada, el texto en negrita del
+  informe no se pinta (visto el 05/10 en Chrome 154). De la Tanda 4 bis al
+  9.3 se precargaba, 46 KB en cada visita. Los jueces de red la esperan como
+  la única petición después de la carga, una vez (`web/jueces/chrome.ts`,
+  `AL_PINTAR_UN_RESULTADO`), y `web/jueces/papel.spec.ts` (8), cargada cuando
+  aparece el resultado.
 - **Las `url()` son absolutas** (`/fuentes/…`), como pide Vite para lo de
   `public/`, y no relativas como sugería el encargo:
   - Astro incrusta este CSS en cada página, y una URL relativa se rompería en

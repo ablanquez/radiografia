@@ -64,6 +64,7 @@ import { existsSync, mkdtempSync, readdirSync, rmSync, statSync } from 'node:fs'
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import * as textos from '../src/textos.ts';
+import { NEGRITA_DEL_PAPEL } from '../src/estilos/recursos.ts';
 import { abrirPreview, construir, paquetesIncluidos, puertoLibre } from './apoyo.ts';
 
 const RUTAS = [
@@ -116,6 +117,30 @@ const BORRAR_PERFIL = 5_000;
 export interface Peticion {
   tipo: string;
   url: string;
+}
+
+/**
+ * Lo que el analizador pide a propósito después de la carga inicial, al pintar un resultado (decisión de Antonio del
+ * 05/10, punto 8 del 9.3): la negrita del papel, Literata 600 (NEGRITA_DEL_PAPEL), del mismo origen y una vez por visita.
+ * Sin ella cargada, el diálogo de imprimir de Chrome, que no espera a las fuentes web, deja sin pintar el texto en negrita
+ * (visto el 05/10 en el diálogo de Chrome 154: «Discurso: 28,69» desaparece); printToPDF sí espera, y por eso los jueces
+ * del papel no lo ven. Es un fichero de la web: no lleva nada del texto ni sale del navegador. Hasta el 9.3 se precargaba
+ * (46 KB en cada visita).
+ */
+export const AL_PINTAR_UN_RESULTADO: readonly string[] = [NEGRITA_DEL_PAPEL];
+
+/**
+ * Las peticiones de después de la marca, sin las que se esperan al pintar un resultado (AL_PINTAR_UN_RESULTADO), cada una
+ * una vez: si se pide dos veces, la segunda se queda en la lista. `url` es la dirección del preview, con la barra final.
+ */
+export function sinLasDelResultado(despues: readonly Peticion[], url: string): Peticion[] {
+  const vistas = new Set<string>();
+  return despues.filter((x) => {
+    const ruta = AL_PINTAR_UN_RESULTADO.find((r) => x.url === `${url}${r}`);
+    if (ruta === undefined || vistas.has(ruta)) return true;
+    vistas.add(ruta);
+    return false;
+  });
 }
 
 /** Una página de la web abierta en Chrome sobre astro preview, con lo que vieron los testigos antes y después de la marca. */

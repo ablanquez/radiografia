@@ -29,9 +29,11 @@
  *      servidor, por diseño (encargo 6.3). Desde el 10.4 (Tanda 1), con las
  *      fuentes autoalojadas: ni una petición a fonts.googleapis.com ni a
  *      fonts.gstatic.com, antes o después de la marca; las dos caras
- *      precargadas, en la carga inicial (desde la Tanda 4 bis, también la
- *      negrita del papel, que el analizador precarga); y ninguna cara pedida
- *      dos veces. Y
+ *      precargadas, en la carga inicial; y ninguna cara pedida dos veces.
+ *      Desde el 9.3 (punto 8, decisión de Antonio del 05/10), la negrita del
+ *      papel, Literata 600, no se precarga (de la Tanda 4 bis al 9.3, sí):
+ *      se pide al pintar un resultado, y es lo único que puede haber después
+ *      de la marca (chrome.ts, AL_PINTAR_UN_RESULTADO), una vez. Y
  *      la carga inicial, solo lo esperado: la página, su JS y su CSS, las
  *      fuentes, los paquetes, y el icono y el manifiesto (Chrome pide el
  *      manifiesto y sus iconos por su cuenta al cargar).
@@ -64,7 +66,7 @@ import { urlDeRegla } from '../src/catalogo/catalogo.ts';
 import { generosDe } from '../src/pantalla/generos.ts';
 import { FUENTES_PRECARGADAS, NEGRITA_DEL_PAPEL } from '../src/estilos/recursos.ts';
 import { EJEMPLOS_PUBLICOS, PAQUETES_DE_PRUEBA, paqueteDePrueba, paquetesIncluidos, TEXTO_DE_TRES_PAQUETES } from './apoyo.ts';
-import { abrirAnalizadorConTestigos, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
+import { abrirAnalizadorConTestigos, sinLasDelResultado, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
 
 const PRUEBA = 'Paquete de prueba';
 const esperar = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
@@ -233,12 +235,12 @@ describe('el cargador en Chrome, sobre astro preview', () => {
     assert.equal(await aviso(), textos.SIN_PAQUETES_ACTIVOS);
   });
 
-  test('3 · cero peticiones de red después de la carga inicial, y la carga inicial, toda del mismo origen', async (t) => {
+  test('3 · después de la carga inicial, solo la negrita del papel al pintar un resultado; y la carga inicial, toda del mismo origen', async (t) => {
     await arrancar();
     await esperar(1000);
     assert.ok(sesion, 'astro preview no llegó a abrirse');
-    const { carga, despues } = sesion;
-    const origen = new URL(sesion.url).origin;
+    const { carga, despues, url } = sesion;
+    const origen = new URL(url).origin;
     const violaciones = await sesion.violaciones();
     const enLinea = (lista: readonly string[]): string => (lista.length === 0 ? 'ninguna' : lista.join(' · '));
     t.diagnostic(`carga inicial (${carga.length}): ${enLinea(carga.map((x) => `${x.tipo} ${x.url}`))}`);
@@ -249,7 +251,9 @@ describe('el cargador en Chrome, sobre astro preview', () => {
     // Las fuentes, autoalojadas (10.4, Tanda 1): nada de Google Fonts, las dos precargadas sí, y ninguna cara dos veces.
     assert.deepEqual([...carga, ...despues].filter((x) => /^fonts\.(googleapis|gstatic)\.com$/.test(new URL(x.url).hostname)), [], 'peticiones a Google Fonts');
     const fuentes = carga.filter((x) => x.tipo === 'Font').map((x) => new URL(x.url).pathname);
-    for (const ruta of [...FUENTES_PRECARGADAS, NEGRITA_DEL_PAPEL]) assert.ok(fuentes.includes(`/${ruta}`), `la precarga de ${ruta}: ${fuentes.join(' · ')}`);
+    for (const ruta of FUENTES_PRECARGADAS) assert.ok(fuentes.includes(`/${ruta}`), `la precarga de ${ruta}: ${fuentes.join(' · ')}`);
+    // La negrita del papel ya no se precarga (9.3, punto 8: decisión de Antonio del 05/10): se pide al pintar un resultado.
+    assert.ok(!fuentes.includes(`/${NEGRITA_DEL_PAPEL}`), `la negrita del papel, en la carga inicial: ${fuentes.join(' · ')}`);
     assert.deepEqual(fuentes.filter((x, i) => fuentes.indexOf(x) !== i), [], 'caras pedidas dos veces (una precarga sin crossorigin no se reutiliza)');
     // Y nada en la carga inicial fuera de lo esperado: la página, su JS y su CSS, las fuentes, los paquetes, y el icono y el manifiesto (10.4).
     const ESPERADAS = [
@@ -260,7 +264,10 @@ describe('el cargador en Chrome, sobre astro preview', () => {
       /^\/(icono-c\.svg|icon\.svg|favicon\.ico|apple-touch-icon\.png|icon-192\.png|icon-512\.png|icon-512-maskable\.png|site\.webmanifest)$/,
     ];
     assert.deepEqual(carga.filter((x) => !ESPERADAS.some((e) => e.test(new URL(x.url).pathname))), [], 'peticiones de la carga inicial que no se esperan');
-    assert.deepEqual(despues, [], 'peticiones después de la carga inicial');
+    // Después de la marca, solo lo que se pide a propósito al pintar un resultado (chrome.ts, AL_PINTAR_UN_RESULTADO): aquí se
+    // ha analizado, así que la negrita del papel, una vez.
+    assert.deepEqual(sinLasDelResultado(despues, url), [], 'peticiones después de la carga inicial');
+    assert.equal(despues.filter((x) => x.url === `${url}${NEGRITA_DEL_PAPEL}`).length, 1, 'la negrita del papel, pedida al pintar un resultado');
     assert.deepEqual(violaciones, [], 'intentos bloqueados por la CSP');
   });
 });

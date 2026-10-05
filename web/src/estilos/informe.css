@@ -335,7 +335,7 @@
     color: var(--color-ink);
   }
 
-  /* Las negritas del texto, en Literata (la de 600, que precarga el analizador: estilos/recursos.ts). */
+  /* Las negritas del texto, en Literata (la de 600, que el analizador pide al pintar un resultado: estilos/recursos.ts). */
   :is(#senales-informe, #resultado .desglose-paquete, #resultado .desglose-avisos) :is(strong, h3, h3 > a, h4) {
     font-weight: 700;
   }

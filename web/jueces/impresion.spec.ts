@@ -42,8 +42,11 @@
  *      misma página); y el PDF acaba con la nota de autoría, acompañada en su
  *      página (docs/BITACORA.md, 2026-10-05: impreso desde el escritorio, el
  *      PDF perdía su final, y el 2 daba verde porque solo contaba páginas).
- *   4. La red: cero peticiones después de la carga inicial y ningún intento
- *      bloqueado por la CSP, también al emular la impresión e imprimir.
+ *   4. La red: después de la carga inicial, nada más que lo que se pide a
+ *      propósito al pintar un resultado (desde el 9.3, punto 8: la negrita
+ *      del papel, una vez; chrome.ts, AL_PINTAR_UN_RESULTADO), y ningún
+ *      intento bloqueado por la CSP, también al emular la impresión e
+ *      imprimir.
  *
  * [DOC] https://chromedevtools.github.io/devtools-protocol/tot/Emulation/#method-setEmulatedMedia
  *    — «Emulates the given media type or media feature for CSS media
@@ -74,7 +77,7 @@ import { readFileSync } from 'node:fs';
 import * as textos from '../src/textos.ts';
 import { motorDelNavegador, paquetesIncluidos, TEXTO_DE_COMBINACION_REAL } from './apoyo.ts';
 import { nombreDeRegla } from '../src/pantalla/humanizar.ts';
-import { abrirAnalizadorConTestigos, ANCHO_ASENTADO, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
+import { abrirAnalizadorConTestigos, ANCHO_ASENTADO, sinLasDelResultado, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
 import { textoDeLasPaginas } from './pdf.ts';
 
 const esperar = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
@@ -342,14 +345,15 @@ describe('el informe en Chrome, sobre astro preview', () => {
     }
   });
 
-  test('4 · cero peticiones de red después de la carga inicial, también al emular la impresión e imprimir', async (t) => {
+  test('4 · después de la carga inicial, solo la negrita del papel al pintar un resultado, también al emular la impresión e imprimir', async (t) => {
     await arrancar();
     await esperar(1000);
-    const { despues } = sesion!;
+    const { despues, url } = sesion!;
     const violaciones = await sesion!.violaciones();
     t.diagnostic(`después de la marca (${despues.length}): ${despues.length === 0 ? 'ninguna' : despues.map((x) => `${x.tipo} ${x.url}`).join(' · ')}`);
     t.diagnostic(`intentos bloqueados por la CSP (${violaciones.length}): ${violaciones.length === 0 ? 'ninguna' : violaciones.join(' · ')}`);
-    assert.deepEqual(despues, [], 'peticiones después de la carga inicial');
+    // Desde el 9.3 (punto 8), lo que se pide a propósito al pintar un resultado (chrome.ts, AL_PINTAR_UN_RESULTADO), una vez.
+    assert.deepEqual(sinLasDelResultado(despues, url), [], 'peticiones después de la carga inicial');
     assert.deepEqual(violaciones, [], 'intentos bloqueados por la CSP');
   });
 });

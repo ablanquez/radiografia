@@ -13,11 +13,16 @@ export const FUENTES_PRECARGADAS = [
 /**
  * La negrita del papel (10.4, Tanda 4 bis; el marco «Informe / A4»): Literata
  * 600, la que pinta el modelo en los nombres de las reglas, en «Qué hacer» y en
- * las familias del desglose. Solo la precarga el analizador, el que imprime el
- * informe: pedirla al imprimir sería una petición de red después de la carga
- * (jueces/impresion.spec.ts, test 4). 46 KB.
+ * las familias del desglose. 46 KB. Desde el 9.3 (punto 8, decisión de Antonio
+ * del 05/10) no se precarga: la pide el analizador al pintar un resultado
+ * (pantalla.ts, CARA_DE_LA_NEGRITA), y la esperan así los jueces de red
+ * (jueces/chrome.ts, AL_PINTAR_UN_RESULTADO). De la Tanda 4 bis al 9.3, el
+ * analizador la precargaba.
  */
 export const NEGRITA_DEL_PAPEL = 'fuentes/literata/literata-600.woff2';
+
+/** La negrita del papel como la pide document.fonts (el atajo de font de CSS: peso, cuerpo y familia; el cuerpo da igual). */
+export const CARA_DE_LA_NEGRITA = '600 11pt Literata';
 
 /**
  * Los enlaces del icono y del manifiesto, en el orden de Evil Martians (DISEÑO
