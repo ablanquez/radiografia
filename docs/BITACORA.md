@@ -14,7 +14,7 @@
 
 ---
 
-## [2026-10-05] 🔴 ABIERTA — Un fichero de jueces que termina sus tests no sale si su `astro preview` se queda vivo
+## [2026-10-05] ✅ CERRADA — Un fichero de jueces que termina sus tests no sale si su `astro preview` se queda vivo
 
 **Categoría:** arnés de los jueces (Chrome por CDP)
 **Síntoma:** el 04/10 y otra vez el 05/10, el rojo de `catalogo-pantalla.spec.ts` contra `53e5051` en clon imprime sus diez tests y la línea de su suite, y el proceso del fichero no sale: siguen vivos `node --test`, su hijo y el `astro preview` del clon, sin ningún Chrome del arnés. Matado solo el preview, el fichero sale solo y `node --test` sigue con el siguiente. Queda el perfil temporal de Chrome de esa ejecución (`radiografia-chrome-aVyXyH`, 07:10:10). Ver también la entrada de abajo: es otro cuelgue con otra causa.
@@ -25,15 +25,16 @@
 ```
 con vivos, 20 s después, `node --test --test-concurrency=1 --test-timeout=90000 jueces…` (13696), su hijo (16732) y `F:\_clones-005\rojo2-53e5051\node_modules\astro\bin\astro.mjs preview` (9092). Al matar el 9092, el resumen final dijo, entre sus errores: `Error: EPERM, Permission denied: \\?\C:\Users\ORDENA~1\AppData\Local\Temp\radiografia-chrome-aVyXyH`. En pequeño (scratchpad, un test que deja vivo un hijo con tuberías, `node --test --test-timeout=2000`): `✔ deja un hijo vivo (11.0864ms)` · `ℹ pass 1` · `ℹ fail 0` y el proceso no salió: `real 0m20.105s`, cortado por `timeout` (salida 124).
 **Cómo se cazó:** instrumento (la verificación del rojo en clon, que no terminaba) y ojo humano (la lista de procesos y el perfil que quedó)
-**Causa raíz:** ⏳ PENDIENTE
-**Arreglo aplicado:** ⏳ PENDIENTE
-**Commit:** ⏳ PENDIENTE
+**Causa raíz:** el `cerrar()` de `abrirConTestigos` cerraba el preview después de `await abierta.cerrar()`, y este lanzaba cuando `rmSync` no podía borrar el perfil temporal de Chrome (EPERM): Windows lo retenía, por hijos de Chrome que sobreviven a `chrome.kill()` (que solo mata el proceso del navegador) y a veces sin ningún proceso de Chrome vivo (quién lo retenía: NO CONSTA; «acceso denegado» minutos después, con control total sobre los ficheros). El `after` fallaba antes de `preview.cerrar()`, y el preview vivo, con sus tuberías abiertas, no dejaba salir al proceso del fichero; `--test-timeout` no lo corta, porque los tests ya habían acabado. `rmSync` con `maxRetries` no ayudaba: daba EPERM en el acto.
+**Arreglo aplicado:** `web/jueces/chrome.ts`: el preview se cierra en un `finally`, en `cerrar()` y en el camino de error (l. 203 y 211); `cerrarChrome` mata en Windows el árbol entero con `taskkill /pid … /T /F`, como Puppeteer (l. 269); Chrome arranca con `--disable-crash-reporter` (l. 244); el perfil se reintenta borrar hasta 5 s sin bloquear (`BORRAR_PERFIL`, l. 113) y, si aún no se suelta, se avisa con `process.emitWarning` y no se lanza (l. 290); `barrerPerfilesViejos` borra al abrir los de más de una hora (l. 222). Verificado: el mismo rojo en un clon de `53e5051` termina (3 min, `ℹ pass 1 · ℹ fail 9`, salida 1) con el aviso `Warning: no se pudo borrar el perfil temporal de Chrome (…radiografia-chrome-GD1WZA) en 5040 ms y 47 intentos (EPERM): se queda en el temporal` y sin procesos huérfanos; clon limpio de `0d06923`: web `ℹ tests 200 · ℹ pass 200 · ℹ fail 0`.
+**Commit:** `0d06923`
 **Ley que sale de aquí:** SIN LEY TODAVÍA
+Al cerrar: lo que cierra recursos los cierra todos aunque falle uno; un hijo que se queda vivo es un proceso que no sale.
 **Traza:** `web/jueces/chrome.ts`, `abrirConTestigos` (`cerrar`) y `abrirChrome` (`cerrarChrome`, `rmSync` del perfil); `web/jueces/apoyo.ts`, `abrirPreview`.
 
 ---
 
-## [2026-10-05] 🔴 ABIERTA — Si Chrome cae a media prueba, la orden CDP en vuelo no termina nunca y `node --test` se queda colgado sin decir nada
+## [2026-10-05] ✅ CERRADA — Si Chrome cae a media prueba, la orden CDP en vuelo no termina nunca y `node --test` se queda colgado sin decir nada
 
 **Categoría:** arnés de los jueces (Chrome por CDP)
 **Síntoma:** el 04/10, verificando `50ffc75` en clon, los jueces web pasaron diez minutos en su primer fichero sin imprimir nada, con el `astro preview` del clon vivo y ningún `chrome.exe`; hubo que matar el árbol. El 05/10, con Chrome tumbado con `Browser.crash` y una orden en vuelo, la orden no contesta.
@@ -46,10 +47,11 @@ $ node --test --test-concurrency=1 jueces/chrome.spec.ts
   AssertionError [ERR_ASSERTION]: la orden en vuelo: colgada
 ```
 **Cómo se cazó:** instrumento (la verificación en clon, que no terminaba) y ojo humano (la lista de procesos)
-**Causa raíz:** ⏳ PENDIENTE
-**Arreglo aplicado:** ⏳ PENDIENTE
-**Commit:** ⏳ PENDIENTE
+**Causa raíz:** `cdp()` guardaba en `pendientes` cómo resolver cada orden y solo lo hacía al llegar su respuesta por el WebSocket; nada miraba si el proceso de Chrome salía ni si el WebSocket se cerraba, así que una orden en vuelo cuando Chrome caía no se resolvía ni se rechazaba nunca, y el test esperaba para siempre: el script de test de web no llevaba `--test-timeout` (por defecto, `Infinity`). `hasta()` además tomaba cualquier fallo de la expresión por un «todavía no» y seguía hasta su límite.
+**Arreglo aplicado:** `web/jueces/chrome.ts`: `caer()` (l. 248) rechaza cada orden pendiente con el motivo, y la llaman la salida del proceso de Chrome (`chrome.once('exit')`, l. 255), el cierre o el fallo del WebSocket (l. 314) y el cierre de la pestaña; `cdp()` rechaza en el acto si ya cayó (l. 332); `hasta()` relanza el fallo si Chrome cayó (l. 357). `web/package.json`: `--test-timeout=60000` (l. 15), con sus cifras en la cabecera de `chrome.ts`. Juez nuevo `jueces/chrome.spec.ts` (con `chrome-cae.prueba.ts`): verde tres veces seguidas tras el arreglo (`✔ 1` en 5,9 s, `✔ 2` en 0,8 s), cinco contrapruebas en rojo; clon limpio de `0d06923`: web `ℹ tests 200 · ℹ pass 200 · ℹ fail 0`.
+**Commit:** `0d06923`
 **Ley que sale de aquí:** SIN LEY TODAVÍA
+Al cerrar: un juez que espera a otro proceso tiene que fallar si ese proceso muere; y la suite lleva un límite por test, para lo que no se haya previsto.
 **Traza:** `web/jueces/chrome.ts`, `abrirChrome` (`cdp`, `pendientes`, `hasta`); `web/package.json`, script `test`.
 
 ---
