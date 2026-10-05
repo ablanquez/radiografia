@@ -420,7 +420,17 @@ describe('la fidelidad al modelo, sobre astro preview', () => {
     assert.deepEqual(sinProcedencia, [], 'piezas sin pantalla y selector del prototipo, o sin apartado del DISEÑO y nota');
     assert.deepEqual(
       Object.keys(json.medidas).filter((c) => 'origen' in json.medidas[c]!),
-      ['escritorio.cabecera.icono', 'movil.cabecera.icono', 'escritorio.vista.parrafos', 'escritorio.columna-resultado', 'escritorio.margen-de-scroll'],
+      [
+        'escritorio.cabecera.icono',
+        'movil.cabecera.icono',
+        'escritorio.vista.parrafos',
+        'escritorio.columna-resultado',
+        'escritorio.margen-de-scroll',
+        // Desde la Tanda 4 bis, la hoja de imprimir sin resultado (DISEÑO §6.5), para el juez del papel.
+        'informe.sin-resultado.icono',
+        'informe.sin-resultado.nombre',
+        'informe.sin-resultado.mensaje',
+      ],
       'las piezas que vienen del DISEÑO y no del prototipo',
     );
   });
