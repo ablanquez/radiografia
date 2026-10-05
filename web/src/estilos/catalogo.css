@@ -16,8 +16,10 @@
  * radio 8 y 32 de margen, el aviso a 20 en negrita y «Quitar filtros».
  * Tableta (769-1023): los filtros en dos columnas a 32 (familia; detector y
  * severidad, a 24), y debajo, a 16, «Quitar filtros» y el recuento en una
- * fila. Móvil (hasta 768): bloques a 24; en vez de los filtros, el botón
- * «Filtros (n)» con el recuento al lado; los filtros, en una hoja inferior
+ * fila. Móvil (hasta 768): bloques a 24; el nombre de cada regla, un enlace de
+ * 44 de alto como mínimo (desde la Tanda 5: el modelo lo dejaba en 26); en vez
+ * de los filtros, el botón «Filtros (n)» con el recuento al lado; los filtros,
+ * en una hoja inferior
  * (60 % de alto, 90 % con el asa), con su título, la X, los tres grupos con
  * scroll y abajo «Aplicar» y «Quitar filtros», a todo el ancho.
  * La hoja: la abre catalogo/hoja-filtros.ts, que le pone la clase hoja; el asa
@@ -260,6 +262,14 @@
 
   .panel-filtros:not(.hoja) {
     display: none;
+  }
+
+  /* El nombre de cada regla, el enlace a su ficha, de 44 de alto como los demás enlaces de la interfaz (como las fuentes
+     de la ficha): de una línea medía 26 (Tanda 5, juez de pulsación; WCAG 2.5.5). */
+  .cuerpo-regla h2 a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--medida-toque);
   }
 
   .panel-filtros.hoja {
