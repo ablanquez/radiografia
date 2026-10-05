@@ -14,6 +14,21 @@
 
 ---
 
+## [2026-10-05] 🔴 ABIERTA — En el papel, el anexo de las señales («¿Por qué lo miramos?» y las de contexto) no lleva el aire de 14 pt que le da su regla; ningún juez lo ve
+
+**Categoría:** jueces web / impresión
+**Síntoma:** web/src/estilos/informe.css da `.anexo-informe { margin-top: 14pt; }` y, en Chrome con la impresión emulada y combinacion-real analizado, a 1280 y a 390: «margin-top de .anexo-informe en impresión: 0px» (scratchpad c108/reglas-muertas.mjs; la única declaración de impresión que no gana en ningún elemento sin querer). En el PDF del papel (printToPDF desde 1280), de «(«USD 100»).» a «¿Por qué lo miramos?» hay 20 px de línea base a línea base; en el de «Descargar informe», 37,62. Por eso la página 8 empieza distinta: el papel por «Pasiva perifrástica con agente:», el PDF por «Coletilla de gerundio final:» (las otras 10, por lo mismo; scratchpad c108/comparar-paginas.mjs).
+**⭐ Qué dio verde mientras el fallo estaba vivo:** la verificación en clon limpio de db4e79a (web 242/242, salida en scratchpad c108/web-db4e79a.txt):
+`✔ 3 · desde 1280: cada pieza del marco en su línea del PDF, con su letra y el aire de la línea de antes (601.392ms)` y `✔ 3 · desde 390: …` (papel.spec, 8 de 8);
+`✔ 5 · el PDF, página a página, desde 1280 y desde 390: el número de cada página, la 4, la 5 y la 6 empiezan página, ninguna señal se parte y el final está, con la nota acompañada (1380.5707ms)` (impresion.spec, 6 de 6);
+`✔ 4 · el PDF, página a página: A4, «n / N», las siete secciones con salto antes de la 4, la 5 y la 6, la etiqueta y la frase, ninguna señal partida y la nota al final, acompañada (1.0666ms)` y `✔ 5 · su texto es el del papel, carácter a carácter sin los blancos y sin los números de página (2.4467ms)` (informe-pdf.spec, 11 de 11).
+**Cómo se cazó:** instrumento (al comparar, para la parada 4 ter, la primera línea de cada página del PDF descargado con la del papel)
+**Causa raíz:** ⏳ PENDIENTE
+**Arreglo aplicado:** ⏳ PENDIENTE
+**Commit:** ⏳ PENDIENTE
+**Ley que sale de aquí:** SIN LEY TODAVÍA
+**Traza:** web/src/estilos/informe.css (`.anexo-informe`, junto a `#senales-informe > .entrada-informe + .entrada-informe`; la regla de reinicio del papel, `:is(…, #senales-informe, …) :is(div, …) { margin: 0 }`), web/src/pantalla/pintar.ts (el `div.anexo-informe`), web/src/pantalla/informe-pdf.ts (el anexo, a 14 pt); desde a18bac8 (Tanda 4 bis, entra la regla de reinicio con id); en 77f72eb, NO CONSTA (no medido).
+
 ## [2026-10-05] ✅ CERRADA — En el papel, la sección 5 («Desglose») arranca al pie de una página y se parte; el juez de fidelidad del papel no lo ve
 
 **Categoría:** jueces web / impresión
