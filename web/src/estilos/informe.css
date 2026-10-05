@@ -32,7 +32,10 @@
  * tinta, a 12 px de «[sigla] familia (paquete)»), con 0,2 em; 4 el texto, con
  * la sigla de cada subrayado detrás, entre corchetes y a 9 pt, y 14 pt entre
  * párrafos (salto de página antes); 5 el desglose (cada paquete, su total y
- * sus familias con viñeta y sus reglas debajo, con 0,3 em); 6 las señales,
+ * sus familias con viñeta y sus reglas debajo, con 0,3 em; salto de página
+ * antes, por el DISEÑO §6.5 desde el cierre de la parada 4 bis: arrancaba al
+ * pie de una página y se partía; en el marco empieza página porque su
+ * paginador no parte bloques); 6 las señales,
  * regla a regla (salto de página antes): el nombre en Literata negrita con la
  * dirección de su ficha detrás en Atkinson 9,5 pt e ink-2, la frase, los
  * fragmentos y «Qué hacer», con 0,3 em entre líneas y 14 pt entre señales, y
@@ -206,8 +209,8 @@
   /*
    * El informe en el orden del DISEÑO: las columnas y el resultado no cuentan (display: contents) y cada sección lleva su orden.
    * Entre secciones, 14 pt (el hueco del marco) con márgenes y no con gap: impreso desde el móvil, lo que las pestañas se
-   * llevan del desglose va suelto (order: 6), y un gap lo separaría de su título. Ni la 4 ni la 6 lo llevan: empiezan página,
-   * y tras un salto forzado el margen se conserva.
+   * llevan del desglose va suelto (order: 6), y un gap lo separaría de su título. Ni la 4, ni la 5, ni la 6 lo llevan: empiezan
+   * página, y tras un salto forzado el margen se conserva.
    */
   .analizador {
     display: flex;
@@ -217,7 +220,6 @@
   }
 
   #resultado :is(#medidor, #leyenda),
-  #desglose,
   #resultado .pie-informe {
     margin-top: 14pt;
   }
@@ -483,11 +485,16 @@
   /*
    * 5 · El desglose: cada paquete, su total y sus familias, con viñeta, con sus reglas debajo. Con «#resultado» y no con
    * «#desglose»: impreso desde el móvil, sus partes están en los paneles de las pestañas (estilos/pestanas.css, que les pone su
-   * recuadro), que van dentro del resultado.
+   * recuadro), que van dentro del resultado. En página nueva (DISEÑO §6.5): #desglose lleva siempre el título de la sección, y
+   * lo que las pestañas se llevan va detrás (order: 6).
    */
   #desglose,
   #resultado :is(.otro-paquete, .desglose-paquete, .desglose-avisos, .lectura) {
     display: block;
+  }
+
+  #desglose {
+    break-before: page;
   }
 
   #resultado :is(.desglose-paquete, .desglose-avisos, .lectura) > * + *,

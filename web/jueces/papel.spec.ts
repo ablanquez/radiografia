@@ -22,8 +22,13 @@
  *      diálogo): el PDF es A4; cada página lleva su número, «n / N», con la
  *      letra del marco, su línea base y su borde derecho; no hay nada más
  *      fuera del área de la página (ni la cabecera ni el pie de Chrome); y la
- *      primera línea de la página 1 y las de las páginas donde empiezan la 4 y
- *      la 6 caen donde en el marco.
+ *      primera línea de la página 1 y las de las páginas donde empiezan la 4,
+ *      la 5 y la 6 caen donde en el marco. Las tres llevan salto de página
+ *      antes (DISEÑO §6.5): la 4 y la 6, como el marco; la 5, por el DISEÑO
+ *      (la pieza informe.s5.salto; en el marco empieza página porque su
+ *      paginador no parte bloques). Hasta el cierre de la parada 4 bis, este
+ *      test solo miraba la 4 y la 6, y la 5 arrancaba al pie de la página 2
+ *      y se partía con el juez en verde (docs/BITACORA.md, 2026-10-05).
  *   3. Desde 1280 y desde 390, cada pieza del marco en su línea del PDF: su
  *      familia, su peso, su cuerpo, su color y su borde izquierdo; y el aire
  *      entre ella y la línea de antes (la distancia entre sus líneas base),
@@ -108,6 +113,9 @@ interface Pieza {
   derecha: number;
   base?: number;
   ultimaBase?: number;
+  /** Las del DISEÑO (no del marco): su apartado y, en la del salto de la 5, que lo lleva. */
+  origen?: string;
+  saltoAntes?: boolean;
 }
 
 /** A4 a 96 ppp, en px CSS: 210 × 297 mm. Los márgenes de @page, 20 mm arriba y abajo y 18 a los lados. */
@@ -247,17 +255,19 @@ describe('el papel, como el marco «Informe / A4» del modelo', () => {
 
   test('1 · el fichero trae las piezas del marco que se juzgan, con su página', () => {
     const m = medidas();
-    const claves = [...PIEZAS.map((x) => x.clave), 'informe.pagina', 'informe.numero', 'informe.s3.muestra', 'informe.s4.titulo', 'informe.s6.titulo'];
+    const claves = [...PIEZAS.map((x) => x.clave), 'informe.pagina', 'informe.numero', 'informe.s3.muestra', 'informe.s4.titulo', 'informe.s5.titulo', 'informe.s6.titulo'];
     assert.deepEqual(
       claves.filter((c) => m[c]?.pantalla !== 'informe/escritorio' || typeof m[c]?.pagina !== 'number'),
       [],
       'piezas del marco que el fichero no trae',
     );
     assert.deepEqual([m['informe.pagina']!.ancho, m['informe.pagina']!.alto], [794, 1123], 'la página del marco, A4 a 96 ppp');
+    // El salto antes de la 5, del DISEÑO y no del marco, con su apartado.
+    assert.deepEqual([m['informe.s5.salto']?.origen, m['informe.s5.salto']?.saltoAntes], ['DISEÑO-RADIOGRAFIA.md §6.5', true], 'el salto de página antes de la sección 5, del DISEÑO');
   });
 
   for (const ancho of [1280, 390]) {
-    test(`2 · desde ${ancho}: A4, el número de cada página como el del marco, nada fuera del área, y la primera línea de las páginas 1, 4 y 6 donde en el marco`, async (t) => {
+    test(`2 · desde ${ancho}: A4, el número de cada página como el del marco, nada fuera del área, y la primera línea de la página 1 y de las que empiezan la 4, la 5 y la 6 donde en el marco`, async (t) => {
       await preparar();
       const m = medidas();
       const paginas = await pdfDesde(ancho);
@@ -282,10 +292,11 @@ describe('el papel, como el marco «Informe / A4» del modelo', () => {
           }
         }
       });
-      // La primera línea de la página 1 y de las páginas donde empiezan la 4 y la 6 (saltos de página antes), donde en el marco.
+      // La primera línea de la página 1 y de las páginas donde empiezan la 4, la 5 y la 6 (saltos de página antes), donde en el marco.
       for (const [clave, titulo] of [
         ['informe.s1.titulo', `1. ${textos.INFORME_DE_RADIOGRAFIA}`],
         ['informe.s4.titulo', `4. ${textos.TEXTO_DEL_INFORME}`],
+        ['informe.s5.titulo', `5. ${textos.DESGLOSE}`],
         ['informe.s6.titulo', `6. ${textos.SENALES_DEL_INFORME}`],
       ] as const) {
         const donde = paginas.findIndex((pg) => pg.lineas[0]?.texto === titulo);

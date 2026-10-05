@@ -36,9 +36,9 @@
  *   muestra de su línea y «[sigla] familia (paquete)». La fidelidad al marco
  *   (letra, márgenes y aire) la juzga papel.spec.ts.
  *   5. El PDF, página a página (su texto, con pdf.ts), desde 1280 y desde 390:
- *      cada página lleva abajo «n / N» con N el total de verdad; la sección 4
- *      y la 6 empiezan página (su título es lo primero de una página que no es
- *      la primera); ninguna señal se parte (su nombre y su «Qué hacer», en la
+ *      cada página lleva abajo «n / N» con N el total de verdad; las secciones
+ *      4, 5 y 6 empiezan página (su título es lo primero de una página que no
+ *      es la primera; la 5, desde el cierre de la parada 4 bis, DISEÑO §6.5); ninguna señal se parte (su nombre y su «Qué hacer», en la
  *      misma página); y el PDF acaba con la nota de autoría, acompañada en su
  *      página (docs/BITACORA.md, 2026-10-05: impreso desde el escritorio, el
  *      PDF perdía su final, y el 2 daba verde porque solo contaba páginas).
@@ -305,7 +305,7 @@ describe('el informe en Chrome, sobre astro preview', () => {
     assert.ok(Math.abs(Number(caja[1]) - A4.ancho) < 0.5 && Math.abs(Number(caja[2]) - A4.alto) < 0.5, `MediaBox ${caja[1]} × ${caja[2]}, y A4 es ${A4.ancho} × ${A4.alto}`);
   });
 
-  test('5 · el PDF, página a página, desde 1280 y desde 390: el número de cada página, la 4 y la 6 empiezan página, ninguna señal se parte y el final está, con la nota acompañada', async (t) => {
+  test('5 · el PDF, página a página, desde 1280 y desde 390: el número de cada página, la 4, la 5 y la 6 empiezan página, ninguna señal se parte y el final está, con la nota acompañada', async (t) => {
     await arrancar();
     const entradas = await p().evaluar<{ id: string; nombre: string; queHacer: string }[]>(`[...document.querySelectorAll('#senales-informe .entrada-informe')].map((e) => ({
       id: e.dataset.regla,
@@ -320,8 +320,8 @@ describe('el informe en Chrome, sobre astro preview', () => {
         t.diagnostic(`desde ${ancho}: ${n} páginas; la última acaba en «${paginas.at(-1)?.at(-2)}»`);
         // El número de cada página, abajo: «n / N», con N el total de verdad.
         assert.deepEqual(paginas.map((l) => l.at(-1)), paginas.map((_, i) => `${i + 1} / ${n}`), `desde ${ancho}: el número de cada página`);
-        // La 4 y la 6 empiezan página: su título es lo primero de una página que no es la primera.
-        for (const titulo of [`4. ${textos.TEXTO_DEL_INFORME}`, `6. ${textos.SENALES_DEL_INFORME}`]) {
+        // La 4, la 5 y la 6 empiezan página: su título es lo primero de una página que no es la primera.
+        for (const titulo of [`4. ${textos.TEXTO_DEL_INFORME}`, `5. ${textos.DESGLOSE}`, `6. ${textos.SENALES_DEL_INFORME}`]) {
           const donde = paginas.findIndex((l) => l.includes(titulo));
           assert.ok(donde > 0 && paginas[donde]![0] === titulo, `desde ${ancho}: «${titulo}» en la página ${donde + 1}, que empieza por «${paginas[donde]?.[0]}»`);
         }
