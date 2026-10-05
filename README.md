@@ -304,6 +304,9 @@ Los paquetes van aparte del JS, y no dentro, para que el JS se quede en unos
 120 KB y los JSON se puedan guardar en caché por separado. Metidos en el
 build, el JS habría pasado de 400 KB.
 
+Al pulsar «Descargar informe» (desde el 9.3), y solo entonces, se piden además el trozo
+de JS de pdfmake y las cinco caras del PDF: abajo, en [«Informe»](#informe).
+
 El catálogo no pide los paquetes ni el motor: es HTML hecho en build.
 Además de cada página, pide el JS del buscador y el de las cadenas.
 
@@ -519,75 +522,102 @@ botones), que están en [`web/src/textos.ts`](web/src/textos.ts).
 
 ## Informe
 
-Tras analizar, el botón **«Descargar informe»** abre el diálogo de imprimir
-del navegador. El informe es la misma página preparada para el papel, sin
-librerías ni nada que se genere fuera: se imprime, o se guarda en PDF desde
-ese diálogo.
+Tras analizar, el botón **«Descargar informe»** genera el informe en PDF en
+el navegador y lo descarga como «RadiografIA.pdf», sin pasar por el diálogo
+de imprimir (decisión del 05/10/2026: ese diálogo no sirve en el iPhone ni en
+el iPad). Funciona igual en el ordenador, la tableta y el móvil, y nada sale
+del navegador: el PDF lo hace [pdfmake](https://pdfmake.github.io/) en la
+propia página, con el último análisis pintado, y se descarga desde la
+memoria del navegador.
 
-**Qué incluye**, en una hoja A4 con márgenes de 2 cm:
-- la cabecera: la fecha y la hora del análisis, el género, las palabras de
-  prosa y el tramo, los paquetes con su versión (los propios, marcados
-  «(propio)») y, de cada paquete con escala, su total y con qué textos de
-  personas se compara (en pantalla van plegados en «Ver el detalle»);
-- de cada paquete, la etiqueta y la frase, si tiene escala, y el resumen;
-- la clave de las familias, con su sigla;
-- el texto con sus subrayados y, detrás de cada uno, entre corchetes, la
-  sigla de su familia: [L] léxico, [D] discurso…;
-- el desglose de cada paquete;
-- las señales, regla a regla: hasta cinco fragmentos de cada una, su
-  explicación, su sugerencia y la dirección de su ficha del catálogo. Las de
-  un paquete propio no tienen ficha, y lo dice;
-- al pie, la nota: RadiografIA analiza estilo; no demuestra autoría.
+**En el iPhone y en el iPad** el PDF se abre en el visor del sistema, y desde
+ahí se guarda o se comparte (con el botón de compartir, por ejemplo «Guardar
+en Archivos»). Es lo esperado: lo vio Antonio así en los dos el 05/10.
 
-No salen el cuadro de texto, los botones, el selector, el cargador, la
-navegación ni el panel de un subrayado (lo sustituye la lista de señales).
-Una regla no se parte entre dos páginas.
+**Qué incluye**, en A4 con márgenes de 20 mm arriba y abajo y 18 a los lados,
+calcado al marco «Informe · A4» del modelo:
+1. la cabecera: la fecha y la hora del análisis, las palabras de prosa, el
+   tramo y el género, los paquetes con su versión (los propios, marcados
+   «(propio)») y, de cada paquete con escala, su total y con qué textos de
+   personas se compara;
+2. el resultado: la etiqueta y la frase, lo que más pesa, por dónde empezar
+   y una línea de cada uno de los otros paquetes;
+3. la clave de las familias: la muestra de la línea de cada una, en tinta, y
+   «[sigla] familia (paquete)»;
+4. el texto, con sus subrayados y, detrás de cada uno, entre corchetes, la
+   sigla de su familia;
+5. el desglose de cada paquete;
+6. las señales, regla a regla: su frase en claro, hasta cinco fragmentos,
+   «Qué hacer» y la dirección de su ficha del catálogo (las de un paquete
+   propio no tienen ficha, y lo dice); al final, en letra más pequeña, por qué
+   se mira cada una y las reglas de contexto;
+7. la nota: RadiografIA analiza estilo; no demuestra autoría.
 
-**Cómo se guarda en PDF.**
-- En **Chrome** y en **Edge**, en el diálogo de imprimir, como destino,
-  «Guardar como PDF».
-- En **Firefox**, como destino, «Guardar como PDF».
-- El fichero se llama «RadiografIA.pdf» si no le das otro nombre.
+La 4, la 5 y la 6 empiezan página. Una señal no se parte entre dos páginas
+y la nota no queda sola. Cada página lleva su número, «n / N», abajo a la
+derecha. Las fuentes son las de la web, Literata y Atkinson Hyperlegible
+Next, incrustadas.
 
-**Márgenes: «Predeterminado».** En el diálogo de imprimir de Chrome, deja
-«Márgenes» en «Predeterminado»: el informe trae los suyos (20 mm arriba y
-abajo, 18 a los lados) y el número de cada página, «n / N», abajo a la
-derecha. Con «Ninguno», Chrome quita los márgenes de la página y, con
-ellos, el número, que va en el margen: la hoja pone entonces los márgenes
-por dentro, pero el número no sale (visto en Chrome 154 el 05/10). Si en
-otra impresión elegiste «Ninguno», vuelve a «Predeterminado».
+**Lo que se carga al pulsar**, la primera vez en cada visita, del mismo
+sitio: el trozo de JS de pdfmake (unos 1,09 MB; unos 359 KB comprimido con
+gzip) y las cinco caras del PDF (162.720 bytes, en WOFF). La página no
+engorda por ello: sin pulsar, no se pide. Con el texto de prueba de la
+combinación de los dos paquetes salen 11 páginas y unos 165 KB, en menos de
+un segundo la primera vez y en unas siete décimas las siguientes (medido en Chrome
+headless, el 05/10/2026). Mientras se prepara, el botón dice «Preparando el
+informe…».
 
-**El color no hace falta para leerlo.** Cada subrayado lleva su sigla y cada
-regla dice su familia y su paquete en texto. No hay que marcar «imprimir
-fondos»; se lee igual en una impresora en gris.
+**Cuando no hay PDF.** Con menos de 100 palabras no hay informe que
+descargar, y el botón lo dice debajo. Si algo falla al prepararlo (por
+ejemplo, no llega una fuente), lo dice también, con el motivo.
 
-**Imprime el último análisis.** Si después cambias el texto o los paquetes,
-vuelve a pulsar «Pon tu texto a contraluz» antes de imprimir; la cabecera
-dice de qué análisis es el informe.
+**En qué se distingue del papel.** pdfmake dibuja los subrayados a su
+manera: la línea discontinua y la punteada salen con el grosor de la familia
+(se le pide el doble, porque recorta la mitad) y los puntos, como rayitas;
+la doble discontinua de Ortotipografía, que pdfmake no tiene, va discontinua
+y fina, y la sigla [O] la distingue; el tinte de un tramo ocupa la altura de
+la línea; y un tramo con varias familias lleva la línea de la primera (las
+siglas dicen todas). Las letras de Literata son las de su tamaño óptico de
+12, el de por defecto (en papel, el navegador lo ajusta al cuerpo). El texto
+es el mismo que el del papel.
 
-**Lo que no depende de la página.** El encabezado y el pie que añade el
-navegador (la dirección, la fecha, el título) dependen de sus ajustes: en
-Firefox, la casilla «Imprimir encabezados y pies de página». En Chrome no
-salen aunque esté marcada «Encabezados y pies de página»: el informe ocupa
-los márgenes de la página con su número (visto en Chrome 154). El informe
-lleva su propia fecha en la cabecera.
+**El papel.** Ctrl+P o el menú Imprimir del navegador sacan el mismo
+informe en papel, con la hoja de impresión de la página; no se bloquean. Sin
+análisis, sale una sola hoja con el icono, el nombre y el aviso de que no
+hay nada que imprimir.
+- **Márgenes: «Predeterminado».** En el diálogo de imprimir de Chrome, deja
+  «Márgenes» en «Predeterminado»: el informe trae los suyos y el número de
+  cada página. Con «Ninguno», Chrome quita los márgenes de la página y, con
+  ellos, el número, que va en el margen: la hoja pone entonces los márgenes
+  por dentro, pero el número no sale (visto en Chrome 154 el 05/10).
+- **El color no hace falta para leerlo.** Cada subrayado lleva su sigla. No
+  hay que marcar «imprimir fondos»; se lee igual en una impresora en gris.
+- **Lo que no depende de la página.** El encabezado y el pie que añade el
+  navegador (la dirección, la fecha, el título) dependen de sus ajustes: en
+  Firefox, la casilla «Imprimir encabezados y pies de página». En Chrome no
+  salen: el informe ocupa los márgenes con su número (visto en Chrome 154).
+  En Safari no sale el número de página (no tiene cajas de margen).
 
-**Los jueces**
-([`web/jueces/impresion.spec.ts`](web/jueces/impresion.spec.ts) y la lógica
-en [`informe.spec.ts`](web/jueces/informe.spec.ts)) comprueban, con Chrome:
-- que en papel no salen el formulario ni la navegación ni el panel, y sí
-  todo lo de arriba;
-- que cada subrayado lleva su sigla y cada regla de la lista, la dirección
-  de su ficha;
-- que, sin análisis, el botón está desactivado, y que con un texto de menos
-  de 100 palabras el informe lo dice y no pinta secciones vacías;
-- que el PDF que genera Chrome es válido y A4. Con el texto de prueba de la
-  combinación de los dos paquetes salen 16 páginas y unos 214 KB;
-- que ni imprimir ni preparar la impresión piden nada a la red.
+**Imprime o descarga el último análisis.** Si después cambias el texto o los
+paquetes, vuelve a pulsar «Pon tu texto a contraluz»; la cabecera dice de qué
+análisis es el informe.
 
-Que ninguna regla quede partida entre páginas lo pide la hoja
-(`break-inside: avoid`) y lo comprueba el juez en cada entrada. Que se
-cumple en el PDF se miró a ojo, página a página.
+**Los jueces**, con Chrome:
+- [`web/jueces/informe-pdf.spec.ts`](web/jueces/informe-pdf.spec.ts), el
+  PDF que se descarga de verdad: A4, «n / N» en cada página, las siete
+  secciones en orden con los saltos del papel, ninguna señal partida (con el
+  texto de prueba y con los dos ejemplos), el mismo texto que el papel, el
+  calco al marco del modelo (±1 px), nuestras fuentes incrustadas y las
+  mismas caras que el papel, lo mismo que el papel con un paquete propio, que
+  con menos de 100 palabras no hay PDF, que Ctrl+P no se toca y que no se pide
+  nada fuera del propio sitio;
+- [`web/jueces/papel.spec.ts`](web/jueces/papel.spec.ts) e
+  [`impresion.spec.ts`](web/jueces/impresion.spec.ts), el papel: el calco al
+  marco, la hoja sin análisis, lo que sale y lo que no, y que imprimir no
+  pide nada a la red;
+- el juez 10 de [`construccion.spec.ts`](web/jueces/construccion.spec.ts),
+  que el trozo de pdfmake lleva dentro el aviso de licencia de cada pieza que
+  empaqueta (THIRD-PARTY-NOTICES § 1.8).
 
 ## Paquetes
 
