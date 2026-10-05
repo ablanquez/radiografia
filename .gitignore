@@ -27,6 +27,10 @@ web/src/estilos/tokens.css
 # `astro build`. La fuente son los paquetes, que sí se versionan.
 web/src/catalogo/tramos-de-ejemplos.json
 
+# Los PDF de prueba que Antonio imprime para comparar el informe con el marco
+# del modelo (encargo 10.4, Tanda 4 bis): se miran y no se versionan.
+docs/informes/
+
 # generated types
 .astro/
 
