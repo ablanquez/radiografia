@@ -440,6 +440,8 @@ describe('la fidelidad al modelo, sobre astro preview', () => {
         'informe.sin-resultado.icono',
         'informe.sin-resultado.nombre',
         'informe.sin-resultado.mensaje',
+        // Y, al cerrar la parada 4 bis, el salto de página antes de la sección 5 (DISEÑO §6.5).
+        'informe.s5.salto',
       ],
       'las piezas que vienen del DISEÑO y no del prototipo',
     );

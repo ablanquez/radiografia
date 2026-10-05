@@ -29,7 +29,9 @@
  * arriba de la página (con un marcador de 0 × 0 en la línea base, que se quita
  * después). Con eso el juez mira márgenes, interlineados y el aire entre
  * secciones, párrafos y señales. Y, entre las piezas del DISEÑO, la hoja de
- * imprimir sin resultado (§6.5; decisión de Antonio del 05/10).
+ * imprimir sin resultado (§6.5; decisión de Antonio del 05/10) y el salto de
+ * página antes de la sección 5 (§6.5; al cerrar la parada 4 bis: en el marco,
+ * la 5 empieza página porque su paginador no parte bloques, no por un salto).
  *
  * Cada pieza se mide en el marco de su tamaño (escritorio 1280, tableta 820,
  * móvil 390): el modelo pinta cada pantalla en un marco de ancho fijo
@@ -237,7 +239,10 @@ const PIEZAS: readonly { clave: string; pantalla: string; selector: string }[] =
  * por medidas del prototipo.
  */
 const DEL_DISENO: Readonly<
-  Record<string, { origen: string; nota: string } & Partial<Record<'ancho' | 'alto' | 'separacionDeParrafos' | 'margenDeScroll', number>> & Partial<Record<'familia' | 'peso' | 'tamano' | 'color', string>>>
+  Record<
+    string,
+    { origen: string; nota: string } & Partial<Record<'ancho' | 'alto' | 'separacionDeParrafos' | 'margenDeScroll', number>> & Partial<Record<'familia' | 'peso' | 'tamano' | 'color', string>> & { saltoAntes?: boolean }
+  >
 > = {
   'escritorio.cabecera.icono': {
     origen: 'DISEÑO-RADIOGRAFIA.md §8',
@@ -290,6 +295,12 @@ const DEL_DISENO: Readonly<
     peso: '400',
     tamano: '16px',
     color: 'rgb(74, 74, 74)',
+  },
+  // El salto de página antes de la sección 5 (Tanda 4 bis, al cerrar la parada 4 bis).
+  'informe.s5.salto': {
+    origen: 'DISEÑO-RADIOGRAFIA.md §6.5',
+    nota: 'Del DISEÑO, no del prototipo: salto de página antes de la sección 5, el desglose, como antes de la 4 y de la 6 (decisión de Antonio del 05/10, al ver que el desglose arrancaba al pie de una página y se partía). En el marco, la 5 también empieza página (informe.s5.titulo, en la 3), pero no por un salto: su paginador (Informe.tsx, paginar) no parte bloques y la sección entera no cabía en la 2; con salto antes, solo la 4 y la 6.',
+    saltoAntes: true,
   },
 };
 

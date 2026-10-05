@@ -38,7 +38,10 @@ la web real es `web/` (Astro). Esto es la fuente del calco (10.4).
   con el carril de la barra, §6.1, y el margen de scroll del anillo de
   foco, 4 px, §7, aceptados por Antonio en la parada 3; desde la Tanda 4
   bis, la hoja de imprimir sin resultado, §6.5, decisión de Antonio del
-  05/10): el script las escribe con su apartado y su nota. Desde la Tanda
+  05/10, y el salto de página antes de la sección 5, §6.5, al cerrar la
+  parada 4 bis: en el marco, la 5 empieza página porque su paginador no
+  parte bloques, no por un salto): el script las escribe con su apartado y
+  su nota. Desde la Tanda
   2, las del analizador (formulario, resultado, tramos, tarjeta de regla,
   pestañas y hoja), y también el estilo, el grosor, el color y el
   desplazamiento de la línea, la alineación, el borde izquierdo y el alto
@@ -47,7 +50,7 @@ la web real es `web/` (Astro). Esto es la fuente del calco (10.4).
   bis, el marco «Informe / A4» (la página, sus márgenes, el número de
   página y las líneas de cada sección, con su página, su caja y la línea
   base de su primera y su última línea), que lee el juez de fidelidad del
-  papel: 168 piezas.
+  papel: 169 piezas.
 - `fuentes.md` y `subconjunto-unicode.txt` — la ficha de las fuentes
   autoalojadas (origen, versiones, huellas, Reserved Font Name, comandos y
   cifras de la decisión) y la lista de caracteres del recorte (10.4,
