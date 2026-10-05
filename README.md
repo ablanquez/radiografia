@@ -35,9 +35,9 @@ el texto ni las reglas.
 
 ## Estado
 
-**En construcción.** Hoy (02/10/2026) existe el plan firmado, la
+**En construcción.** Hoy (05/10/2026) existe el plan firmado, la
 investigación de las familias en [`docs/investigacion/`](docs/investigacion/),
-la **pantalla mínima** y el **catálogo de reglas** en [`web/`](web/) (abajo,
+la **pantalla**, ya con su diseño, y el **catálogo de reglas** en [`web/`](web/) (abajo,
 [«Cómo ejecutar»](#cómo-ejecutar) y [«Catálogo»](#catálogo)) y, en la carpeta
 [`motor/`](motor/), el **motor completo**, probado con paquetes de prueba:
 
@@ -142,7 +142,7 @@ referencias ajenas**, no dadas por buenas:
   necesitaban; su código se retiró. La medida entera, en
   [`docs/investigacion/pos-medida.md`](docs/investigacion/pos-medida.md).
 
-La pantalla es la mínima: funciona, no luce. Pegas el texto, o cargas uno
+Pegas el texto, o cargas uno
 de los dos ejemplos (abajo, [«Ejemplos»](#ejemplos)), eliges el género y, al
 pulsar el botón, ves:
 
@@ -157,8 +157,8 @@ pulsar el botón, ves:
 
 Y antes de analizar eliges los paquetes: los dos incluidos, con sus
 casillas, y los tuyos, cargados desde el ordenador (abajo, [«Paquetes
-propios»](#paquetes-propios)). Después, «Descargar informe» imprime el
-resultado o lo guarda en PDF (abajo, [«Informe»](#informe)).
+propios»](#paquetes-propios)). Después, «Descargar informe» genera el
+informe en PDF y lo descarga (abajo, [«Informe»](#informe)).
 
 El punto 6 del plan está cerrado: Antonio vio el ciclo entero en Chrome el
 02/10/2026. Después vino la **ampliación 6.4**, mantenimiento del paquete y
@@ -181,7 +181,10 @@ imprimirse o guardarse en PDF desde el navegador, con la cabecera del
 análisis, la puntuación, el texto con sus subrayados y la sigla de cada
 familia, el desglose y la lista de señales con su explicación y su
 sugerencia (abajo, [«Informe»](#informe)). Antonio abrió el PDF el
-03/10/2026.
+03/10/2026. Desde la **ampliación 9.3** (05/10/2026), «Descargar informe»
+genera el PDF en el propio navegador y lo descarga, también en el iPhone y en
+el iPad; Ctrl+P sigue sacando el papel. Antonio lo vio en los tres el mismo
+día.
 
 La **ampliación 9.2, lenguaje de calle**, está hecha desde el 03/10/2026:
 el resultado se lee en frases llanas (una etiqueta con su frase, un resumen
@@ -191,8 +194,19 @@ resultado»](#cómo-leer-el-resultado)). Antonio la vio en Chrome el mismo
 día y cambió el titular por la etiqueta y la frase; falta que vea ese
 retoque.
 
-Falta después, en el orden de la [hoja de ruta](#hoja-de-ruta): el diseño
-(punto 10) y el despliegue (11).
+El **diseño** (punto 10) está cerrado, a falta de la última mirada de
+Antonio en Chrome, en el iPhone y en el iPad. La web calca el modelo de
+Figma Make con los tokens del DISEÑO y las fuentes servidas desde la propia
+web (abajo, [«Diseño»](#diseño)). Pasó por el
+[acta de contraste y accesibilidad](docs/acta-contraste-y-accesibilidad.md):
+- el contraste de cada par de colores;
+- el daltonismo;
+- los 320 px;
+- el tamaño de lo que se pulsa;
+- el árbol de accesibilidad.
+
+Falta después, en el orden de la [hoja de ruta](#hoja-de-ruta), el
+despliegue (punto 11).
 
 ## Cómo ejecutar
 
@@ -279,46 +293,78 @@ con un solo `package-lock.json`. `web/` importa el motor por
 
 ### Lo que viaja al navegador
 
-Nada sale del navegador. La página pide su JS y los dos paquetes incluidos,
-que se validan al arrancar, y un texto de ejemplo cuando se pulsa su botón.
-Un paquete propio no se pide: se lee del fichero, en el navegador (abajo,
-[«Paquetes propios»](#paquetes-propios)). Medido en el build de la web el
-03/10/2026, con el catálogo, el cargador, la CSP, el informe y el lenguaje
-de calle:
+Nada sale del navegador. Lo que la web pide es suyo, del mismo sitio:
 
-| fichero | bytes |
-|---|---|
-| el JS del analizador (motor, validador, cargador, informe, lenguaje de calle y aviso MIT de Ajv; minificado por Vite) | 137.352 |
-| las cadenas de la interfaz que comparten el analizador y el catálogo (un JS aparte) | 9.584 |
-| `paquetes/radiografia.json` (con su calibración, los nombres y las frases en claro de las reglas) | 347.340 |
-| `paquetes/espanol-correcto.json` | 21.618 |
-| `index.html` (con la CSP, 507 bytes, y la hoja de impresión) | 5.565 |
-| `ejemplos/antonio.txt`, al pulsar su botón | 1.777 |
-| `ejemplos/ia.txt`, al pulsar su botón | 1.957 |
+- **al cargar**: su HTML, su JS y su CSS, las fuentes y los dos paquetes
+  incluidos, que se validan al arrancar;
+- **al pulsar un ejemplo**: el texto de ese ejemplo;
+- **al pintar un resultado**: la negrita del papel, una vez por visita
+  (abajo, [«Informe»](#informe));
+- **al pulsar «Descargar informe»**, la primera vez: el trozo de JS de
+  pdfmake y las cinco caras del PDF.
+
+Un paquete propio no se pide: se lee del fichero, en el navegador (abajo,
+[«Paquetes propios»](#paquetes-propios)).
+
+Medido el 05/10/2026 en Chrome sobre el build (`astro preview`), petición por
+petición. La columna «con gzip» es cada fichero comprimido con el gzip de
+Node a su nivel por defecto; lo que comprima el servidor de verdad se verá
+en el despliegue (punto 11). Las fuentes ya van comprimidas.
+
+**El analizador, al cargar:** 15 peticiones.
+
+| fichero | bytes | con gzip |
+|---|---|---|
+| `index.html` (con la CSP y la hoja de impresión) | 6.496 | 2.385 |
+| el JS del analizador (motor, validador, cargador, resultado, papel y aviso MIT de Ajv; minificado por Vite) | 156.330 | 35.585 |
+| las cadenas de la interfaz, que comparte con el catálogo (un JS aparte) | 10.435 | 4.269 |
+| el arranque de los módulos (un JS de Vite) | 589 | 368 |
+| el CSS del analizador (con el del papel) | 20.843 | 4.331 |
+| el CSS común: tokens, fuentes, cabecera, pie y familias | 12.981 | 2.952 |
+| Literata 400 (woff2) | 43.696 | — |
+| Literata 400 itálica (woff2) | 44.212 | — |
+| Atkinson Hyperlegible Next, de 400 a 700 (woff2) | 25.920 | — |
+| `paquetes/radiografia.json` (con su calibración, los nombres y las frases en claro de las reglas) | 352.239 | 76.955 |
+| `paquetes/espanol-correcto.json` | 21.976 | 6.066 |
+| el icono de la cabecera, los dos del navegador y el manifiesto | 3.637 | 3.127 |
+| **en total** | **699.354** | **249.866** |
+
+**Después, solo si hace falta:**
+
+| cuándo | fichero | bytes | con gzip |
+|---|---|---|---|
+| al pulsar «Texto humano» | `ejemplos/antonio.txt` | 1.777 | — |
+| al pulsar «Texto de IA» | `ejemplos/ia.txt` | 1.957 | — |
+| al pintar un resultado | Literata 600, la negrita del papel (woff2) | 46.424 | — |
+| al pulsar «Descargar informe» | el trozo de JS de pdfmake, con la definición del informe | 1.093.577 | 362.661 |
+| al pulsar «Descargar informe» | las cinco caras del PDF (WOFF): Literata 400, 400 itálica y 600, y Atkinson 400 y 700 | 162.720 | — |
 
 Los dos paquetes de prueba, `ejemplos/paquete-prueba.json` (6.900 bytes) y
 `ejemplos/paquete-prueba-invalido.json` (6.904), se publican para
 descargarlos y copiarlos, pero la página no los pide.
 
 Los paquetes van aparte del JS, y no dentro, para que el JS se quede en unos
-120 KB y los JSON se puedan guardar en caché por separado. Metidos en el
-build, el JS habría pasado de 400 KB.
+156 KB y los JSON se puedan guardar en caché por separado. Metidos en el
+build, el JS habría pasado de 400 KB (medido el 03/10/2026).
 
-Al pulsar «Descargar informe» (desde el 9.3), y solo entonces, se piden además el trozo
-de JS de pdfmake y las cinco caras del PDF: abajo, en [«Informe»](#informe).
+**El catálogo** no pide los paquetes ni el motor: es HTML hecho en build.
+Pide el CSS común, las tres fuentes, las cadenas y los iconos, como el
+analizador, y además:
 
-El catálogo no pide los paquetes ni el motor: es HTML hecho en build.
-Además de cada página, pide el JS del buscador y el de las cadenas.
+| fichero | bytes | con gzip |
+|---|---|---|
+| `reglas/index.html`, el índice | 74.694 | 15.771 |
+| el CSS del catálogo y de las fichas | 7.302 | 1.618 |
+| el JS del buscador y los filtros | 3.652 | 1.569 |
+| **en total, el índice** (12 peticiones) | **226.529** | **143.134** |
+| cada ficha, `reglas/<id>/index.html` (sin JS) | de 6.300 a 18.267 | |
+| **en total, una ficha** (10 peticiones; la de «Conector repetido») | **147.051** | **124.934** |
+| las 50 fichas juntas | 476.320 | |
 
-| fichero | bytes |
-|---|---|
-| `reglas/index.html`, el índice | 73.781 |
-| el JS del buscador y los filtros | 1.131 |
-| cada ficha, `reglas/<id>/index.html` | de 4.179 a 16.272 |
-| las 50 fichas juntas | 358.643 |
-
-`dist/` entero: 52 páginas HTML (el analizador, el índice y 50 fichas), 61
-ficheros y 972.552 bytes. Cada página lleva la CSP.
+`dist/` entero: 52 páginas HTML (el analizador, el índice y 50 fichas), 85
+ficheros y 2.604.629 bytes. Casi la mitad (1.256.297) es el trozo de pdfmake
+y las fuentes del PDF, que solo se piden al descargar. Cada página lleva la
+CSP.
 
 ## Ejemplos
 
@@ -559,8 +605,8 @@ derecha. Las fuentes son las de la web, Literata y Atkinson Hyperlegible
 Next, incrustadas.
 
 **Lo que se carga al pulsar**, la primera vez en cada visita, del mismo
-sitio: el trozo de JS de pdfmake (unos 1,09 MB; unos 359 KB comprimido con
-gzip) y las cinco caras del PDF (162.720 bytes, en WOFF). La página no
+sitio: el trozo de JS de pdfmake (unos 1,09 MB; unos 363 KB comprimido con
+gzip, medido el 05/10/2026) y las cinco caras del PDF (162.720 bytes, en WOFF). La página no
 engorda por ello: sin pulsar, no se pide. Con el texto de prueba de la
 combinación de los dos paquetes salen 11 páginas y unos 165 KB, del clic a
 la descarga en algo más de un segundo la primera vez y en algo menos las
@@ -622,6 +668,82 @@ análisis es el informe.
 - el juez 10 de [`construccion.spec.ts`](web/jueces/construccion.spec.ts),
   que el trozo de pdfmake lleva dentro el aviso de licencia de cada pieza que
   empaqueta (THIRD-PARTY-NOTICES § 1.8).
+
+## Diseño
+
+El aspecto de la web (punto 10 del plan) sale de cuatro sitios, por este
+orden de mando.
+
+1. **El DISEÑO**, [`DISEÑO-RADIOGRAFIA.md`](DISEÑO-RADIOGRAFIA.md). Manda.
+   Fija:
+   - la paleta de las familias, con sus estilos de línea y sus siglas;
+   - la tipografía;
+   - cómo es cada pantalla en el ordenador, la tableta y el móvil;
+   - el informe;
+   - las reglas de accesibilidad.
+
+   Cuando el modelo dice otra cosa, gana el DISEÑO.
+2. **El modelo.** Es un prototipo hecho en Figma Make a partir del DISEÑO.
+   Su material está en [`docs/figma/`](docs/figma/): las guías que leyó Make,
+   los prompts y su código, solo como referencia de lectura.
+   - **Cómo se calca.** El prototipo publicado se midió por CDP: fuente,
+     tamaño, interlineado, colores, bordes, rellenos y cajas de 169 piezas,
+     en sus tres tamaños y en el marco del informe A4. Las medidas están en
+     [`docs/figma/medidas-modelo.json`](docs/figma/medidas-modelo.json). La
+     web se escribió a mano sobre Astro, sin copiar el código de Make, y el
+     juez de fidelidad
+     ([`web/jueces/fidelidad.spec.ts`](web/jueces/fidelidad.spec.ts)) la
+     compara pieza a pieza: ±1 px en las longitudes; el color, la letra y el
+     texto, iguales.
+   - **Lo que no viene del modelo.** Algunas piezas salen del DISEÑO y no
+     del modelo: el icono de la cabecera, la separación de los párrafos, la
+     columna del resultado con scroll propio, el sitio del anillo de foco al
+     desplazar, la hoja de imprimir sin resultado y el salto antes del
+     desglose. En las medidas llevan su
+     apartado del DISEÑO y una nota que dice por qué.
+3. **Los tokens.** Están en
+   [`docs/figma/tokens.json`](docs/figma/tokens.json), en el formato del
+   Design Tokens Community Group (2025.10): colores, tipografías, tamaños,
+   espacios, radios, foco, medidas y el informe.
+   - **De dónde sale el CSS.** `web/src/estilos/tokens.css` se genera de ese
+     JSON antes de cada `npm run dev` y `npm run build` (con
+     [`web/scripts/tokens-a-css.ts`](web/scripts/tokens-a-css.ts)) y no se
+     versiona.
+   - **Ningún color suelto.** Un juez comprueba que en `web/src` no hay
+     ningún color fuera de los tokens
+     ([`web/jueces/tokens.spec.ts`](web/jueces/tokens.spec.ts)). El PDF lee
+     el mismo JSON.
+   - **El único cambio en los colores de las familias.** Puntuación y formato pasó de
+     #009E73 a #009988 el 05/10/2026, porque el simulador de daltonismo la
+     confundía con Ortotipografía (abajo, en el acta).
+4. **Las fuentes.** Literata es la del texto analizado y la lectura;
+   Atkinson Hyperlegible Next, la de la interfaz. Las dos son de licencia
+   OFL 1.1.
+   - **Dónde están.** Se sirven desde la propia web
+     ([`web/public/fuentes/`](web/public/fuentes/)), recortadas a los
+     caracteres que se usan y fijadas en los pesos que hacen falta.
+   - **Por qué desde la propia web.** Así nada sale del navegador: ni la
+     dirección de quien la visita va a los servidores de Google Fonts (el
+     LG München I lo condenó el 20/01/2022, 3 O 17493/20), ni la página
+     depende de otro sitio. Recortadas pesan menos.
+   - **Dónde está el detalle.** Origen, versiones, huellas y comandos, en
+     [`docs/figma/fuentes.md`](docs/figma/fuentes.md); la atribución, en
+     [`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md) § 2.4.
+
+Los iconos son los que eligió Antonio
+([`docs/figma/icono/`](docs/figma/icono/)): el de la pestaña del navegador y
+el de la cabecera.
+
+**La accesibilidad** está medida en el
+[acta de contraste y accesibilidad](docs/acta-contraste-y-accesibilidad.md).
+Recoge:
+
+- el contraste de cada par de colores y de todo el texto que se ve;
+- el daltonismo simulado;
+- los 320 px;
+- el tamaño de lo que se pulsa;
+- el árbol de accesibilidad;
+- lo que queda sin medir, como un lector de pantalla de verdad.
 
 ## Paquetes
 
@@ -744,7 +866,10 @@ corta, y el paquete no entra:
 - Cada señal dice de qué paquete viene: la leyenda nombra cada familia con
   su paquete, cada paquete tiene su bloque en el desglose y el panel de un
   subrayado dice el paquete de cada regla.
-- Las familias de un paquete propio se subrayan con trazo discontinuo.
+- Las familias de un paquete propio se subrayan en gris (ink-2, con su
+  tinte al 14 %) y con trazo discontinuo, también sus reglas informativas
+  (DISEÑO §4; desde el 10.4, porque en el 8.1 las informativas iban
+  punteadas).
 - Las reglas de un paquete propio no tienen página en el catálogo. El panel
   enseña su ficha completa, y en el desglose se despliega al pulsar su
   línea.
