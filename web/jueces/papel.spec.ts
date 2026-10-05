@@ -40,6 +40,17 @@
  *      la ventana del tamaño del área (que es el papel lo dice la línea base
  *      del nombre, la misma en el DOM y en el PDF); y sin red: el icono es el
  *      de la cabecera, ya cargado.
+ *   6. «Márgenes: Ninguno» en el diálogo de imprimir (visto el 05/10 en el de
+ *      Chrome 154: quita los márgenes de @page y, con ellos, el número de
+ *      página): cuando el área de la página es la hoja entera, el cuerpo pone
+ *      esos márgenes por dentro, en cada página (box-decoration-break: clone),
+ *      y la hoja sin resultado los descuenta; con los márgenes de @page, nada.
+ *      En el DOM con la impresión emulada y la ventana del tamaño del área:
+ *      printToPDF no deja quitar los márgenes de @page (los de sus opciones
+ *      no les ganan), y el diálogo no se abre en Chrome headless. En el
+ *      diálogo de verdad (Chrome 154 con ventana, por CDP, el 05/10): con
+ *      «Predeterminado», como el marco; con «Ninguno», el texto en x = 68 y la
+ *      primera línea de las páginas 1 y 2 en y = 92.
  *
  * Tolerancia, la del encargo: ±1 px en posiciones y distancias (Chrome deja
  * cada línea base en un píxel entero: ±0,5 en cada una), ±0,05 px en el
@@ -201,6 +212,37 @@ describe('el papel, como el marco «Informe / A4» del modelo', () => {
     assert.deepEqual(diferencias, []);
     // Y nada de red al imprimir la hoja: el icono es el de la cabecera, ya cargado.
     assert.deepEqual(sesion.despues, [], 'peticiones después de la carga inicial');
+  });
+
+  test('6 · «Márgenes: Ninguno» en el diálogo: con el área de la página del tamaño de la hoja, el cuerpo pone dentro los márgenes de @page, en cada página; con los de @page, nada', async () => {
+    sesion = await (arranque ??= abrirAnalizadorConTestigos());
+    /** Con la impresión emulada y la ventana del tamaño del área de la página: el relleno del cuerpo, cómo se parte y el alto de la hoja sin resultado. */
+    const leer = async (ancho: number, alto: number): Promise<{ relleno: number[]; partido: string; hoja: number }> => {
+      await p().cdp('Emulation.setDeviceMetricsOverride', { width: ancho, height: alto, deviceScaleFactor: 1, mobile: false });
+      await p().cdp('Emulation.setEmulatedMedia', { media: 'print' });
+      return p().evaluar(`(() => {
+        const c = getComputedStyle(document.body);
+        return { relleno: [c.paddingTop, c.paddingRight, c.paddingBottom, c.paddingLeft].map(parseFloat), partido: c.boxDecorationBreak, hoja: document.querySelector('.hoja-sin-informe').getBoundingClientRect().height };
+      })()`);
+    };
+    const diferencias: string[] = [];
+    try {
+      // La hoja entera (210 × 297 mm, en px enteros): los márgenes de @page, por dentro y en cada página; la hoja sin resultado, sin ellos.
+      // El área con los márgenes de @page (174 × 257 mm): nada.
+      for (const [que, ancho, alto, relleno, hoja] of [
+        ['la hoja entera', PAGINA.ancho, PAGINA.alto, [PAGINA.arriba, PAGINA.lado, PAGINA.arriba, PAGINA.lado], PAGINA.alto - 2 * PAGINA.arriba],
+        ['el área con los márgenes de @page', PAGINA.ancho - 2 * PAGINA.lado, PAGINA.alto - 2 * PAGINA.arriba, [0, 0, 0, 0], PAGINA.alto - 2 * PAGINA.arriba],
+      ] as const) {
+        const visto = await leer(Math.round(ancho), Math.round(alto));
+        if (visto.relleno.some((x, k) => !cerca(x, relleno[k]!))) diferencias.push(`${que}: el relleno del cuerpo es ${visto.relleno.join(' ')}, y lo esperado ${relleno.map((x) => x.toFixed(2)).join(' ')}`);
+        if (visto.partido !== 'clone') diferencias.push(`${que}: box-decoration-break ${visto.partido}`);
+        if (!cerca(visto.hoja, hoja)) diferencias.push(`${que}: la hoja sin resultado mide ${visto.hoja}, y lo esperado ${hoja.toFixed(2)}`);
+      }
+    } finally {
+      await p().cdp('Emulation.setEmulatedMedia', { media: '' });
+      await anchoDe(1280);
+    }
+    assert.deepEqual(diferencias, []);
   });
 
   test('1 · el fichero trae las piezas del marco que se juzgan, con su página', () => {

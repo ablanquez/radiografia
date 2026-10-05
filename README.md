@@ -549,6 +549,14 @@ Una regla no se parte entre dos páginas.
 - En **Firefox**, como destino, «Guardar como PDF».
 - El fichero se llama «RadiografIA.pdf» si no le das otro nombre.
 
+**Márgenes: «Predeterminado».** En el diálogo de imprimir de Chrome, deja
+«Márgenes» en «Predeterminado»: el informe trae los suyos (20 mm arriba y
+abajo, 18 a los lados) y el número de cada página, «n / N», abajo a la
+derecha. Con «Ninguno», Chrome quita los márgenes de la página y, con
+ellos, el número, que va en el margen: la hoja pone entonces los márgenes
+por dentro, pero el número no sale (visto en Chrome 154 el 05/10). Si en
+otra impresión elegiste «Ninguno», vuelve a «Predeterminado».
+
 **El color no hace falta para leerlo.** Cada subrayado lleva su sigla y cada
 regla dice su familia y su paquete en texto. No hay que marcar «imprimir
 fondos»; se lee igual en una impresora en gris.
@@ -558,9 +566,11 @@ vuelve a pulsar «Pon tu texto a contraluz» antes de imprimir; la cabecera
 dice de qué análisis es el informe.
 
 **Lo que no depende de la página.** El encabezado y el pie que añade el
-navegador (la dirección, la fecha, el número de página) dependen de sus
-ajustes: en Firefox, la casilla «Imprimir encabezados y pies de página». El
-informe lleva su propia fecha en la cabecera.
+navegador (la dirección, la fecha, el título) dependen de sus ajustes: en
+Firefox, la casilla «Imprimir encabezados y pies de página». En Chrome no
+salen aunque esté marcada «Encabezados y pies de página»: el informe ocupa
+los márgenes de la página con su número (visto en Chrome 154). El informe
+lleva su propia fecha en la cabecera.
 
 **Los jueces**
 ([`web/jueces/impresion.spec.ts`](web/jueces/impresion.spec.ts) y la lógica

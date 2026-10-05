@@ -568,3 +568,26 @@
     break-before: avoid;
   }
 }
+
+/*
+ * El respaldo de los márgenes (Tanda 4 bis; visto el 05/10 en el diálogo de imprimir de Chrome 154): con «Márgenes: Ninguno»,
+ * el diálogo quita los de @page (20 mm arriba y abajo, 18 a los lados) y, con ellos, el número de página, que va en una caja de
+ * margen (el PDF de Antonio del 05/10 salió así: el texto en x = 0). Al imprimir, 100vw y 100vh son el área de la página (174 ×
+ * 257 mm con los márgenes de @page; la hoja entera, 210 × 297, con «Ninguno»): el cuerpo pone por dentro, en cada página
+ * (box-decoration-break: clone), lo que el área tenga de más, y la hoja sin resultado no pasa de 257 mm. Con los márgenes de
+ * @page, nada. El número no vuelve: lo dice el README. No con una media query de ancho: en el diálogo, width es el de la hoja
+ * entera también con «Predeterminado» (Media Queries 4: «For paged media, this is the width of the page box»; visto el 05/10:
+ * los márgenes salían dobles).
+ */
+@media print {
+  body,
+  body.con-pestanas {
+    padding: max(0px, (100vh - 257mm) / 2) max(0px, (100vw - 174mm) / 2);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+
+  .solo-impresion.hoja-sin-informe:not([hidden]) {
+    height: min(100vh, 257mm);
+  }
+}
