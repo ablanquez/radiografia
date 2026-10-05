@@ -33,7 +33,7 @@ import assert from 'node:assert/strict';
 import * as textos from '../src/textos.ts';
 import { PESTANAS, pestanaTrasTecla, REPARTO } from '../src/pantalla/pestanas.ts';
 import { TEXTO_DE_COMBINACION_REAL } from './apoyo.ts';
-import { abrirAnalizadorConTestigos, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
+import { abrirAnalizadorConTestigos, ANCHO_ASENTADO, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
 
 describe('las pestañas: la lógica', () => {
   test('1 · el reparto del DISEÑO §6.2 y la pestaña que toca con cada tecla', () => {
@@ -70,6 +70,7 @@ describe('las pestañas en el móvil, sobre astro preview', () => {
   });
   const anchoDe = async (ancho: number): Promise<void> => {
     await (await p()).cdp('Emulation.setDeviceMetricsOverride', { width: ancho, height: 844, deviceScaleFactor: 1, mobile: ancho < 769 });
+    await (await p()).hasta(ANCHO_ASENTADO, `el ancho de ${ancho}, asentado`);
   };
   const tecla = async (key: string, code: string, windowsVirtualKeyCode: number): Promise<void> => {
     for (const type of ['keyDown', 'keyUp']) await (await p()).cdp('Input.dispatchKeyEvent', { type, key, code, windowsVirtualKeyCode });

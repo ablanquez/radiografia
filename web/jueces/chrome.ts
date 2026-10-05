@@ -136,6 +136,19 @@ export interface PaginaConTestigos {
 export type AnalizadorConTestigos = PaginaConTestigos;
 
 /**
+ * Verdadero cuando la página ya ha recibido el último cambio de ancho (10.4, Tanda 4), para esperarlo con hasta() tras
+ * Emulation.setDeviceMetricsOverride: los oyentes de matchMedia lo reciben en el siguiente fotograma, no en el acto, y
+ * con resultado mueven bloques (pantalla/pestanas.ts): en el móvil, a los paneles de las pestañas; en una columna, la
+ * vista detrás del medidor. Sin resultado (o en una página sin analizador), no hay nada que esperar.
+ */
+export const ANCHO_ASENTADO = `(() => {
+  const resultado = document.getElementById('resultado');
+  if (resultado === null || resultado.hidden || resultado.classList.contains('insuficiente')) return true;
+  const vistaEnUnaColumna = document.getElementById('vista').parentElement.id !== 'columna-texto';
+  return document.body.classList.contains('con-pestanas') === (innerWidth <= 768) && vistaEnUnaColumna === (innerWidth <= 1023);
+})()`;
+
+/**
  * Build, astro preview y Chrome con el analizador cargado: espera a que diga
  * que cargó los paquetes y a que la red lleve 500 ms quieta (nada en vuelo ni
  * nada nuevo), y pone ahí la marca. Si algo falla por el camino, cierra lo que

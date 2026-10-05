@@ -17,6 +17,25 @@
  *    «If the given child is a reference to an existing node in the document,
  *    appendChild() moves it from its current position to the new position».
  *
+ * Y la vista cambia de sitio con el ancho (10.4, Tanda 4; decisión de Antonio
+ * en la parada 3): en la tableta y en el móvil va justo detrás del medidor (la
+ * pastilla y lo que más pesa), que es donde se ve, para que el orden del
+ * documento sea el visual también para el lector de pantalla; en el
+ * escritorio, al final de la columna del texto, debajo del cuadro plegado: la
+ * columna del resultado es una sola caja con scroll propio (DISEÑO §6.1) y la
+ * vista, que se ve fuera de ella, no puede ir dentro. Lo hace la misma función
+ * que reparte los bloques en los paneles, con los dos cortes a la vez (1023 y
+ * 768): un cambio de ancho que cruza los dos da dos avisos, y cada uno lo deja
+ * todo en el sitio del ancho de ahora, lleguen en el orden que lleguen. Mover
+ * un nodo le quita el foco a lo que lo tenía dentro: se le devuelve.
+ * [DOC] https://www.w3.org/WAI/WCAG22/Understanding/meaningful-sequence.html
+ *    — 1.3.2: «When the sequence in which content is presented affects its
+ *    meaning, a correct reading sequence can be programmatically
+ *    determined».
+ * [DOC] https://html.spec.whatwg.org/multipage/infrastructure.html — en los
+ *    pasos de quitar un nodo: «If document's focused area is removedNode, then
+ *    set document's focused area to document's viewport».
+ *
  * El patrón tabs de la APG, con activación automática (como el modelo):
  * tablist, tab y tabpanel; aria-selected y aria-controls en cada pestaña y
  * aria-labelledby en cada panel; solo la elegida en el orden del tabulador; las
@@ -52,13 +71,17 @@ export function pestanaTrasTecla(actual: Pestana, tecla: string): Pestana | null
 export interface Pestanas {
   /** Antes de pintar o de quitar el resultado: cada bloque, a su sitio del escritorio, y sin pestañas. */
   devolver: () => void;
-  /** Con el resultado pintado: si es el móvil, cada bloque a su panel, en la pestaña Texto. */
+  /** Con el resultado pintado: la vista, en el sitio del ancho; y si es el móvil, cada bloque a su panel, en la pestaña Texto. */
   alPintar: () => void;
 }
 
 /** Una sola por página: la barra con sus tres pestañas y los tres paneles (index.astro). */
 export function crearPestanas(barra: HTMLElement): Pestanas {
   const movil = matchMedia('(max-width: 768px)');
+  const unaColumna = matchMedia('(max-width: 1023px)');
+  const vista = document.getElementById('vista')!;
+  const medidor = document.getElementById('medidor')!;
+  const columnaDelTexto = document.getElementById('columna-texto')!;
   const boton = (p: Pestana): HTMLButtonElement => document.getElementById(`pestana-${p}`) as HTMLButtonElement;
   const panel = (p: Pestana): HTMLElement => document.getElementById(`panel-${p}`)!;
   /** De dónde salió cada bloque movido, para devolverlo; y si «Ver el detalle» estaba abierto. */
@@ -117,11 +140,23 @@ export function crearPestanas(barra: HTMLElement): Pestanas {
     e.preventDefault();
     elegir(destino, true);
   });
-  movil.addEventListener('change', () => {
+  /** La vista, en el sitio del ancho: detrás del medidor en una columna; al final de la columna del texto en el escritorio. */
+  const colocarLaVista = (): void => {
+    if (unaColumna.matches) {
+      if (medidor.nextElementSibling !== vista) medidor.after(vista);
+    } else if (columnaDelTexto.lastElementChild !== vista) columnaDelTexto.append(vista);
+  };
+  /** Con resultado, cada bloque en el sitio del ancho de ahora; y el foco, donde estaba. */
+  const ajustar = (): void => {
     if (!hayResultado) return;
+    const foco = document.activeElement;
+    devolver();
+    colocarLaVista();
     if (movil.matches) repartir();
-    else devolver();
-  });
+    if (foco instanceof HTMLElement && foco !== document.activeElement && foco.isConnected) foco.focus({ preventScroll: true });
+  };
+  movil.addEventListener('change', ajustar);
+  unaColumna.addEventListener('change', ajustar);
   return {
     devolver: () => {
       hayResultado = false;
@@ -129,7 +164,7 @@ export function crearPestanas(barra: HTMLElement): Pestanas {
     },
     alPintar: () => {
       hayResultado = true;
-      if (movil.matches) repartir();
+      ajustar();
     },
   };
 }

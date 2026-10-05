@@ -58,7 +58,6 @@ body.con-pestanas[data-pestana='reglas'] .pie {
   display: flex;
   flex-direction: column;
   gap: var(--espacio-32);
-  order: 5;
 }
 
 /* En Reglas, el desglose de las reglas con su título, en una tarjeta de borde line (como el modelo); el título no se ve fuera. */
@@ -88,12 +87,6 @@ body.con-pestanas[data-pestana='reglas'] .pie {
 .panel-pestana .desglose-avisos {
   font-size: var(--tipografia-tamano-secundario);
   line-height: var(--tipografia-interlineado-secundario);
-}
-
-
-/* Dentro de un panel, el orden del reparto (pestanas.ts), no el de la tableta. */
-.panel-pestana > * {
-  order: 0;
 }
 
 .panel-pestana:focus-visible {

@@ -37,7 +37,7 @@
 import { after, describe, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { TEXTO_DE_COMBINACION_REAL } from './apoyo.ts';
-import { abrirAnalizadorConTestigos, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
+import { abrirAnalizadorConTestigos, ANCHO_ASENTADO, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
 
 const ALTO = 800;
 
@@ -66,6 +66,7 @@ describe('la columna del resultado con scroll propio, en Chrome sobre astro prev
   });
   const anchoDe = async (ancho: number): Promise<void> => {
     await (await p()).cdp('Emulation.setDeviceMetricsOverride', { width: ancho, height: ALTO, deviceScaleFactor: 1, mobile: ancho < 769 });
+    await (await p()).hasta(ANCHO_ASENTADO, `el ancho de ${ancho}, asentado`);
   };
   const esperar = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
   /** Espera a que el scroll de la ventana y el de la columna se queden quietos (la rueda puede ir con animación). */

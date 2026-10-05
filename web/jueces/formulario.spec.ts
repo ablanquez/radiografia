@@ -32,7 +32,7 @@ import * as textos from '../src/textos.ts';
 import { generosDe, nombreDeGenero } from '../src/pantalla/generos.ts';
 import { GENERO_DE_LOS_EJEMPLOS } from '../src/pantalla/ejemplos.ts';
 import { EJEMPLOS_PUBLICOS, paquetesIncluidos } from './apoyo.ts';
-import { abrirAnalizadorConTestigos, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
+import { abrirAnalizadorConTestigos, ANCHO_ASENTADO, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
 
 const TINTA_2 = 'rgb(74, 74, 74)';
 const ACENTO = 'rgb(51, 34, 136)';
@@ -56,6 +56,7 @@ describe('el formulario del analizador en Chrome, sobre astro preview', () => {
   });
   const anchoDe = async (ancho: number): Promise<void> => {
     await (await p()).cdp('Emulation.setDeviceMetricsOverride', { width: ancho, height: 900, deviceScaleFactor: 1, mobile: ancho < 769 });
+    await (await p()).hasta(ANCHO_ASENTADO, `el ancho de ${ancho}, asentado`);
   };
   const caja = async (selector: string): Promise<Caja> =>
     (await p()).evaluar<Caja>(`(() => { const r = document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect(); return { izquierda: r.left, arriba: r.top, ancho: r.width, alto: r.height }; })()`);

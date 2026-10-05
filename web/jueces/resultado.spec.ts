@@ -44,7 +44,7 @@ import * as textos from '../src/textos.ts';
 import { recuentoDeFamilias } from '../src/pantalla/lectura.ts';
 import { indexar } from '../src/pantalla/pintar.ts';
 import { motorDelNavegador, paquetesIncluidos, TEXTO_DE_COMBINACION_REAL } from './apoyo.ts';
-import { abrirAnalizadorConTestigos, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
+import { abrirAnalizadorConTestigos, ANCHO_ASENTADO, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
 
 const CARD = 'rgb(245, 245, 245)';
 const LINEA = 'rgb(217, 217, 217)';
@@ -71,6 +71,7 @@ describe('el resultado del analizador en Chrome, sobre astro preview', () => {
   });
   const anchoDe = async (ancho: number): Promise<void> => {
     await (await p()).cdp('Emulation.setDeviceMetricsOverride', { width: ancho, height: 900, deviceScaleFactor: 1, mobile: ancho < 769 });
+    await (await p()).hasta(ANCHO_ASENTADO, `el ancho de ${ancho}, asentado`);
   };
   const caja = async (selector: string): Promise<Caja> =>
     (await p()).evaluar<Caja>(`(() => { const e = document.querySelector(${JSON.stringify(selector)}); const r = e.getBoundingClientRect(); return { izquierda: r.left + scrollX, derecha: r.right + scrollX, arriba: r.top + scrollY, ancho: r.width, alto: r.height, visible: e.checkVisibility() }; })()`);

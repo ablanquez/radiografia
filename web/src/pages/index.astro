@@ -63,6 +63,11 @@
  *    tinte y su sigla, en estilos/familias.css, por el id de cada familia
  *    (pantalla/familias.ts); las de un paquete propio, en gris y siempre
  *    discontinuas (DISEÑO §4).
+ * El orden del documento es el que se ve (10.4, Tanda 4; decisión de Antonio
+ *    en la parada 3): los paneles de las pestañas del móvil van dentro del
+ *    resultado, detrás del medidor (la pastilla y lo que más pesa), y en la
+ *    tableta y el móvil la vista pasa a ese mismo sitio (pantalla/pestanas.ts);
+ *    en el escritorio se queda en la columna del texto. Sin order de CSS.
  * El botón «Descargar informe» (encargo 9.1, b; firmado en la parada 1),
  *    type="button" y desactivado hasta el primer resultado: abre el diálogo de
  *    imprimir (pantalla.ts), donde se elige «Guardar como PDF».
@@ -219,6 +224,9 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
         <section id="resultado" class="resultado" aria-label={RESULTADO} hidden>
           <div id="cabecera-informe" class="solo-impresion"></div>
           <div id="medidor" class="medidor"></div>
+          <div id="panel-texto" class="panel-pestana" role="tabpanel" aria-labelledby="pestana-texto" tabindex="0" hidden></div>
+          <div id="panel-reglas" class="panel-pestana" role="tabpanel" aria-labelledby="pestana-reglas" tabindex="0" hidden></div>
+          <div id="panel-datos" class="panel-pestana" role="tabpanel" aria-labelledby="pestana-datos" tabindex="0" hidden></div>
           <section id="leyenda" class="familias"></section>
           <div id="desglose" class="desglose"></div>
           <div class="acciones-resultado">
@@ -230,9 +238,6 @@ const catalogo = urlDelCatalogo(import.meta.env.BASE_URL);
         </section>
         <p class="solo-impresion sin-informe">{SIN_INFORME}</p>
       </div>
-      <div id="panel-texto" class="panel-pestana" role="tabpanel" aria-labelledby="pestana-texto" tabindex="0" hidden></div>
-      <div id="panel-reglas" class="panel-pestana" role="tabpanel" aria-labelledby="pestana-reglas" tabindex="0" hidden></div>
-      <div id="panel-datos" class="panel-pestana" role="tabpanel" aria-labelledby="pestana-datos" tabindex="0" hidden></div>
     </main>
     <div id="tarjeta" class="tarjeta-regla" role="dialog" aria-labelledby="titulo-tarjeta" hidden></div>
     <div id="velo" class="velo" hidden></div>

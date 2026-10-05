@@ -35,8 +35,11 @@
  *    interface». Tableta (769-1023): una columna con los mismos
  * bloques y en el orden del modelo (cuadro plegado, pastilla y lo que más
  * pesa, vista, familias, detalle, Español correcto y botones): las columnas
- * no cuentan (display: contents) y cada bloque lleva su orden. Móvil (hasta
- * 768): como la tableta hasta que lleguen las pestañas.
+ * no cuentan (display: contents). Hasta la Tanda 3, cada bloque llevaba su
+ * order y la vista se veía detrás de lo que más pesa pero iba antes en el
+ * documento; desde la Tanda 4 (decisión de Antonio en la parada 3), la vista
+ * va en el documento donde se ve (pantalla/pestanas.ts) y no hay order. Móvil
+ * (hasta 768): como la tableta hasta que lleguen las pestañas.
  * [DOC] https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/position
  *    — sticky: «positioned according to the normal flow of the document, and
  *    then offset relative to its nearest scrolling ancestor».
@@ -458,7 +461,7 @@
   background: var(--color-card);
 }
 
-/* Tableta y móvil: una columna, los bloques en el orden del modelo (solo en pantalla: el papel tiene su orden, en index.astro). */
+/* Tableta y móvil: una columna, los bloques en el orden del modelo, que es el del documento (solo en pantalla: el papel tiene su orden, en index.astro). */
 @media screen and (max-width: 1023px) {
   .analizador {
     flex-direction: column;
@@ -474,45 +477,14 @@
   }
 
   .formulario {
-    order: 0;
     max-width: var(--medida-columna-texto);
   }
 
   .hueco-resultado {
-    order: 1;
     max-width: var(--medida-columna-texto);
     box-sizing: border-box;
     padding: 0;
     border: 0;
-  }
-
-  .plegado {
-    order: 2;
-  }
-
-  .pastilla {
-    order: 3;
-  }
-
-  .medidor > .resumen,
-  .lo-que-mas-pesa {
-    order: 4;
-  }
-
-  .vista {
-    order: 5;
-  }
-
-  .familias {
-    order: 7;
-  }
-
-  .desglose {
-    order: 8;
-  }
-
-  .acciones-resultado {
-    order: 9;
   }
 }
 

@@ -40,7 +40,7 @@
 import { after, describe, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { TEXTO_DE_COMBINACION_REAL } from './apoyo.ts';
-import { abrirAnalizadorConTestigos, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
+import { abrirAnalizadorConTestigos, ANCHO_ASENTADO, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
 
 interface Foco {
   nombre: string;
@@ -82,11 +82,11 @@ describe('el orden del foco es el que se ve, en Chrome sobre astro preview', () 
   after(async () => {
     await sesion?.cerrar();
   });
-  /** Cambia el ancho y espera a que la página lo haya recibido (las pestañas solo existen con resultado y en el móvil). */
+  /** Cambia el ancho y espera a que la página lo haya recibido (con resultado, las pestañas del móvil y el sitio de la vista). */
   const anchoDe = async (ancho: number): Promise<void> => {
     const pestana = await p();
     await pestana.cdp('Emulation.setDeviceMetricsOverride', { width: ancho, height: 900, deviceScaleFactor: 1, mobile: ancho < 769 });
-    await pestana.hasta(`document.body.classList.contains('con-pestanas') === (!document.getElementById('resultado').hidden && innerWidth <= 768)`, `el ancho de ${ancho}, asentado`);
+    await pestana.hasta(ANCHO_ASENTADO, `el ancho de ${ancho}, asentado`);
   };
   /** Tab desde el principio de la página hasta que el foco sale de ella o da la vuelta; cada foco, con su sitio. */
   const recorrer = async (): Promise<Foco[]> => {

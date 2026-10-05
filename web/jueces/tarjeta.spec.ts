@@ -36,7 +36,7 @@ import * as textos from '../src/textos.ts';
 import { colocar, ordenDeLasSenales, vecinas } from '../src/pantalla/tarjeta.ts';
 import { urlDeRegla } from '../src/catalogo/catalogo.ts';
 import { motorDelNavegador, paquetesIncluidos, TEXTO_DE_COMBINACION_REAL } from './apoyo.ts';
-import { abrirAnalizadorConTestigos, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
+import { abrirAnalizadorConTestigos, ANCHO_ASENTADO, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
 
 const TOKENS = JSON.parse(readFileSync(new URL('../../docs/figma/tokens.json', import.meta.url), 'utf8')) as { color: Record<string, { $value: { components: number[] } }> };
 const rgb = (nombre: string): string => `rgb(${TOKENS.color[nombre]!.$value.components.map((c) => Math.round(c * 255)).join(', ')})`;
@@ -211,6 +211,7 @@ describe('la tarjeta en Chrome, sobre astro preview', () => {
   test('7 · a 820, debajo del tramo, sin taparlo y dentro de la pantalla', async () => {
     const pestana = await p();
     await pestana.cdp('Emulation.setDeviceMetricsOverride', { width: 820, height: 900, deviceScaleFactor: 1, mobile: false });
+    await pestana.hasta(ANCHO_ASENTADO, 'el ancho de 820, asentado');
     await pestana.evaluar(`${ADEMAS}.click()`);
     const a = await abierta();
     const { izquierda, derecha, util } = await pestana.evaluar<{ izquierda: number; derecha: number; util: number }>(`(() => { const r = document.getElementById('tarjeta').getBoundingClientRect(); return { izquierda: r.left, derecha: r.right, util: document.documentElement.clientWidth }; })()`);

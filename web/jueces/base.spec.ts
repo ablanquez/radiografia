@@ -32,7 +32,7 @@ import { after, describe, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { EJEMPLOS_PUBLICOS } from './apoyo.ts';
-import { abrirAnalizadorConTestigos, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
+import { abrirAnalizadorConTestigos, ANCHO_ASENTADO, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
 
 const TINTA = 'rgb(26, 26, 26)';
 const TINTA_2 = 'rgb(74, 74, 74)';
@@ -69,6 +69,7 @@ describe('la base de la interfaz en Chrome, sobre astro preview', () => {
 
   const anchoDe = async (ancho: number): Promise<void> => {
     await (await p()).cdp('Emulation.setDeviceMetricsOverride', { width: ancho, height: 900, deviceScaleFactor: 1, mobile: ancho < 769 });
+    await (await p()).hasta(ANCHO_ASENTADO, `el ancho de ${ancho}, asentado`);
   };
   const estilo = async (selector: string): Promise<Estilo> =>
     (await p()).evaluar<Estilo>(`(() => {

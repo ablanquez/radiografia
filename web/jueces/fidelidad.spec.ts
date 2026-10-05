@@ -54,7 +54,7 @@ import { after, describe, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { EJEMPLOS_PUBLICOS, TEXTO_DE_COMBINACION_REAL } from './apoyo.ts';
-import { abrirAnalizadorConTestigos, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
+import { abrirAnalizadorConTestigos, ANCHO_ASENTADO, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
 
 const MEDIDAS = new URL('../../docs/figma/medidas-modelo.json', import.meta.url);
 
@@ -354,6 +354,7 @@ describe('la fidelidad al modelo, sobre astro preview', () => {
   const modelo = (): Record<string, Medida> => (JSON.parse(readFileSync(MEDIDAS, 'utf8')) as { medidas: Record<string, Medida> }).medidas;
   const anchoDe = async (ancho: number): Promise<void> => {
     await (await p()).cdp('Emulation.setDeviceMetricsOverride', { width: ancho, height: 900, deviceScaleFactor: 1, mobile: ancho < 769 });
+    await (await p()).hasta(ANCHO_ASENTADO, `el ancho de ${ancho}, asentado`);
   };
   /** Las mismas medidas que toma medir-modelo.ts, en la web; el texto, el que se ve (innerText). */
   const medir = async (selector: string): Promise<Medida> =>
