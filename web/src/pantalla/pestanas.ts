@@ -28,6 +28,19 @@
  * 768): un cambio de ancho que cruza los dos da dos avisos, y cada uno lo deja
  * todo en el sitio del ancho de ahora, lleguen en el orden que lleguen. Mover
  * un nodo le quita el foco a lo que lo tenía dentro: se le devuelve.
+ * Al imprimir, nada se mueve (docs/BITACORA.md, 2026-10-05): el papel mide de
+ * ancho lo que un móvil, y Chrome avisa del cambio de ancho cuando ya ha
+ * contado las páginas; lo que cambiara entonces en el documento saldría en un
+ * PDF con las páginas de antes, cortado por el final (visto: sin la nota de
+ * autoría). La hoja de impresión ordena los bloques estén donde estén
+ * (estilos/informe.css), y al volver del papel el aviso de vuelta lo deja todo
+ * en el sitio del ancho, que es el de antes.
+ * [DOC] https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList/change_event
+ *    — «The change event of the MediaQueryList interface fires when the
+ *    status of media query support changes»: también al pasar a print, que
+ *    se ve con matchMedia('print').matches (visto con Page.printToPDF: el
+ *    aviso de (max-width: 768px) llega con print ya en verdadero, y el de
+ *    vuelta, con los dos en falso).
  * [DOC] https://www.w3.org/WAI/WCAG22/Understanding/meaningful-sequence.html
  *    — 1.3.2: «When the sequence in which content is presented affects its
  *    meaning, a correct reading sequence can be programmatically
@@ -79,6 +92,7 @@ export interface Pestanas {
 export function crearPestanas(barra: HTMLElement): Pestanas {
   const movil = matchMedia('(max-width: 768px)');
   const unaColumna = matchMedia('(max-width: 1023px)');
+  const impresion = matchMedia('print');
   const vista = document.getElementById('vista')!;
   const medidor = document.getElementById('medidor')!;
   const columnaDelTexto = document.getElementById('columna-texto')!;
@@ -146,9 +160,9 @@ export function crearPestanas(barra: HTMLElement): Pestanas {
       if (medidor.nextElementSibling !== vista) medidor.after(vista);
     } else if (columnaDelTexto.lastElementChild !== vista) columnaDelTexto.append(vista);
   };
-  /** Con resultado, cada bloque en el sitio del ancho de ahora; y el foco, donde estaba. */
+  /** Con resultado, cada bloque en el sitio del ancho de ahora; y el foco, donde estaba. Al imprimir, nada. */
   const ajustar = (): void => {
-    if (!hayResultado) return;
+    if (!hayResultado || impresion.matches) return;
     const foco = document.activeElement;
     devolver();
     colocarLaVista();

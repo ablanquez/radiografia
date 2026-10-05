@@ -22,6 +22,10 @@
  *   2. Page.printToPDF (preferCSSPageSize, sin fondos, como el navegador por
  *      defecto): empieza por %PDF-, tiene de 2 a 20 páginas por /Type /Page
  *      (las mismas que /Count) y su MediaBox es A4.
+ *   5. Desde el 10.4 (Tanda 4; docs/BITACORA.md, 2026-10-05: impreso desde el
+ *      escritorio, el PDF perdía su final, y el 2 daba verde porque solo
+ *      contaba páginas): el texto del PDF (pdf.ts), desde 1280 y desde 390,
+ *      acaba con la nota de autoría.
  *   4. La red: cero peticiones después de la carga inicial y ningún intento
  *      bloqueado por la CSP, también al emular la impresión e imprimir.
  *
@@ -53,7 +57,8 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import * as textos from '../src/textos.ts';
 import { motorDelNavegador, paquetesIncluidos, TEXTO_DE_COMBINACION_REAL } from './apoyo.ts';
-import { abrirAnalizadorConTestigos, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
+import { abrirAnalizadorConTestigos, ANCHO_ASENTADO, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
+import { textoDeLasPaginas } from './pdf.ts';
 
 const esperar = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
 const A4 = { ancho: 595.28, alto: 841.89 };
@@ -90,6 +95,14 @@ describe('el informe en Chrome, sobre astro preview', () => {
     } finally {
       await p().cdp('Emulation.setEmulatedMedia', { media: '' });
     }
+  }
+
+  /** El PDF que da Chrome desde ese ancho, como texto: por página, sus líneas de arriba abajo (pdf.ts). */
+  async function pdfDesde(ancho: number): Promise<string[][]> {
+    await p().cdp('Emulation.setDeviceMetricsOverride', { width: ancho, height: 900, deviceScaleFactor: 1, mobile: ancho < 769 });
+    await p().hasta(ANCHO_ASENTADO, `el ancho de ${ancho}, asentado`);
+    const { data } = (await p().cdp('Page.printToPDF', { preferCSSPageSize: true, printBackground: false })) as { data: string };
+    return textoDeLasPaginas(Buffer.from(data, 'base64'));
   }
 
   after(async () => {
@@ -229,6 +242,20 @@ describe('el informe en Chrome, sobre astro preview', () => {
     assert.equal(cuenta, paginas, '/Count y las /Type /Page');
     assert.ok(caja, 'sin MediaBox');
     assert.ok(Math.abs(Number(caja[1]) - A4.ancho) < 0.5 && Math.abs(Number(caja[2]) - A4.alto) < 0.5, `MediaBox ${caja[1]} × ${caja[2]}, y A4 es ${A4.ancho} × ${A4.alto}`);
+  });
+
+  test('5 · el PDF, desde 1280 y desde 390, acaba con la nota de autoría', async (t) => {
+    await arrancar();
+    try {
+      for (const ancho of [1280, 390]) {
+        const paginas = await pdfDesde(ancho);
+        t.diagnostic(`desde ${ancho}: ${paginas.length} páginas; la última acaba en «${paginas.at(-1)?.at(-1)}»`);
+        assert.equal(paginas.at(-1)?.at(-1), textos.NOTA_DE_AUTORIA, `desde ${ancho}: la nota, al final del PDF`);
+      }
+    } finally {
+      await p().cdp('Emulation.setDeviceMetricsOverride', { width: 1280, height: 900, deviceScaleFactor: 1, mobile: false });
+      await p().hasta(ANCHO_ASENTADO, 'el ancho de 1280, asentado');
+    }
   });
 
   test('4 · cero peticiones de red después de la carga inicial, también al emular la impresión e imprimir', async (t) => {

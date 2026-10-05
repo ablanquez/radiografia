@@ -239,7 +239,15 @@ export function crearTarjeta(tarjeta: HTMLElement, vista: HTMLElement, velo: HTM
   velo.addEventListener('click', () => cerrar(true));
   addEventListener('resize', recolocar);
   // Si la ventana cruza el ancho del móvil con la tarjeta abierta, se cierra: tarjeta y hoja no se transforman la una en la otra.
-  movil.addEventListener('change', () => cerrar(false));
+  // Al imprimir, no (desde el 10.4, Tanda 4): el papel mide de ancho lo que un móvil, y lo que cambia en la página mientras se
+  // imprime sale cortado en el PDF (docs/BITACORA.md, 2026-10-05; pestanas.ts); al volver del papel, el ancho es el de antes.
+  const impresion = matchMedia('print');
+  let eraMovil = movil.matches;
+  movil.addEventListener('change', () => {
+    if (impresion.matches || movil.matches === eraMovil) return;
+    eraMovil = movil.matches;
+    cerrar(false);
+  });
   return {
     preparar: (nuevo) => {
       cerrar(false);
