@@ -14,7 +14,7 @@
 
 ---
 
-## [2026-10-05] 🔴 ABIERTA — En el papel, el anexo de las señales («¿Por qué lo miramos?» y las de contexto) no lleva el aire de 14 pt que le da su regla; ningún juez lo ve
+## [2026-10-05] ✅ CERRADA — En el papel, el anexo de las señales («¿Por qué lo miramos?» y las de contexto) no lleva el aire de 14 pt que le da su regla; ningún juez lo ve
 
 **Categoría:** jueces web / impresión
 **Síntoma:** web/src/estilos/informe.css da `.anexo-informe { margin-top: 14pt; }` y, en Chrome con la impresión emulada y combinacion-real analizado, a 1280 y a 390: «margin-top de .anexo-informe en impresión: 0px» (scratchpad c108/reglas-muertas.mjs; la única declaración de impresión que no gana en ningún elemento sin querer). En el PDF del papel (printToPDF desde 1280), de «(«USD 100»).» a «¿Por qué lo miramos?» hay 20 px de línea base a línea base; en el de «Descargar informe», 37,62. Por eso la página 8 empieza distinta: el papel por «Pasiva perifrástica con agente:», el PDF por «Coletilla de gerundio final:» (las otras 10, por lo mismo; scratchpad c108/comparar-paginas.mjs).
@@ -23,10 +23,11 @@
 `✔ 5 · el PDF, página a página, desde 1280 y desde 390: el número de cada página, la 4, la 5 y la 6 empiezan página, ninguna señal se parte y el final está, con la nota acompañada (1380.5707ms)` (impresion.spec, 6 de 6);
 `✔ 4 · el PDF, página a página: A4, «n / N», las siete secciones con salto antes de la 4, la 5 y la 6, la etiqueta y la frase, ninguna señal partida y la nota al final, acompañada (1.0666ms)` y `✔ 5 · su texto es el del papel, carácter a carácter sin los blancos y sin los números de página (2.4467ms)` (informe-pdf.spec, 11 de 11).
 **Cómo se cazó:** instrumento (al comparar, para la parada 4 ter, la primera línea de cada página del PDF descargado con la del papel)
-**Causa raíz:** ⏳ PENDIENTE
-**Arreglo aplicado:** ⏳ PENDIENTE
-**Commit:** ⏳ PENDIENTE
+**Causa raíz:** la regla de reinicio del papel (desde a18bac8), `:is(#cabecera-informe, …, #senales-informe, …) :is(div, section, article, p, …) { margin: 0; … }`, tiene especificidad 1,0,1 y le gana a toda regla sin id; su comentario ya dice que lo de cada sección que va detrás lleva el id. En la regla del aire de 14 pt, `#senales-informe > .entrada-informe + .entrada-informe` lo llevaba y `.anexo-informe` (0,1,0) no, así que el `div.anexo-informe` se quedaba con margin 0. Ningún juez lo podía ver: el test 3 de papel.spec solo compara las piezas del marco, y el marco no tiene anexo; impresion.spec 5 e informe-pdf.spec 4 miran secciones, saltos y señales enteras, no el aire; e informe-pdf.spec 5 admite a propósito otros cortes de línea y de página (el eje óptico de Literata), así que la página 8 distinta pasaba por uno de ellos. Nada comprobaba que una declaración de la hoja de impresión se aplicara de verdad.
+**Arreglo aplicado:** web/src/estilos/informe.css, la regla del aire de 14 pt: `.anexo-informe` → `#senales-informe > .anexo-informe`. web/jueces/papel.spec.ts, test 7 (PISADAS): con la impresión emulada, desde 1280 y desde 390 con resultado y desde 1280 sin él, cada declaración de dentro de un `@media print` gana en algún elemento al que se aplica. web/jueces/informe-pdf.spec.ts, test 12 (aireEnLaSeccion6): el aire de «¿Por qué lo miramos?» y de «Lo que se nota en el conjunto» en la sección 6, en el PDF como en el papel, ±1 px. Rojo antes, en el clon de trabajo con la hoja de antes: papel 7, «'.anexo-informe { margin-top: 14pt }'»; PDF 12, «'desde 1280, «¿Por qué lo miramos?», antes: 37.62 en el PDF y 20.00 en el papel'» (y desde 390). Contrapruebas, 4 de 4 en rojo. Después: en el papel, 38,00 antes de «¿Por qué lo miramos?» (en el PDF, 37,62); las 11 páginas del PDF empiezan por la misma línea que las del papel, desde 1280 y desde 390; clon limpio de 8f0b158: tipos limpios, motor 909/899, web 244/244.
+**Commit:** 8f0b158 (la hoja y los dos jueces); 4451984 (el README, la lista de jueces)
 **Ley que sale de aquí:** SIN LEY TODAVÍA
+Al cerrar: una regla de la hoja que nada comprueba que se aplique puede estar muerta sin que se note; lo que la hoja declara, un juez mira que gane, y lo que el marco no mide, se compara entre el PDF y el papel.
 **Traza:** web/src/estilos/informe.css (`.anexo-informe`, junto a `#senales-informe > .entrada-informe + .entrada-informe`; la regla de reinicio del papel, `:is(…, #senales-informe, …) :is(div, …) { margin: 0 }`), web/src/pantalla/pintar.ts (el `div.anexo-informe`), web/src/pantalla/informe-pdf.ts (el anexo, a 14 pt); desde a18bac8 (Tanda 4 bis, entra la regla de reinicio con id); en 77f72eb, NO CONSTA (no medido).
 
 ## [2026-10-05] ✅ CERRADA — En el papel, la sección 5 («Desglose») arranca al pie de una página y se parte; el juez de fidelidad del papel no lo ve
