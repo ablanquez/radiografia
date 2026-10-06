@@ -846,7 +846,8 @@ checklist fija, en escritorio y a 390 px, sin capturas (derechos), en
       nada: hosting compartido para estático; si hay auto-deploy desde
       GitHub para estático o se sube el `dist` NO CONSTA hoy — se resuelve
       con la doc y los precedentes de la casa, no de memoria
-- [ ] Publicado en el subdominio que Antonio decida; verificado desde
+- [ ] Publicado en el subdominio que Antonio decida (decidido el 05/10:
+      **radiografia.antonioblanquez.es**); verificado desde
       fuera con el ojo delante
 - [ ] README final: qué hace, qué no demuestra, cómo escribir un paquete
       propio, enlace al catálogo
