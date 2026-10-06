@@ -28,6 +28,11 @@
  *    estilos/ficha.css; las familias (la muestra y la sigla), de
  *    estilos/familias.css, y la hoja (el asa y el velo), de estilos/hoja.css.
  *    El layout ya no lleva estilos propios.
+ * Desde el 11.1 (hallazgo 2 del censo pre-despliegue), también la página de
+ *    créditos y licencias (pages/creditos.astro), con la clase «creditos» y
+ *    estilos/creditos.css, que va aquí con las demás hojas del layout: sale
+ *    en el mismo CSS enlazado que las otras páginas del catálogo, y la página
+ *    no lleva <style> propio ni otra CSP.
  */
 import { urlDelAnalizador } from '../catalogo/catalogo.ts';
 import { ANALIZADOR } from '../textos.ts';
@@ -42,6 +47,7 @@ import '../estilos/familias.css';
 import '../estilos/hoja.css';
 import '../estilos/catalogo.css';
 import '../estilos/ficha.css';
+import '../estilos/creditos.css';
 
 interface Props {
   /** Lo que va delante de «RadiografIA» en el título de la pestaña. */

@@ -382,3 +382,165 @@ export const POSICIONES_RESPECTO_A_LO_HABITUAL: Readonly<Record<string, string>>
 export const QUE_HACER = 'Qué hacer';
 export const POR_QUE_LO_MIRAMOS = '¿Por qué lo miramos?';
 export const VER_SU_FICHA = 'Ver su ficha en el catálogo';
+
+// La página de créditos y licencias (11.1, hallazgo 2 del censo pre-despliegue; firmada por Antonio): /creditos/, en una
+// columna de 34em como la ficha (DISEÑO §6.4), enlazada desde el pie de cada página y, en «Ver el detalle», debajo de la
+// comparación con los textos de personas. Lo ajeno que usa la web, con la atribución que pide cada licencia, de
+// THIRD-PARTY-NOTICES.md y de data/calibracion/LICENSE-CORPUS.md; la cita del BOE, con las palabras que exige su
+// licencia tipo. Las direcciones de los enlaces van como claves: el juez de textos no lee las claves.
+export const CREDITOS_Y_LICENCIAS = 'Créditos y licencias';
+/** En «Ver el detalle», debajo de la comparación, delante del enlace a la página de créditos. */
+export const CORPUS_EN = 'Textos de personas: corpus en';
+/** La cita que exige la licencia tipo del BOE para una obra derivada (THIRD-PARTY-NOTICES § 2.3), literal. */
+export const CITA_DEL_BOE = 'Basado en datos de la Agencia Estatal Boletín Oficial del Estado';
+export const PRESENTACION_DE_LOS_CREDITOS =
+  'El código y los paquetes de reglas de RadiografIA tienen licencia Apache 2.0. Lo ajeno que usa esta web conserva sus propias condiciones: aquí está cada pieza, con la atribución que pide su licencia.';
+/** Una obra en la página de créditos: su nombre, sus párrafos y sus enlaces (la dirección y su texto); las de la propia web, sin barra delante. */
+export interface ObraEnLosCreditos {
+  readonly nombre: string;
+  readonly parrafos: readonly string[];
+  readonly enlaces: Readonly<Record<string, string>>;
+}
+/** Una sección de la página de créditos: su título, lo que va debajo y sus obras. */
+export interface SeccionDeLosCreditos {
+  readonly titulo: string;
+  readonly presentacion: string | null;
+  readonly obras: readonly ObraEnLosCreditos[];
+}
+const CC_BY_4 = 'La licencia CC BY 4.0';
+export const SECCIONES_DE_LOS_CREDITOS: readonly SeccionDeLosCreditos[] = [
+  {
+    titulo: 'Los textos de personas',
+    presentacion:
+      'El resultado compara tu texto con textos escritos por personas, del mismo tipo y de la misma longitud. De esos textos, la web solo lleva cifras, los percentiles de cada medida: ni una frase. Estos son sus corpus.',
+    obras: [
+      {
+        nombre: 'Noticias',
+        parrafos: [
+          'UD Spanish-AnCora r2.18: noticias de la agencia EFE y de El Periódico, del año 2000. De Taulé, Martí y Recasens (AnCora, CLiC-UB); conversión a Universal Dependencies de Martínez Alonso y Zeman. Licencia CC BY 4.0.',
+          "Taulé, M., M.A. Martí, M. Recasens (2008) 'Ancora: Multilevel Annotated Corpora for Catalan and Spanish', Proceedings of 6th International Conference on Language Resources and Evaluation. Marrakesh (Morocco).",
+        ],
+        enlaces: {
+          'https://github.com/UniversalDependencies/UD_Spanish-AnCora': 'UD Spanish-AnCora',
+          'https://creativecommons.org/licenses/by/4.0/legalcode': CC_BY_4,
+        },
+      },
+      {
+        nombre: 'Textos administrativos',
+        parrafos: [
+          'Disposiciones, resoluciones y anuncios del Boletín Oficial del Estado publicados entre 2000 y 2021, reutilizados según la licencia tipo de la Agencia Estatal Boletín Oficial del Estado (Resolución de 27 de junio de 2024).',
+          CITA_DEL_BOE,
+        ],
+        enlaces: {
+          'https://www.boe.es': 'www.boe.es',
+          'https://www.boe.es/informacion/aviso_legal/index.php': 'Las condiciones de reutilización del BOE',
+        },
+      },
+      {
+        nombre: 'Narrativa clásica',
+        parrafos: [
+          'Capítulos de novelas y cuentos en español de autores que murieron en 1945 o antes: dominio público en España. Los textos salen de las ediciones digitales de Project Gutenberg.',
+        ],
+        enlaces: { 'https://www.gutenberg.org': 'www.gutenberg.org' },
+      },
+      {
+        nombre: 'Textos académicos',
+        parrafos: [
+          'CSIC Spanish Corpus 1.0.0, del Barcelona Supercomputing Center dentro del Plan de Tecnologías del Lenguaje (SEDIA, 2022): artículos de las revistas científicas del Consejo Superior de Investigaciones Científicas. Licencia CC BY 4.0.',
+        ],
+        enlaces: {
+          'https://doi.org/10.5281/zenodo.7313126': 'CSIC Spanish Corpus',
+          'https://revistas.csic.es': 'Las revistas del CSIC',
+          'https://creativecommons.org/licenses/by/4.0/': CC_BY_4,
+        },
+      },
+      {
+        nombre: 'Críticas de cine',
+        parrafos: [
+          'Críticas de usuarios de www.muchocine.net. Licencia CC BY 2.1 ES, según declaran quienes las recogieron:',
+          'Cruz, F. L., Troyano, J. A., Enriquez, F., & Ortega, J. (2008). Clasificación de documentos basada en la opinión: experimentos con un corpus de críticas de cine en español. Procesamiento del lenguaje natural, 41.',
+        ],
+        enlaces: {
+          'https://github.com/ITALIC-US/Spanish-Movie-Reviews': 'Spanish Movie Reviews',
+          'https://creativecommons.org/licenses/by/2.1/es/': 'La licencia CC BY 2.1 ES',
+        },
+      },
+      {
+        nombre: 'General',
+        parrafos: ['Una mezcla de los cinco corpus anteriores, con el mismo número de textos de cada uno; cada texto conserva la licencia del suyo.'],
+        enlaces: {},
+      },
+    ],
+  },
+  {
+    titulo: 'Las fuentes tipográficas',
+    presentacion:
+      'Las dos tienen licencia SIL Open Font License 1.1. Aquí van recortadas a los caracteres latinos y, las del informe en PDF, además, en otro formato.',
+    obras: [
+      {
+        nombre: 'Literata, la del texto',
+        parrafos: ['Copyright 2017 The Literata Project Authors.'],
+        enlaces: { 'fuentes/literata/OFL.txt': 'Su licencia', 'https://github.com/googlefonts/literata': 'Literata' },
+      },
+      {
+        nombre: 'Atkinson Hyperlegible Next, la de la interfaz',
+        parrafos: ['Copyright 2020-2024 The Atkinson Hyperlegible Next Project Authors.'],
+        enlaces: {
+          'fuentes/atkinson-hyperlegible-next/OFL.txt': 'Su licencia',
+          'https://github.com/googlefonts/atkinson-hyperlegible-next': 'Atkinson Hyperlegible Next',
+        },
+      },
+    ],
+  },
+  {
+    titulo: 'El código ajeno que llega a tu navegador',
+    presentacion: 'El aviso de licencia de cada uno viaja dentro del propio JavaScript.',
+    obras: [
+      {
+        nombre: 'Ajv',
+        parrafos: ['De Evgeny Poberezkin, con licencia MIT. Valida cada paquete de reglas: viaja una función suya y el código que genera para nuestros esquemas.'],
+        enlaces: { 'https://github.com/ajv-validator/ajv': 'Ajv' },
+      },
+      {
+        nombre: 'silabea',
+        parrafos: ['De Javier Arce, sobre silabajs, de Nicolás Cofré Méndez, con licencia MIT. Separa las palabras en sílabas para medir la legibilidad.'],
+        enlaces: { 'https://github.com/javierarce/silabea': 'silabea' },
+      },
+      {
+        nombre: 'pdfmake',
+        parrafos: [
+          'De bpampuch y liborm85, con licencia MIT, y las piezas que lleva dentro, pdfkit y fontkit entre ellas: 76 en total, cada una con su licencia. Genera el informe en PDF y solo se carga al pulsar «Descargar informe».',
+        ],
+        enlaces: { 'https://github.com/bpampuch/pdfmake': 'pdfmake' },
+      },
+    ],
+  },
+  {
+    titulo: 'Las listas de frecuencia',
+    presentacion: null,
+    obras: [
+      {
+        nombre: 'wordfreq',
+        parrafos: [
+          'De Robyn Speer: las 20.000 palabras más frecuentes del español, con datos de Wikipedia, OpenSubtitles 2018, NewsCrawl, GlobalVoices, Google Books Ngrams, OSCAR, Twitter y Reddit. Licencia CC BY-SA 4.0.',
+          'Está en el repositorio para una versión futura: ninguna regla de esta la usa, y no llega a esta web.',
+        ],
+        enlaces: {
+          'https://github.com/rspeer/wordfreq': 'wordfreq',
+          'https://github.com/ablanquez/radiografia/blob/main/data/frecuencias/LICENSE-CC-BY-SA-4.0.md': 'Su atribución completa',
+        },
+      },
+    ],
+  },
+  {
+    titulo: 'La lista completa',
+    presentacion: null,
+    obras: [
+      {
+        nombre: 'THIRD-PARTY-NOTICES.md',
+        parrafos: ['Cada pieza con su versión, su huella y el texto entero de su licencia, en el repositorio de RadiografIA.'],
+        enlaces: { 'https://github.com/ablanquez/radiografia/blob/main/THIRD-PARTY-NOTICES.md': 'THIRD-PARTY-NOTICES.md' },
+      },
+    ],
+  },
+];

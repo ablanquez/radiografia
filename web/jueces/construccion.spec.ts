@@ -54,6 +54,13 @@
  *      motor/src/terceros/silabea.cjs (THIRD-PARTY-NOTICES § 1.5). Esa
  *      cabecera es un comentario «/*» y el minificado la quitaba: el código de
  *      silabea viajaba sin su aviso (docs/CENSO-PRE-DESPLIEGUE.md, § 10).
+ *  12. Desde el 11.1 (hallazgo 2 del censo, firmado por Antonio), la página
+ *      de créditos y licencias está en dist/creditos/index.html; el pie de
+ *      cada página de dist/ la enlaza («Créditos y licencias»); y lleva, en su
+ *      propio párrafo, la cita que exige la licencia tipo del BOE, literal la
+ *      del NOTICES § 2.3, y el enlace a la sede del BOE que pide la misma
+ *      condición («incluyendo en todo caso un enlace a la sede electrónica»,
+ *      data/calibracion/LICENSE-CORPUS.md).
  *
  * El build, memorizado y con la telemetría apagada, y astro preview son los
  * de apoyo.ts (los comparte con textos-web.spec.ts y catalogo.spec.ts).
@@ -65,6 +72,7 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
+import { urlDeLosCreditos } from '../src/catalogo/catalogo.ts';
 import { EJEMPLOS } from '../src/pantalla/ejemplos.ts';
 import * as textos from '../src/textos.ts';
 import { conPreview, construir, decodificar, DIST, motorDelNavegador, PAQUETES, PAQUETES_DE_PRUEBA } from './apoyo.ts';
@@ -186,6 +194,23 @@ describe('la web construida', () => {
     const conSilabea = jsDeDist().filter(({ texto }) => texto.includes('getSilabas'));
     assert.ok(conSilabea.length > 0, 'ningún JS de dist/ lleva silabea');
     for (const { ruta, texto } of conSilabea) assert.ok(sinMarcasDeComentario(texto).includes(licencia), `${ruta} no lleva el aviso MIT de silabea entero`);
+  });
+
+  test('12 · la página de créditos está en dist/creditos/, el pie de cada página la enlaza, y lleva literal la cita del BOE del NOTICES y el enlace a su sede', () => {
+    construir();
+    assert.ok(existsSync(new URL('creditos/index.html', DIST)), 'no existe dist/creditos/index.html');
+    const paginas = readdirSync(DIST, { recursive: true, encoding: 'utf8' })
+      .map((f) => f.replaceAll('\\', '/'))
+      .filter((f) => f.endsWith('.html'));
+    const enlace = new RegExp(`<a href="${urlDeLosCreditos('/')}"[^>]*>${textos.CREDITOS_Y_LICENCIAS}</a>`);
+    const sinEnlace = paginas.filter((pagina) => !enlace.test(/<footer class="pie">([\s\S]*?)<\/footer>/.exec(readFileSync(new URL(pagina, DIST), 'utf8'))?.[1] ?? ''));
+    assert.deepEqual(sinEnlace, [], `páginas de dist/ (${paginas.length}) sin el enlace a los créditos en su pie`);
+    const notices = readFileSync(new URL('../../THIRD-PARTY-NOTICES.md', import.meta.url), 'utf8');
+    const cita = /Cita obligatoria: «([^»]+)»/.exec(notices)?.[1];
+    assert.equal(cita, 'Basado en datos de la Agencia Estatal Boletín Oficial del Estado', 'la cita del BOE en el NOTICES § 2.3');
+    const creditos = decodificar(readFileSync(new URL('creditos/index.html', DIST), 'utf8'));
+    assert.ok(creditos.includes(`<p class="largo">${cita}</p>`), 'la página de créditos no lleva la cita del BOE literal, en su propio párrafo');
+    assert.match(creditos, /<a href="https:\/\/www\.boe\.es">/, 'la página de créditos no enlaza la sede del BOE');
   });
 
   test('7 · dist/ejemplos/ lleva los dos textos de ejemplo y los dos paquetes de prueba, byte a byte los de public/ejemplos/, en UTF-8 sin BOM y con \\n', async () => {

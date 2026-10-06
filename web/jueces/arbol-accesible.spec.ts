@@ -16,6 +16,9 @@
  *      (el formulario sigue a la vista); con un análisis, el formulario se pliega y su botón queda fuera del árbol, y el
  *      del final, activo; al pulsarlo, mientras se prepara (el trozo de pdfmake, retenido con Fetch), desactivado y con
  *      el nombre «Preparando el informe…»; al terminar, como estaba.
+ *   7. Desde el 11.1 (hallazgo 2 del censo pre-despliegue), la página de créditos: el main; su título, heading de nivel 1,
+ *      y los de sus secciones, de nivel 2, en su orden, cada sección una region con el nombre de su título; cada enlace,
+ *      un link con nombre; y el pie, contentinfo, con el enlace «Créditos y licencias».
  *
  * [DOC] https://chromedevtools.github.io/devtools-protocol/tot/Accessibility/ — getFullAXTree («Fetches the entire
  *    accessibility tree for the root Document»); AXNode: role, name, properties, ignored, backendDOMNodeId; AXPropertyName
@@ -256,5 +259,31 @@ describe('el árbol de accesibilidad, sobre astro preview', () => {
     await p().hasta(`!document.getElementById('descargar').disabled && document.getElementById('descargar').textContent === ${JSON.stringify(textos.DESCARGAR_INFORME)}`, 'el botón, de vuelta', 60_000);
     const despues = await uno('#descargar');
     assert.deepEqual([despues.rol, despues.nombre, despues.props['disabled'] ?? false], ['button', textos.DESCARGAR_INFORME, false], 'al terminar');
+  });
+
+  test('7 · la página de créditos: el main, los títulos de nivel 1 y 2 en su orden, cada sección una region con su nombre, cada enlace con nombre y el pie con el enlace a los créditos', async () => {
+    await abrir();
+    try {
+      await ir('creditos/');
+      assert.equal((await uno('body > main')).rol, 'main', 'el <main>');
+      const h1 = await uno('.creditos h1');
+      assert.deepEqual([h1.rol, h1.nombre, h1.props['level']], ['heading', textos.CREDITOS_Y_LICENCIAS, 1], 'el título');
+      const titulos = await nodos('.creditos > section > h2');
+      assert.deepEqual(
+        titulos.map((n) => [n.rol, n.nombre, n.props['level']]),
+        textos.SECCIONES_DE_LOS_CREDITOS.map((s) => ['heading', s.titulo, 2]),
+        'los títulos de las secciones',
+      );
+      const secciones = await nodos('.creditos > section');
+      assert.deepEqual(secciones.map((n) => [n.rol, n.nombre]), textos.SECCIONES_DE_LOS_CREDITOS.map((s) => ['region', s.titulo]), 'las secciones');
+      const enlaces = await nodos('.creditos a');
+      assert.ok(enlaces.length > 10, `${enlaces.length} enlaces`);
+      assert.deepEqual(enlaces.filter((n) => n.rol !== 'link' || n.nombre === ''), [], 'enlaces que no son link o sin nombre');
+      assert.equal((await uno('footer.pie')).rol, 'contentinfo', 'el pie');
+      const delPie = await uno('footer.pie a');
+      assert.deepEqual([delPie.rol, delPie.nombre], ['link', textos.CREDITOS_Y_LICENCIAS], 'el enlace del pie');
+    } finally {
+      await ir('');
+    }
   });
 });

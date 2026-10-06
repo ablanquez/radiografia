@@ -13,7 +13,9 @@
  * CDP el 04/10): nombre a 28/33,6 en negrita con
  * interletrado −0,025em (20/26 en móvil), eslogan en Literata itálica a 15 en
  * ink-2, enlace en negrita con 44 de alto, 20 px arriba y abajo (12 en
- * móvil), línea line debajo; pie a 15 en ink-2 con línea line encima.
+ * móvil), línea line debajo; pie a 15 en ink-2 con línea line encima (desde
+ * el 11.1, con el enlace a los créditos junto a la nota, que el modelo no
+ * tenía).
  * El icono (c), del DISEÑO §8 (el modelo no lo tenía; tamaño corregido por
  * Antonio al ver la Tanda 1): 56 px en escritorio, la altura del bloque nombre
  * + eslogan, a 12 del nombre; 48 en la cabecera compacta del móvil. El 56 no
@@ -81,12 +83,29 @@ body {
   display: none;
 }
 
+/* Desde el 11.1 (hallazgo 2 del censo pre-despliegue), junto a la nota, el enlace a los créditos, de 44 de alto como el
+   de la cabecera; si no caben en una línea, el enlace baja a la siguiente. */
 .pie {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0 var(--espacio-24);
   padding: var(--espacio-20) 0;
   border-top: 1px solid var(--color-line);
   font-size: var(--tipografia-tamano-secundario);
   line-height: var(--tipografia-interlineado-secundario);
   color: var(--color-ink-2);
+}
+
+.nota-de-autoria {
+  margin: 0;
+}
+
+.pie a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--medida-toque);
 }
 
 @media (max-width: 1023px) {

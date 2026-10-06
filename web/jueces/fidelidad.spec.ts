@@ -105,7 +105,10 @@ const ESCRITORIO: readonly Caso[] = [
   { clave: 'escritorio.cabecera.nombre', selector: '.cabecera .nombre', propiedades: [...TIPO, 'interletrado', 'texto'] },
   { clave: 'escritorio.cabecera.eslogan', selector: '.cabecera .eslogan', propiedades: [...TIPO, 'estilo', 'texto'] },
   { clave: 'escritorio.cabecera.enlace', selector: '.cabecera nav a', propiedades: [...TIPO, 'decoracion', 'alto', 'texto'] },
-  { clave: 'escritorio.pie', selector: '.pie', propiedades: [...TIPO, 'bordeArriba', 'relleno', 'texto'] },
+  // Desde el 11.1 (hallazgo 2 del censo pre-despliegue, firmado por Antonio), el pie lleva, junto a la nota, el enlace a
+  // los créditos, que el modelo no tenía: el pie se compara sin su texto, y el texto, el de la nota.
+  { clave: 'escritorio.pie', selector: '.pie', propiedades: [...TIPO, 'bordeArriba', 'relleno'] },
+  { clave: 'escritorio.pie', selector: '.pie .nota-de-autoria', propiedades: [...TIPO, 'texto'] },
   { clave: 'escritorio.boton.principal', selector: '#analizar', propiedades: [...BOTON, 'texto'] },
   // Desde el 10.4 (Tanda 2) los ejemplos son chips: el secundario es el cargador, como en el modelo (que lo mide con «Paquetes» abierto).
   { clave: 'escritorio.boton.secundario', selector: 'label[for="paquete-propio"]', propiedades: BOTON },

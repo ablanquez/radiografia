@@ -10,13 +10,16 @@
  *      derecha, con 44 de alto; la línea line debajo; la página con 64 px de
  *      margen a cada lado.
  *   2. El pie: la nota de autoría con su línea encima, lo último de la
- *      página; y la nota ya no se repite dentro del resultado.
+ *      página; y la nota ya no se repite dentro del resultado. Desde el 11.1
+ *      (hallazgo 2 del censo pre-despliegue, firmado por Antonio), junto a la
+ *      nota, el enlace «Créditos y licencias» a /creditos/.
  *   3. A 820, márgenes de 40; a 390, la cabecera compacta: icono de 48 (la
  *      altura del bloque),
  *      nombre a 20 px, márgenes de 16, y el enlace dice «Catálogo», también
  *      en su nombre accesible (el árbol de accesibilidad de Chrome).
  *   4. El catálogo lleva la misma cabecera, con el nombre en un <p> y el
- *      enlace «Analizador», y el mismo pie (en el HTML construido).
+ *      enlace «Analizador», y el mismo pie (en el HTML construido); desde el
+ *      11.1, también la página de créditos.
  *
  * [DOC] https://github.com/ChromeDevTools/devtools-protocol (json/
  *    browser_protocol.json) — Accessibility.getPartialAXTree («Fetches the
@@ -27,6 +30,7 @@
 import { after, describe, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { urlDeLosCreditos } from '../src/catalogo/catalogo.ts';
 import * as textos from '../src/textos.ts';
 import { construir, decodificar, DIST } from './apoyo.ts';
 import { abrirAnalizadorConTestigos, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
@@ -81,7 +85,14 @@ describe('la cabecera y el pie', () => {
 
   test('2 · el pie: la nota con su línea encima, lo último de la página; la nota no se repite en el resultado', async () => {
     const pestana = await p();
-    assert.equal(await pestana.evaluar(`document.querySelector('footer.pie').textContent`), textos.NOTA_DE_AUTORIA);
+    assert.deepEqual(
+      await pestana.evaluar(`[...document.querySelector('footer.pie').children].map((e) => [e.tagName, e.textContent, e.getAttribute('href')])`),
+      [
+        ['P', textos.NOTA_DE_AUTORIA, null],
+        ['A', textos.CREDITOS_Y_LICENCIAS, urlDeLosCreditos('/')],
+      ],
+      'el pie: la nota y el enlace a los créditos',
+    );
     assert.equal(await estilo('footer.pie', 'border-top'), '1px solid rgb(217, 217, 217)', 'la línea del pie');
     assert.equal(await pestana.evaluar(`[...document.body.children].filter((e) => e.checkVisibility()).at(-1).className`), 'pie', 'el pie es lo último que se ve');
     assert.equal(await pestana.evaluar(`[...document.querySelectorAll('#resultado p')].some((p) => p.textContent === ${JSON.stringify(textos.NOTA_DE_AUTORIA)} && !p.classList.contains('solo-impresion'))`), false, 'la nota, fuera del resultado en pantalla');
@@ -104,16 +115,18 @@ describe('la cabecera y el pie', () => {
     assert.deepEqual([nodes[0]!.role.value, nodes[0]!.name.value], ['link', textos.CATALOGO_CORTO], 'el nombre accesible del enlace en móvil');
   });
 
-  test('4 · el catálogo: la misma cabecera, con el nombre en un <p> y el enlace «Analizador», y el mismo pie', () => {
+  test('4 · el catálogo y la página de créditos: la misma cabecera, con el nombre en un <p> y el enlace «Analizador», y el mismo pie', () => {
     construir();
-    for (const pagina of ['reglas/index.html', 'reglas/disc-marcador-repetido/index.html']) {
+    for (const pagina of ['reglas/index.html', 'reglas/disc-marcador-repetido/index.html', 'creditos/index.html']) {
       const html = readFileSync(new URL(pagina, DIST), 'utf8');
       const cabecera = /<header class="cabecera">([\s\S]*?)<\/header>/.exec(html)?.[1] ?? '';
       assert.match(cabecera, /<img class="icono-marca" src="\/icono-c\.svg" alt="" width="56" height="56">/, `${pagina}: el icono`);
       assert.match(cabecera, /<p class="nombre">RadiografIA<\/p>/, `${pagina}: el nombre, en un <p>`);
       assert.equal(decodificar(/<p class="eslogan">([^<]*)<\/p>/.exec(cabecera)?.[1] ?? ''), textos.ESLOGAN, `${pagina}: el eslogan`);
       assert.equal(decodificar(/<nav><a href="\/">([^<]*)<\/a><\/nav>/.exec(cabecera)?.[1] ?? ''), textos.ANALIZADOR, `${pagina}: el enlace al analizador`);
-      assert.equal(decodificar(/<footer class="pie">([^<]*)<\/footer>/.exec(html)?.[1] ?? ''), textos.NOTA_DE_AUTORIA, `${pagina}: el pie`);
+      const pie = /<footer class="pie">([\s\S]*?)<\/footer>/.exec(html)?.[1] ?? '';
+      assert.equal(decodificar(/<p class="nota-de-autoria">([^<]*)<\/p>/.exec(pie)?.[1] ?? ''), textos.NOTA_DE_AUTORIA, `${pagina}: la nota del pie`);
+      assert.equal(decodificar(/<a href="\/creditos\/">([^<]*)<\/a>/.exec(pie)?.[1] ?? ''), textos.CREDITOS_Y_LICENCIAS, `${pagina}: el enlace del pie a los créditos`);
     }
   });
 });

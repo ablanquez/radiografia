@@ -5,9 +5,9 @@
  *
  *   1. En el móvil (390, con mobile), cada objetivo, de 44 × 44 como mínimo (WCAG 2.2, 2.5.5; el DISEÑO, --medida-toque):
  *      el analizador sin resultado (con «Paquetes» abierto), con resultado en cada pestaña y con la hoja abierta; el
- *      catálogo y su hoja de filtros; una ficha.
+ *      catálogo y su hoja de filtros; una ficha; desde el 11.1 (hallazgo 2 del censo pre-despliegue), la página de créditos.
  *   2. En escritorio (1280), de 24 × 24 como mínimo (2.5.8): el analizador sin resultado (con «Paquetes» abierto), con
- *      resultado (con «Ver el detalle» abierto) y con la tarjeta abierta; el catálogo; una ficha.
+ *      resultado (con «Ver el detalle» abierto) y con la tarjeta abierta; el catálogo; una ficha; la página de créditos.
  *      Objetivo es lo que se pulsa y se ve (fuera lo inerte): enlaces, botones, campos, desplegables, resúmenes de
  *      <details>, lo que lleva role button, tab o checkbox, y lo que entra en el tabulador. La caja de una casilla es la de
  *      la etiqueta que la envuelve (pulsar la etiqueta la marca), y la de un campo oculto a la vista, la de su etiqueta.
@@ -16,7 +16,7 @@
  *      18,46 puntos»). Se cuentan aparte, y tiene que haber de los dos donde los hay.
  *   3. A 320, sin scroll horizontal (1.4.10) donde los jueces de cada página no miran: el resultado en cada una de sus
  *      tres pestañas, con la hoja abierta y, en el catálogo, con la hoja de filtros abierta. Los otros, en resultado.spec
- *      (9), pestanas.spec (5), catalogo-pantalla.spec (6) y ficha-pantalla.spec (6 y 8).
+ *      (9), pestanas.spec (5), catalogo-pantalla.spec (6), ficha-pantalla.spec (6 y 8) y creditos-pantalla.spec (4).
  *
  * [DOC] https://www.w3.org/TR/WCAG22/#target-size-minimum — 2.5.8 Target Size (Minimum): «The size of the target for
  *    pointer inputs is at least 24 by 24 CSS pixels», con la excepción «Inline: The target is in a sentence or its size
@@ -144,6 +144,8 @@ describe('el tamaño de lo que se pulsa y los 320 px, sobre astro preview', () =
       await medir(t, 'el catálogo, con la hoja de filtros', 44, fuera, exentos);
       await ir('reglas/disc-marcador-repetido/');
       await medir(t, 'una ficha', 44, fuera, exentos);
+      await ir('creditos/');
+      await medir(t, 'los créditos', 44, fuera, exentos);
     } finally {
       await anchoDe(1280);
       await ir('');
@@ -172,6 +174,8 @@ describe('el tamaño de lo que se pulsa y los 320 px, sobre astro preview', () =
       await medir(t, 'el catálogo', 24, fuera, exentos);
       await ir('reglas/disc-marcador-repetido/');
       await medir(t, 'una ficha', 24, fuera, exentos);
+      await ir('creditos/');
+      await medir(t, 'los créditos', 24, fuera, exentos);
     } finally {
       await ir('');
     }

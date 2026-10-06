@@ -433,9 +433,15 @@ escribir (`motor/herramientas/calibrar/manifiesto.ts`). Los textos se descargan 
   cada corpus de origen, como `general.json`; atribución en `LICENSE-CORPUS.md`.
 - Una fila por fichero de calibración y un fichero por fila, con la licencia que dice el propio
   fichero: lo vigila `motor/src/notices.spec.ts`.
-- **Viajará al navegador**: los percentiles entran en la cabecera del paquete
-  (`cabecera.calibracion`), cada celda con el nombre de su corpus. Cómo se enseña la atribución
-  en la interfaz, **NO CONSTA** hasta el punto 6.
+- **Viaja al navegador**: los percentiles entran en la cabecera del paquete
+  (`cabecera.calibracion`), cada celda con el nombre de su corpus. **La atribución se enseña en
+  la web** desde el 11.1 (hallazgo 2 del censo pre-despliegue): la página «Créditos y licencias»,
+  `/creditos/` ([`web/src/pages/creditos.astro`](web/src/pages/creditos.astro), con sus textos en
+  `web/src/textos.ts`), enlazada desde el pie de cada página y, en «Ver el detalle», debajo de
+  la comparación con los textos de personas. Lleva cada corpus con la atribución que pide su
+  licencia y, literal, la cita del BOE con el enlace a su sede. Lo vigilan el juez 12 de
+  [`web/jueces/construccion.spec.ts`](web/jueces/construccion.spec.ts) y
+  [`web/jueces/creditos-pantalla.spec.ts`](web/jueces/creditos-pantalla.spec.ts).
 
 ### 2.4 · `web/public/fuentes/` — Literata y Atkinson Hyperlegible Next (OFL 1.1)
 

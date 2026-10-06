@@ -28,6 +28,8 @@ type Familia = Paquete['cabecera']['familias'][number];
 export const urlDelAnalizador = (base: string): string => conBarraFinal(base);
 export const urlDelCatalogo = (base: string): string => `${conBarraFinal(base)}reglas/`;
 export const urlDeRegla = (base: string, id: string): string => `${urlDelCatalogo(base)}${id}/`;
+/** La página de créditos y licencias (11.1, hallazgo 2 del censo pre-despliegue). */
+export const urlDeLosCreditos = (base: string): string => `${conBarraFinal(base)}creditos/`;
 
 /** Una regla del catálogo, con lo que la ficha enseña de su paquete y de su familia. */
 export interface EntradaDelCatalogo {

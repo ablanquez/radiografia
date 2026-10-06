@@ -19,6 +19,9 @@
  * Cada texto va como un párrafo. No entran, porque no son de la web, lo que
  * viene de los paquetes y lo que dice el motor (textos.ts).
  *
+ * Desde el 11.1 (hallazgo 2 del censo pre-despliegue), un segundo juez: todo
+ * lo que se lee en el <main> de la página de créditos sale de textos.ts.
+ *
  * Con 100 palabras de prosa o más se analiza con analizar(); hoy pasan de 300.
  * [PROPIO] Si bajaran de 100, el juez falla en vez de pasar: el motor no
  *    analizaría (texto insuficiente), y el encargo pide entonces pasar los
@@ -43,8 +46,8 @@ const DECLARADAS: Readonly<Record<string, string>> = {
     '«subrayado», en la clave del papel («detrás de cada subrayado, va entre corchetes la sigla de su familia»), es el nombre de la función y no se cambia (decisión del 01/10). La muestra de la leyenda ya no lo dice: desde el 10.4 (Tanda 2) es «Abc». La regla busca la raíz subray- y no distingue el nombre del verbo; está declarado en su ficha.',
   'est-frases-cortas':
     'los textos de la web son etiquetas y mensajes sueltos, no prosa: cada uno cuenta como una frase, y salen muchas frases para tan pocas palabras. Juntarlos en frases largas para que no dispare sería escribir para la regla.',
-  'est-pocas-comas':
-    'la misma causa (encargo 8.1): los mensajes del cargador son frases sueltas y cortas, con dos puntos y sin incisos, y bajan las comas por punto por debajo de la banda humana. Meterles comas para que no dispare sería escribir para la regla.',
+  // 'est-pocas-comas' estuvo aquí del 8.1 al 11.1: los mensajes del cargador, frases sueltas y cortas, bajaban las comas
+  // por punto. Desde los textos de la página de créditos (11.1, hallazgo 2), que son prosa con sus comas, ya no dispara.
 };
 
 /** Los datos con que se llama a cada función de textos.ts: los que pinta la página en un análisis de verdad. */
@@ -182,5 +185,17 @@ describe('los textos de la web, por los dos paquetes', () => {
     );
     const deEspanol = r.senales.filter((s) => s.paquete === espanol!.paquete).map((s) => `${s.reglaId} «${texto.slice(s.inicio, s.fin)}»`);
     assert.deepEqual(deEspanol, [], 'Español correcto');
+  });
+
+  // Desde el 11.1 (hallazgo 2 del censo pre-despliegue): la página de créditos saca de textos.ts todo lo que se lee en
+  // ella, como el catálogo, y por eso sus textos pasan por el juez de arriba.
+  test('la página de créditos: todo lo que se lee en su <main> sale de textos.ts', () => {
+    construir();
+    const main = /<main[^>]*>([\s\S]*?)<\/main>/.exec(readFileSync(new URL('creditos/index.html', DIST), 'utf8'))?.[1] ?? '';
+    assert.ok(main !== '', 'dist/creditos/index.html sin <main>');
+    const deTextos = new Set(textosDelScript());
+    const leidos = textosDelHtml(main);
+    assert.ok(leidos.length > 20, `${leidos.length} textos en la página de créditos`);
+    assert.deepEqual(leidos.filter((t) => !deTextos.has(t)), [], 'textos de la página de créditos que no salen de textos.ts');
   });
 });

@@ -1,10 +1,16 @@
 ---
 /**
  * El pie común (encargo 10.4, Tanda 1), como en el modelo (PieApp): la nota de
- * autoría, visible siempre (DISEÑO §6.1, 7: en el pie de página). Los
- * estilos, en estilos/marco.css.
+ * autoría, visible siempre (DISEÑO §6.1, 7: en el pie de página). Desde el
+ * 11.1 (hallazgo 2 del censo pre-despliegue, firmado por Antonio), junto a la
+ * nota, el enlace a la página de créditos y licencias, con la base de Astro
+ * (catalogo.ts). Los estilos, en estilos/marco.css.
  */
-import { NOTA_DE_AUTORIA } from '../textos.ts';
+import { urlDeLosCreditos } from '../catalogo/catalogo.ts';
+import { CREDITOS_Y_LICENCIAS, NOTA_DE_AUTORIA } from '../textos.ts';
 ---
 
-<footer class="pie">{NOTA_DE_AUTORIA}</footer>
+<footer class="pie">
+  <p class="nota-de-autoria">{NOTA_DE_AUTORIA}</p>
+  <a href={urlDeLosCreditos(import.meta.env.BASE_URL)}>{CREDITOS_Y_LICENCIAS}</a>
+</footer>

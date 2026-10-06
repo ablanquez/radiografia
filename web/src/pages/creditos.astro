@@ -1,0 +1,70 @@
+---
+/**
+ * La página de créditos y licencias, /creditos/ (11.1, hallazgo 2 del censo
+ * pre-despliegue; firmada por Antonio): lo ajeno que usa la web, con la
+ * atribución que pide cada licencia. Los percentiles con los que se compara un
+ * texto viajan en el paquete de RadiografIA y salen de corpus con licencia; la
+ * del BOE exige, para una obra derivada, la cita «Basado en datos de la
+ * Agencia Estatal Boletín Oficial del Estado» y un enlace a su sede, que hasta
+ * ahora no se veían en ninguna página publicada (docs/CENSO-PRE-DESPLIEGUE.md,
+ * § 10; THIRD-PARTY-NOTICES § 2.3). Con la misma cabecera y el mismo pie que
+ * el catálogo (layouts/Catalogo.astro), en una columna de 34em como la ficha
+ * (DISEÑO §6.4); enlazada desde el pie de cada página (Pie.astro) y, en «Ver
+ * el detalle», debajo de la comparación con los textos de personas.
+ *
+ * Todo el texto, de textos.ts (SECCIONES_DE_LOS_CREDITOS): cada sección con
+ * su título, lo que va debajo y sus obras; cada obra con su nombre, sus
+ * párrafos y sus enlaces. Las direcciones de la propia web llevan la base de
+ * Astro delante. Los enlaces de fuera, con el icono de enlace externo,
+ * aria-hidden, y «(enlace externo)» solo para el lector, como las fuentes de
+ * la ficha. Los estilos, en estilos/creditos.css.
+ */
+import Catalogo from '../layouts/Catalogo.astro';
+import { conBarraFinal } from '../pantalla/cargar.ts';
+import * as textos from '../textos.ts';
+
+const base = conBarraFinal(import.meta.env.BASE_URL);
+const deFuera = (url: string): boolean => /^https?:\/\//.test(url);
+---
+
+<Catalogo titulo={textos.CREDITOS_Y_LICENCIAS} clase="creditos">
+  <div class="cabeza-creditos">
+    <h1>{textos.CREDITOS_Y_LICENCIAS}</h1>
+    <p class="largo">{textos.PRESENTACION_DE_LOS_CREDITOS}</p>
+  </div>
+  {
+    textos.SECCIONES_DE_LOS_CREDITOS.map((seccion, i) => (
+      <section aria-labelledby={`creditos-${i + 1}`}>
+        <h2 id={`creditos-${i + 1}`}>{seccion.titulo}</h2>
+        {seccion.presentacion !== null && <p class="largo">{seccion.presentacion}</p>}
+        {seccion.obras.map((obra) => (
+          <div class="obra">
+            <h3>{obra.nombre}</h3>
+            {obra.parrafos.map((parrafo) => (
+              <p class="largo">{parrafo}</p>
+            ))}
+            {Object.keys(obra.enlaces).length > 0 && (
+              <ul class="enlaces-creditos">
+                {Object.entries(obra.enlaces).map(([url, texto]) => (
+                  <li>
+                    {deFuera(url) ? (
+                      <a href={url}>
+                        <span>{texto}</span>
+                        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h4v4M13 3L7 9M11 9.5V13H3V5h3.5" /></svg>
+                        <span class="solo-lector">{textos.ENLACE_EXTERNO}</span>
+                      </a>
+                    ) : (
+                      <a href={`${base}${url}`}>
+                        <span>{texto}</span>
+                      </a>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
+      </section>
+    ))
+  }
+</Catalogo>

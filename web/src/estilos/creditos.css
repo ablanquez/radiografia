@@ -1,0 +1,79 @@
+/*
+ * La página de créditos y licencias, /creditos/ (11.1, hallazgo 2 del censo
+ * pre-despliegue; firmada por Antonio), como la ficha (DISEÑO §6.4;
+ * estilos/ficha.css): una columna de 34em centrada, con 32 entre bloques;
+ * arriba el título y, a 12, la presentación; cada sección con su título a 20
+ * y, a 16, lo que va debajo y sus obras; cada obra con su nombre a 16 en
+ * negrita y, a 8, sus párrafos en Literata 18 y sus enlaces de 44 de alto
+ * (los de fuera, con el icono de enlace externo a 8, como las fuentes de la
+ * ficha). Solo variables de tokens.css.
+ */
+
+.creditos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-32);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--medida-columna-texto);
+  margin: 0 auto;
+  padding-bottom: var(--espacio-16);
+  /* Una palabra que no cabe (una dirección, un nombre de fichero) se parte en vez de desbordar a 320. */
+  overflow-wrap: anywhere;
+}
+
+.creditos :is(h1, h2, h3, p, ul) {
+  margin: 0;
+}
+
+.cabeza-creditos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-12);
+}
+
+.creditos section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-16);
+}
+
+.obra {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-8);
+}
+
+.obra h3 {
+  font-size: var(--tipografia-tamano-base);
+  line-height: var(--tipografia-interlineado-base);
+}
+
+.creditos .largo {
+  font-family: var(--tipografia-font-family-texto);
+  font-size: var(--tipografia-tamano-cuerpo);
+  line-height: var(--tipografia-interlineado-cuerpo);
+}
+
+.enlaces-creditos {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  list-style: none;
+}
+
+.enlaces-creditos a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-8);
+  min-height: var(--medida-toque);
+}
+
+.enlaces-creditos svg {
+  flex-shrink: 0;
+}
+
+/* El texto, como elemento flexible, puede estrecharse por debajo de su palabra más larga, que se parte. */
+.enlaces-creditos a > span:first-child {
+  min-width: 0;
+}
