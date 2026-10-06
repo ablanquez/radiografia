@@ -81,6 +81,12 @@
  *      el 9.3, por el import() de pdfmake) lleva entero el aviso MIT de Vite:
  *      la parte «Vite core license» del LICENSE.md de vite, el que instala la
  *      web (astro.config.mjs, avisoDeVite).
+ *  16. Desde el 11.2 (firmado por Antonio el 06/10, textos incluidos), la
+ *      página que no existe está en dist/404.html: su título, su frase y sus
+ *      dos enlaces, de textos.ts y literales los firmados, y todas sus
+ *      direcciones desde la raíz («/…»), porque el servidor la sirve en
+ *      cualquier dirección (el ErrorDocument del .htaccess) y una relativa
+ *      se rompería en /reglas/x/y/. Y el juez 5: /no-existe da 404 con ella.
  *
  * El build, memorizado y con la telemetría apagada, y astro preview son los
  * de apoyo.ts (los comparte con textos-web.spec.ts y catalogo.spec.ts).
@@ -94,7 +100,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import { gzipSync } from 'node:zlib';
-import { urlDeLosCreditos } from '../src/catalogo/catalogo.ts';
+import { urlDeLosCreditos, urlDelAnalizador, urlDelCatalogo } from '../src/catalogo/catalogo.ts';
 import { EJEMPLOS } from '../src/pantalla/ejemplos.ts';
 import * as textos from '../src/textos.ts';
 import { conPreview, construir, decodificar, DIST, motorDelNavegador, PAQUETES, PAQUETES_DE_PRUEBA } from './apoyo.ts';
@@ -346,11 +352,38 @@ describe('la web construida', () => {
     assert.deepEqual(mal, []);
   });
 
-  test('5 · astro preview responde 200 en / y 404 en /no-existe', async () => {
+  test('16 · la página que no existe está en dist/404.html, con los textos firmados y todas sus direcciones desde la raíz', () => {
+    construir();
+    assert.deepEqual(
+      [textos.NO_HAY_NADA_AQUI, textos.ESA_DIRECCION_NO_LLEVA, textos.IR_AL_ANALIZADOR, textos.VER_EL_CATALOGO_DE_REGLAS],
+      ['No hay nada aquí', 'Esa dirección no lleva a ninguna página de RadiografIA.', 'Ir al analizador', 'Ver el catálogo de reglas'],
+      'los textos que firmó Antonio el 06/10',
+    );
+    assert.ok(existsSync(new URL('404.html', DIST)), 'no existe dist/404.html');
+    const html = decodificar(readFileSync(new URL('404.html', DIST), 'utf8'));
+    assert.ok(html.includes(`<title>${textos.NO_HAY_NADA_AQUI} · RadiografIA</title>`), 'el título de la pestaña');
+    const main = /<main class="no-encontrada">([\s\S]*?)<\/main>/.exec(html)?.[1] ?? '';
+    assert.ok(main.includes(`<h1>${textos.NO_HAY_NADA_AQUI}</h1>`), 'el título');
+    assert.ok(main.includes(`<p class="largo">${textos.ESA_DIRECCION_NO_LLEVA}</p>`), 'la frase');
+    assert.deepEqual(
+      [...main.matchAll(/<a href="([^"]*)">([^<]*)<\/a>/g)].map((m) => [m[1], m[2]]),
+      [
+        [urlDelAnalizador('/'), textos.IR_AL_ANALIZADOR],
+        [urlDelCatalogo('/'), textos.VER_EL_CATALOGO_DE_REGLAS],
+      ],
+      'los dos enlaces',
+    );
+    const relativas = [...html.matchAll(/\s(?:href|src)="([^"]*)"/g)].map((m) => m[1]!).filter((u) => !u.startsWith('/') && !/^https?:\/\//.test(u));
+    assert.deepEqual(relativas, [], 'direcciones relativas, que se romperían en una dirección anidada');
+  });
+
+  test('5 · astro preview responde 200 en / y 404 en /no-existe, con la página que no existe', async () => {
     construir();
     await conPreview(async (url) => {
       assert.equal((await fetch(url)).status, 200, `GET ${url}`);
-      assert.equal((await fetch(`${url}no-existe`)).status, 404, `GET ${url}no-existe`);
+      const respuesta = await fetch(`${url}no-existe`);
+      assert.equal(respuesta.status, 404, `GET ${url}no-existe`);
+      assert.ok(decodificar(await respuesta.text()).includes(`<h1>${textos.NO_HAY_NADA_AQUI}</h1>`), `GET ${url}no-existe: sin la página que no existe`);
     });
   });
 });

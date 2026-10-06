@@ -19,6 +19,8 @@
  *   7. Desde el 11.1 (hallazgo 2 del censo pre-despliegue), la página de créditos: el main; su título, heading de nivel 1,
  *      y los de sus secciones, de nivel 2, en su orden, cada sección una region con el nombre de su título; cada enlace,
  *      un link con nombre; y el pie, contentinfo, con el enlace «Créditos y licencias».
+ *   8. Desde el 11.2, la página que no existe, en /no-existe/ (astro preview la sirve ahí con el 404, como el servidor):
+ *      el main; su título, heading de nivel 1; sus dos enlaces, link con su nombre, en su orden; y el pie, contentinfo.
  *
  * [DOC] https://chromedevtools.github.io/devtools-protocol/tot/Accessibility/ — getFullAXTree («Fetches the entire
  *    accessibility tree for the root Document»); AXNode: role, name, properties, ignored, backendDOMNodeId; AXPropertyName
@@ -282,6 +284,21 @@ describe('el árbol de accesibilidad, sobre astro preview', () => {
       assert.equal((await uno('footer.pie')).rol, 'contentinfo', 'el pie');
       const delPie = await uno('footer.pie a');
       assert.deepEqual([delPie.rol, delPie.nombre], ['link', textos.CREDITOS_Y_LICENCIAS], 'el enlace del pie');
+    } finally {
+      await ir('');
+    }
+  });
+
+  test('8 · la página que no existe: el main, el título de nivel 1, sus dos enlaces con su nombre y el pie', async () => {
+    await abrir();
+    try {
+      await ir('no-existe/');
+      assert.equal((await uno('body > main')).rol, 'main', 'el <main>');
+      const h1 = await uno('.no-encontrada h1');
+      assert.deepEqual([h1.rol, h1.nombre, h1.props['level']], ['heading', textos.NO_HAY_NADA_AQUI, 1], 'el título');
+      const enlaces = await nodos('.no-encontrada a');
+      assert.deepEqual(enlaces.map((n) => [n.rol, n.nombre]), [['link', textos.IR_AL_ANALIZADOR], ['link', textos.VER_EL_CATALOGO_DE_REGLAS]], 'los dos enlaces');
+      assert.equal((await uno('footer.pie')).rol, 'contentinfo', 'el pie');
     } finally {
       await ir('');
     }

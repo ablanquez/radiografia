@@ -22,7 +22,8 @@
  * Desde el 11.1 (hallazgo 2 del censo pre-despliegue), un segundo juez: todo
  * lo que se lee en el <main> de la página de créditos sale de textos.ts. Y
  * (hallazgo 8) un tercero: todo lo que se lee en dist/index.html sale de
- * textos.ts, salvo el nombre, RadiografIA, que es identidad.
+ * textos.ts, salvo el nombre, RadiografIA, que es identidad. Desde el 11.2,
+ * un cuarto: lo que se lee en el <main> de la página que no existe, también.
  *
  * Con 100 palabras de prosa o más se analiza con analizar(); hoy pasan de 300.
  * [PROPIO] Si bajaran de 100, el juez falla en vez de pasar: el motor no
@@ -201,6 +202,17 @@ describe('los textos de la web, por los dos paquetes', () => {
     const leidos = textosDelHtml(main);
     assert.ok(leidos.length > 20, `${leidos.length} textos en la página de créditos`);
     assert.deepEqual(leidos.filter((t) => !deTextos.has(t)), [], 'textos de la página de créditos que no salen de textos.ts');
+  });
+
+  // Desde el 11.2 (firmada por Antonio el 06/10): la página que no existe, igual.
+  test('la página que no existe: todo lo que se lee en su <main> sale de textos.ts', () => {
+    construir();
+    const main = /<main[^>]*>([\s\S]*?)<\/main>/.exec(readFileSync(new URL('404.html', DIST), 'utf8'))?.[1] ?? '';
+    assert.ok(main !== '', 'dist/404.html sin <main>');
+    const deTextos = new Set(textosDelScript());
+    const leidos = textosDelHtml(main);
+    assert.equal(leidos.length, 4, `los textos de la página que no existe: ${leidos.join(' | ')}`);
+    assert.deepEqual(leidos.filter((t) => !deTextos.has(t)), [], 'textos de la página que no existe que no salen de textos.ts');
   });
 
   // Desde el 11.1 (hallazgo 8 del censo pre-despliegue): el analizador tampoco escribe a mano ningún texto; solo el

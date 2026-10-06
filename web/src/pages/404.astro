@@ -1,0 +1,33 @@
+---
+/**
+ * La página que no existe (11.2; firmada por Antonio el 06/10, textos
+ * incluidos): el servidor la sirve, con el código 404, en cualquier dirección
+ * que no lleve a una página (el ErrorDocument del .htaccess de la rama
+ * publicacion; astro preview hace lo mismo). Con la misma cabecera y el mismo
+ * pie que el catálogo (layouts/Catalogo.astro), en la columna de 34em de la
+ * página de créditos: el título, la frase y los enlaces al analizador y al
+ * catálogo. Todo el texto, de textos.ts. Como se sirve en direcciones de
+ * cualquier profundidad (/reglas/x/y/), todas las suyas van desde la raíz: las
+ * de la cabecera, el pie y los recursos ya lo hacen, y las de aquí también
+ * (urlDelAnalizador y urlDelCatalogo, con la base de Astro). Los estilos, en
+ * estilos/no-encontrada.css.
+ *
+ * [DOC] https://docs.astro.build/en/basics/astro-pages/ — «For a custom 404
+ *    error page, you can create a 404.astro or 404.md file in src/pages. This
+ *    will build to a 404.html page.»
+ */
+import Catalogo from '../layouts/Catalogo.astro';
+import { urlDelAnalizador, urlDelCatalogo } from '../catalogo/catalogo.ts';
+import * as textos from '../textos.ts';
+---
+
+<Catalogo titulo={textos.NO_HAY_NADA_AQUI} clase="no-encontrada">
+  <div class="cabeza-no-encontrada">
+    <h1>{textos.NO_HAY_NADA_AQUI}</h1>
+    <p class="largo">{textos.ESA_DIRECCION_NO_LLEVA}</p>
+  </div>
+  <ul class="enlaces-no-encontrada">
+    <li><a href={urlDelAnalizador(import.meta.env.BASE_URL)}>{textos.IR_AL_ANALIZADOR}</a></li>
+    <li><a href={urlDelCatalogo(import.meta.env.BASE_URL)}>{textos.VER_EL_CATALOGO_DE_REGLAS}</a></li>
+  </ul>
+</Catalogo>

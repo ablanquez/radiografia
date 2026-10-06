@@ -1,0 +1,46 @@
+/*
+ * La página que no existe, dist/404.html (11.2; firmada por Antonio el 06/10), como la de créditos
+ * (estilos/creditos.css): una columna de 34em centrada, con 32 entre bloques; arriba el título y, a 12, la frase en
+ * Literata 18; debajo, los dos enlaces, de 44 de alto. Solo variables de tokens.css.
+ */
+
+.no-encontrada {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-32);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--medida-columna-texto);
+  margin: 0 auto;
+  padding-bottom: var(--espacio-16);
+  overflow-wrap: anywhere;
+}
+
+.no-encontrada :is(h1, p, ul) {
+  margin: 0;
+}
+
+.cabeza-no-encontrada {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-12);
+}
+
+.no-encontrada .largo {
+  font-family: var(--tipografia-font-family-texto);
+  font-size: var(--tipografia-tamano-cuerpo);
+  line-height: var(--tipografia-interlineado-cuerpo);
+}
+
+.enlaces-no-encontrada {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  list-style: none;
+}
+
+.enlaces-no-encontrada a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--medida-toque);
+}

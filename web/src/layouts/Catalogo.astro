@@ -33,6 +33,8 @@
  *    estilos/creditos.css, que va aquí con las demás hojas del layout: sale
  *    en el mismo CSS enlazado que las otras páginas del catálogo, y la página
  *    no lleva <style> propio ni otra CSP.
+ * Desde el 11.2, también la página que no existe (pages/404.astro), con la
+ *    clase «no-encontrada» y estilos/no-encontrada.css, por lo mismo.
  */
 import { urlDelAnalizador } from '../catalogo/catalogo.ts';
 import { ANALIZADOR } from '../textos.ts';
@@ -48,6 +50,7 @@ import '../estilos/hoja.css';
 import '../estilos/catalogo.css';
 import '../estilos/ficha.css';
 import '../estilos/creditos.css';
+import '../estilos/no-encontrada.css';
 
 interface Props {
   /** Lo que va delante de «RadiografIA» en el título de la pestaña. */

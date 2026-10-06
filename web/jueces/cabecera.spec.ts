@@ -19,7 +19,7 @@
  *      en su nombre accesible (el árbol de accesibilidad de Chrome).
  *   4. El catálogo lleva la misma cabecera, con el nombre en un <p> y el
  *      enlace «Analizador», y el mismo pie (en el HTML construido); desde el
- *      11.1, también la página de créditos.
+ *      11.1, también la página de créditos; desde el 11.2, la que no existe.
  *
  * [DOC] https://github.com/ChromeDevTools/devtools-protocol (json/
  *    browser_protocol.json) — Accessibility.getPartialAXTree («Fetches the
@@ -115,9 +115,9 @@ describe('la cabecera y el pie', () => {
     assert.deepEqual([nodes[0]!.role.value, nodes[0]!.name.value], ['link', textos.CATALOGO_CORTO], 'el nombre accesible del enlace en móvil');
   });
 
-  test('4 · el catálogo y la página de créditos: la misma cabecera, con el nombre en un <p> y el enlace «Analizador», y el mismo pie', () => {
+  test('4 · el catálogo, la página de créditos y la que no existe: la misma cabecera, con el nombre en un <p> y el enlace «Analizador», y el mismo pie', () => {
     construir();
-    for (const pagina of ['reglas/index.html', 'reglas/disc-marcador-repetido/index.html', 'creditos/index.html']) {
+    for (const pagina of ['reglas/index.html', 'reglas/disc-marcador-repetido/index.html', 'creditos/index.html', '404.html']) {
       const html = readFileSync(new URL(pagina, DIST), 'utf8');
       const cabecera = /<header class="cabecera">([\s\S]*?)<\/header>/.exec(html)?.[1] ?? '';
       assert.match(cabecera, /<img class="icono-marca" src="\/icono-c\.svg" alt="" width="56" height="56">/, `${pagina}: el icono`);

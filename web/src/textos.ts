@@ -398,6 +398,14 @@ export const QUE_HACER = 'Qué hacer';
 export const POR_QUE_LO_MIRAMOS = '¿Por qué lo miramos?';
 export const VER_SU_FICHA = 'Ver su ficha en el catálogo';
 
+// La página que no existe (11.2; firmada por Antonio el 06/10, textos incluidos): dist/404.html, la que el servidor
+// sirve, con el código 404, en cualquier dirección que no lleve a una página (el ErrorDocument del .htaccess de la rama
+// publicacion). Con la cabecera y el pie de las demás, en la columna de 34em de los créditos.
+export const NO_HAY_NADA_AQUI = 'No hay nada aquí';
+export const ESA_DIRECCION_NO_LLEVA = 'Esa dirección no lleva a ninguna página de RadiografIA.';
+export const IR_AL_ANALIZADOR = 'Ir al analizador';
+export const VER_EL_CATALOGO_DE_REGLAS = 'Ver el catálogo de reglas';
+
 // La página de créditos y licencias (11.1, hallazgo 2 del censo pre-despliegue; firmada por Antonio): /creditos/, en una
 // columna de 34em como la ficha (DISEÑO §6.4), enlazada desde el pie de cada página y, en «Ver el detalle», debajo de la
 // comparación con los textos de personas. Lo ajeno que usa la web, con la atribución que pide cada licencia, de
