@@ -6,9 +6,10 @@
   "license": "Apache-2.0",
   "description": "La web estática de RadiografIA, en Astro: el texto se analiza en el navegador con el motor y nada sale de él.",
   "scripts": {
-    "predev": "npm run generar --workspace @radiografia/motor && node scripts/copiar-paquetes.ts && node scripts/tokens-a-css.ts && node scripts/tramos-de-ejemplos.ts",
+    "preparar": "npm run generar --workspace @radiografia/motor && node scripts/copiar-paquetes.ts && node scripts/tokens-a-css.ts && node scripts/tramos-de-ejemplos.ts",
+    "predev": "npm run preparar",
     "dev": "astro dev",
-    "prebuild": "npm run generar --workspace @radiografia/motor && node scripts/copiar-paquetes.ts && node scripts/tokens-a-css.ts && node scripts/tramos-de-ejemplos.ts",
+    "prebuild": "npm run preparar",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",

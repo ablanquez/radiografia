@@ -7,6 +7,8 @@
  *      astro.config.mjs); fuera los relativos y los de Node (node:). `vite` llegaba de rebote, como dependencia de
  *      astro: si astro cambiara de Vite, o npm dejara de subirlo a la raíz de node_modules, `npm run tipos` fallaría
  *      sin haber tocado nada.
+ *   2. Hallazgo 19: predev y prebuild eran la misma cadena, copiada. Ahora los dos llaman al mismo script de npm, y
+ *      solo a él: lo que se genera antes de `astro dev` y de `astro build` se define una vez.
  *
  * [DOC] https://docs.npmjs.com/cli/v11/configuring-npm/package-json#devdependencies — «If someone is planning on
  *    downloading and using your module in their program, then they probably don't want or need to download and build
@@ -56,5 +58,14 @@ describe('el package.json de la web', () => {
       [],
       'paquetes que nombra el código de la web y no declara web/package.json',
     );
+  });
+
+  test('2 · predev y prebuild son una sola definición: los dos llaman al mismo script, y solo a él', () => {
+    const scripts = paquete.scripts ?? {};
+    const llamada = (script: string | undefined): string | undefined => /^npm run ([\w:-]+)$/.exec(script ?? '')?.[1];
+    const predev = llamada(scripts['predev']);
+    const prebuild = llamada(scripts['prebuild']);
+    assert.ok(predev !== undefined && predev === prebuild, `predev («${scripts['predev']}») y prebuild («${scripts['prebuild']}») no llaman al mismo script`);
+    assert.match(scripts[predev] ?? '', /\S/, `el script ${predev}, vacío`);
   });
 });

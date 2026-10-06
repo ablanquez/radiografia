@@ -220,10 +220,13 @@ npm run dev                    # http://localhost:4321/ y el catálogo en http:/
 ```
 
 - **`predev` y `prebuild`** corren solos antes de `npm run dev` y de `npm run
-  build`. Generan el validador de esquema que lleva el navegador (`npm run
-  generar` del motor, a `motor/dist/`) y copian `paquetes/*.json` a
-  `web/public/paquetes/`, de donde la página los pide al arrancar. Ninguna
-  de las dos carpetas se versiona.
+  build`, y los dos llaman a `npm run preparar`, que se define una sola vez
+  en [`web/package.json`](web/package.json). Genera el validador de esquema
+  que lleva el navegador (`npm run generar` del motor, a `motor/dist/`),
+  copia `paquetes/*.json` a `web/public/paquetes/` (de donde la página los
+  pide al arrancar), escribe `web/src/estilos/tokens.css` desde los tokens de
+  diseño y calcula los tramos de los ejemplos de cada ficha. Nada de lo que
+  escribe se versiona (`.gitignore` dice cada cosa).
 - **Después de tocar `motor/src/`**, reinicia el servidor con `npm run dev
   -- --force`. Vite pre-empaqueta el motor, porque lleva un fichero CommonJS
   (`motor/src/terceros/silabea.cjs`), y sin `--force` sigue sirviendo el de
