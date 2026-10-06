@@ -14,6 +14,20 @@
 
 ---
 
+## [2026-10-06] 🔴 ABIERTA — El juez del README no encuentra el paquete de ejemplo si el README sale del checkout con CRLF
+
+**Categoría:** finales de línea / juez que solo se probó con ficheros copiados
+**Síntoma:** con `README.md` en CRLF (el checkout de esta máquina, `core.autocrlf=true`; `.gitattributes` no fija `eol` para los `.md`), el test 4 de `web/jueces/readme.spec.ts` (commit `6166bba`, encargo 11.4) cae: `/^```json\n/` no casa con «```json\r\n». Medido en el clon de trabajo con el README pasado a CRLF: «✖ 4 · el paquete de ejemplo entra como un paquete propio y sus ejemplos hacen lo que dicen; el error que cita es el de la web (1.0155ms)» y «AssertionError [ERR_ASSERTION]: el bloque JSON del paquete de ejemplo». Los tests 1 a 3 pasan.
+**⭐ Qué dio verde mientras el fallo estaba vivo:** el juez entero en el clon de trabajo (`F:/_clones-005/trabajo`), con `README.md` y los documentos copiados con `cp` desde el árbol real en LF, no sacados por git. Con `URL_PRODUCCION`: «ℹ tests 5», «ℹ pass 5», «ℹ fail 0», «ℹ skipped 0». Y las quince contrapruebas, todas «ROJO» en su test, con «ficheros del clon, como en el repo real: true».
+**Cómo se cazó:** ojo humano: el ejecutor, antes de lanzar la verificación en clon limpio de `6166bba`, cayó en que el clon limpio saca los `.md` en CRLF y lo probó.
+**Causa raíz:** ⏳ PENDIENTE
+**Arreglo aplicado:** ⏳ PENDIENTE
+**Commit:** ⏳ PENDIENTE
+**Ley que sale de aquí:** SIN LEY TODAVÍA
+**Traza:** `web/jueces/readme.spec.ts` (test 4, el bloque `json` de «Cómo escribir un paquete propio»); `README.md`; el clon de trabajo y `scratchpad/c111/correr.sh`, que copia ficheros.
+
+---
+
 ## [2026-10-06] ✅ CERRADA — El JS del analizador lleva código de Vite (su función de precarga) sin aviso de licencia, y el censo y el NOTICES dicen que lo que viaja está completo
 
 **Categoría:** licencias de terceros (empaquetado del navegador)
