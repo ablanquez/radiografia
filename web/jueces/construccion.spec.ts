@@ -64,6 +64,11 @@
  *      del NOTICES § 2.3, y el enlace a la sede del BOE que pide la misma
  *      condición («incluyendo en todo caso un enlace a la sede electrónica»,
  *      data/calibracion/LICENSE-CORPUS.md).
+ *  13. Desde el 11.1 (hallazgo 18 del censo, firmado por Antonio), el trozo
+ *      de JS del runtime de Rolldown (rolldown-runtime.*.js, uno solo) lleva
+ *      entero el LICENSE de rolldown, el que instala vite: sus ayudantes de
+ *      CommonJS son código de Rolldown, no generado del nuestro
+ *      (astro.config.mjs, avisoDeRolldown).
  *
  * El build, memorizado y con la telemetría apagada, y astro preview son los
  * de apoyo.ts (los comparte con textos-web.spec.ts y catalogo.spec.ts).
@@ -75,6 +80,7 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
+import { pathToFileURL } from 'node:url';
 import { urlDeLosCreditos } from '../src/catalogo/catalogo.ts';
 import { EJEMPLOS } from '../src/pantalla/ejemplos.ts';
 import * as textos from '../src/textos.ts';
@@ -111,6 +117,12 @@ function licenciaDeSilabea(): string {
   const fuente = readFileSync(new URL('../../motor/src/terceros/silabea.cjs', import.meta.url), 'utf8');
   const cabecera = /^\/\*([\s\S]*?)\*\//.exec(fuente)?.[1] ?? '';
   return sinMarcasDeComentario(cabecera.split('texto íntegro de su fichero LICENSE:')[1] ?? '');
+}
+
+/** El LICENSE de rolldown, el que instala vite (que es quien lo trae), como lo lee astro.config.mjs. */
+function licenciaDeRolldown(): string {
+  const desdeVite = createRequire(createRequire(new URL('../package.json', import.meta.url)).resolve('vite/package.json'));
+  return readFileSync(new URL('LICENSE', pathToFileURL(desdeVite.resolve('rolldown/package.json'))), 'utf8').replace(/\r\n/g, '\n').trim();
 }
 
 describe('la web construida', () => {
@@ -217,6 +229,15 @@ describe('la web construida', () => {
     const creditos = decodificar(readFileSync(new URL('creditos/index.html', DIST), 'utf8'));
     assert.ok(creditos.includes(`<p class="largo">${cita}</p>`), 'la página de créditos no lleva la cita del BOE literal, en su propio párrafo');
     assert.match(creditos, /<a href="https:\/\/www\.boe\.es">/, 'la página de créditos no enlaza la sede del BOE');
+  });
+
+  test('13 · el trozo del runtime de Rolldown lleva entero el LICENSE de rolldown', () => {
+    construir();
+    const licencia = licenciaDeRolldown();
+    assert.match(licencia, /^MIT License\n\nCopyright \(c\) 2024-present VoidZero Inc\. & Contributors\n\nPermission is hereby granted, /, 'el LICENSE de rolldown no es el que se miró el 06/10');
+    const runtime = jsDeDist().filter(({ ruta }) => /rolldown-runtime\.[\w-]+\.js$/.test(ruta));
+    assert.equal(runtime.length, 1, `los trozos del runtime de Rolldown en dist/: ${runtime.map((x) => x.ruta).join(', ')}`);
+    assert.ok(sinMarcasDeComentario(runtime[0]!.texto).includes(sinMarcasDeComentario(licencia)), `${runtime[0]!.ruta} no lleva el LICENSE de rolldown entero`);
   });
 
   test('7 · dist/ejemplos/ lleva los dos textos de ejemplo y los dos paquetes de prueba, byte a byte los de public/ejemplos/, en UTF-8 sin BOM y con \\n', async () => {

@@ -61,6 +61,26 @@
  *    la vigila motor/src/notices.spec.ts). Si la cabecera no está, el build
  *    para. Lo vigila el juez 11 de jueces/construccion.spec.ts.
  *
+ * vite.plugins: avisoDeRolldown — desde el 11.1 (hallazgo 18 del censo
+ *    pre-despliegue, firmado por Antonio: si viaja código de terceros, su
+ *    aviso va en el JS). Rolldown, el empaquetador de Vite 8 (MIT, VoidZero
+ *    Inc. & Contributors), escribe en el JS publicado un trozo propio,
+ *    rolldown-runtime.*.js, con sus ayudantes para cargar CommonJS
+ *    (__commonJSMin, __copyProps y __toESM). No los genera a partir de
+ *    nuestro código: son su módulo de runtime, el que lleva dentro tal cual
+ *    («export var __create = Object.create; …», visto el 06/10 en
+ *    @rolldown/binding-win32-x64-msvc), y sin aviso. A ese trozo, el que
+ *    lleva el módulo de runtime, se le pone en cabecera el LICENSE de
+ *    rolldown como comentario legal «/*!». Lo vigila el juez 13 de
+ *    jueces/construccion.spec.ts.
+ *    [DOC] node_modules/rolldown/dist (rolldown 1.2.12) — `const
+ *    RUNTIME_MODULE_ID = "\0rolldown/runtime.js"`; y en sus tipos
+ *    (shared/define-config-*.d.mts), el RenderedChunk de cada trozo: «The
+ *    list of ids of modules included in this chunk» (moduleIds); y, de
+ *    output.postBanner, «after renderChunk hook and minification»: el
+ *    gancho renderChunk va antes del minificado, que conserva el «/*!»
+ *    (comments.legal, arriba).
+ *
  * security.csp — la Content-Security-Policy de las páginas publicadas
  *    (encargo 8.1, b; firmada en la parada 1): connect-src 'self' (ningún
  *    fetch, XHR, WebSocket ni sendBeacon a otro origen) y form-action 'self'
@@ -105,7 +125,8 @@
  */
 import { createHash } from 'node:crypto';
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { createRequire } from 'node:module';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'astro/config';
 import { cspDetrasDelCharset } from './scripts/csp-primero.ts';
@@ -137,6 +158,23 @@ const avisoDeSilabea = {
   },
 };
 
+/** El LICENSE de rolldown, el que instala vite (que es quien lo trae). */
+function licenciaDeRolldown() {
+  const desdeVite = createRequire(createRequire(import.meta.url).resolve('vite/package.json'));
+  const licencia = readFileSync(join(dirname(desdeVite.resolve('rolldown/package.json')), 'LICENSE'), 'utf8').replace(/\r\n/g, '\n').trim();
+  if (licencia.includes('*/')) throw new Error('el LICENSE de rolldown lleva «*/»: cerraría el comentario');
+  return licencia;
+}
+
+/** @type {import('vite').Plugin} */
+const avisoDeRolldown = {
+  name: 'radiografia-aviso-de-rolldown',
+  renderChunk(codigo, trozo) {
+    if (!trozo.moduleIds.includes('\0rolldown/runtime.js')) return null;
+    return { code: `/*!\n${licenciaDeRolldown()}\n*/\n${codigo}`, map: null };
+  },
+};
+
 /** @type {import('vite').Plugin} */
 const avisosDePdfmake = {
   name: 'radiografia-avisos-de-pdfmake',
@@ -152,7 +190,7 @@ export default defineConfig({
   integrations: [cspPrimero],
   security: { csp: { directives: ["connect-src 'self'", "form-action 'self'"] } },
   vite: {
-    plugins: [avisoDeSilabea, avisosDePdfmake],
+    plugins: [avisoDeSilabea, avisoDeRolldown, avisosDePdfmake],
     optimizeDeps: { include: ['@radiografia/motor/navegador'] },
     build: { rolldownOptions: { output: { comments: { legal: true } } } },
   },

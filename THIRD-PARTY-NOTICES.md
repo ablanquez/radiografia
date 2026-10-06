@@ -61,8 +61,23 @@ otro workspace y no es de terceros.
 > [`motor/src/navegador.spec.ts`](motor/src/navegador.spec.ts), no equivale a ese build.
 >
 > **De `astro` no viaja nada al navegador.** Genera el HTML en build. El JS de la página es el
-> motor, el validador y los ayudantes que escribe el empaquetador: en el build de la web
-> (02/10/2026), el JS no lleva código de Vite ni de Astro.
+> motor, el validador y lo que escribe el empaquetador, que no es todo nuestro (medido el
+> 06/10/2026, en el 11.1):
+>
+> - **El runtime de Rolldown** (`_astro/rolldown-runtime.*.js`): los ayudantes con los que
+>   Rolldown, el empaquetador de Vite 8 (MIT, © VoidZero Inc. & Contributors), carga el CommonJS
+>   de `silabea.cjs` y de pdfmake. Son su módulo de runtime tal cual, no código generado del
+>   nuestro. **Su aviso viaja en cabecera de ese trozo**: el `LICENSE` de `rolldown` como
+>   comentario legal, que pone `avisoDeRolldown` en [`web/astro.config.mjs`](web/astro.config.mjs)
+>   (hallazgo 18 del censo pre-despliegue). Lo vigila el juez 13 de
+>   [`web/jueces/construccion.spec.ts`](web/jueces/construccion.spec.ts).
+> - **La función de precarga de Vite** (`preload`; MIT, © VoidZero Inc. and Vite contributors),
+>   en el JS del analizador desde el 9.3, por el `import()` de pdfmake. **Su aviso no viaja
+>   todavía**: es el hallazgo 21 del censo, sin firmar
+>   ([`docs/CENSO-PRE-DESPLIEGUE.md`](docs/CENSO-PRE-DESPLIEGUE.md) § 14.4; bitácora del 06/10).
+>
+> Hasta el 06/10, este párrafo decía que el JS no llevaba código de Vite ni de Astro (medido el
+> 02/10/2026): era cierto antes del 9.3.
 >
 > **`pdfmake` viaja al navegador, pero no con la página** (encargo 9.3). Su build para navegador,
 > `node_modules/pdfmake/build/pdfmake.js`, va en un trozo de JS aparte que la página carga solo al
