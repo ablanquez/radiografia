@@ -14,16 +14,17 @@
 
 ---
 
-## [2026-10-06] 🔴 ABIERTA — El juez del README no encuentra el paquete de ejemplo si el README sale del checkout con CRLF
+## [2026-10-06] ✅ CERRADA — El juez del README no encuentra el paquete de ejemplo si el README sale del checkout con CRLF
 
 **Categoría:** finales de línea / juez que solo se probó con ficheros copiados
 **Síntoma:** con `README.md` en CRLF (el checkout de esta máquina, `core.autocrlf=true`; `.gitattributes` no fija `eol` para los `.md`), el test 4 de `web/jueces/readme.spec.ts` (commit `6166bba`, encargo 11.4) cae: `/^```json\n/` no casa con «```json\r\n». Medido en el clon de trabajo con el README pasado a CRLF: «✖ 4 · el paquete de ejemplo entra como un paquete propio y sus ejemplos hacen lo que dicen; el error que cita es el de la web (1.0155ms)» y «AssertionError [ERR_ASSERTION]: el bloque JSON del paquete de ejemplo». Los tests 1 a 3 pasan.
 **⭐ Qué dio verde mientras el fallo estaba vivo:** el juez entero en el clon de trabajo (`F:/_clones-005/trabajo`), con `README.md` y los documentos copiados con `cp` desde el árbol real en LF, no sacados por git. Con `URL_PRODUCCION`: «ℹ tests 5», «ℹ pass 5», «ℹ fail 0», «ℹ skipped 0». Y las quince contrapruebas, todas «ROJO» en su test, con «ficheros del clon, como en el repo real: true».
 **Cómo se cazó:** ojo humano: el ejecutor, antes de lanzar la verificación en clon limpio de `6166bba`, cayó en que el clon limpio saca los `.md` en CRLF y lo probó.
-**Causa raíz:** ⏳ PENDIENTE
-**Arreglo aplicado:** ⏳ PENDIENTE
-**Commit:** ⏳ PENDIENTE
+**Causa raíz:** el juez leía los ficheros tal cual y buscaba el bloque con `\n` literal detrás de la valla. En el clon de trabajo, `correr.sh` copia los ficheros del árbol real con `cp`, y allí están en LF: ningún checkout pasó por medio, así que el entorno en el que se vio verde no era el de la verificación en clon ni el de `npm run publicar`, que sacan los `.md` con CRLF. Los tests 1 a 3 aguantaban porque en JavaScript `$` con la bandera `m` también casa antes de `\r`. Confirmado en un checkout de verdad: el clon limpio de `7f7913a` (el árbol de `6166bba` con esta entrada) dio en la web «ℹ tests 308», «ℹ pass 300», «ℹ fail 1», el 4, con «AssertionError [ERR_ASSERTION]: el bloque JSON del paquete de ejemplo».
+**Arreglo aplicado:** `web/jueces/readme.spec.ts`, `leer`: cada fichero del repositorio se lee con sus saltos en `\n` (`.replace(/\r\n/g, '\n')`), con el comentario que remite aquí. Verde con el README y los cinco documentos de `docs/` en CRLF («ℹ pass 5», con `URL_PRODUCCION`) y en LF (4 y el 5 omitido); y en el clon limpio de `cbcd6af`: web «ℹ tests 308», «ℹ pass 301», «ℹ fail 0», «ℹ skipped 7»; motor 909, 899, 0.
+**Commit:** `cbcd6af`
 **Ley que sale de aquí:** SIN LEY TODAVÍA
+Al cerrar: un juez que lee ficheros del repositorio no se da por verde con ficheros copiados al clon de trabajo; se ve en un checkout (el clon limpio), o se le pasan los ficheros en CRLF a propósito.
 **Traza:** `web/jueces/readme.spec.ts` (test 4, el bloque `json` de «Cómo escribir un paquete propio»); `README.md`; el clon de trabajo y `scratchpad/c111/correr.sh`, que copia ficheros.
 
 ---
