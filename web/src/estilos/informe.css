@@ -582,7 +582,7 @@
  * margen (el PDF de Antonio del 05/10 salió así: el texto en x = 0). Al imprimir, 100vw y 100vh son el área de la página (174 ×
  * 257 mm con los márgenes de @page; la hoja entera, 210 × 297, con «Ninguno»): el cuerpo pone por dentro, en cada página
  * (box-decoration-break: clone), lo que el área tenga de más, y la hoja sin resultado no pasa de 257 mm. Con los márgenes de
- * @page, nada. El número no vuelve: lo dice el README. No con una media query de ancho: en el diálogo, width es el de la hoja
+ * @page, nada. El número no vuelve: lo dice docs/WEB.md («Informe»). No con una media query de ancho: en el diálogo, width es el de la hoja
  * entera también con «Predeterminado» (Media Queries 4: «For paged media, this is the width of the page box»; visto el 05/10:
  * los márgenes salían dobles).
  */

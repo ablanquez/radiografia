@@ -289,7 +289,8 @@ fina (pdfmake no la tiene) y la sigla [O] la distingue; un tramo con varias
 familias lleva solo la línea de la primera (pdfmake no superpone
 decoraciones) y todas sus siglas (05/10). Si en el diálogo
 de Chrome se elige «Márgenes: Ninguno», la hoja pone los márgenes por
-dentro y el número de página desaparece; el README lo advierte.
+dentro y el número de página desaparece; lo advierte `docs/WEB.md`
+(«Informe»).
 
 ## 7 · Componentes y estados
 

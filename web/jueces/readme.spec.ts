@@ -3,7 +3,7 @@
  * repositorio y en la web publicada.
  *
  *   1. Lleva las secciones acordadas, en su orden, y la cabecera: el nombre, el eslogan, que analiza estilo y no
- *      demuestra autoría, la demo y el catálogo, la versión en preparación y la licencia.
+ *      demuestra autoría, la demo y el catálogo, la versión (1.0.0) y la licencia.
  *   2. Cada enlace relativo (también el de una imagen) del README y de los cinco documentos que salieron de él en el 11.4
  *      lleva a un fichero o a una carpeta del repositorio, y su ancla, a un título de ese fichero, como la calcula GitHub.
  *   3. Sus cifras son las de hoy: los tests de la suite, los del motor y los de la web, contados sin correrlos
@@ -144,7 +144,7 @@ describe('el README', () => {
       'Analiza estilo. No demuestra autoría.',
       '(https://radiografia.antonioblanquez.es)',
       '(https://radiografia.antonioblanquez.es/reglas/)',
-      'versi%C3%B3n-1.0.0%20en%20preparaci%C3%B3n',
+      'versi%C3%B3n-1.0.0-332288',
       'licencia-Apache%202.0',
     ])
       assert.ok(enUnaLinea(cabecera).includes(dicho), `la cabecera no dice «${dicho}»`);

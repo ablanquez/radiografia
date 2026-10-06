@@ -28,7 +28,8 @@
  * [DOC] https://encoding.spec.whatwg.org/ — «UTF-8 decode»: «If buffer is
  *    0xEF 0xBB 0xBF, then read three bytes»: un BOM delante no llega a
  *    JSON.parse. Un JSON en otra codificación (latin-1) se lee con caracteres
- *    de sustitución que el esquema no ve: declarado en el README.
+ *    de sustitución que el esquema no ve: declarado en docs/WEB.md
+ *    («Paquetes propios»).
  * [DOC] https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/file
  *    — «The accept attribute doesn't validate the types of the selected
  *    files»: por eso JSON.parse y el validador miran siempre.

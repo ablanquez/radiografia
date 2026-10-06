@@ -20,7 +20,7 @@
  *    va a su propio trozo.
  * Descarga en iOS: en el visor del sistema, y desde ahí se guarda (visto por
  *    Antonio el 05/10 en su iPhone y su iPad con la página de prueba: los
- *    tres caminos se comportan igual); el README lo dice.
+ *    tres caminos se comportan igual); lo dice docs/WEB.md («Informe»).
  */
 import pdfMake from 'pdfmake/build/pdfmake';
 import { definicionDelInforme, FUENTES_DEL_PDF } from './informe-pdf.ts';

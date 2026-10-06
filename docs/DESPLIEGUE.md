@@ -221,9 +221,9 @@ omiten con un aviso.
 Y, a ojo, Antonio en el PC, el iPhone y el iPad, con datos móviles.
 
 Lo que la documentación oficial de LiteSpeed no dice directiva a directiva
-(que rellene `env=HTTPS`, `RedirectMatch`, `AddType`) no consta: lo
-deciden esos jueces. Si una directiva no la entiende, no da error; no hace
-nada.
+(`env=HTTPS`, `RedirectMatch`, `AddType`, `FilesMatch`) se midió desde
+fuera con esos jueces el 06/10/2026: lo que cumple y lo que no, en el
+[censo, § 15](CENSO-PRE-DESPLIEGUE.md#15--la-publicación-112-06102026-la-variante-elegida).
 
 ### Qué no se sube
 

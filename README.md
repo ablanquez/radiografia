@@ -6,7 +6,7 @@
 
 **A contraluz se nota todo.**
 
-[![Versión](https://img.shields.io/badge/versi%C3%B3n-1.0.0%20en%20preparaci%C3%B3n-332288)](#estado-y-nevera)
+[![Versión](https://img.shields.io/badge/versi%C3%B3n-1.0.0-332288)](#estado-y-nevera)
 [![Licencia](https://img.shields.io/badge/licencia-Apache%202.0-64748B)](LICENSE)
 [![Astro](https://img.shields.io/badge/Astro-7-BC52EE)](https://astro.build/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6)](https://www.typescriptlang.org/)
@@ -470,8 +470,8 @@ iconos PNG y sirve desde su caché el JS con el tipo de antes
   diseño.
 - 06/10: 11.1, el censo pre-despliegue. Ese día se publicó la web (11.2).
 
-**Lo que queda del punto 11:** este README (11.4), la release v1.0.0 con su
-etiqueta (11.5) y la ficha del proyecto en el portafolio (11.6).
+**Lo que queda del punto 11:** la release v1.0.0 (11.5) y la ficha del
+portafolio (11.6).
 
 **La nevera**, lo que se apartó para la v1.1 con su fecha, no se copia
 aquí: está en el

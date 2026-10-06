@@ -496,7 +496,8 @@ combina con los incluidos.
 **Qué se comprueba**, en este orden. La primera comprobación que falla
 corta, y el paquete no entra:
 1. Que no pase de 2 MB (2 × 1.024 × 1.024 bytes; RadiografIA, con su
-   calibración, ocupa 342 KB). Un fichero más grande no se llega a leer.
+   calibración, ocupa 347.340 bytes, medido el 06/10/2026). Un fichero más
+   grande no se llega a leer.
 2. Que sea JSON. Si no lo es, la página lo dice y, detrás, copia lo que dice
    el navegador, en su idioma.
 3. Que cumpla el esquema y lo que el esquema no ve: ids repetidos, familias
