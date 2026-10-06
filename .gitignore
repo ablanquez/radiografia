@@ -31,6 +31,13 @@ web/src/catalogo/tramos-de-ejemplos.json
 # del modelo (encargo 10.4, Tanda 4 bis): se miran y no se versionan.
 docs/informes/
 
+# El código que generó Figma Make para el modelo (encargo 10.4): referencia de
+# lectura para el calco, que vive solo en local (11.1, hallazgo 6 del censo
+# pre-despliegue, firmado por Antonio). Las condiciones de lo que genera Make
+# NO CONSTAN y el repositorio es público. Estuvo versionado del 04/10 al 06/10
+# y sigue en la historia. Lo vigila web/jueces/repositorio.spec.ts.
+docs/figma/modelo-make.zip
+
 # generated types
 .astro/
 

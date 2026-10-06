@@ -69,6 +69,12 @@ la web real es `web/` (Astro). Esto es la fuente del calco (10.4).
   Make decidió donde el DOM publicado no baste. No se descomprime en el
   repo, no se instala, no entra en el NOTICES (no se distribuye) y no se
   copia al Astro: el calco se escribe a mano sobre `web/` con los tokens.
+  **Vive solo en local**, en esta carpeta: desde el 06/10 (11.1, hallazgo 6
+  del censo pre-despliegue, firmado por Antonio) no se versiona y
+  `.gitignore` lo ignora. Las condiciones de lo que genera Figma Make NO
+  CONSTAN y el repositorio es público. Del 04/10 al 06/10 estuvo
+  versionado y sigue en la historia de git; se asume. Lo vigila
+  `web/jueces/repositorio.spec.ts`.
 - El prototipo publicado (URL en la conversación de estrategia; Figma
   Make, cuenta de Antonio) es la referencia visual: Claude Code lo mide
   por CDP y compara cada tanda del calco con él.
