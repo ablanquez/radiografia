@@ -10,7 +10,8 @@
   ],
   "scripts": {
     "test": "npm test --workspaces",
-    "tipos": "npm run tipos --workspaces"
+    "tipos": "npm run tipos --workspaces",
+    "publicar": "node web/scripts/publicar.ts"
   },
   "engines": {
     "node": ">=24.12.0"
