@@ -114,19 +114,24 @@ familias, calibrado y validado) está hecho.
 Los textos de la propia web también pasan por los dos paquetes, en un juez
 ([`web/jueces/textos-web.spec.ts`](web/jueces/textos-web.spec.ts)). Entran el
 texto visible de la página del analizador y todas las cadenas de la interfaz,
-también las del catálogo, las del cargador, las del informe y las del
-lenguaje de calle: 1.409 palabras de prosa, analizadas con «general». No entra el contenido de las fichas de las reglas,
+también las del catálogo, las del cargador, las del informe, las del
+lenguaje de calle y las de la página de créditos: 2.375 palabras de prosa
+(06/10/2026), analizadas con «general». Desde el 11.1, todo lo que se lee en
+el analizador y en los créditos sale de `web/src/textos.ts`, salvo el
+nombre, que es identidad. No entra el contenido de las fichas de las reglas,
 porque menciona las formas que las reglas buscan (abajo,
 [«Catálogo»](#catálogo)).
 
 - **Español correcto** no da ninguna señal.
-- **RadiografIA** puntúa tres reglas, declaradas en el juez con su porqué:
+- **RadiografIA** puntúa dos reglas, declaradas en el juez con su porqué:
   - `lex-verbos-de-enfasis`, por «subrayado», el nombre de la función, que
     está declarado en su ficha;
   - `est-frases-cortas`, porque son etiquetas sueltas, no prosa, y cada una
-    cuenta como una frase;
-  - `est-pocas-comas`, por lo mismo: los mensajes del cargador son frases
-    sueltas y cortas, sin incisos.
+    cuenta como una frase.
+
+  Hasta el 11.1 puntuaba también `est-pocas-comas`, por los mensajes del
+  cargador; con la prosa de la página de créditos, que lleva sus comas, dejó
+  de dispararse y salió de las declaradas.
 
 Las piezas de apoyo que las reglas necesitarán están **medidas contra
 referencias ajenas**, no dadas por buenas:
@@ -205,8 +210,22 @@ web (abajo, [«Diseño»](#diseño)). Pasó por el
 - el tamaño de lo que se pulsa;
 - el árbol de accesibilidad.
 
-Falta después, en el orden de la [hoja de ruta](#hoja-de-ruta), el
-despliegue (punto 11).
+El **despliegue** (punto 11) empezó el 06/10/2026 por el [censo
+pre-despliegue](docs/CENSO-PRE-DESPLIEGUE.md), de solo lectura: veinte
+hallazgos, que Antonio firmó uno a uno. Los que eran para arreglar ya están
+arreglados, cada uno con su juez. Entre ellos:
+
+- el aviso MIT de silabea y el del runtime de Rolldown, que no viajaban,
+  van ahora dentro del JS publicado;
+- la nueva página «Créditos y licencias» (`/creditos/`), con la atribución
+  de cada corpus y la cita del BOE (abajo, [«Licencia y
+  créditos»](#licencia-y-créditos)).
+
+Otros se declararon con su porqué o quedaron para la v1.1. Uno nuevo, el
+21, la función de precarga de Vite que viaja sin aviso, espera firma (§ 14
+del censo). Faltan la parada de Hostinger (las cabeceras de caché y la CSP,
+con la documentación del panel delante) y la publicación en
+`radiografia.antonioblanquez.es`.
 
 ## Cómo ejecutar
 
@@ -283,8 +302,9 @@ Get-Content -Encoding UTF8 -Raw texto.txt | Set-Clipboard
 motor/      el motor: TypeScript sin compilar, sus jueces y las herramientas de calibración
 web/        la web estática en Astro 7: el analizador en src/pages/index.astro con su lógica en
             src/pantalla/; el catálogo en src/pages/reglas/ con su lógica en src/catalogo/;
-            las cadenas de la interfaz en src/textos.ts; los textos de ejemplo y los dos paquetes
-            de prueba del cargador en public/ejemplos/
+            los créditos en src/pages/creditos.astro; las cadenas de la interfaz en
+            src/textos.ts; los textos de ejemplo y los dos paquetes de prueba del cargador en
+            public/ejemplos/
 paquetes/   los dos paquetes de reglas incluidos (RadiografIA y Español correcto)
 data/       los datos de terceros y la calibración, cada carpeta con su licencia
 docs/       la investigación de cada familia, los textos de ejemplo y la bitácora de fallos
@@ -309,7 +329,7 @@ Nada sale del navegador. Lo que la web pide es suyo, del mismo sitio:
 Un paquete propio no se pide: se lee del fichero, en el navegador (abajo,
 [«Paquetes propios»](#paquetes-propios)).
 
-Medido el 05/10/2026 en Chrome sobre el build (`astro preview`), petición por
+Medido el 06/10/2026 en Chrome sobre el build (`astro preview`), petición por
 petición. La columna «con gzip» es cada fichero comprimido con el gzip de
 Node a su nivel por defecto; lo que comprima el servidor de verdad se verá
 en el despliegue (punto 11). Las fuentes ya van comprimidas.
@@ -318,19 +338,19 @@ en el despliegue (punto 11). Las fuentes ya van comprimidas.
 
 | fichero | bytes | con gzip |
 |---|---|---|
-| `index.html` (con la CSP y la hoja de impresión) | 6.496 | 2.385 |
-| el JS del analizador (motor, validador, cargador, resultado, papel y aviso MIT de Ajv; minificado por Vite) | 156.330 | 35.585 |
-| las cadenas de la interfaz, que comparte con el catálogo (un JS aparte) | 10.435 | 4.269 |
-| el arranque de los módulos (un JS de Vite) | 589 | 368 |
+| `index.html` (con la CSP y la hoja de impresión) | 6.573 | 2.422 |
+| el JS del analizador (motor, validador, cargador, resultado, papel, los avisos MIT de Ajv y de silabea, y la función de precarga de Vite; minificado por Vite) | 158.521 | 36.898 |
+| las cadenas de la interfaz, que comparte con el catálogo (un JS aparte) | 10.531 | 4.314 |
+| el runtime de Rolldown, el empaquetador de Vite, con su aviso MIT (un JS aparte, que también pide el trozo de pdfmake) | 1.898 | 1.156 |
 | el CSS del analizador (con el del papel) | 20.843 | 4.331 |
-| el CSS común: tokens, fuentes, cabecera, pie y familias | 12.981 | 2.952 |
+| el CSS común: tokens, fuentes, cabecera, pie y familias | 13.174 | 2.986 |
 | Literata 400 (woff2) | 43.696 | — |
 | Literata 400 itálica (woff2) | 44.212 | — |
 | Atkinson Hyperlegible Next, de 400 a 700 (woff2) | 25.920 | — |
 | `paquetes/radiografia.json` (con su calibración, los nombres y las frases en claro de las reglas) | 352.239 | 76.955 |
 | `paquetes/espanol-correcto.json` | 21.976 | 6.066 |
 | el icono de la cabecera, los dos del navegador y el manifiesto | 3.637 | 3.127 |
-| **en total** | **699.354** | **249.866** |
+| **en total** | **703.220** | **252.083** |
 
 **Después, solo si hace falta:**
 
@@ -339,7 +359,7 @@ en el despliegue (punto 11). Las fuentes ya van comprimidas.
 | al pulsar «Texto humano» | `ejemplos/antonio.txt` | 1.777 | — |
 | al pulsar «Texto de IA» | `ejemplos/ia.txt` | 1.957 | — |
 | al pintar un resultado | Literata 600, la negrita del papel (woff2) | 46.424 | — |
-| al pulsar «Descargar informe» | el trozo de JS de pdfmake, con la definición del informe | 1.093.577 | 362.661 |
+| al pulsar «Descargar informe» | el trozo de JS de pdfmake, con la definición del informe | 1.093.403 | 362.615 |
 | al pulsar «Descargar informe» | las cinco caras del PDF (WOFF): Literata 400, 400 itálica y 600, y Atkinson 400 y 700 | 162.720 | — |
 
 Los dos paquetes de prueba, `ejemplos/paquete-prueba.json` (6.900 bytes) y
@@ -347,25 +367,28 @@ Los dos paquetes de prueba, `ejemplos/paquete-prueba.json` (6.900 bytes) y
 descargarlos y copiarlos, pero la página no los pide.
 
 Los paquetes van aparte del JS, y no dentro, para que el JS se quede en unos
-156 KB y los JSON se puedan guardar en caché por separado. Metidos en el
+159 KB y los JSON se puedan guardar en caché por separado. Metidos en el
 build, el JS habría pasado de 400 KB (medido el 03/10/2026).
 
-**El catálogo** no pide los paquetes ni el motor: es HTML hecho en build.
-Pide el CSS común, las tres fuentes, las cadenas y los iconos, como el
-analizador, y además:
+**El catálogo y la página de créditos** no piden los paquetes ni el motor:
+son HTML hecho en build. Piden el CSS común, las tres fuentes y los iconos,
+como el analizador (el índice, además, las cadenas: las fichas y los
+créditos no llevan JS), y lo suyo:
 
 | fichero | bytes | con gzip |
 |---|---|---|
-| `reglas/index.html`, el índice | 74.694 | 15.771 |
-| el CSS del catálogo y de las fichas | 7.302 | 1.618 |
-| el JS del buscador y los filtros | 3.652 | 1.569 |
-| **en total, el índice** (12 peticiones) | **226.529** | **143.134** |
-| cada ficha, `reglas/<id>/index.html` (sin JS) | de 6.300 a 18.267 | |
-| **en total, una ficha** (10 peticiones; la de «Conector repetido») | **147.051** | **124.934** |
-| las 50 fichas juntas | 476.320 | |
+| `reglas/index.html`, el índice | 74.773 | 15.803 |
+| el CSS del catálogo, de las fichas y de los créditos | 8.377 | 1.724 |
+| el JS del buscador y los filtros | 3.652 | 1.568 |
+| **en total, el índice** (12 peticiones) | **227.972** | **143.350** |
+| cada ficha, `reglas/<id>/index.html` (sin JS) | de 6.379 a 18.346 | |
+| **en total, una ficha** (10 peticiones; la de «Conector repetido») | **148.398** | **125.114** |
+| las 50 fichas juntas | 480.270 | |
+| `creditos/index.html`, la página de créditos (sin JS) | 14.469 | 3.709 |
+| **en total, la página de créditos** (10 peticiones) | **153.485** | **125.374** |
 
-`dist/` entero: 52 páginas HTML (el analizador, el índice y 50 fichas), 85
-ficheros y 2.604.629 bytes. Casi la mitad (1.256.297) es el trozo de pdfmake
+`dist/` entero: 53 páginas HTML (el analizador, el índice, 50 fichas y los
+créditos), 86 ficheros y 2.627.894 bytes. Casi la mitad (1.256.123) es el trozo de pdfmake
 y las fuentes del PDF, que solo se piden al descargar. Cada página lleva la
 CSP.
 
@@ -609,7 +632,7 @@ Next, incrustadas.
 
 **Lo que se carga al pulsar**, la primera vez en cada visita, del mismo
 sitio: el trozo de JS de pdfmake (unos 1,09 MB; unos 363 KB comprimido con
-gzip, medido el 05/10/2026) y las cinco caras del PDF (162.720 bytes, en WOFF). La página no
+gzip, medido el 06/10/2026) y las cinco caras del PDF (162.720 bytes, en WOFF). La página no
 engorda por ello: sin pulsar, no se pide. Con el texto de prueba de la
 combinación de los dos paquetes salen 11 páginas y unos 165 KB, del clic a
 la descarga en algo más de un segundo la primera vez y en algo menos las
@@ -1408,6 +1431,23 @@ Las dependencias de terceros van una por una, con su licencia, en
 Las fuentes de cada regla (estudios, guías, corpus) se citan en su ficha y
 en el catálogo.
 
+**En la web**, la página «Créditos y licencias» (`/creditos/`, desde el
+11.1), enlazada desde el pie de cada página, lleva lo ajeno que usa:
+
+- los corpus de los textos de personas, con la atribución que pide cada
+  licencia, y la cita del BOE, literal, con el enlace a su sede;
+- las fuentes tipográficas (OFL);
+- el código que llega al navegador: Ajv, silabea, pdfmake y el runtime de
+  Rolldown;
+- las listas de frecuencia (CC BY-SA), que no llegan a la web;
+- el enlace a este NOTICES.
+
+El aviso de licencia de cada pieza de código ajeno viaja dentro del propio
+JavaScript, y un juez lo busca en `dist/`
+([`web/jueces/construccion.spec.ts`](web/jueces/construccion.spec.ts)). La
+excepción es la función de precarga de Vite: es el hallazgo 21 del censo,
+pendiente de firma.
+
 ### Datos de terceros
 
 Los datos ajenos **no están bajo la Apache 2.0**: viven en [`data/`](data/),
@@ -1429,4 +1469,5 @@ una carpeta por conjunto, cada una con su licencia y su atribución al lado.
 
 El detalle, en la § 2 de [`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md).
 Y hay un fichero de código ajeno copiado tal cual, el silabeador
-**silabea** (MIT), con su licencia en cabecera: § 1.5 del mismo documento.
+**silabea** (MIT), con su licencia en cabecera, que desde el 11.1 viaja
+también en el JS publicado: § 1.5 del mismo documento.
