@@ -14,7 +14,7 @@
 
 ---
 
-## [2026-10-06] 🔴 ABIERTA — El JS del analizador lleva código de Vite (su función de precarga) sin aviso de licencia, y el censo y el NOTICES dicen que lo que viaja está completo
+## [2026-10-06] ✅ CERRADA — El JS del analizador lleva código de Vite (su función de precarga) sin aviso de licencia, y el censo y el NOTICES dicen que lo que viaja está completo
 
 **Categoría:** licencias de terceros (empaquetado del navegador)
 **Síntoma:** desde el 9.3 (el `import()` de pdfmake), Vite 8.3.2 mete en el JS del analizador su función `preload` (`node_modules/vite/dist/node/chunks/node.js`, MIT, © VoidZero Inc. and Vite contributors): `__vite__mapDeps`, `modulepreload` y el evento `vite:preloadError`. Ningún aviso de Vite viaja en `dist/`.
@@ -26,10 +26,11 @@ $ grep -o "vite:preloadError" …0uYdAJsu.js
 vite:preloadError
 ```
 **Cómo se cazó:** instrumento (al preparar el hallazgo 18 del censo, el trozo de Rolldown, se buscó en cada JS de `dist/` otro código del empaquetador)
-**Causa raíz:** ⏳ PENDIENTE
-**Arreglo aplicado:** ⏳ PENDIENTE
-**Commit:** ⏳ PENDIENTE
+**Causa raíz:** lo que viaja se miraba por las piezas que metemos nosotros (Ajv, silabea, pdfmake, las fuentes), y cada juez busca el aviso de una pieza que ya tiene nombre; el código que el empaquetador escribe por su cuenta no lo nombraba nadie. Vite mete su función de precarga en cuanto hay un `import()` dinámico, sin que ninguna dependencia nuestra la pida: `getPreloadCode` escribe `preload.toString()` como el módulo `\0vite/preload-helper.js` (`node_modules/vite/dist/node/chunks/node.js`, Vite 8.3.2, región `src/node/plugins/importAnalysisBuild.ts`). La frase del NOTICES se midió el 02/10, antes del 9.3, y nadie la volvió a medir cuando el 9.3 trajo el `import()` de pdfmake; el censo heredó la lista de piezas conocidas y la dio por completa (su § 11.1 cuenta jueces, no el código ajeno que hay en `dist/`).
+**Arreglo aplicado:** `web/astro.config.mjs`: `avisoDeVite` (renderChunk), que al trozo cuyo `moduleIds` lleva `\0vite/preload-helper.js` le pone en cabecera, como comentario legal `/*!`, la parte «Vite core license» del `LICENSE.md` de vite; si esa parte no está, el build para. `web/jueces/construccion.spec.ts`, juez 15: el único trozo de `dist/` con `vite:preloadError` lleva entera esa parte. Rojo antes, en el clon de trabajo con el config de antes: «_astro\index.astro_astro_type_script_index_0_lang.D372zeZt.js no lleva entero el aviso MIT de Vite»; contrapruebas, 3 de 3 en rojo (el año del copyright esperado, el número de trozos y la licencia que se busca). `THIRD-PARTY-NOTICES.md` § 1.1 (su aviso viaja, con su juez), la obra «Vite» en la página de créditos (`web/src/textos.ts`) y el README. Después, el trozo del analizador lleva tres comentarios legales (Ajv, silabea y Vite) y pasa de 158.521 a 159.670 bytes; clon limpio de 40dd211: tipos limpios, motor 909/899, web 281/281.
+**Commit:** 40dd211
 **Ley que sale de aquí:** SIN LEY TODAVÍA
+Al cerrar: un juez que busca el aviso de una pieza con nombre no ve el código ajeno que nadie ha nombrado; cuando cambia cómo se empaqueta (un `import()` nuevo, un CommonJS), se mira qué código ajeno hay en `dist/`, no solo qué dependencias hay.
 **Traza:** `web/src/pantalla/descarga.ts` (`import()` del trozo de pdfmake); `dist/_astro/index.astro_astro_type_script_index_0_lang.*.js`; `docs/CENSO-PRE-DESPLIEGUE.md` § 10 y § 11.1; `THIRD-PARTY-NOTICES.md` § 1.1.
 
 ---
