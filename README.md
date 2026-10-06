@@ -223,9 +223,18 @@ Entre ellos:
   créditos»](#licencia-y-créditos)).
 
 Otros se declararon con su porqué o quedaron para la v1.1 (§ 14 del
-censo). Faltan la parada de Hostinger (las cabeceras de caché y la CSP,
-con la documentación del panel delante) y la publicación en
-`radiografia.antonioblanquez.es`.
+censo).
+
+La **publicación** (encargo 11.2) se decidió el 06/10/2026 con la
+documentación del panel de Hostinger delante. `npm run publicar` deja lista
+la rama `publicacion`, con `web/dist/` y su `.htaccess` (abajo,
+[«Despliegue»](#despliegue)), y la web tiene ya su página para las
+direcciones que no existen. Falta lo que hace Antonio:
+
+- crear el subdominio en el panel y conectarle la rama;
+- activar «Forzar HTTPS»;
+- empujar `main` y `publicacion`;
+- y verificarla desde fuera, con los jueces de producción y a ojo.
 
 ## Cómo ejecutar
 
@@ -267,6 +276,8 @@ npm run dev                    # http://localhost:4321/ y el catálogo en http:/
     **Chrome**, sin ventana, y la manejan por su protocolo de depuración. Hace falta Chrome instalado. Si no está en su ruta de
     siempre, se le da con la variable `CHROME`. Sin Chrome, esos jueces
     fallan; no se saltan.
+- **Los jueces de producción** se omiten, con un aviso, mientras no se les
+  da la dirección publicada (abajo, [«Despliegue»](#despliegue)).
 - **Los tipos:** `npm run tipos` revisa los de los dos workspaces con `tsc`.
   No se usa `astro check`: añadiría 77 paquetes al árbol y 67 MB para
   revisar los `.astro`.
@@ -302,9 +313,11 @@ Get-Content -Encoding UTF8 -Raw texto.txt | Set-Clipboard
 motor/      el motor: TypeScript sin compilar, sus jueces y las herramientas de calibración
 web/        la web estática en Astro 7: el analizador en src/pages/index.astro con su lógica en
             src/pantalla/; el catálogo en src/pages/reglas/ con su lógica en src/catalogo/;
-            los créditos en src/pages/creditos.astro; las cadenas de la interfaz en
-            src/textos.ts; los textos de ejemplo y los dos paquetes de prueba del cargador en
-            public/ejemplos/
+            los créditos en src/pages/creditos.astro y la página que no existe en
+            src/pages/404.astro; las cadenas de la interfaz en src/textos.ts; los textos
+            de ejemplo y los dos paquetes de prueba del cargador en public/ejemplos/; la
+            publicación (la plantilla del .htaccess y la rama) en publicacion/ y
+            scripts/publicar.ts
 paquetes/   los dos paquetes de reglas incluidos (RadiografIA y Español correcto)
 data/       los datos de terceros y la calibración, cada carpeta con su licencia
 docs/       la investigación de cada familia, los textos de ejemplo y la bitácora de fallos
@@ -370,27 +383,169 @@ Los paquetes van aparte del JS, y no dentro, para que el JS se quede en unos
 160 KB y los JSON se puedan guardar en caché por separado. Metidos en el
 build, el JS habría pasado de 400 KB (medido el 03/10/2026).
 
-**El catálogo y la página de créditos** no piden los paquetes ni el motor:
-son HTML hecho en build. Piden el CSS común, las tres fuentes y los iconos,
-como el analizador (el índice, además, las cadenas: las fichas y los
-créditos no llevan JS), y lo suyo:
+**El catálogo, la página de créditos y la que no existe** no piden los
+paquetes ni el motor: son HTML hecho en build. Piden el CSS común, las tres
+fuentes y los iconos, como el analizador (el índice, además, las cadenas:
+las fichas, los créditos y la que no existe no llevan JS), y lo suyo:
 
 | fichero | bytes | con gzip |
 |---|---|---|
 | `reglas/index.html`, el índice | 74.773 | 15.803 |
-| el CSS del catálogo, de las fichas y de los créditos | 8.377 | 1.724 |
+| el CSS del catálogo, de las fichas, de los créditos y de la que no existe | 9.047 | 1.763 |
 | el JS del buscador y los filtros | 3.652 | 1.568 |
-| **en total, el índice** (12 peticiones) | **227.972** | **143.350** |
+| **en total, el índice** (12 peticiones) | **228.642** | **143.389** |
 | cada ficha, `reglas/<id>/index.html` (sin JS) | de 6.379 a 18.346 | |
-| **en total, una ficha** (10 peticiones; la de «Conector repetido») | **148.398** | **125.114** |
+| **en total, una ficha** (10 peticiones; la de «Conector repetido») | **149.068** | **125.153** |
 | las 50 fichas juntas | 480.270 | |
 | `creditos/index.html`, la página de créditos (sin JS) | 15.084 | 3.764 |
-| **en total, la página de créditos** (10 peticiones) | **154.100** | **125.429** |
+| **en total, la página de créditos** (10 peticiones) | **154.770** | **125.468** |
+| `404.html`, la página que no existe (sin JS) | 1.938 | 1.020 |
+| **en total, la que no existe** (10 peticiones, en `/no-existe/`) | **141.624** | **122.724** |
 
-`dist/` entero: 53 páginas HTML (el analizador, el índice, 50 fichas y los
-créditos), 86 ficheros y 2.629.658 bytes. Casi la mitad (1.256.123) es el trozo de pdfmake
+`dist/` entero: 54 páginas HTML (el analizador, el índice, 50 fichas, los
+créditos y la que no existe), 87 ficheros y 2.632.266 bytes. Casi la mitad (1.256.123) es el trozo de pdfmake
 y las fuentes del PDF, que solo se piden al descargar. Cada página lleva la
 CSP.
+
+## Despliegue
+
+La web se publica en **radiografia.antonioblanquez.es**, en el hosting
+compartido de Hostinger, que sirve con LiteSpeed. Lo decidió Antonio el
+06/10/2026 con la documentación del panel delante (encargo 11.2). El panel
+despliega una rama de GitHub en el directorio del subdominio y no ejecuta
+ningún build: según [su documentación](https://docs.hostinger.com/websites/git),
+«Does **not** run a build step — the files committed to the repo are the files
+served».
+
+### Cómo se publica
+
+En la raíz del repositorio, con el árbol limpio y `main` empujado:
+
+```bash
+npm run publicar
+```
+
+[`web/scripts/publicar.ts`](web/scripts/publicar.ts) hace, por orden:
+
+1. **Comprueba el punto de partida:** el árbol limpio, la rama `main`, y
+   `main` igual a `origin/main` después de traerlo. Así, el commit que se
+   publica existe en GitHub.
+2. **Prueba ese commit en un clon temporal**, fuera del repositorio:
+   `npm ci`, los tipos, los jueces del motor y los de la web, con Chrome.
+   No toca el árbol de trabajo.
+3. **Construye dos veces**, cada una desde un `dist/` vacío, y compara las
+   dos fichero a fichero: tienen que salir iguales.
+4. **Escribe el `.htaccess`** en `dist/` desde
+   [`web/publicacion/.htaccess.plantilla`](web/publicacion/.htaccess.plantilla),
+   con la CSP del `<meta>` de las páginas. Para si:
+   - las páginas no llevan todas la misma CSP;
+   - algún fichero no cae en un grupo de caché, o cae en dos;
+   - un JS o un CSS no lleva la huella de su contenido en el nombre.
+5. **Pone en la rama `publicacion`** el contenido exacto de `dist/`, en un
+   git worktree aparte, y lo comprueba byte a byte
+   ([`web/publicacion/publicacion.ts`](web/publicacion/publicacion.ts)).
+6. **Imprime lo que va a subir:** cada fichero con sus bytes y su sha256,
+   por grupo de caché, con sus cabeceras, y la orden para empujar,
+   `git push origin publicacion`. El push lo da Antonio.
+
+Si algo falla, para, dice dónde y deja el clon temporal para mirarlo. Tarda
+lo que la suite y dos builds. El juez del script
+([`web/jueces/publicacion.spec.ts`](web/jueces/publicacion.spec.ts)) lo
+prueba con un `dist/` de prueba y un repositorio temporal: la rama lleva
+esos ficheros y ninguno más, y el `.htaccess`, la CSP del `<meta>`.
+
+### Qué rama ve Hostinger
+
+La rama `publicacion`. Es huérfana: no comparte historia con `main`. En su
+raíz lleva el contenido de `web/dist/` y el `.htaccess`, y nada más. Cada
+publicación es un commit encima del anterior, con el hash de `main` del que
+sale y la fecha.
+
+Los ficheros van byte a byte como salen del build, también los finales de
+línea. El checkout de Windows deja en CRLF los dos paquetes y las dos
+licencias de las fuentes, y git, con `core.autocrlf=true` (el de esta
+máquina), los pasaría a LF al guardarlos. Por eso el script le da a git
+`core.autocrlf=false`.
+
+### El `.htaccess`
+
+| ficheros | Cache-Control |
+|---|---|
+| el JS y el CSS, en `_astro/`, con la huella de su contenido en el nombre | `public, max-age=31536000, immutable` |
+| las fuentes: woff2 de la web y woff del PDF, sin huella en el nombre | `public, max-age=604800` (una semana) |
+| el HTML, los paquetes y los ejemplos (JSON y txt), el manifiesto, los iconos, el favicon y las licencias de las fuentes | `no-cache`: se guardan, pero se revalidan cada vez |
+
+En todas las respuestas, también en la de la página que no existe:
+
+- `Content-Security-Policy`, la misma del `<meta>` de cada página. El
+  `<meta>` se queda. Con las dos políticas, el navegador aplica las dos, y
+  por eso tienen que ser idénticas: salen de la misma fuente.
+- `X-Content-Type-Options: nosniff`.
+- `Referrer-Policy: strict-origin-when-cross-origin`.
+- Por https, `Strict-Transport-Security: max-age=31536000` (un año, sin
+  `includeSubDomains` ni `preload`).
+
+Además:
+
+- `ErrorDocument 404 /404.html`: la página que no existe, con el código 404.
+- Todo lo que empieza por `/.git` da 404.
+- Los tipos de `.woff2`, `.woff`, `.webmanifest` y `.svg`.
+- Ninguna regla de reescritura: cada ruta es una carpeta con su
+  `index.html`. La redirección de http a https la hace el panel, con
+  «Forzar HTTPS».
+
+El porqué de cada línea, con su cita (LiteSpeed, Apache, MDN, Hostinger),
+está en la plantilla.
+
+### Cómo se verifica desde fuera
+
+Después de publicar, en `web/`, con el mismo commit de `main`:
+
+```bash
+URL_PRODUCCION=https://radiografia.antonioblanquez.es npm test
+```
+
+(En PowerShell: `$env:URL_PRODUCCION = 'https://radiografia.antonioblanquez.es'; npm test`.)
+
+Con la variable, los jueces de producción
+([`web/jueces/produccion.spec.ts`](web/jueces/produccion.spec.ts))
+comprueban:
+
+- que cada fichero de `dist/` responde 200, con su contenido y las
+  cabeceras de su grupo;
+- que cada página lleva la CSP por cabecera igual a su `<meta>`;
+- que `/no-existe/` da 404 con la página que no existe;
+- que `/.git` y `/.htaccess` no se sirven;
+- que http redirige a https;
+- y, en Chrome, el recorrido entero (analizar, descargar el PDF, el catálogo,
+  una ficha, los créditos y la que no existe): nada fuera del origen, ni una
+  violación de la CSP, ni un error en la consola.
+
+Además, los demás jueces de Chrome piden las páginas al sitio publicado en
+vez de a `astro preview`: la red, la CSP, los 320 px, el tamaño de lo que
+se pulsa y la fidelidad al modelo. Sin la variable, los de producción se
+omiten con un aviso.
+
+Y, a ojo, Antonio en el PC, el iPhone y el iPad, con datos móviles.
+
+Lo que la documentación oficial de LiteSpeed no dice directiva a directiva
+(que rellene `env=HTTPS`, `RedirectMatch`, `AddType`) no consta: lo
+deciden esos jueces. Si una directiva no la entiende, no da error; no hace
+nada.
+
+### Qué no se sube
+
+Solo `dist/` y el `.htaccess`. No se suben:
+
+- `docs/`, `data/` ni `motor/`;
+- `paquetes/`, que va copiado en `dist/paquetes/`;
+- `web/src`, `web/jueces`, `web/scripts` ni `web/terceros`;
+- `node_modules/`, la historia de `main` ni los `package*.json`;
+- `CLAUDE.md`, el PLAN, el ESTADO, el DISEÑO ni este README;
+- ni mapas de fuente: el script para si `dist/` los lleva.
+
+El inventario y por qué, en el
+[censo pre-despliegue](docs/CENSO-PRE-DESPLIEGUE.md) (§ 9.5 y § 15).
 
 ## Ejemplos
 
@@ -1350,8 +1505,9 @@ género “Noticia” de 300 a 599 palabras», con su total y los percentiles.
   precarga de fuentes, un icono) quedaría fuera. Una integración de
   [`web/astro.config.mjs`](web/astro.config.mjs) lo recoloca al terminar el
   build, justo detrás de `<meta charset>`, sin tocar su contenido; un juez
-  comprueba el sitio y que el contenido es el que emitió Astro. Si en el
-  despliegue la CSP pasa a cabecera HTTP, la integración sobra.
+  comprueba el sitio y que el contenido es el que emitió Astro. Desde la
+  publicación (11.2), la CSP va también por cabecera, idéntica, en el
+  `.htaccess`; el `<meta>` se queda, y la integración con él.
 - **Párrafos como en CommonMark.** Una línea en blanco separa dos párrafos
   y un salto de línea simple no (especificación CommonMark 0.31.2, § 4.8 y
   § 6.8). Así, un texto cortado a mano (un correo, un PDF copiado, un

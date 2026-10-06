@@ -17,6 +17,9 @@
 > 18, y `dist/` antes y después: § 14. El resto se queda como se escribió
 > sobre `4b8f9f2`.
 >
+> **Publicación (11.2, 06/10/2026).** La variante elegida para el servidor,
+> frente a las del § 9: § 15.
+>
 > **De dónde sale el checklist.** El encargo remite a la sección «BLOQUE A ·
 > CÓDIGO — el checklist» de `GUIA-BUENAS-PRACTICAS.md`. Ese fichero no está
 > en disco: **NO CONSTA**.
@@ -361,6 +364,8 @@ Partirlos por tamaño repartiría una sola responsabilidad entre ficheros. **Se 
 ---
 
 ## 9 · Para el despliegue (del bloque E)
+
+La variante que se eligió en el 11.2, con lo que cambia frente a estas: § 15.
 
 **Ejecutado, simulado y no simulado:**
 
@@ -721,6 +726,45 @@ Lo que cambia, y por qué hallazgo:
 - **Las cadenas** (`textos.*.js`), de 10.435 a 10.531 bytes: las nuevas que usa el JS (2 y 8).
 - **El trozo de pdfmake, de 1.093.577 a 1.093.403 bytes**: lleva `tokens.json` dentro (16), ahora sin los dos tokens (9).
 - **Con el 21**: el JS del analizador, de 158.521 a 159.670 bytes (el aviso MIT de Vite), y `creditos/index.html`, de 14.469 a 15.084 (la obra «Vite»): entre los dos, los 1.764 bytes de más de `dist/`.
+
+---
+
+## 15 · La publicación (11.2, 06/10/2026): la variante elegida
+
+Antonio firmó el 06/10, con la documentación del panel de Hostinger delante, la **variante A** del § 9.3 y la CSP por cabecera del § 9.4, con los cambios de abajo. Lo hace `npm run publicar`, y el README lo cuenta en «Despliegue». Commits: `13674a2` (la página que no existe), `c667183` (la publicación) y `4ac5838` (los jueces de producción).
+
+**Cómo llega `dist/` al servidor (§ 9.5).** Por una rama huérfana, `publicacion`, que lleva en su raíz el contenido de `web/dist/` y el `.htaccess`, y nada más. El panel la despliega con su app de GitHub en el directorio del subdominio, sin build. Nada del resto del repositorio llega al servidor.
+
+**El `.htaccess`.** No va en `web/public/`, como proponía el § 9.3. Lo escribe `npm run publicar` en `dist/`, desde `web/publicacion/.htaccess.plantilla`, con la CSP del `<meta>` de las páginas.
+
+**Lo que cambia frente a los § 9.3 y 9.4:**
+
+- **Caché (hallazgo 5).** Los tres grupos del § 9.3, con una diferencia: los iconos y el favicon pasan de una semana a `no-cache` (firma de Antonio). Las fuentes, una semana, sin huella en el nombre. El script para si un fichero no cae en un grupo y en uno solo, o si un JS o un CSS no lleva la huella en el nombre.
+- **CSP (hallazgo 4).** Por cabecera además del `<meta>`, idéntica, en todas las respuestas (`Header always set`), no solo en las `.html`. El script para si las páginas no llevan todas la misma: hoy, las 54 llevan una. Un juez de producción compara la cabecera con el `<meta>` de cada página. La política no se amplía: `frame-ancestors`, `default-src` y lo demás del § 9.4 siguen siendo decisión aparte.
+- **Nuevo:**
+  - `X-Content-Type-Options: nosniff`;
+  - `Referrer-Policy: strict-origin-when-cross-origin`;
+  - HSTS de un año, solo por https (`env=HTTPS`), sin `includeSubDomains` ni `preload`;
+  - `ErrorDocument 404 /404.html`, con la página que no existe (`web/src/pages/404.astro`, textos de Antonio);
+  - todo lo que empieza por `/.git` da 404;
+  - el tipo de `.svg`, junto a los tres del § 9.3.
+- **Sin reescritura.** Cada ruta es una carpeta con su `index.html`. La redirección de http a https la hace el panel («Forzar HTTPS»).
+- **`mod_expires`, no.** La caché la pone `Cache-Control`, con `mod_headers`.
+
+**NO CONSTA, y lo miran los jueces de producción** (`web/jueces/produccion.spec.ts`, con `URL_PRODUCCION`):
+
+- que LiteSpeed rellene la variable `HTTPS` (`env=HTTPS`); su documentación oficial da el ejemplo de HSTS sin ella;
+- que cumpla `RedirectMatch`, `AddType` y `FilesMatch` en el `.htaccess`: la documentación oficial no los lista uno a uno;
+- si el despliegue deja una carpeta `.git` en el directorio;
+- si el servidor añade cabeceras propias que dupliquen las nuestras.
+
+**El build.**
+
+- El de `87c80b4` en un clon limpio es idéntico, fichero a fichero, al del clon de trabajo: 86 ficheros.
+- Con la página que no existe: 87 ficheros, 54 páginas, 2.632.266 bytes.
+- `npm run publicar` construye dos veces y para si los dos `dist/` no son iguales.
+
+**Los finales de línea.** El checkout de Windows deja en CRLF cuatro ficheros de texto de `dist/`: los dos paquetes y los dos `OFL.txt`. Git, con `core.autocrlf=true` (el de esta máquina), los pasaría a LF al guardarlos en la rama. El script da a git `core.autocrlf=false` y compara el árbol del commit con `dist/`, byte a byte. En el repositorio están en LF; `.gitattributes` les deja el final de línea a la máquina, al revés que a los ejemplos, los SVG y el manifiesto (`eol=lf`). Desde otro sistema saldrían con LF: el mismo contenido, otros bytes. Fijarlo es cambiar la web, y no entra en el 11.2: queda propuesto.
 
 ---
 
