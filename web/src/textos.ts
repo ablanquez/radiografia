@@ -529,6 +529,13 @@ export const SECCIONES_DE_LOS_CREDITOS: readonly SeccionDeLosCreditos[] = [
         enlaces: { 'https://github.com/bpampuch/pdfmake': 'pdfmake' },
       },
       {
+        nombre: 'Vite',
+        parrafos: [
+          'De VoidZero Inc. y sus colaboradores, con licencia MIT. Construye esta web y deja en ella su función para cargar, al pulsar «Descargar informe», el código que genera el PDF.',
+        ],
+        enlaces: { 'https://github.com/vitejs/vite': 'Vite' },
+      },
+      {
         nombre: 'Rolldown',
         parrafos: [
           'De VoidZero Inc. y sus colaboradores, con licencia MIT. Es el empaquetador de Vite, y deja en la web sus ayudantes para cargar el código CommonJS de silabea y de pdfmake.',

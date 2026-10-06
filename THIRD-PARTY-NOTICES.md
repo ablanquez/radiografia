@@ -72,9 +72,14 @@ otro workspace y no es de terceros.
 >   (hallazgo 18 del censo pre-despliegue). Lo vigila el juez 13 de
 >   [`web/jueces/construccion.spec.ts`](web/jueces/construccion.spec.ts).
 > - **La función de precarga de Vite** (`preload`; MIT, © VoidZero Inc. and Vite contributors),
->   en el JS del analizador desde el 9.3, por el `import()` de pdfmake. **Su aviso no viaja
->   todavía**: es el hallazgo 21 del censo, sin firmar
->   ([`docs/CENSO-PRE-DESPLIEGUE.md`](docs/CENSO-PRE-DESPLIEGUE.md) § 14.4; bitácora del 06/10).
+>   en el JS del analizador desde el 9.3, por el `import()` de pdfmake: pide a la vez el trozo de
+>   pdfmake y los que este necesita, y avisa con `vite:preloadError` si alguno falla. Es código de Vite
+>   tal cual. **Su aviso viaja en cabecera de ese trozo**: la parte MIT del `LICENSE.md` de `vite`
+>   (la «Vite core license»; lo que sigue son las licencias de lo que Vite lleva empaquetado, y la
+>   función no lleva nada de eso) como comentario legal, que pone `avisoDeVite` en
+>   [`web/astro.config.mjs`](web/astro.config.mjs) (hallazgo 21 del censo pre-despliegue: hasta el
+>   06/10 viajaba sin él; bitácora del 06/10). Lo vigila el juez 15 de
+>   [`web/jueces/construccion.spec.ts`](web/jueces/construccion.spec.ts).
 >
 > Hasta el 06/10, este párrafo decía que el JS no llevaba código de Vite ni de Astro (medido el
 > 02/10/2026): era cierto antes del 9.3.

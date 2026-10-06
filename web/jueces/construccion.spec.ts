@@ -75,6 +75,12 @@
  *      su nivel por defecto), es el del trozo de dist/: el NOTICES decía 359
  *      KB, de un build del 05/10, y el guardián del NOTICES cuenta cifras del
  *      lock, no tamaños.
+ *  15. Desde el 11.1 (hallazgo 21 del censo, firmado por Antonio con el
+ *      mismo trato que el 18), el trozo de JS que lleva la función de
+ *      precarga de Vite (el único con «vite:preloadError»: Vite la mete desde
+ *      el 9.3, por el import() de pdfmake) lleva entero el aviso MIT de Vite:
+ *      la parte «Vite core license» del LICENSE.md de vite, el que instala la
+ *      web (astro.config.mjs, avisoDeVite).
  *
  * El build, memorizado y con la telemetría apagada, y astro preview son los
  * de apoyo.ts (los comparte con textos-web.spec.ts y catalogo.spec.ts).
@@ -130,6 +136,12 @@ function licenciaDeSilabea(): string {
 function licenciaDeRolldown(): string {
   const desdeVite = createRequire(createRequire(new URL('../package.json', import.meta.url)).resolve('vite/package.json'));
   return readFileSync(new URL('LICENSE', pathToFileURL(desdeVite.resolve('rolldown/package.json'))), 'utf8').replace(/\r\n/g, '\n').trim();
+}
+
+/** La parte MIT del LICENSE.md de vite, el que instala la web: lo que va entre «# Vite core license» y la lista de lo que Vite lleva empaquetado. */
+function licenciaDeVite(): string {
+  const licencia = readFileSync(new URL('LICENSE.md', pathToFileURL(createRequire(new URL('../package.json', import.meta.url)).resolve('vite/package.json'))), 'utf8').replace(/\r\n/g, '\n');
+  return (/^# Vite core license\n([\s\S]*?)\n# Licenses of bundled dependencies\n/.exec(licencia)?.[1] ?? '').trim();
 }
 
 describe('la web construida', () => {
@@ -260,6 +272,15 @@ describe('la web construida', () => {
       assert.ok(dichos.length > 0, `${documento} no dice el tamaño del trozo de pdfmake`);
       for (const dicho of dichos) assert.deepEqual(dicho, medido, `${documento}: el trozo de pdfmake, en MB y en KB con gzip`);
     }
+  });
+
+  test('15 · el trozo que lleva la función de precarga de Vite lleva entero su aviso MIT (la parte «Vite core license» del LICENSE.md de vite)', () => {
+    construir();
+    const licencia = licenciaDeVite();
+    assert.match(licencia, /^Vite is released under the MIT license:\n\nMIT License\n\nCopyright \(c\) 2019-present, VoidZero Inc\. and Vite contributors\n\nPermission is hereby granted, [\s\S]*\nSOFTWARE\.$/, 'la parte MIT del LICENSE.md de vite no es la que se miró el 06/10');
+    const precarga = jsDeDist().filter(({ texto }) => texto.includes('vite:preloadError'));
+    assert.equal(precarga.length, 1, `los trozos con la función de precarga de Vite en dist/: ${precarga.map((x) => x.ruta).join(', ')}`);
+    assert.ok(sinMarcasDeComentario(precarga[0]!.texto).includes(sinMarcasDeComentario(licencia)), `${precarga[0]!.ruta} no lleva entero el aviso MIT de Vite`);
   });
 
   test('7 · dist/ejemplos/ lleva los dos textos de ejemplo y los dos paquetes de prueba, byte a byte los de public/ejemplos/, en UTF-8 sin BOM y con \\n', async () => {

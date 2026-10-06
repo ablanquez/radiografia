@@ -81,6 +81,24 @@
  *    gancho renderChunk va antes del minificado, que conserva el «/*!»
  *    (comments.legal, arriba).
  *
+ * vite.plugins: avisoDeVite — desde el 11.1 (hallazgo 21 del censo
+ *    pre-despliegue, firmado por Antonio con el mismo trato que el 18).
+ *    Desde el 9.3, por el import() de pdfmake, Vite mete en el JS del
+ *    analizador su función de precarga (preload, del núcleo de Vite; MIT,
+ *    VoidZero Inc. and Vite contributors): la que pide a la vez el trozo de
+ *    pdfmake y los que este necesita, y avisa con «vite:preloadError» si
+ *    alguno falla. Es código de Vite tal cual, que viajaba sin aviso. Al trozo que
+ *    lleva su módulo se le pone en cabecera, como comentario legal «/*!», la
+ *    parte MIT del LICENSE.md de vite (la «Vite core license»; detrás van
+ *    las licencias de lo que Vite lleva empaquetado, y la función no lleva
+ *    nada de eso). Si esa parte no está, el build para. Lo vigila el juez 15
+ *    de jueces/construccion.spec.ts.
+ *    [DOC] node_modules/vite/dist/node/chunks/node.js (Vite 8.3.2), región
+ *    src/node/plugins/importAnalysisBuild.ts — `const preloadHelperId =
+ *    "\0vite/preload-helper.js"`, y getPreloadCode, que escribe el código
+ *    del módulo con `preload.toString()`. Visto el 06/10, en un build, en el
+ *    moduleIds del trozo que lleva «vite:preloadError», y en ningún otro.
+ *
  * security.csp — la Content-Security-Policy de las páginas publicadas
  *    (encargo 8.1, b; firmada en la parada 1): connect-src 'self' (ningún
  *    fetch, XHR, WebSocket ni sendBeacon a otro origen) y form-action 'self'
@@ -175,6 +193,24 @@ const avisoDeRolldown = {
   },
 };
 
+/** La parte MIT del LICENSE.md de vite: lo que va entre «# Vite core license» y la lista de lo que Vite lleva empaquetado. */
+function licenciaDeVite() {
+  const licencia = readFileSync(join(dirname(createRequire(import.meta.url).resolve('vite/package.json')), 'LICENSE.md'), 'utf8').replace(/\r\n/g, '\n');
+  const parte = /^# Vite core license\n([\s\S]*?)\n# Licenses of bundled dependencies\n/.exec(licencia)?.[1]?.trim();
+  if (parte === undefined || !parte.includes('MIT License')) throw new Error('el LICENSE.md de vite no empieza por su «Vite core license» MIT: el aviso de la función de precarga no viajaría');
+  if (parte.includes('*/')) throw new Error('el LICENSE.md de vite lleva «*/»: cerraría el comentario');
+  return parte;
+}
+
+/** @type {import('vite').Plugin} */
+const avisoDeVite = {
+  name: 'radiografia-aviso-de-vite',
+  renderChunk(codigo, trozo) {
+    if (!trozo.moduleIds.includes('\0vite/preload-helper.js')) return null;
+    return { code: `/*!\n${licenciaDeVite()}\n*/\n${codigo}`, map: null };
+  },
+};
+
 /** @type {import('vite').Plugin} */
 const avisosDePdfmake = {
   name: 'radiografia-avisos-de-pdfmake',
@@ -190,7 +226,7 @@ export default defineConfig({
   integrations: [cspPrimero],
   security: { csp: { directives: ["connect-src 'self'", "form-action 'self'"] } },
   vite: {
-    plugins: [avisoDeSilabea, avisoDeRolldown, avisosDePdfmake],
+    plugins: [avisoDeSilabea, avisoDeRolldown, avisoDeVite, avisosDePdfmake],
     optimizeDeps: { include: ['@radiografia/motor/navegador'] },
     build: { rolldownOptions: { output: { comments: { legal: true } } } },
   },

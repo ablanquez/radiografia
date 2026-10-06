@@ -115,7 +115,7 @@ Los textos de la propia web también pasan por los dos paquetes, en un juez
 ([`web/jueces/textos-web.spec.ts`](web/jueces/textos-web.spec.ts)). Entran el
 texto visible de la página del analizador y todas las cadenas de la interfaz,
 también las del catálogo, las del cargador, las del informe, las del
-lenguaje de calle y las de la página de créditos: 2.375 palabras de prosa
+lenguaje de calle y las de la página de créditos: 2.407 palabras de prosa
 (06/10/2026), analizadas con «general». Desde el 11.1, todo lo que se lee en
 el analizador y en los créditos sale de `web/src/textos.ts`, salvo el
 nombre, que es identidad. No entra el contenido de las fichas de las reglas,
@@ -212,18 +212,18 @@ web (abajo, [«Diseño»](#diseño)). Pasó por el
 
 El **despliegue** (punto 11) empezó el 06/10/2026 por el [censo
 pre-despliegue](docs/CENSO-PRE-DESPLIEGUE.md), de solo lectura: veinte
-hallazgos, que Antonio firmó uno a uno. Los que eran para arreglar ya están
-arreglados, cada uno con su juez. Entre ellos:
+hallazgos, que Antonio firmó uno a uno, y el 21, que salió al arreglar el
+18. Los que eran para arreglar ya están arreglados, cada uno con su juez.
+Entre ellos:
 
-- el aviso MIT de silabea y el del runtime de Rolldown, que no viajaban,
-  van ahora dentro del JS publicado;
+- los avisos MIT de silabea, del runtime de Rolldown y de la función de
+  precarga de Vite, que no viajaban, van ahora dentro del JS publicado;
 - la nueva página «Créditos y licencias» (`/creditos/`), con la atribución
   de cada corpus y la cita del BOE (abajo, [«Licencia y
   créditos»](#licencia-y-créditos)).
 
-Otros se declararon con su porqué o quedaron para la v1.1. Uno nuevo, el
-21, la función de precarga de Vite que viaja sin aviso, espera firma (§ 14
-del censo). Faltan la parada de Hostinger (las cabeceras de caché y la CSP,
+Otros se declararon con su porqué o quedaron para la v1.1 (§ 14 del
+censo). Faltan la parada de Hostinger (las cabeceras de caché y la CSP,
 con la documentación del panel delante) y la publicación en
 `radiografia.antonioblanquez.es`.
 
@@ -338,8 +338,8 @@ en el despliegue (punto 11). Las fuentes ya van comprimidas.
 
 | fichero | bytes | con gzip |
 |---|---|---|
-| `index.html` (con la CSP y la hoja de impresión) | 6.573 | 2.422 |
-| el JS del analizador (motor, validador, cargador, resultado, papel, los avisos MIT de Ajv y de silabea, y la función de precarga de Vite; minificado por Vite) | 158.521 | 36.898 |
+| `index.html` (con la CSP y la hoja de impresión) | 6.573 | 2.423 |
+| el JS del analizador (motor, validador, cargador, resultado, papel y la función de precarga de Vite, con los avisos MIT de Ajv, de silabea y de Vite; minificado por Vite) | 159.670 | 36.973 |
 | las cadenas de la interfaz, que comparte con el catálogo (un JS aparte) | 10.531 | 4.314 |
 | el runtime de Rolldown, el empaquetador de Vite, con su aviso MIT (un JS aparte, que también pide el trozo de pdfmake) | 1.898 | 1.156 |
 | el CSS del analizador (con el del papel) | 20.843 | 4.331 |
@@ -350,7 +350,7 @@ en el despliegue (punto 11). Las fuentes ya van comprimidas.
 | `paquetes/radiografia.json` (con su calibración, los nombres y las frases en claro de las reglas) | 352.239 | 76.955 |
 | `paquetes/espanol-correcto.json` | 21.976 | 6.066 |
 | el icono de la cabecera, los dos del navegador y el manifiesto | 3.637 | 3.127 |
-| **en total** | **703.220** | **252.083** |
+| **en total** | **704.369** | **252.159** |
 
 **Después, solo si hace falta:**
 
@@ -367,7 +367,7 @@ Los dos paquetes de prueba, `ejemplos/paquete-prueba.json` (6.900 bytes) y
 descargarlos y copiarlos, pero la página no los pide.
 
 Los paquetes van aparte del JS, y no dentro, para que el JS se quede en unos
-159 KB y los JSON se puedan guardar en caché por separado. Metidos en el
+160 KB y los JSON se puedan guardar en caché por separado. Metidos en el
 build, el JS habría pasado de 400 KB (medido el 03/10/2026).
 
 **El catálogo y la página de créditos** no piden los paquetes ni el motor:
@@ -384,11 +384,11 @@ créditos no llevan JS), y lo suyo:
 | cada ficha, `reglas/<id>/index.html` (sin JS) | de 6.379 a 18.346 | |
 | **en total, una ficha** (10 peticiones; la de «Conector repetido») | **148.398** | **125.114** |
 | las 50 fichas juntas | 480.270 | |
-| `creditos/index.html`, la página de créditos (sin JS) | 14.469 | 3.709 |
-| **en total, la página de créditos** (10 peticiones) | **153.485** | **125.374** |
+| `creditos/index.html`, la página de créditos (sin JS) | 15.084 | 3.764 |
+| **en total, la página de créditos** (10 peticiones) | **154.100** | **125.429** |
 
 `dist/` entero: 53 páginas HTML (el analizador, el índice, 50 fichas y los
-créditos), 86 ficheros y 2.627.894 bytes. Casi la mitad (1.256.123) es el trozo de pdfmake
+créditos), 86 ficheros y 2.629.658 bytes. Casi la mitad (1.256.123) es el trozo de pdfmake
 y las fuentes del PDF, que solo se piden al descargar. Cada página lleva la
 CSP.
 
@@ -1437,16 +1437,14 @@ en el catálogo.
 - los corpus de los textos de personas, con la atribución que pide cada
   licencia, y la cita del BOE, literal, con el enlace a su sede;
 - las fuentes tipográficas (OFL);
-- el código que llega al navegador: Ajv, silabea, pdfmake y el runtime de
-  Rolldown;
+- el código que llega al navegador: Ajv, silabea, pdfmake, la función de
+  precarga de Vite y el runtime de Rolldown;
 - las listas de frecuencia (CC BY-SA), que no llegan a la web;
 - el enlace a este NOTICES.
 
 El aviso de licencia de cada pieza de código ajeno viaja dentro del propio
 JavaScript, y un juez lo busca en `dist/`
-([`web/jueces/construccion.spec.ts`](web/jueces/construccion.spec.ts)). La
-excepción es la función de precarga de Vite: es el hallazgo 21 del censo,
-pendiente de firma.
+([`web/jueces/construccion.spec.ts`](web/jueces/construccion.spec.ts)).
 
 ### Datos de terceros
 
