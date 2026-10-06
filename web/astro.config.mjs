@@ -8,7 +8,7 @@
  *    `minimal` (github.com/withastro/astro/tree/main/examples/minimal).
  * [DOC] https://docs.astro.build/en/reference/configuration-reference/#output
  *    — `output` vale 'static' por defecto: un sitio estático, sin servidor.
- *    No se escribe. Sin integraciones.
+ *    No se escribe. Una sola integración: cspPrimero (abajo, desde el 10.4).
  *
  * optimizeDeps.include — el motor es una dependencia ENLAZADA (workspace,
  *    sin compilar) que lleva un fichero CommonJS incorporado tal cual

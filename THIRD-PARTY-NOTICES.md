@@ -40,8 +40,8 @@ otro workspace y no es de terceros.
 | `astro` | 7.3.5 | MIT | (web) El marco de la web estática: compila `web/src/pages/` a HTML y, con Vite 8 y Rolldown, empaqueta el script de la página. Fijada exacta (encargo 6.2). Sus binarios, en § 1.4 |
 | `pdfmake` | 0.3.11 | MIT | (web) Genera en el navegador el PDF de «Descargar informe» (encargo 9.3, decisión de Antonio del 05/10), con pdfkit y fontkit dentro. Fijada exacta. Lo que lleva dentro, en § 1.8 |
 
-> **Lo que viajará al navegador — y lo que no.** `ajv` entero **no** viajará: el navegador
-> llevará `motor/dist/validador.standalone.js`, la función de validación que
+> **Lo que viaja al navegador — y lo que no.** `ajv` entero **no** viaja: el navegador
+> lleva `motor/dist/validador.standalone.js`, la función de validación que
 > `motor/src/generar-validador.ts` genera con Ajv y empaqueta con esbuild (encargo 3.2; se genera
 > en build y no se versiona). Dentro de ese fichero, lo ajeno es **una función de Ajv**,
 > `ajv/dist/runtime/ucs2length.js` (MIT, © Evgeny Poberezkin), y el código que Ajv genera a
@@ -82,7 +82,7 @@ otro workspace y no es de terceros.
 > **`pdfmake` viaja al navegador, pero no con la página** (encargo 9.3). Su build para navegador,
 > `node_modules/pdfmake/build/pdfmake.js`, va en un trozo de JS aparte que la página carga solo al
 > pulsar «Descargar informe» (`web/src/pantalla/generar-pdf.ts`, con `import()`): unos 1,09 MB,
-> unos 359 KB con gzip (build del 05/10/2026). Ese fichero lleva dentro, ya empaquetados por pdfmake,
+> unos 363 KB con gzip (build del 06/10/2026; lo ata a `dist/` el juez 14 de `web/jueces/construccion.spec.ts`). Ese fichero lleva dentro, ya empaquetados por pdfmake,
 > **setenta y seis piezas** de terceros: pdfkit, fontkit, los polyfills que añadió su build y el
 > arranque de webpack (la lista, en § 1.8). **Su aviso viaja dentro del trozo**, como el de Ajv:
 > [`web/astro.config.mjs`](web/astro.config.mjs) le pone en cabecera, como comentario legal
@@ -410,7 +410,7 @@ no viven en `data/` porque las sirve la web: su tabla la vigila `web/jueces/fuen
 
 | Fichero | Obra | Titular | Licencia | Para qué |
 |---|---|---|---|---|
-| `es-wordfreq.json` | wordfreq 3.1.1, lista `best` (= `large`) del español: las 20.000 formas más frecuentes con su frecuencia Zipf | Robyn Speer; datos de Wikipedia, OpenSubtitles 2018, NewsCrawl, GlobalVoices, Google Books Ngrams, OSCAR, Twitter y Reddit | **CC BY-SA 4.0** | Lista de frecuencias para las reglas estadísticas (se usará desde el punto 4) |
+| `es-wordfreq.json` | wordfreq 3.1.1, lista `best` (= `large`) del español: las 20.000 formas más frecuentes con su frecuencia Zipf | Robyn Speer; datos de Wikipedia, OpenSubtitles 2018, NewsCrawl, GlobalVoices, Google Books Ngrams, OSCAR, Twitter y Reddit | **CC BY-SA 4.0** | Lista de frecuencias guardada para la v1.1: ninguna regla de la v1 la usa |
 
 - Atribución completa —a la autora, a cada fuente que wordfreq declara y la nota SUBTLEX que
   exige— en [`data/frecuencias/LICENSE-CC-BY-SA-4.0.md`](data/frecuencias/LICENSE-CC-BY-SA-4.0.md).
@@ -420,8 +420,9 @@ no viven en `data/` porque las sirve la web: su tabla la vigila `web/jueces/fuen
   (US, UK, CH, DE, NL): que la lista española lleve datos SUBTLEX, **NO CONSTA**.
 - Los datos de wordfreq son una foto «up through 2021» (`SUNSET.md` del repositorio): anteriores
   a la oleada de texto generado.
-- **Viajará al navegador** cuando la usen las reglas: su atribución CC BY-SA tendrá que viajar
-  con ella. Cómo, **NO CONSTA** hasta que exista el build (punto 6).
+- **No viaja al navegador**: ninguna regla de la v1 la usa, y solo la lee su juez
+  (`motor/src/frecuencias.spec.ts`). Si una regla de la v1.1 la usa, viajará con su
+  atribución CC BY-SA, como ya la nombra la página de créditos (`/creditos/`, desde el 11.1).
 
 ### 2.3 · `data/calibracion/` — percentiles de textos humanos, por género
 
