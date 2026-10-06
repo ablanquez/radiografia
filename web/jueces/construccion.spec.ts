@@ -71,10 +71,11 @@
  *      (astro.config.mjs, avisoDeRolldown).
  *  14. Desde el 11.1 (hallazgo 17 del censo, firmado por Antonio), el
  *      tamaño del trozo de pdfmake que dicen THIRD-PARTY-NOTICES § 1.1 y el
- *      README («Informe»), en MB con dos decimales y en KB con gzip (Node, a
- *      su nivel por defecto), es el del trozo de dist/: el NOTICES decía 359
- *      KB, de un build del 05/10, y el guardián del NOTICES cuenta cifras del
- *      lock, no tamaños.
+ *      README, en MB con dos decimales y en KB con gzip (Node, a su nivel por
+ *      defecto), es el del trozo de dist/: el NOTICES decía 359 KB, de un
+ *      build del 05/10, y el guardián del NOTICES cuenta cifras del lock, no
+ *      tamaños. Desde el 11.4, también docs/WEB.md («Informe»), adonde se
+ *      trasladó esa sección del README.
  *  15. Desde el 11.1 (hallazgo 21 del censo, firmado por Antonio con el
  *      mismo trato que el 18), el trozo de JS que lleva la función de
  *      precarga de Vite (el único con «vite:preloadError»: Vite la mete desde
@@ -265,13 +266,13 @@ describe('la web construida', () => {
     assert.ok(sinMarcasDeComentario(runtime[0]!.texto).includes(sinMarcasDeComentario(licencia)), `${runtime[0]!.ruta} no lleva el LICENSE de rolldown entero`);
   });
 
-  test('14 · el NOTICES y el README dicen el tamaño del trozo de pdfmake que hay en dist/ («unos N MB» y «unos N KB» con gzip)', () => {
+  test('14 · el NOTICES, el README y docs/WEB.md dicen el tamaño del trozo de pdfmake que hay en dist/ («unos N MB» y «unos N KB» con gzip)', () => {
     construir();
     const pdfmake = jsDeDist().filter(({ texto }) => texto.includes('createPdfKitDocument'));
     assert.equal(pdfmake.length, 1, 'el trozo de pdfmake');
     const contenido = readFileSync(new URL(pdfmake[0]!.ruta.replaceAll('\\', '/'), DIST));
     const medido = [(contenido.length / 1e6).toFixed(2).replace('.', ','), String(Math.round(gzipSync(contenido).length / 1000))];
-    for (const documento of ['THIRD-PARTY-NOTICES.md', 'README.md']) {
+    for (const documento of ['THIRD-PARTY-NOTICES.md', 'README.md', 'docs/WEB.md']) {
       // Las líneas, juntas y sin la marca de cita (el párrafo del NOTICES va en un «> »).
       const texto = readFileSync(new URL(`../../${documento}`, import.meta.url), 'utf8').replace(/^>[ \t]?/gm, '').replace(/\s+/g, ' ');
       const dichos = [...texto.matchAll(/unos (\d+,\d+) MB[,;] unos (\d+) KB (?:con gzip|comprimido con gzip)/g)].map((m) => [m[1]!, m[2]!]);

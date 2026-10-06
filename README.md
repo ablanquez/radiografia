@@ -1,1633 +1,512 @@
 <div align="center">
 
+<img src="docs/figma/icono/icono-c.svg" width="110" alt="Icono de RadiografIA: un documento en negativo">
+
 # RadiografIA
 
 **A contraluz se nota todo.**
 
+[![Versión](https://img.shields.io/badge/versi%C3%B3n-1.0.0%20en%20preparaci%C3%B3n-332288)](#estado-y-nevera)
 [![Licencia](https://img.shields.io/badge/licencia-Apache%202.0-64748B)](LICENSE)
-[![Estado](https://img.shields.io/badge/estado-en%20construcci%C3%B3n-F59E0B)](#hoja-de-ruta)
+[![Astro](https://img.shields.io/badge/Astro-7-BC52EE)](https://astro.build/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6)](https://www.typescriptlang.org/)
+[![Sin backend](https://img.shields.io/badge/backend-ninguno-64748B)](#cómo-está-hecho)
+[![En línea](https://img.shields.io/badge/en%20l%C3%ADnea-radiografia.antonioblanquez.es-16A34A)](https://radiografia.antonioblanquez.es)
+
+**50 reglas · 2 paquetes · 6 géneros calibrados · 54 páginas · nada sale del navegador**
 
 </div>
 
-> Pegas un texto en español, pulsas **«Pon tu texto a contraluz»** y ves
-> qué patrones de *estilo IA* hay en él: subrayados por familia, un medidor
-> con su desglose y, en cada señal, la regla que la disparó, por qué y qué
-> harías tú.
+<div align="center">
+
+### 🩻 Probarlo → **[radiografia.antonioblanquez.es](https://radiografia.antonioblanquez.es)**
+
+</div>
+
+> **Analiza estilo. No demuestra autoría.** Pegas un texto en español y
+> RadiografIA señala los rasgos que, según sus fuentes, los asistentes de
+> chat dejan más que las personas: fórmulas, formato pegado, puntuación,
+> vocabulario y ritmo. Lo compara con textos escritos por personas, del
+> mismo tipo y de la misma longitud, y dice a qué suena. Nunca quién lo
+> escribió.
 >
-> ⚠️ **Analiza estilo. No demuestra autoría.** Un texto lleno de señales
-> puede ser de una persona; uno limpio puede ser de una máquina. La
-> herramienta señala rasgos, no firma sentencias.
+> **Para probarlo en un minuto:** pulsa «Texto de IA» o «Texto humano» y
+> después «Pon tu texto a contraluz». Las reglas, una por una y con sus
+> fuentes, están en el
+> **[catálogo](https://radiografia.antonioblanquez.es/reglas/)**.
+>
+> Para levantarlo en tu máquina →
+> [**Cómo ejecutarlo y probarlo**](#cómo-ejecutarlo-y-probarlo).
 
 ---
 
-## Qué es
+## Qué hace
 
-Un analizador de textos **por reglas**, no por modelo. No hay red neuronal
-detrás ni llamada a ninguna API: cada señal la produce una regla escrita a
-mano, con su explicación, su sugerencia y sus ejemplos, y se puede leer una
-por una en el catálogo.
+1. **Pegas un texto en español**, o cargas uno de los dos de ejemplo, y
+   eliges su género: general, noticia, administrativo, narrativa clásica,
+   académico u opinión (críticas de cine).
+2. **Pulsas «Pon tu texto a contraluz»** y sale una etiqueta con una frase
+   en claro: cómo suena tu texto al lado de textos escritos por personas,
+   del mismo género y de su misma longitud. Por ejemplo: «Tu texto suena
+   mucho a asistente (IA): de cada 100 noticias escritas por personas,
+   solo 1 suena tanto».
+3. **Debajo, el texto con sus tramos marcados por familia**, cada una con
+   su tinte, su estilo de línea y su sigla. Al tocar un tramo, la regla en
+   una frase llana y qué hacer.
+4. **«Descargar informe» genera el PDF en el navegador** y lo descarga,
+   también en el iPhone y en el iPad.
+5. **Todo corre en tu navegador.** El servidor solo sirve ficheros: no hay
+   backend que analice, ni cuentas, ni cookies. Ni el texto ni los
+   paquetes que cargues salen de él.
 
-El motor **no sabe nada de «IA»**. Aplica un **paquete de reglas** en JSON.
-RadiografIA es el primer paquete y «español correcto» el segundo; el
-siguiente puede ser la guía de estilo de tu empresa. Se cargan paquetes
-propios desde el ordenador, se combinan, y **nada sale del navegador**: ni
-el texto ni las reglas.
+<div align="center">
+<img src="docs/capturas/analizador.png" width="92%" alt="El analizador en el ordenador: arriba a la derecha, «Texto con muchos rasgos de Asistente IA» y su frase; debajo, lo que más pesa y las familias; a la izquierda, el texto con sus tramos subrayados por familia">
+<br><em>El texto de prueba de los jueces, escrito a propósito con estilo de asistente y calcos de traducción, analizado como «Noticia» en la web publicada. <strong>La etiqueta habla de su estilo, no de quién lo escribió</strong>: lo compara con noticias de su longitud escritas por personas.</em>
+</div>
 
-## Estado
+---
 
-**En construcción.** Hoy (05/10/2026) existe el plan firmado, la
-investigación de las familias en [`docs/investigacion/`](docs/investigacion/),
-la **pantalla**, ya con su diseño, y el **catálogo de reglas** en [`web/`](web/) (abajo,
-[«Cómo ejecutar»](#cómo-ejecutar) y [«Catálogo»](#catálogo)) y, en la carpeta
-[`motor/`](motor/), el **motor completo**, probado con paquetes de prueba:
+## Qué no demuestra, y por qué
 
-- el **esquema del paquete y de la ficha de regla** (JSON Schema 2020-12),
-  con los parámetros de cada tipo de detector ya cerrados, y un
-  **validador** que dice qué regla y qué campo fallan, probado con un
-  paquete válido y uno roto a propósito por cada error que tiene que saber
-  nombrar;
-- el **texto segmentado** en párrafos, frases y palabras, con sus posiciones
-  exactas sobre el original y cada párrafo marcado como prosa o no (viñetas,
-  tablas y código no cuentan). Los párrafos se leen como en CommonMark: un
-  salto de línea simple no parte el párrafo (abajo, [«Cómo está
-  pensado»](#cómo-está-pensado));
-- el **umbral de longitud**: menos de 100 palabras de prosa, texto
-  insuficiente y no se analiza; de 100 a 299, resultado poco fiable; 300 o
-  más, completo;
-- los **detectores de patrón y estructural**: formas o expresiones regulares
-  por palabra o por frase, y expresiones en una posición (principio o final
-  de frase o de párrafo, último párrafo, o en cualquier punto de un párrafo).
-  Miran solo la prosa, salvo las reglas que buscan formato pegado, que miran
-  también viñetas, encabezados y tablas; el código, nunca. Una regla puede
-  pedir un mínimo de apariciones, señalar solo la forma que se repite cierto
-  número de veces o, al revés, señalar que algo falta en el texto entero (las
-  ausencias no se juzgan por debajo de 300 palabras de prosa); y puede
-  limitarse a ciertos géneros, que se eligen al analizar;
-- el **detector estadístico**: mide el texto entero con una métrica y la
-  compara con los percentiles de textos humanos del mismo género y del mismo
-  tramo de longitud, que trae el propio paquete; nunca con un umbral fijo. El
-  género lo elige quien analiza (por defecto, «general»);
-- la **puntuación**: puntos por 1.000 palabras de prosa, con su desglose por
-  familia y por regla; las reglas informativas se enseñan pero no suman y
-  los atenuantes restan;
-- la **escala del medidor**: dónde cae el total respecto a los textos
-  humanos del mismo género y tramo (abajo, [«Escala»](#escala)), sin tope
-  ni veredicto;
-- la **combinación de paquetes**: se analizan varios a la vez, cada señal
-  dice de qué paquete viene y cada paquete lleva su propio desglose. Está
-  probada también con los dos paquetes reales juntos;
-- la **entrada del navegador**
-  ([`motor/src/navegador.ts`](motor/src/navegador.ts)): el análisis, la
-  escala y el validador de paquetes, sin Ajv y sin nada de Node. El
-  validador de esquema va compilado de antemano, en build. Empaquetada y sin
-  minificar con esbuild ocupa unos 210 KB, y unos 570 KB con los dos
-  paquetes y su calibración (medido el 02/10/2026). Un juez comprueba que
-  hace lo mismo que el motor en Node. Lo que viaja de verdad al navegador, en
-  el build de la web, está abajo, en [«Cómo ejecutar»](#cómo-ejecutar).
+- **No es un detector de autoría.** Las reglas miden rasgos de estilo. Una
+  persona puede tenerlos, y un texto de asistente puede no tenerlos. Por
+  eso la frase dice «suena a», y nunca quién escribió el texto. Los dos
+  textos de ejemplo lo enseñan con «Opinión (críticas de cine)». El que
+  generó Claude Opus 5.5 el 02/10/2026, sin ninguna instrucción de estilo,
+  sale «Texto con muy pocos rasgos que indiquen que tiene Asistente IA». El
+  de Antonio, el autor del proyecto, sale «Dentro de lo normal». Sus
+  cifras, regla a regla, en [`docs/ejemplos.md`](docs/ejemplos.md), con un
+  juez que las vigila.
+- **No da porcentajes de «IA».** «De cada 100 noticias escritas por
+  personas, solo 1 suena tanto» cuenta textos de personas. No es la
+  probabilidad de que el tuyo lo haya escrito una máquina.
+- **Compara con personas, no con máquinas.** Las reglas estadísticas
+  comparan tu texto con los percentiles de textos de personas de su género
+  y su longitud, nunca con un umbral fijo. Se validaron con textos de
+  personas que se apartaron antes de medir: en el 2,1 % (35 de 1.703)
+  saltan dos o más de ellas. Por género, va del 1,1 % de opinión al 5,1 %
+  (5 de 98) de administrativo. El plan pedía no pasar del 5 %, y Antonio aceptó
+  administrativo con declaración el 01/10/2026.
+- **Sin cifras de acierto.** Cuántos textos de asistente reconoce y
+  cuántos se le escapan no está medido. Haría falta un corpus de textos de
+  asistente medido con el mismo cuidado, y quedó fuera de la v1 el
+  29/09/2026 ([PLAN, «Fuera de la v1»](PLAN-RADIOGRAFIA.md#fuera-de-la-v1-fase-2--no-se-toca-sin-abrir-el-plan)).
+  Sin él, una cifra de acierto sería inventada.
+- **Sus límites:**
+  - con menos de 100 palabras de prosa no analiza; de 100 a 299, el
+    resultado es orientativo; desde 300, completo;
+  - hay seis géneros calibrados, y no en todas las longitudes: narrativa
+    clásica y académico no tienen textos de personas de 100 a 299 palabras
+    con los que comparar, y ahí dice «No podemos comparar»;
+  - cuatro de los cinco corpus son de España: la prensa de la agencia EFE
+    y de El Periódico, el BOE, el CSIC y las críticas de MuchoCine. La
+    narrativa clásica es de Project Gutenberg. Las columnas y los blogs de
+    hoy, la narrativa contemporánea, el lenguaje corporativo y la variedad
+    americana no tienen corpus abierto con licencia, y no están calibrados
+    ([ESTADO, «Nevera»](RADIOGRAFIA-ESTADO.md#nevera)).
 
-Las **métricas** del detector estadístico, cada una con su fórmula y su
-fuente en [`motor/src/metricas/`](motor/src/metricas/):
+---
 
-- de frase: frases por cada 100 palabras, dispersión de la longitud de
-  frase (coeficiente de variación) y el índice de legibilidad de
-  Flesch-Szigriszt;
-- de vocabulario: variedad léxica (TTR, MATTR con ventana de 50, MTLD y
-  HD-D) y repetición de secuencias de cuatro palabras;
-- de puntuación: comas por punto, signos por cada 1.000 palabras y
-  paréntesis, comillas, punto y coma, dos puntos, barras y raya por cada
-  1.000 palabras;
-- de estilo: nominalizaciones (palabras en -ción, -miento, -dad…) y
-  pronombres anafóricos, por cada 1.000 palabras; la segunda es solo de
-  contexto, porque sin etiquetado gramatical cuenta también artículos y
-  determinantes («la», «este»).
+## Capturas
 
-Todo está probado con dos paquetes de prueba internos y con los dos paquetes
-reales (abajo, [«Paquetes»](#paquetes)): cada ejemplo positivo dispara su
-regla y ningún negativo. Los percentiles de los paquetes de prueba son
-inventados; los de RadiografIA están medidos con textos humanos (abajo,
-[«Calibración»](#calibración)) y comprobados con otros textos humanos que
-se apartaron antes de medir (abajo, [«Validación»](#validación)).
+### En el móvil
 
-Con eso, el punto 5 del plan (el paquete RadiografIA con sus seis
-familias, calibrado y validado) está hecho.
+<table>
+  <tr>
+    <td width="50%">
+      <img src="docs/capturas/movil-resultado.png" alt="El resultado a 390 px: la etiqueta «Texto con muchos rasgos de Asistente IA» con su frase, lo que más pesa y, abajo, las pestañas Texto, Reglas y Datos">
+      <p align="center"><em>Arriba, la etiqueta y su frase; debajo, <strong>lo que más pesa</strong> y por dónde empezar. Las cifras van plegadas. A 390 px, el texto, las reglas y los datos son pestañas.</em></p>
+    </td>
+    <td width="50%">
+      <img src="docs/capturas/movil-tarjeta.png" alt="La hoja inferior de la regla «Cierre de plantilla», abierta al tocar «En conclusión» en el texto">
+      <p align="center"><em>Al tocar un tramo, la hoja de abajo: la regla en una frase llana, <strong>qué hacer</strong> y, plegado, «¿Por qué lo miramos?».</em></p>
+    </td>
+  </tr>
+</table>
 
-Los textos de la propia web también pasan por los dos paquetes, en un juez
-([`web/jueces/textos-web.spec.ts`](web/jueces/textos-web.spec.ts)). Entran el
-texto visible de la página del analizador y todas las cadenas de la interfaz,
-también las del catálogo, las del cargador, las del informe, las del
-lenguaje de calle y las de la página de créditos: 2.407 palabras de prosa
-(06/10/2026), analizadas con «general». Desde el 11.1, todo lo que se lee en
-el analizador y en los créditos sale de `web/src/textos.ts`, salvo el
-nombre, que es identidad. No entra el contenido de las fichas de las reglas,
-porque menciona las formas que las reglas buscan (abajo,
-[«Catálogo»](#catálogo)).
+### El catálogo y el informe
 
-- **Español correcto** no da ninguna señal.
-- **RadiografIA** puntúa dos reglas, declaradas en el juez con su porqué:
-  - `lex-verbos-de-enfasis`, por «subrayado», el nombre de la función, que
-    está declarado en su ficha;
-  - `est-frases-cortas`, porque son etiquetas sueltas, no prosa, y cada una
-    cuenta como una frase.
+<table>
+  <tr>
+    <td width="50%">
+      <img src="docs/capturas/ficha.png" alt="La ficha de la regla «Cierre de plantilla» en el catálogo: su frase en claro, qué hacer y la explicación con sus fuentes">
+      <p align="center"><em><a href="https://radiografia.antonioblanquez.es/reglas/disc-cierre-de-plantilla/">Cada regla tiene su página</a>: su frase en claro, qué hacer, la explicación con sus fuentes, las excepciones y los ejemplos.</em></p>
+    </td>
+    <td width="50%">
+      <img src="docs/capturas/informe.png" alt="La página 2 del PDF descargado: el texto con sus subrayados y, detrás de cada uno, la sigla de su familia entre corchetes">
+      <p align="center"><em>La página 2 del PDF: el texto con sus subrayados y, detrás de cada uno, <strong>la sigla de su familia</strong>, para leerlo sin color.</em></p>
+    </td>
+  </tr>
+</table>
 
-  Hasta el 11.1 puntuaba también `est-pocas-comas`, por los mensajes del
-  cargador; con la prosa de la página de créditos, que lleva sus comas, dejó
-  de dispararse y salió de las declaradas.
+Las cinco son de la web publicada, del 06/10/2026. Cómo se hicieron, en
+[`docs/capturas/PROCEDENCIA.md`](docs/capturas/PROCEDENCIA.md).
 
-Las piezas de apoyo que las reglas necesitarán están **medidas contra
-referencias ajenas**, no dadas por buenas:
+---
 
-- **Silabeo**: 57 de 60 palabras silabeadas como la *Ortografía* de la RAE
-  (falla en los prefijos *sub-* y en *tungsteno*).
-- **Frecuencias**: las 20.000 formas más frecuentes del español
-  ([`data/frecuencias/`](data/frecuencias/)).
-- **Etiquetado gramatical** (adjetivos, adverbios, pronombres): medido contra
-  el corpus UD Spanish-AnCora y **no llega** al umbral fijado (adjetivos
-  72,5 %, pronombres 66,9 %, adverbios 91,2 %, sobre frases que no se miraron
-  al ajustarlo). Queda **fuera de la v1**, y con él las reglas que lo
-  necesitaban; su código se retiró. La medida entera, en
-  [`docs/investigacion/pos-medida.md`](docs/investigacion/pos-medida.md).
+## Cómo está hecho
 
-Pegas el texto, o cargas uno
-de los dos ejemplos (abajo, [«Ejemplos»](#ejemplos)), eliges el género y, al
-pulsar el botón, ves:
-
-- los subrayados por familia;
-- arriba, una etiqueta y una frase con cómo suena tu texto al lado de los
-  textos de personas del mismo tipo; debajo, lo que más pesa y por dónde
-  empezar; las cifras, plegadas (abajo, [«Cómo leer el
-  resultado»](#cómo-leer-el-resultado));
-- al tocar un subrayado, la regla en una frase llana, qué hacer y, plegado,
-  por qué se mira, con el enlace a su ficha del catálogo;
-- el desglose de cada paquete, con un enlace a la ficha de cada regla.
-
-Y antes de analizar eliges los paquetes: los dos incluidos, con sus
-casillas, y los tuyos, cargados desde el ordenador (abajo, [«Paquetes
-propios»](#paquetes-propios)). Después, «Descargar informe» genera el
-informe en PDF y lo descarga (abajo, [«Informe»](#informe)).
-
-El punto 6 del plan está cerrado: Antonio vio el ciclo entero en Chrome el
-02/10/2026. Después vino la **ampliación 6.4**, mantenimiento del paquete y
-no un punto nuevo. Completó las listas de dos reglas de ausencia, D3 (sin
-marcadores epistémicos) y D4 (sin automenciones), con fuente, y recalculó y
-revalidó la calibración (abajo, [«Validación»](#validación)).
-
-El **catálogo de reglas** (punto 7) está cerrado: una página por regla y un
-índice con buscador y filtros (abajo, [«Catálogo»](#catálogo)), y cada regla
-con su nombre, con sus tildes. Antonio lo vio en Chrome el 02/10/2026.
-
-El **cargador de paquetes** (punto 8) está hecho desde el 02/10/2026: las
-casillas de los dos incluidos, un paquete propio que se lee en el navegador
-y no sale de él, la combinación con el origen de cada señal y los errores
-de validación con su regla y su campo (abajo, [«Paquetes
-propios»](#paquetes-propios)). Antonio lo vio en Chrome el 02/10/2026.
-
-El **informe** (punto 9) está cerrado: la misma página, preparada para
-imprimirse o guardarse en PDF desde el navegador, con la cabecera del
-análisis, la puntuación, el texto con sus subrayados y la sigla de cada
-familia, el desglose y la lista de señales con su explicación y su
-sugerencia (abajo, [«Informe»](#informe)). Antonio abrió el PDF el
-03/10/2026. Desde la **ampliación 9.3** (05/10/2026), «Descargar informe»
-genera el PDF en el propio navegador y lo descarga, también en el iPhone y en
-el iPad; Ctrl+P sigue sacando el papel. Antonio lo vio en los tres el mismo
-día.
-
-La **ampliación 9.2, lenguaje de calle**, está hecha desde el 03/10/2026:
-el resultado se lee en frases llanas (una etiqueta con su frase, un resumen
-de dos líneas y la frase en claro de cada regla), con las cifras plegadas y
-sin las palabras del motor (abajo, [«Cómo leer el
-resultado»](#cómo-leer-el-resultado)). Antonio la vio en Chrome el mismo
-día y cambió el titular por la etiqueta y la frase; falta que vea ese
-retoque.
-
-El **diseño** (punto 10) está cerrado, a falta de la última mirada de
-Antonio en Chrome, en el iPhone y en el iPad. La web calca el modelo de
-Figma Make con los tokens del DISEÑO y las fuentes servidas desde la propia
-web (abajo, [«Diseño»](#diseño)). Pasó por el
-[acta de contraste y accesibilidad](docs/acta-contraste-y-accesibilidad.md):
-- el contraste de cada par de colores;
-- el daltonismo;
-- los 320 px;
-- el tamaño de lo que se pulsa;
-- el árbol de accesibilidad.
-
-El **despliegue** (punto 11) empezó el 06/10/2026 por el [censo
-pre-despliegue](docs/CENSO-PRE-DESPLIEGUE.md), de solo lectura: veinte
-hallazgos, que Antonio firmó uno a uno, y el 21, que salió al arreglar el
-18. Los que eran para arreglar ya están arreglados, cada uno con su juez.
-Entre ellos:
-
-- los avisos MIT de silabea, del runtime de Rolldown y de la función de
-  precarga de Vite, que no viajaban, van ahora dentro del JS publicado;
-- la nueva página «Créditos y licencias» (`/creditos/`), con la atribución
-  de cada corpus y la cita del BOE (abajo, [«Licencia y
-  créditos»](#licencia-y-créditos)).
-
-Otros se declararon con su porqué o quedaron para la v1.1 (§ 14 del
-censo).
-
-La **publicación** (encargo 11.2) se decidió el 06/10/2026 con la
-documentación del panel de Hostinger delante. `npm run publicar` deja lista
-la rama `publicacion`, con `web/dist/` y su `.htaccess` (abajo,
-[«Despliegue»](#despliegue)), y la web tiene ya su página para las
-direcciones que no existen. Falta lo que hace Antonio:
-
-- crear el subdominio en el panel y conectarle la rama;
-- activar «Forzar HTTPS»;
-- empujar `main` y `publicacion`;
-- y verificarla desde fuera, con los jueces de producción y a ojo.
-
-## Cómo ejecutar
-
-Hace falta Node 24.12 o posterior. En la raíz del repositorio:
-
-```bash
-npm install                    # instala los dos workspaces a la vez (motor/ y web/)
-npx astro telemetry disable    # una vez: apaga la telemetría de Astro en tu máquina
-cd web
-npm run dev                    # http://localhost:4321/ y el catálogo en http://localhost:4321/reglas/
-```
-
-- **`predev` y `prebuild`** corren solos antes de `npm run dev` y de `npm run
-  build`, y los dos llaman a `npm run preparar`, que se define una sola vez
-  en [`web/package.json`](web/package.json). Genera el validador de esquema
-  que lleva el navegador (`npm run generar` del motor, a `motor/dist/`),
-  copia `paquetes/*.json` a `web/public/paquetes/` (de donde la página los
-  pide al arrancar), escribe `web/src/estilos/tokens.css` desde los tokens de
-  diseño y calcula los tramos de los ejemplos de cada ficha. Nada de lo que
-  escribe se versiona (`.gitignore` dice cada cosa).
-- **Después de tocar `motor/src/`**, reinicia el servidor con `npm run dev
-  -- --force`. Vite pre-empaqueta el motor, porque lleva un fichero CommonJS
-  (`motor/src/terceros/silabea.cjs`), y sin `--force` sigue sirviendo el de
-  antes (la nota está en [`web/astro.config.mjs`](web/astro.config.mjs)).
-- **La versión construida:** `npm run build` y `npm run preview`, en la
-  misma dirección.
-- **Las pruebas:** `npm test` en la raíz corre los jueces del motor y los de
-  la web, que construyen la página y la sirven con `astro preview`.
-  - Un juez arranca además `astro dev` y pide el analizador, el catálogo y
-    una ficha: 200 y ningún error en su salida. Lo arranca con
-    `--ignore-lock` en un puerto libre, así que no choca con un `npm run
-    dev` abierto.
-  - Hasta el 02/10/2026 solo se probaba lo construido, y el catálogo rompió
-    `npm run dev` sin que nada se pusiera rojo.
-  - Los jueces del cargador, los del informe y los del lenguaje de calle
-    ([`web/jueces/navegador.spec.ts`](web/jueces/navegador.spec.ts),
-    [`impresion.spec.ts`](web/jueces/impresion.spec.ts) y
-    [`pantalla.spec.ts`](web/jueces/pantalla.spec.ts)) abren la página en
-    **Chrome**, sin ventana, y la manejan por su protocolo de depuración. Hace falta Chrome instalado. Si no está en su ruta de
-    siempre, se le da con la variable `CHROME`. Sin Chrome, esos jueces
-    fallan; no se saltan.
-- **Los jueces de producción** se omiten, con un aviso, mientras no se les
-  da la dirección publicada (abajo, [«Despliegue»](#despliegue)).
-- **Los tipos:** `npm run tipos` revisa los de los dos workspaces con `tsc`.
-  No se usa `astro check`: añadiría 77 paquetes al árbol y 67 MB para
-  revisar los `.astro`.
-  Aquí los `.astro` llevan HTML, el import del script y, en el catálogo, la
-  plantilla de cada página. La lógica va en `.ts`, que revisa `tsc`, y lo
-  que pintan las plantillas lo miran los jueces sobre `dist/`.
-- **El aviso de npm sobre esbuild** (`allow-scripts … esbuild`) es lo
-  esperado: su `postinstall` no está aprobado y funciona sin él
-  ([`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md), § 1.4).
-
-### Prueba manual
-
-Para pasar a mano un `.txt` por la pantalla, cópialo al portapapeles
-leyéndolo como UTF-8. En PowerShell:
-
-```powershell
-Get-Content -Encoding UTF8 -Raw texto.txt | Set-Clipboard
-```
-
-- **Sin `-Encoding UTF8`, las tildes y las comillas llegan rotas.** Windows
-  PowerShell 5.1, la que trae Windows, lee un fichero sin BOM con la página
-  de códigos ANSI del sistema. La [doc de
-  Microsoft](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_character_encoding?view=powershell-5.1)
-  lo dice así: «`Get-Content` […] uses the `Default` ANSI encoding».
-- **Y el análisis cambia.** El 02/10/2026, el texto de
-  `motor/src/combinacion-real.spec.ts` con «Noticia» dio 356 palabras de
-  prosa y un total de 17,04, en vez de 325 y 47,08.
-- **`-Raw`** lee el fichero de una vez, con sus saltos de línea.
-
-### Estructura
+- **Un motor de reglas que no sabe nada de «IA».** Aplica paquetes de
+  reglas en JSON, validados al cargar con un esquema (JSON Schema 2020-12)
+  que dice qué regla y qué campo fallan. Hay tres tipos de detector: de
+  patrón, estructural y estadístico. Está en [`motor/`](motor/), en
+  TypeScript que Node ejecuta sin compilar.
+- **Dos paquetes incluidos.** **RadiografIA**, 43 reglas en seis familias:
+  léxico, sintaxis, puntuación y formato, estadística, discurso y canal.
+  **Español correcto**, 7 avisos de norma de la RAE que suelen delatar un
+  calco del inglés o una traducción. Cada regla lleva su nivel de
+  evidencia y sus fuentes (abajo,
+  [«Reglas y evidencia»](#reglas-y-evidencia)).
+- **Calibrado con textos de personas** de cinco corpus, uno por género:
+  AnCora (noticia), el BOE (administrativo), Project Gutenberg (narrativa
+  clásica), el CSIC (académico) y MuchoCine (opinión). El sexto, «general»,
+  los mezcla. Los textos no están en el repositorio: solo sus cifras y sus
+  manifiestos, sin texto. La licencia de cada corpus y la atribución que
+  pide, en la página
+  [«Créditos y licencias»](https://radiografia.antonioblanquez.es/creditos/).
+- **Una web estática en Astro 7**, sin backend: el analizador, el catálogo
+  con una página por regla, los créditos y la página que no existe. Las
+  fuentes, Literata y Atkinson Hyperlegible Next, se sirven desde la propia
+  web, sin pedir nada a Google Fonts.
+- **El PDF se hace en el navegador**, con pdfmake, en un trozo de JS aparte
+  que solo se pide al pulsar «Descargar informe»: unos 1,09 MB; unos 363 KB
+  con gzip.
+- **Publicada en Hostinger** desde una rama aparte, `publicacion`, que
+  lleva solo `web/dist/` y su `.htaccess`, con la política de seguridad
+  (CSP) también por cabecera.
 
 ```text
 motor/      el motor: TypeScript sin compilar, sus jueces y las herramientas de calibración
-web/        la web estática en Astro 7: el analizador en src/pages/index.astro con su lógica en
-            src/pantalla/; el catálogo en src/pages/reglas/ con su lógica en src/catalogo/;
-            los créditos en src/pages/creditos.astro y la página que no existe en
-            src/pages/404.astro; las cadenas de la interfaz en src/textos.ts; los textos
-            de ejemplo y los dos paquetes de prueba del cargador en public/ejemplos/; la
-            publicación (la plantilla del .htaccess y la rama) en publicacion/ y
-            scripts/publicar.ts
-paquetes/   los dos paquetes de reglas incluidos (RadiografIA y Español correcto)
+web/        la web estática en Astro: el analizador, el catálogo, los créditos, sus jueces y la publicación
+paquetes/   los dos paquetes de reglas incluidos
 data/       los datos de terceros y la calibración, cada carpeta con su licencia
-docs/       la investigación de cada familia, los textos de ejemplo y la bitácora de fallos
+docs/       la investigación, el detalle de la web, la calibración, el despliegue, el acta, el censo y la bitácora
 ```
 
-La raíz es un [workspace de npm](https://docs.npmjs.com/cli/v11/using-npm/workspaces)
-con un solo `package-lock.json`. `web/` importa el motor por
-`@radiografia/motor/navegador`, la entrada sin Ajv ni nada de Node.
+**El detalle vive al lado:**
 
-### Lo que viaja al navegador
+- [`docs/WEB.md`](docs/WEB.md): cómo se lee el resultado, el catálogo, el
+  informe, el diseño, los dos paquetes, el cargador y las decisiones de
+  fondo.
+- [`docs/CALIBRACION.md`](docs/CALIBRACION.md): los corpus, cómo se
+  reproduce la calibración, la validación con sus tablas y la escala.
+- [`docs/ARRANQUE-LOCAL.md`](docs/ARRANQUE-LOCAL.md): arrancarlo en local,
+  con el porqué de cada paso.
+- [`docs/DESPLIEGUE.md`](docs/DESPLIEGUE.md): lo que viaja al navegador,
+  con sus tamaños, y cómo se publica.
+- [`DISEÑO-RADIOGRAFIA.md`](DISEÑO-RADIOGRAFIA.md): la paleta, la
+  tipografía, las pantallas y el informe.
+- [`docs/acta-contraste-y-accesibilidad.md`](docs/acta-contraste-y-accesibilidad.md):
+  el contraste y la accesibilidad, medidos.
+- [`docs/CENSO-PRE-DESPLIEGUE.md`](docs/CENSO-PRE-DESPLIEGUE.md): el censo
+  antes de publicar y lo medido en producción.
+- [`docs/investigacion/`](docs/investigacion/): la investigación de cada
+  familia, hecha antes de escribir su primera regla.
+- [`PLAN-RADIOGRAFIA.md`](PLAN-RADIOGRAFIA.md) y
+  [`RADIOGRAFIA-ESTADO.md`](RADIOGRAFIA-ESTADO.md): el plan por puntos y el
+  estado.
+- [`docs/BITACORA.md`](docs/BITACORA.md): los fallos reales, con lo que
+  daba verde mientras estaban vivos.
+- [`docs/CRONICA-DE-CONSTRUCCION.md`](docs/CRONICA-DE-CONSTRUCCION.md): la
+  sección «Estado» que tuvo este README hasta el 06/10/2026, tal cual.
 
-Nada sale del navegador. Lo que la web pide es suyo, del mismo sitio:
+---
 
-- **al cargar**: su HTML, su JS y su CSS, las fuentes y los dos paquetes
-  incluidos, que se validan al arrancar;
-- **al pulsar un ejemplo**: el texto de ese ejemplo;
-- **al pintar un resultado**: la negrita del papel, una vez por visita
-  (abajo, [«Informe»](#informe));
-- **al pulsar «Descargar informe»**, la primera vez: el trozo de JS de
-  pdfmake y las cinco caras del PDF.
+## Cómo ejecutarlo y probarlo
 
-Un paquete propio no se pide: se lee del fichero, en el navegador (abajo,
-[«Paquetes propios»](#paquetes-propios)).
+Hace falta **[Node](https://nodejs.org/) 24.12 o posterior** (el
+repositorio lo declara en `engines`) y, para los jueces que abren la
+página, **Chrome** instalado. Si no está en su ruta de siempre, se le da
+con la variable `CHROME`.
 
-Medido el 06/10/2026 en Chrome sobre el build (`astro preview`), petición por
-petición. La columna «con gzip» es cada fichero comprimido con el gzip de
-Node a su nivel por defecto; lo que comprima el servidor de verdad se verá
-en el despliegue (punto 11). Las fuentes ya van comprimidas.
+```bash
+git clone https://github.com/ablanquez/radiografia.git
+cd radiografia
+npm ci          # en la raíz: instala los dos workspaces, motor/ y web/
+cd web
+npm run dev     # http://localhost:4321/, y el catálogo en /reglas/
+```
 
-**El analizador, al cargar:** 15 peticiones.
+- `npm run build` y `npm run preview`, en `web/`: la versión construida.
+- `npm test`, en la raíz: los jueces del motor y los de la web.
+- `npm run tipos`, en la raíz: los tipos de los dos workspaces, con `tsc`.
 
-| fichero | bytes | con gzip |
-|---|---|---|
-| `index.html` (con la CSP y la hoja de impresión) | 6.573 | 2.423 |
-| el JS del analizador (motor, validador, cargador, resultado, papel y la función de precarga de Vite, con los avisos MIT de Ajv, de silabea y de Vite; minificado por Vite) | 159.670 | 36.973 |
-| las cadenas de la interfaz, que comparte con el catálogo (un JS aparte) | 10.531 | 4.314 |
-| el runtime de Rolldown, el empaquetador de Vite, con su aviso MIT (un JS aparte, que también pide el trozo de pdfmake) | 1.898 | 1.156 |
-| el CSS del analizador (con el del papel) | 20.843 | 4.331 |
-| el CSS común: tokens, fuentes, cabecera, pie y familias | 13.174 | 2.986 |
-| Literata 400 (woff2) | 43.696 | — |
-| Literata 400 itálica (woff2) | 44.212 | — |
-| Atkinson Hyperlegible Next, de 400 a 700 (woff2) | 25.920 | — |
-| `paquetes/radiografia.json` (con su calibración, los nombres y las frases en claro de las reglas) | 347.340 | 76.863 |
-| `paquetes/espanol-correcto.json` | 21.618 | 6.049 |
-| el icono de la cabecera, los dos del navegador y el manifiesto | 3.637 | 3.127 |
-| **en total** | **699.112** | **252.050** |
+La telemetría de Astro, el `--force` después de tocar el motor y la prueba
+a mano desde PowerShell están en
+[`docs/ARRANQUE-LOCAL.md`](docs/ARRANQUE-LOCAL.md).
 
-**Después, solo si hace falta:**
+### Lo que vigila la suite
 
-| cuándo | fichero | bytes | con gzip |
+En la raíz, `npm test` corre **1.217 tests**: 909 del motor y 308 de la web
+(contados el 06/10/2026). Los que piden la web publicada, los de producción
+y el de las URL de este README, se omiten con su aviso si no se les da su
+dirección (`URL_PRODUCCION`).
+
+**En el motor:**
+
+- el esquema y el validador, con un paquete roto a propósito por cada
+  error que tiene que saber nombrar;
+- el texto: párrafos, frases y palabras, con sus posiciones sobre el
+  original, también cuando llega cortado a mano;
+- los tres detectores, la puntuación, la escala y el umbral de longitud;
+- las métricas del detector estadístico;
+- los dos paquetes: cada ejemplo positivo dispara su regla y ningún
+  negativo; ninguna regla va sin fuente, y ningún peso pasa del que permite
+  su nivel de evidencia;
+- las herramientas de calibración y de validación;
+- el NOTICES, al día con las dependencias.
+
+**En la web:**
+
+- el build, y que cada aviso de licencia viaja dentro del JS;
+- la red: ni una petición fuera del propio sitio, y la CSP en cada página;
+- el analizador en Chrome: el resultado, el lenguaje de calle, las
+  familias, la tarjeta y la hoja del móvil;
+- el catálogo y sus fichas;
+- el cargador de paquetes propios;
+- el informe: el PDF que se descarga y el papel;
+- el diseño: la fidelidad al modelo (±1 px), los tokens, las fuentes y los
+  iconos;
+- la accesibilidad: el contraste y el daltonismo, los 320 px, el tamaño de
+  lo que se pulsa, el orden del foco y el árbol de accesibilidad;
+- los textos de la propia web, pasados por los dos paquetes;
+- la publicación y, con `URL_PRODUCCION`, la web publicada vista desde
+  fuera;
+- y este README: sus secciones, sus enlaces y sus cifras.
+
+### Publicarlo
+
+`npm run publicar`, en la raíz y con `main` empujado, prueba el commit en
+un clon aparte, construye dos veces y deja lista la rama `publicacion`, con
+`web/dist/` y su `.htaccess`. El push lo da Antonio, y el panel de
+Hostinger despliega esa rama. Cómo se hace, en
+[`docs/DESPLIEGUE.md`](docs/DESPLIEGUE.md#despliegue). Lo medido en
+producción, en el
+[censo, § 15](docs/CENSO-PRE-DESPLIEGUE.md#15--la-publicación-112-06102026-la-variante-elegida).
+
+---
+
+## Cómo escribir un paquete propio
+
+Un paquete es un JSON con una cabecera y una lista de reglas. Se escribe
+contra el esquema, en JSON Schema 2020-12:
+[`motor/esquema/paquete.schema.json`](motor/esquema/paquete.schema.json) y
+[`motor/esquema/regla.schema.json`](motor/esquema/regla.schema.json). Con
+la línea `"$schema"`, VS Code avisa de los errores mientras escribes.
+
+- **La cabecera** lleva `nombre`, `version`, `idioma`, `descripcion`,
+  `autor`, `licencia` y `familias`, cada una con su `id`, su `nombre` y si
+  es `informativa`.
+- **Cada regla** lleva `id`, `familia`, `detector` (`patrón`,
+  `estructural` o `estadístico`) con sus `parametros`, `peso`, `severidad`
+  (`baja`, `media` o `alta`), `informativa`, `explicacion`, `sugerencia`,
+  `excepciones`, `fuente`, `origenLista`, `nivelEvidencia` y `ejemplos`,
+  positivos y negativos. Son opcionales `nombre` y `enClaro`, que la web
+  enseña si están, y `generos`, que limita la regla a unos géneros.
+- **Los `parametros` dependen del detector**: las formas o la expresión
+  regular en el de patrón, la posición en el estructural, y la métrica y
+  el percentil en el estadístico. El esquema los fija uno a uno.
+- **Los ejemplos documentan la regla.** En los paquetes incluidos, un juez
+  comprueba que cada positivo la dispara y cada negativo no. En el de
+  abajo, también.
+
+Uno mínimo, que entra en la web y cuyos ejemplos hacen lo que dicen (lo
+comprueba el juez del README):
+
+```json
+{
+  "$schema": "https://raw.githubusercontent.com/ablanquez/radiografia/main/motor/esquema/paquete.schema.json",
+  "cabecera": {
+    "nombre": "Mi guía de estilo",
+    "version": "0.1.0",
+    "idioma": "es",
+    "descripcion": "Una regla de ejemplo: «a nivel de» donde no hay niveles.",
+    "autor": "Tu nombre",
+    "licencia": "CC-BY-4.0",
+    "familias": [{ "id": "estilo", "nombre": "Estilo", "informativa": false }]
+  },
+  "reglas": [
+    {
+      "id": "a-nivel-de",
+      "nombre": "A nivel de",
+      "enClaro": "«A nivel de» donde no hay niveles, como en «a nivel de empresa».",
+      "familia": "estilo",
+      "detector": "patrón",
+      "parametros": {
+        "regex": "(?<!\\p{L})a nivel de(?!\\p{L})",
+        "flags": "iu",
+        "ambito": "frase",
+        "normalizar": { "minusculas": true, "tildes": false }
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "El Diccionario panhispánico de dudas dice que la lengua cuidada rechaza «a nivel de» cuando no indica altura ni categoría.",
+      "sugerencia": "Di «en», «en el ámbito de» o «con respecto a»: «a nivel de empresa» suele ser «en la empresa».",
+      "excepciones": ["Donde «nivel» es altura o categoría, como en «relaciones a nivel de embajada», el DPD lo admite. La regla dispara igual."],
+      "fuente": [{ "titulo": "RAE y ASALE, Diccionario panhispánico de dudas, «nivel»", "url": "https://www.rae.es/dpd/nivel" }],
+      "origenLista": null,
+      "nivelEvidencia": "norma",
+      "ejemplos": {
+        "positivos": ["Lo hablaremos a nivel de empresa."],
+        "negativos": ["Lo hablaremos en la empresa."]
+      }
+    }
+  ]
+}
+```
+
+Hay uno más largo, con tres reglas, en
+[`web/public/ejemplos/paquete-prueba.json`](web/public/ejemplos/paquete-prueba.json),
+y su gemelo con un error a propósito,
+[`paquete-prueba-invalido.json`](web/public/ejemplos/paquete-prueba-invalido.json).
+
+**Cómo se carga.** En el analizador, en «Paquetes», el botón «Cargar un
+paquete propio (JSON)». El fichero se lee en el navegador y no sale de él.
+Tampoco se guarda: al recargar la página, desaparece. Se combina con los
+incluidos, y cada señal dice de qué paquete viene.
+
+**Si no entra**, la página dice por qué. Comprueba en este orden, y la
+primera comprobación que falla corta:
+
+1. que no pase de 2 MB;
+2. que sea JSON; si no lo es, copia lo que dice el navegador;
+3. que cumpla el esquema y lo que el esquema no ve (ids repetidos,
+   familias sin declarar, expresiones regulares que no compilan). Cada
+   error sale con su regla y su campo:
+   `regla "prueba-a-nivel-de" (reglas[0]) · campo "peso": tiene que ser número`;
+4. que no se llame como otro paquete, incluido o propio.
+
+Para ver una regla entera, con su forma de buscar dicha en palabras, el
+[catálogo](https://radiografia.antonioblanquez.es/reglas/).
+
+---
+
+## Reglas y evidencia
+
+**De dónde salen.** Cada familia tiene su investigación en
+[`docs/investigacion/`](docs/investigacion/), hecha con fuentes leídas
+antes de escribir su primera regla. Cada ficha cita sus fuentes y dice de
+dónde sale su lista (`origenLista`): «inventario propio», cuando lo es.
+
+**Cada regla lleva su nivel de evidencia**, y en RadiografIA ese nivel
+pone un tope a su peso:
+
+| Nivel | Qué quiere decir | Peso | Reglas |
 |---|---|---|---|
-| al pulsar «Texto humano» | `ejemplos/antonio.txt` | 1.777 | — |
-| al pulsar «Texto de IA» | `ejemplos/ia.txt` | 1.957 | — |
-| al pintar un resultado | Literata 600, la negrita del papel (woff2) | 46.424 | — |
-| al pulsar «Descargar informe» | el trozo de JS de pdfmake, con la definición del informe | 1.093.403 | 362.615 |
-| al pulsar «Descargar informe» | las cinco caras del PDF (WOFF): Literata 400, 400 itálica y 600, y Atkinson 400 y 700 | 162.720 | — |
-
-Los dos paquetes de prueba, `ejemplos/paquete-prueba.json` (6.900 bytes) y
-`ejemplos/paquete-prueba-invalido.json` (6.904), se publican para
-descargarlos y copiarlos, pero la página no los pide.
-
-Los paquetes van aparte del JS, y no dentro, para que el JS se quede en unos
-160 KB y los JSON se puedan guardar en caché por separado. Metidos en el
-build, el JS habría pasado de 400 KB (medido el 03/10/2026).
-
-**El catálogo, la página de créditos y la que no existe** no piden los
-paquetes ni el motor: son HTML hecho en build. Piden el CSS común, las tres
-fuentes y los iconos, como el analizador (el índice, además, las cadenas:
-las fichas, los créditos y la que no existe no llevan JS), y lo suyo:
-
-| fichero | bytes | con gzip |
-|---|---|---|
-| `reglas/index.html`, el índice | 74.773 | 15.803 |
-| el CSS del catálogo, de las fichas, de los créditos y de la que no existe | 9.047 | 1.763 |
-| el JS del buscador y los filtros | 3.652 | 1.568 |
-| **en total, el índice** (12 peticiones) | **228.642** | **143.389** |
-| cada ficha, `reglas/<id>/index.html` (sin JS) | de 6.379 a 18.346 | |
-| **en total, una ficha** (10 peticiones; la de «Conector repetido») | **149.068** | **125.153** |
-| las 50 fichas juntas | 480.270 | |
-| `creditos/index.html`, la página de créditos (sin JS) | 15.084 | 3.764 |
-| **en total, la página de créditos** (10 peticiones) | **154.770** | **125.468** |
-| `404.html`, la página que no existe (sin JS) | 1.938 | 1.020 |
-| **en total, la que no existe** (10 peticiones, en `/no-existe/`) | **141.624** | **122.724** |
-
-`dist/` entero: 54 páginas HTML (el analizador, el índice, 50 fichas, los
-créditos y la que no existe), 87 ficheros y 2.626.823 bytes. Casi la mitad (1.256.123) es el trozo de pdfmake
-y las fuentes del PDF, que solo se piden al descargar. Cada página lleva la
-CSP.
-
-## Despliegue
-
-La web se publica en **radiografia.antonioblanquez.es**, en el hosting
-compartido de Hostinger, que sirve con LiteSpeed. Lo decidió Antonio el
-06/10/2026 con la documentación del panel delante (encargo 11.2). El panel
-despliega una rama de GitHub en el directorio del subdominio y no ejecuta
-ningún build: según [su documentación](https://docs.hostinger.com/websites/git),
-«Does **not** run a build step — the files committed to the repo are the files
-served».
-
-### Cómo se publica
-
-En la raíz del repositorio, con el árbol limpio y `main` empujado:
-
-```bash
-npm run publicar
-```
-
-[`web/scripts/publicar.ts`](web/scripts/publicar.ts) hace, por orden:
-
-1. **Comprueba el punto de partida:** el árbol limpio, la rama `main`, y
-   `main` igual a `origin/main` después de traerlo. Así, el commit que se
-   publica existe en GitHub.
-2. **Prueba ese commit en un clon temporal**, fuera del repositorio:
-   `npm ci`, los tipos, los jueces del motor y los de la web, con Chrome.
-   No toca el árbol de trabajo.
-3. **Construye dos veces**, cada una desde un `dist/` vacío, y compara las
-   dos fichero a fichero: tienen que salir iguales.
-4. **Escribe el `.htaccess`** en `dist/` desde
-   [`web/publicacion/.htaccess.plantilla`](web/publicacion/.htaccess.plantilla),
-   con la CSP del `<meta>` de las páginas. Para si:
-   - las páginas no llevan todas la misma CSP;
-   - algún fichero no cae en un grupo de caché, o cae en dos;
-   - un JS o un CSS no lleva la huella de su contenido en el nombre.
-5. **Pone en la rama `publicacion`** el contenido exacto de `dist/`, en un
-   git worktree aparte, y lo comprueba byte a byte
-   ([`web/publicacion/publicacion.ts`](web/publicacion/publicacion.ts)).
-6. **Imprime lo que va a subir:** cada fichero con sus bytes y su sha256,
-   por grupo de caché, con sus cabeceras, y la orden para empujar,
-   `git push origin publicacion`. El push lo da Antonio.
-
-Si algo falla, para, dice dónde y deja el clon temporal para mirarlo. Tarda
-lo que la suite y dos builds. El juez del script
-([`web/jueces/publicacion.spec.ts`](web/jueces/publicacion.spec.ts)) lo
-prueba con un `dist/` de prueba y un repositorio temporal: la rama lleva
-esos ficheros y ninguno más, y el `.htaccess`, la CSP del `<meta>`.
-
-### Qué rama ve Hostinger
-
-La rama `publicacion`. Es huérfana: no comparte historia con `main`. En su
-raíz lleva el contenido de `web/dist/` y el `.htaccess`, y nada más. Cada
-publicación es un commit encima del anterior, con el hash de `main` del que
-sale y la fecha.
-
-Los ficheros van byte a byte como salen del build, también los finales de
-línea: el script le da a git `core.autocrlf=false`, porque con el `true` de
-esta máquina git cambiaría los de un fichero de texto que llegara en CRLF.
-Ya no llega ninguno. [`.gitattributes`](.gitattributes) fija `eol=lf` a todo
-lo de texto que se publica, y desde el 11.2 también a los dos paquetes y a
-las licencias de las fuentes, que el checkout de Windows dejaba en CRLF. Así,
-`dist/` sale con los mismos bytes en cualquier máquina. Lo vigila el juez 8
-de [`web/jueces/publicacion.spec.ts`](web/jueces/publicacion.spec.ts).
-
-### El `.htaccess`
-
-| ficheros | Cache-Control |
-|---|---|
-| el JS y el CSS, en `_astro/`, con la huella de su contenido en el nombre | `public, max-age=31536000, immutable` |
-| las fuentes: woff2 de la web y woff del PDF, sin huella en el nombre | `public, max-age=604800` (una semana) |
-| el HTML, los paquetes y los ejemplos (JSON y txt), el manifiesto, los iconos, el favicon y las licencias de las fuentes | `no-cache`: se guardan, pero se revalidan cada vez |
-
-En todas las respuestas, también en la de la página que no existe:
-
-- `Content-Security-Policy`, la misma del `<meta>` de cada página. El
-  `<meta>` se queda. Con las dos políticas, el navegador aplica las dos, y
-  por eso tienen que ser idénticas: salen de la misma fuente.
-- `X-Content-Type-Options: nosniff`.
-- `Referrer-Policy: strict-origin-when-cross-origin`.
-- Por https, `Strict-Transport-Security: max-age=31536000` (un año, sin
-  `includeSubDomains` ni `preload`).
-
-Además:
-
-- `ErrorDocument 404 /404.html`: la página que no existe, con el código 404.
-- Todo lo que empieza por `/.git` da 404.
-- Los tipos de `.woff2`, `.woff`, `.webmanifest` y `.svg`, y el del JS:
-  `text/javascript`, el que pide la
-  [RFC 9239](https://www.rfc-editor.org/rfc/rfc9239). El servidor lo daba
-  como `application/x-javascript`, que la RFC da por obsoleto.
-- Ninguna regla de reescritura: cada ruta es una carpeta con su
-  `index.html`. La redirección de http a https la hace el panel, con
-  «Forzar HTTPS».
-
-El porqué de cada línea, con su cita (LiteSpeed, Apache, MDN, Hostinger),
-está en la plantilla.
-
-### Cómo se verifica desde fuera
-
-Después de publicar, en `web/`, con el mismo commit de `main`:
-
-```bash
-URL_PRODUCCION=https://radiografia.antonioblanquez.es npm test
-```
-
-(En PowerShell: `$env:URL_PRODUCCION = 'https://radiografia.antonioblanquez.es'; npm test`.)
-
-Con la variable, los jueces de producción
-([`web/jueces/produccion.spec.ts`](web/jueces/produccion.spec.ts))
-comprueban:
-
-- que cada fichero de `dist/` responde 200, con su contenido, las
-  cabeceras de su grupo y su tipo (el del JS, `text/javascript`);
-- que cada página lleva la CSP por cabecera igual a su `<meta>`;
-- que `/no-existe/` da 404 con la página que no existe;
-- que `/.git` y `/.htaccess` no se sirven;
-- que http redirige a https;
-- y, en Chrome, el recorrido entero (analizar, descargar el PDF, el catálogo,
-  una ficha, los créditos y la que no existe): nada fuera del origen, ni una
-  violación de la CSP, ni un error en la consola.
-
-Además, los demás jueces de Chrome piden las páginas al sitio publicado en
-vez de a `astro preview`: la red, la CSP, los 320 px, el tamaño de lo que
-se pulsa y la fidelidad al modelo. Sin la variable, los de producción se
-omiten con un aviso.
-
-Y, a ojo, Antonio en el PC, el iPhone y el iPad, con datos móviles.
-
-Lo que la documentación oficial de LiteSpeed no dice directiva a directiva
-(que rellene `env=HTTPS`, `RedirectMatch`, `AddType`) no consta: lo
-deciden esos jueces. Si una directiva no la entiende, no da error; no hace
-nada.
-
-### Qué no se sube
-
-Solo `dist/` y el `.htaccess`. No se suben:
-
-- `docs/`, `data/` ni `motor/`;
-- `paquetes/`, que va copiado en `dist/paquetes/`;
-- `web/src`, `web/jueces`, `web/scripts` ni `web/terceros`;
-- `node_modules/`, la historia de `main` ni los `package*.json`;
-- `CLAUDE.md`, el PLAN, el ESTADO, el DISEÑO ni este README;
-- ni mapas de fuente: el script para si `dist/` los lleva.
-
-El inventario y por qué, en el
-[censo pre-despliegue](docs/CENSO-PRE-DESPLIEGUE.md) (§ 9.5 y § 15).
-
-## Ejemplos
-
-Dos botones junto al cuadro de texto cargan dos textos sobre el mismo tema,
-por qué gustan los cómics, y seleccionan el género «Opinión (críticas de
-cine)». El análisis empieza al pulsar «Pon tu texto a contraluz».
-
-- **El texto humano**
-  ([`web/public/ejemplos/antonio.txt`](web/public/ejemplos/antonio.txt)) lo
-  escribió Antonio, el autor del proyecto, y lo entregó el 02/10/2026. **No se
-  retoca, diga lo que diga el motor**: lo que sale se documenta.
-- **El texto de IA** ([`web/public/ejemplos/ia.txt`](web/public/ejemplos/ia.txt))
-  lo generó Claude Opus 5.5 (`claude-opus-5-5`) el 02/10/2026.
-  - Recibió una sola instrucción y nada más: «Escribe un texto de unas 330
-    palabras, en español, sobre por qué te gustan los cómics, mencionando
-    Spiderman, Flash, Green Lantern y Daredevil.»
-  - Sin instrucciones de estilo, por la CLI de Claude Code, sin herramientas y
-    con el prompt de sistema vacío.
-  - Se guardó tal cual, con su título en negrita de Markdown, y no se
-    regenera.
-
-Lo que el motor dice de cada uno, regla a regla, está en
-[`docs/ejemplos.md`](docs/ejemplos.md), con la procedencia completa y una
-primera generación que se descartó. Un juez comprueba que sus cifras siguen
-siendo las que da el motor. Su apartado «Historia» cuenta por qué cambiaron
-con la ampliación 6.4: antes, el de Antonio sumaba 5 y el de IA 2.
-
-## Cómo leer el resultado
-
-El resultado se lee de arriba abajo: una etiqueta y una frase, dos líneas
-y, si quieres, las cifras. La forma la da la barra lateral de
-[Hemingway](https://hemingwayapp.com/help/docs/highlighted-issues), una frase
-por subrayado («These are words like 'maybe' or 'I think' that make your
-writing sound less confident»), pero sin afirmar nunca quién escribió el
-texto.
-
-**La etiqueta y la frase** dicen cómo suena tu texto al lado de textos
-escritos por personas del mismo tipo (el género que eliges) y de su misma
-longitud. Son la banda de la [«Escala»](#escala) traducida, no una
-probabilidad, y nunca afirman autoría: el verbo es «suena a». Las escribió
-Antonio el 03/10/2026, al ver la pantalla. La etiqueta es el título del
-bloque de resultado y la frase va debajo, con el género en singular y su
-concordancia («una crítica de cine… escrita», «un texto… escrito»). Los ocho
-casos, con «Opinión (críticas de cine)»:
-
-1. Ninguna regla suma: «Texto sin indicios de Asistente IA» y «Aquí no hay
-   nada que suene a asistente (IA).» Si unas suman y otras restan hasta
-   cero, va la de la banda.
-2. Por debajo de la mediana: «Texto con muy pocos rasgos que indiquen que
-   tiene Asistente IA» y «Tu texto suena menos a asistente (IA) que una
-   crítica de cine normal escrita por una persona.»
-3. Entre la mediana y el p95: «Dentro de lo normal» y «Suena como cualquier
-   crítica de cine escrita por una persona. Nada raro.»
-4. Por encima del p95: «Texto con bastantes rasgos de Asistente IA» y «Tu
-   texto suena bastante a asistente (IA): de cada 100 críticas de cine
-   escritas por personas, solo 5 suenan tanto.»
-5. Por encima del p99: «Texto con muchos rasgos de Asistente IA» y «Tu
-   texto suena mucho a asistente (IA): de cada 100 críticas de cine
-   escritas por personas, solo 1 suena tanto.»
-6. Sin textos de personas de ese género y longitud con los que comparar:
-   «No podemos comparar» y «No tenemos críticas de cine de este tamaño
-   escritas por personas con las que comparar. Mira el detalle.»
-7. Con 100 a 299 palabras de prosa, la etiqueta y la frase de su banda y,
-   debajo, «Ojo: tu texto es corto (menos de 300 palabras). Tómate el
-   resultado como orientativo.»
-8. Un paquete propio con escala: «Texto con pocas señales del paquete “X”»
-   y «Tu texto tiene menos señales de “X” que un texto de referencia
-   normal.» (por debajo de la mediana o dentro de lo normal); «…bastantes…»
-   (por encima del p95) o «…muchas…» (por encima del p99), y «De cada 100
-   textos de referencia de “X”, solo 5 tienen tantas señales como el tuyo.»
-   (o «solo 1 tiene»); sin calibración, la 6 con «textos de referencia de
-   “X”».
-
-«De esta longitud» no va en la frase: se queda en «Ver el detalle». En un
-paquete con escala, la etiqueta ocupa el sitio del nombre del paquete como
-título del bloque; Español correcto, sin escala, sigue con su nombre.
-
-Con los ejemplos y «Opinión (críticas de cine)», el texto de IA queda en
-«Texto con muy pocos rasgos que indiquen que tiene Asistente IA»; el de
-Antonio, en «Dentro de lo normal».
-
-**Los «rasgos de Asistente IA»** de la etiqueta son lo que miden las reglas
-de RadiografIA: fórmulas, formato pegado, puntuación, vocabulario y ritmo
-que, según sus fuentes, los asistentes de chat dejan más que las personas.
-Una persona puede tenerlos, y un texto de asistente puede no tenerlos. Por
-eso la frase dice a qué suena tu texto, y nunca quién lo escribió ni que
-sea «generado».
-
-**El resumen**, debajo:
-- «Lo que más pesa:», con las tres reglas que más suman y, entre paréntesis,
-  cuántas veces aparecen o, en las que se comparan con textos de personas
-  (las estadísticas), su valor y lo normal: «Pocas comas (0,38 comas por
-  punto; lo normal en las críticas de cine es más de 0,49)». **La meta solo
-  existe donde hay textos de personas medidos**: el resto de las reglas dice
-  cuántas veces, sin meta.
-- «Empieza por:», con la sugerencia de la primera.
-- Español correcto, en una línea: «9 avisos de norma: …».
-
-**«Ver el detalle»**, plegado, guarda las cifras: tu total en puntos por
-cada 1.000 palabras, la mediana, el p95 y el p99 de los textos de personas
-con los que se compara, y cuántos son.
-
-**Al tocar un subrayado**, cada regla dice su nombre, su frase en claro, qué
-hacer y, plegado, «¿Por qué lo miramos?»: la explicación con sus fuentes,
-el nivel de evidencia, el origen de la lista y el enlace a su ficha.
-
-**El desglose** cuenta por paquete y familia las veces y los puntos de cada
-regla. Las que restan dicen «rasgo humano: resta»; las de solo aviso, que no
-suman; «Lo que se nota en el conjunto» son las que miran el texto entero, y
-«No miradas en este texto», las que no tocaban, con su porqué («solo se
-miran en las críticas de cine y los textos académicos»).
-
-**«Opinión (críticas de cine)».** Lo que hay calibrado en ese género son
-críticas de cine de MuchoCine (abajo, [«Los seis géneros»](#los-seis-géneros)),
-y el selector lo dice para no prometer otra cosa.
-
-**Los jueces**
-([`web/jueces/lectura.spec.ts`](web/jueces/lectura.spec.ts) y, en Chrome,
-[`pantalla.spec.ts`](web/jueces/pantalla.spec.ts)) comprueban:
-- la etiqueta de cada banda y la frase de cada banda y género, con su
-  concordancia, y los casos sin indicios, sin calibración, de texto corto y
-  de paquete propio;
-- en Chrome, que la etiqueta es lo primero del bloque de resultado y que el
-  aviso de texto corto sale con 150 palabras;
-- el resumen: sus tres reglas, sus empates y sus metas, con el borde que usa
-  cada regla en la celda de su género y longitud;
-- que «Ver el detalle» y «¿Por qué lo miramos?» salen plegados;
-- que en la pantalla no se ven las palabras del motor: ni «informativa», ni
-  «atenuante», ni «tramo», ni los percentiles fuera del detalle.
-
-## Catálogo
-
-En `/reglas/` están todas las reglas de los dos paquetes incluidos, y cada
-una tiene su página, `/reglas/<id>/`. Las de un paquete propio no: su ficha
-se ve entera en el analizador (abajo, [«Paquetes
-propios»](#paquetes-propios)). En local, con `npm run dev`, el índice está en
-http://localhost:4321/reglas/. Desde el analizador se llega por el enlace de
-la cabecera y por el nombre de cada regla, en el panel de un subrayado y en
-el desglose.
-
-- **El índice** lista las 50 reglas: nombre y, debajo, su frase en claro;
-  id, paquete, familia, detector, severidad, nivel de evidencia, peso y la
-  primera frase de la explicación.
-  - El buscador mira el nombre, el id y la explicación entera, sin
-    distinguir mayúsculas ni tildes.
-  - Los filtros son tres: familia, severidad y detector. Dentro de un
-    filtro vale cualquiera de las casillas marcadas; entre filtros, todos a
-    la vez.
-  - El recuento de reglas se anuncia a los lectores de pantalla.
-  - Hoy las 50 reglas tienen severidad «baja», así que el filtro de
-    severidad todavía no separa nada.
-- **La ficha** enseña la regla entera y literal:
-  - bajo el nombre, su frase en claro;
-  - paquete, familia y detector, y cómo busca, dicho en palabras;
-  - peso, severidad y nivel de evidencia;
-  - explicación, sugerencia, excepciones y origen de la lista;
-  - las fuentes, enlazadas, y los ejemplos tal cual.
-- **El nombre** de cada regla es un campo de la ficha desde el 02/10/2026
-  (`nombre`, de 3 a 80 caracteres), y los 50 nombres los firmó Antonio.
-  - En el esquema es opcional, porque un paquete de terceros puede no
-    traerlo. Entonces la web enseña el id sin su prefijo.
-  - En RadiografIA y Español correcto lo exige un juez.
-- **La frase en claro** de cada regla es un campo de la ficha desde el
-  03/10/2026 (`enClaro`, de 3 a 140 caracteres): una frase llana, con un
-  ejemplo cuando ayuda. Las 50 las firmó Antonio.
-  - En el esquema es opcional; donde falta, no se enseña.
-  - En RadiografIA y Español correcto la exige un juez: que empiece por
-    mayúscula, que acabe en punto y que no diga percentil, densidad, regex,
-    lema, n-grama, «IA», «generado» ni «detectado».
-
-**Cómo se genera.** Al construir, Astro lee los dos JSON de `paquetes/` y
-escribe una página por regla con `getStaticPaths`
-([`web/src/pages/reglas/`](web/src/pages/reglas/)).
-- Antes de escribirlas, valida los paquetes con el mismo validador que usa
-  el analizador.
-- El build para si un paquete no valida, o si un id está en los dos: las dos
-  fichas tendrían la misma URL.
-- El catálogo es HTML, sin `fetch`. Su único JS es el del buscador, que
-  oculta y enseña filas.
-
-**Las fichas no pasan por el juez de textos de la web.** Mencionan las
-formas que las reglas buscan («Espero que esto te ayude», «En
-conclusión»…). Analizarlas sería medir los ejemplos de las reglas, no los
-textos de la web: es mención, no uso, como en este README. Sí pasan por el
-juez todas las cadenas de la interfaz del catálogo (títulos, etiquetas,
-botones), que están en [`web/src/textos.ts`](web/src/textos.ts).
-
-**Los jueces del catálogo**, en
-[`web/jueces/catalogo.spec.ts`](web/jueces/catalogo.spec.ts), comprueban:
-- que hay una página por regla y que el índice las enlaza todas;
-- que cada ficha lleva su id, su nombre, una fuente enlazada y sus ejemplos
-  tal cual;
-- que todo enlace interno de `dist/` llega a una página;
-- que el índice lleva sus controles con sus etiquetas y la región que
-  anuncia el recuento;
-- con `astro preview`, que el índice y una ficha dan 200 y
-  `/reglas/no-existe/`, 404;
-- y, con `astro dev`
-  ([`web/jueces/desarrollo.spec.ts`](web/jueces/desarrollo.spec.ts)), que el
-  índice y una ficha también se sirven, sin errores.
-
-## Informe
-
-Tras analizar, el botón **«Descargar informe»** genera el informe en PDF en
-el navegador y lo descarga como «RadiografIA.pdf», sin pasar por el diálogo
-de imprimir (decisión del 05/10/2026: ese diálogo no sirve en el iPhone ni en
-el iPad). Funciona igual en el ordenador, la tableta y el móvil, y nada sale
-del navegador: el PDF lo hace [pdfmake](https://pdfmake.github.io/) en la
-propia página, con el último análisis pintado, y se descarga desde la
-memoria del navegador.
-
-**En el iPhone y en el iPad** el PDF se abre en el visor del sistema, y desde
-ahí se guarda o se comparte (con el botón de compartir, por ejemplo «Guardar
-en Archivos»). Es lo esperado: lo vio Antonio así en los dos el 05/10.
-
-**Qué incluye**, en A4 con márgenes de 20 mm arriba y abajo y 18 a los lados,
-calcado al marco «Informe · A4» del modelo:
-1. la cabecera: la fecha y la hora del análisis, las palabras de prosa, el
-   tramo y el género, los paquetes con su versión (los propios, marcados
-   «(propio)») y, de cada paquete con escala, su total y con qué textos de
-   personas se compara;
-2. el resultado: la etiqueta y la frase, lo que más pesa, por dónde empezar
-   y una línea de cada uno de los otros paquetes;
-3. la clave de las familias: la muestra de la línea de cada una, en tinta, y
-   «[sigla] familia (paquete)»;
-4. el texto, con sus subrayados y, detrás de cada uno, entre corchetes, la
-   sigla de su familia;
-5. el desglose de cada paquete;
-6. las señales, regla a regla: su frase en claro, hasta cinco fragmentos,
-   «Qué hacer» y la dirección de su ficha del catálogo (las de un paquete
-   propio no tienen ficha, y lo dice); al final, en letra más pequeña, por qué
-   se mira cada una y las reglas de contexto;
-7. la nota: RadiografIA analiza estilo; no demuestra autoría.
-
-La 4, la 5 y la 6 empiezan página. Una señal no se parte entre dos páginas
-y la nota no queda sola. Cada página lleva su número, «n / N», abajo a la
-derecha. Las fuentes son las de la web, Literata y Atkinson Hyperlegible
-Next, incrustadas.
-
-**Lo que se carga al pulsar**, la primera vez en cada visita, del mismo
-sitio: el trozo de JS de pdfmake (unos 1,09 MB; unos 363 KB comprimido con
-gzip, medido el 06/10/2026) y las cinco caras del PDF (162.720 bytes, en WOFF). La página no
-engorda por ello: sin pulsar, no se pide. Con el texto de prueba de la
-combinación de los dos paquetes salen 11 páginas y unos 165 KB, del clic a
-la descarga en algo más de un segundo la primera vez y en algo menos las
-siguientes; depende del ordenador (en el de desarrollo, en Chrome headless, el
-05/10/2026: de 1,26 a 1,39 s la primera vez y de 0,82 a 1,06 s las siguientes,
-en tres tandas de tres). Mientras se prepara, el botón dice «Preparando el
-informe…».
-
-**Cuando no hay PDF.** Con menos de 100 palabras no hay informe que
-descargar, y el botón lo dice debajo. Si algo falla al prepararlo (por
-ejemplo, no llega una fuente), lo dice también, con el motivo.
-
-**En qué se distingue del papel.** pdfmake dibuja los subrayados a su
-manera: la línea discontinua y la punteada salen con el grosor de la familia
-(se le pide el doble, porque recorta la mitad) y los puntos, como rayitas;
-la doble discontinua de Ortotipografía, que pdfmake no tiene, va discontinua
-y fina, y la sigla [O] la distingue; el tinte de un tramo ocupa la altura de
-la línea; y un tramo con varias familias lleva la línea de la primera (las
-siglas dicen todas). Las letras de Literata son las de su tamaño óptico de
-12, el de por defecto (en papel, el navegador lo ajusta al cuerpo). El texto
-es el mismo que el del papel.
-
-**El papel.** Ctrl+P o el menú Imprimir del navegador sacan el mismo
-informe en papel, con la hoja de impresión de la página; no se bloquean. Sin
-análisis, sale una sola hoja con el icono, el nombre y el aviso de que no
-hay nada que imprimir.
-- **Márgenes: «Predeterminado».** En el diálogo de imprimir de Chrome, deja
-  «Márgenes» en «Predeterminado»: el informe trae los suyos y el número de
-  cada página. Con «Ninguno», Chrome quita los márgenes de la página y, con
-  ellos, el número, que va en el margen: la hoja pone entonces los márgenes
-  por dentro, pero el número no sale (visto en Chrome 154 el 05/10).
-- **El color no hace falta para leerlo.** Cada subrayado lleva su sigla. No
-  hay que marcar «imprimir fondos»; se lee igual en una impresora en gris.
-- **Lo que no depende de la página.** El encabezado y el pie que añade el
-  navegador (la dirección, la fecha, el título) dependen de sus ajustes: en
-  Firefox, la casilla «Imprimir encabezados y pies de página». En Chrome no
-  salen: el informe ocupa los márgenes con su número (visto en Chrome 154).
-  En Safari no sale el número de página (no tiene cajas de margen).
-
-**Imprime o descarga el último análisis.** Si después cambias el texto o los
-paquetes, vuelve a pulsar «Pon tu texto a contraluz»; la cabecera dice de qué
-análisis es el informe.
-
-**Los jueces**, con Chrome:
-- [`web/jueces/informe-pdf.spec.ts`](web/jueces/informe-pdf.spec.ts), el
-  PDF que se descarga de verdad: A4, «n / N» en cada página, las siete
-  secciones en orden con los saltos del papel, ninguna señal partida (con el
-  texto de prueba y con los dos ejemplos), el mismo texto que el papel, el
-  calco al marco del modelo (±1 px), nuestras fuentes incrustadas y las
-  mismas caras que el papel, lo mismo que el papel con un paquete propio, el
-  aire de lo que el marco no mide (el final de la sección 6) como en el papel,
-  que con menos de 100 palabras no hay PDF, que Ctrl+P no se toca y que no se
-  pide nada fuera del propio sitio;
-- [`web/jueces/papel.spec.ts`](web/jueces/papel.spec.ts) e
-  [`impresion.spec.ts`](web/jueces/impresion.spec.ts), el papel: el calco al
-  marco, la hoja sin análisis, que cada regla de la hoja de impresión se
-  aplique de verdad (que ninguna quede pisada por otra), lo que sale y lo que
-  no, y que imprimir no pide nada a la red;
-- el juez 10 de [`construccion.spec.ts`](web/jueces/construccion.spec.ts),
-  que el trozo de pdfmake lleva dentro el aviso de licencia de cada pieza que
-  empaqueta (THIRD-PARTY-NOTICES § 1.8).
-
-## Diseño
-
-El aspecto de la web (punto 10 del plan) sale de cuatro sitios, por este
-orden de mando.
-
-1. **El DISEÑO**, [`DISEÑO-RADIOGRAFIA.md`](DISEÑO-RADIOGRAFIA.md). Manda.
-   Fija:
-   - la paleta de las familias, con sus estilos de línea y sus siglas;
-   - la tipografía;
-   - cómo es cada pantalla en el ordenador, la tableta y el móvil;
-   - el informe;
-   - las reglas de accesibilidad.
-
-   Cuando el modelo dice otra cosa, gana el DISEÑO.
-2. **El modelo.** Es un prototipo hecho en Figma Make a partir del DISEÑO.
-   Su material está en [`docs/figma/`](docs/figma/): las guías que leyó Make,
-   los prompts y su código, solo como referencia de lectura.
-   - **Cómo se calca.** El prototipo publicado se midió por CDP: fuente,
-     tamaño, interlineado, colores, bordes, rellenos y cajas de 169 piezas,
-     en sus tres tamaños y en el marco del informe A4. Las medidas están en
-     [`docs/figma/medidas-modelo.json`](docs/figma/medidas-modelo.json). La
-     web se escribió a mano sobre Astro, sin copiar el código de Make, y el
-     juez de fidelidad
-     ([`web/jueces/fidelidad.spec.ts`](web/jueces/fidelidad.spec.ts)) la
-     compara pieza a pieza: ±1 px en las longitudes; el color, la letra y el
-     texto, iguales.
-   - **Lo que no viene del modelo.** Algunas piezas salen del DISEÑO y no
-     del modelo: el icono de la cabecera, la separación de los párrafos, la
-     columna del resultado con scroll propio, el sitio del anillo de foco al
-     desplazar, la hoja de imprimir sin resultado y el salto antes del
-     desglose. En las medidas llevan su
-     apartado del DISEÑO y una nota que dice por qué.
-3. **Los tokens.** Están en
-   [`docs/figma/tokens.json`](docs/figma/tokens.json), en el formato del
-   Design Tokens Community Group (2025.10): colores, tipografías, tamaños,
-   espacios, radios, foco, medidas y el informe.
-   - **De dónde sale el CSS.** `web/src/estilos/tokens.css` se genera de ese
-     JSON antes de cada `npm run dev` y `npm run build` (con
-     [`web/scripts/tokens-a-css.ts`](web/scripts/tokens-a-css.ts)) y no se
-     versiona.
-   - **Ningún color suelto.** Un juez comprueba que en `web/src` no hay
-     ningún color fuera de los tokens
-     ([`web/jueces/tokens.spec.ts`](web/jueces/tokens.spec.ts)). El PDF lee
-     el mismo JSON.
-   - **El único cambio en los colores de las familias.** Puntuación y formato pasó de
-     #009E73 a #009988 el 05/10/2026, porque el simulador de daltonismo la
-     confundía con Ortotipografía (abajo, en el acta).
-4. **Las fuentes.** Literata es la del texto analizado y la lectura;
-   Atkinson Hyperlegible Next, la de la interfaz. Las dos son de licencia
-   OFL 1.1.
-   - **Dónde están.** Se sirven desde la propia web
-     ([`web/public/fuentes/`](web/public/fuentes/)), recortadas a los
-     caracteres que se usan y fijadas en los pesos que hacen falta.
-   - **Por qué desde la propia web.** Así nada sale del navegador: ni la
-     dirección de quien la visita va a los servidores de Google Fonts (el
-     LG München I lo condenó el 20/01/2022, 3 O 17493/20), ni la página
-     depende de otro sitio. Recortadas pesan menos.
-   - **Dónde está el detalle.** Origen, versiones, huellas y comandos, en
-     [`docs/figma/fuentes.md`](docs/figma/fuentes.md); la atribución, en
-     [`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md) § 2.4.
-
-Los iconos son los que eligió Antonio
-([`docs/figma/icono/`](docs/figma/icono/)): el de la pestaña del navegador y
-el de la cabecera.
-
-**La accesibilidad** está medida en el
-[acta de contraste y accesibilidad](docs/acta-contraste-y-accesibilidad.md).
-Recoge:
-
-- el contraste de cada par de colores y de todo el texto que se ve;
-- el daltonismo simulado;
-- los 320 px;
-- el tamaño de lo que se pulsa;
-- el árbol de accesibilidad;
-- lo que queda sin medir, como un lector de pantalla de verdad.
-
-## Paquetes
-
-En [`paquetes/`](paquetes/):
-
-- **RadiografIA 0.1.0** ([`radiografia.json`](paquetes/radiografia.json)):
-  trae las seis familias:
-  - **léxico**: once reglas. Las cuatro de más peso están medidas en
-    español (Juzek, 2026): los verbos de énfasis (destacar, subrayar…),
-    «importancia», «innovador» e «imborrable», «multidisciplinario» e
-    «impecable». Las demás son traslados del inglés o anécdotas, con menos
-    peso: fórmulas de chatbot, «Adicionalmente» al principio de la frase,
-    palabras traducidas de las más señaladas en inglés, verbos corporativos
-    o «no solo… sino»;
-  - **canal** (informativa: se señala y no suma): negrita y encabezados de
-    Markdown, viñetas con rótulo en negrita, separadores y tablas, el espacio
-    estrecho U+202F y los caracteres de ancho cero. Las de emojis y flechas
-    esperan fuente;
-  - **puntuación y formato**: la densidad de rayas y la raya con espacios;
-  - **discurso**: diez reglas. Dos son ausencias medidas en inglés, y solo
-    se juzgan en textos de opinión o académicos de 300 palabras o más:
-    ningún marcador de opinión («creo», «quizá») y ninguna mención de quien
-    escribe («yo», «mi», «nuestro»). Otras seis suman: el cierre de
-    plantilla («En conclusión» en el último párrafo), el mismo conector al
-    principio de tres frases o más, el encuadre numerado («En primer
-    lugar… Por último»), la importancia inflada («un papel crucial»), la
-    atribución sin nombre («los expertos coinciden») y la fórmula de «retos
-    y futuro». Y dos restan, porque son rasgos humanos: una referencia
-    concreta a otra parte del texto («véase la tabla 2») y una anécdota en
-    primera persona («recuerdo que», «mi abuela»);
-  - **sintaxis**: una regla, la coletilla de gerundio al final de la frase
-    («…, logrando un récord»), medida en inglés: los modelos la usan entre
-    dos y cinco veces más. Solo una, porque las demás candidatas de la
-    familia son métricas del texto entero, que van en estadística, o
-    necesitaban el etiquetado gramatical, que quedó fuera de la v1;
-  - **estadística**: trece reglas que miden el texto entero y lo comparan
-    con los textos humanos de su género y su longitud (abajo,
-    [«Estadística»](#estadística)). Siete suman: frases cortas, pocas comas,
-    poca puntuación y poca puntuación secundaria, medidas en español; ritmo
-    uniforme, nominalización y repetición de secuencias, medidas en inglés.
-    Seis son de contexto: cuatro de variedad léxica, la legibilidad y los
-    pronombres anafóricos.
-
-  Un juez comprueba que ninguna regla va sin fuente, que el peso, para sumar
-  o para restar, no pasa del que permite su nivel de evidencia, que un
-  atenuante solo resta 1 o 2, que la familia canal no suma, que cada regla
-  estadística usa una métrica del motor, dice en su ficha dónde corta y no
-  se limita a unos géneros, y que ninguna expresión regular usa `\b` ni
-  `\w`, que en JavaScript no reconocen las letras con tilde ni la eñe.
-- **Español correcto 0.1.0**
-  ([`espanol-correcto.json`](paquetes/espanol-correcto.json)): siete avisos
-  de norma de la RAE que suelen delatar un calco del inglés o una
-  traducción. **No mide estilo de IA**: cuenta avisos de norma por cada
-  1.000 palabras, y cada regla cita la sección de la *Ortografía* o de la
-  *Nueva gramática* que la respalda. Dos familias:
-  - **gramática**: la pasiva con «ser» y agente, donde el español prefiere
-    la activa o la pasiva con «se» («fue redactado por el comité»), y el
-    posesivo donde va el artículo («levantó su mano»);
-  - **ortotipografía**: el punto o la coma dentro de las comillas de cierre,
-    la mayúscula en cada palabra de un título, los meses y los días con
-    mayúscula, la coma para separar millares («1,500») y el símbolo de la
-    moneda delante de la cifra («$100»). El punto decimal no se avisa: la
-    *Ortografía* admite los dos separadores y recomienda el punto.
-
-  Un juez comprueba que son siete, todas de norma, con peso 1 y con su
-  sección de rae.es, y que ninguna es informativa.
-
-## Paquetes propios
-
-Un paquete propio es un JSON con la forma de los incluidos: una cabecera
-(nombre, versión, idioma, descripción, autor, licencia y familias) y una
-lista de reglas, cada una con su ficha. Se carga en el analizador y se
-combina con los incluidos.
-
-**Cómo se escribe.**
-- El esquema está en [`motor/esquema/`](motor/esquema/):
-  `paquete.schema.json` y `regla.schema.json`, en JSON Schema 2020-12. Con
-  la línea `"$schema"` que llevan los incluidos, VS Code avisa de los
-  errores mientras se escribe.
-- Las fichas del catálogo (`/reglas/<id>/`) sirven de modelo: cada una
-  enseña la regla entera y cómo busca, dicho en palabras.
-- Hay uno de ejemplo, corto:
-  [`web/public/ejemplos/paquete-prueba.json`](web/public/ejemplos/paquete-prueba.json).
-  Son tres reglas en la familia «Pruebas», una de patrón («a nivel de»), una
-  estructural (pregunta sin signo de apertura) y una informativa («okey» u
-  OK), con la norma del *Diccionario panhispánico de dudas*. No mide estilo
-  de IA: sirve para probar el cargador y para copiarlo. No trae
-  calibración.
-- Su gemelo,
-  [`paquete-prueba-invalido.json`](web/public/ejemplos/paquete-prueba-invalido.json),
-  es el mismo con un campo mal, el peso de la primera regla, para ver el
-  error. Ninguno de los dos se carga solo.
-
-**Cómo se carga.** En el analizador, en el bloque «Paquetes»:
-- «Cargar un paquete propio (JSON)» y eliges el fichero. Si entra, aparece en
-  la lista con su nombre, su versión y su número de reglas, y un botón
-  «Quitar».
-- Las casillas de RadiografIA y Español correcto ponen o quitan los
-  incluidos.
-- Al pulsar «Pon tu texto a contraluz» se analiza con los incluidos marcados
-  y después con los propios. Si cambias los paquetes con un resultado en
-  pantalla, la página te dice que vuelvas a analizar; si no queda ninguno
-  activo, que marques uno.
-
-**Qué se comprueba**, en este orden. La primera comprobación que falla
-corta, y el paquete no entra:
-1. Que no pase de 2 MB (2 × 1.024 × 1.024 bytes; RadiografIA, con su
-   calibración, ocupa 342 KB). Un fichero más grande no se llega a leer.
-2. Que sea JSON. Si no lo es, la página lo dice y, detrás, copia lo que dice
-   el navegador, en su idioma.
-3. Que cumpla el esquema y lo que el esquema no ve: ids repetidos, familias
-   sin declarar, expresiones regulares que no compilan… Es el mismo
-   validador de los incluidos, y la página enseña cada error con su regla y
-   su campo: `regla "prueba-a-nivel-de" (reglas[0]) · campo "peso": tiene
-   que ser número`.
-4. Que no se llame como otro paquete, incluido (marcado o no) o propio: las
-   señales de los dos no se distinguirían.
-
-**Cómo se ve.**
-- Cada señal dice de qué paquete viene: la leyenda nombra cada familia con
-  su paquete, cada paquete tiene su bloque en el desglose y el panel de un
-  subrayado dice el paquete de cada regla.
-- Las familias de un paquete propio se subrayan en gris (ink-2, con su
-  tinte al 14 %) y con trazo discontinuo, también sus reglas informativas
-  (DISEÑO §4; desde el 10.4, porque en el 8.1 las informativas iban
-  punteadas).
-- Las reglas de un paquete propio no tienen página en el catálogo. El panel
-  enseña su ficha completa, y en el desglose se despliega al pulsar su
-  línea.
-- El selector de género junta los géneros de la calibración de los paquetes
-  activos, con «General» siempre.
-- Un paquete sin escala (sin clave `_total-*` en su calibración) no tiene
-  banda; si ninguno de los activos la tiene, el medidor lo dice.
-
-**No sale del navegador**, y no es una promesa:
-- El fichero se lee en la página con `File.text()` y no se sube a ningún
-  sitio.
-- Un juez ([`web/jueces/navegador.spec.ts`](web/jueces/navegador.spec.ts))
-  abre la página en Chrome y espera a que cargue. Después carga los dos
-  paquetes de prueba desde el disco, analiza tres veces, abre paneles, marca
-  y desmarca casillas y quita el propio. Exige **cero peticiones de red**
-  desde la carga inicial, y si hubiera alguna, la lista.
-- Las páginas publicadas llevan además una política de seguridad (CSP): el
-  navegador no conecta con ningún otro origen (`connect-src 'self'`) ni
-  envía un formulario a otro sitio (`form-action 'self'`). Otro juez mira
-  que la lleven todas. `npm run dev` va sin ella: Astro no la aplica en
-  desarrollo.
-
-**No se guarda.** Ni en el navegador ni en la dirección de la página: al
-recargar, el paquete propio desaparece, y la página lo avisa. Salir de la
-página, al catálogo por ejemplo, también puede perderlo.
-
-**Lo que no se protege**, declarado:
-- Una expresión regular de un paquete propio puede colgar la pestaña si es
-  de las que se atascan (retroceso catastrófico): el análisis corre en la
-  página, sin un proceso aparte con tiempo límite.
-- El fichero se lee como UTF-8, y un BOM delante no molesta. Un JSON
-  guardado en otra codificación, como latin-1, se lee con caracteres de
-  sustitución que el esquema no detecta.
-
-**Para verlo a mano en la pestaña Red de Chrome**, pega el texto en vez de
-usar «Cargar ejemplo»: ese botón pide el texto de ejemplo al servidor, y esa
-petición saldría en la lista.
-
-## Estadística
-
-Trece reglas de RadiografIA no buscan palabras: miden el texto entero con
-una métrica y comparan la cifra con **los textos humanos de su mismo género
-y su mismo tramo de longitud**, nunca con un umbral fijo. Los percentiles
-vienen en el propio paquete (abajo, [«Calibración»](#calibración)), y el
-género lo elige quien analiza; si no elige, «general».
-
-- **Siete puntúan**, y cada una mira un solo lado de la banda humana:
-
-  | regla | métrica | señala si queda | peso | evidencia |
-  |---|---|---|---|---|
-  | `est-frases-cortas` | frases por 100 palabras | por encima del p95 | 3 | medido en español |
-  | `est-poca-puntuacion-secundaria` | paréntesis, comillas, punto y coma, dos puntos, barras y raya por 1.000 palabras | por debajo del p5 | 3 | medido en español |
-  | `est-pocas-comas` | comas por punto | por debajo del p1 | 3 | medido en español |
-  | `est-poca-puntuacion` | signos por 1.000 palabras | por debajo del p1 | 3 | medido en español |
-  | `est-ritmo-uniforme` | dispersión de la longitud de frase | por debajo del p1 | 2 | medido en inglés |
-  | `est-nominalizacion` | nominalizaciones por 1.000 palabras | por encima del p99 | 2 | medido en inglés |
-  | `est-repeticion-de-secuencias` | secuencias de cuatro palabras repetidas | por encima del p99 | 1 | medido en inglés |
-
-  Con el corte en el p95 (o el p5), 1 de cada 20 textos humanos de su celda
-  queda fuera; con el p99 (o el p1), 1 de cada 100. Una regla que se sale
-  suma su peso entero, una vez por texto. Por qué cinco cortan en el p99 o
-  el p1, abajo, en [«Validación»](#validación).
-- **Seis son de contexto**: informativas, se enseñan y no suman. Miran los
-  dos lados (por debajo del p5 o por encima del p95), así que 1 de cada 10
-  textos humanos queda fuera. Son la variedad léxica (MATTR, MTLD, HD-D y
-  TTR), la legibilidad de Flesch-Szigriszt y los pronombres anafóricos.
-- **«Sin calibración» existe.** Si el género elegido no tiene celda para la
-  longitud del texto (la narrativa clásica de 100 a 299 palabras), las
-  reglas estadísticas no se evalúan y el análisis lo dice, regla por regla.
-  Con menos de 100 palabras de prosa no se analiza nada.
-- **No demuestran autoría.** La dirección de cada regla sale de los
-  estudios que cita su ficha, y salirse de lo habitual en su género no dice
-  quién escribió el texto.
-- **Texto cortado a mano.** Desde el 6.1, un salto de línea simple no parte
-  el párrafo (abajo, [«Cómo está pensado»](#cómo-está-pensado)). Los 341
-  textos humanos de validación de «general», cortados a 76 columnas, hacen
-  saltar `est-frases-cortas` en el 4,4 % (el 4,1 % tal cual), y la tasa de
-  falsos positivos es la misma en los dos casos, el 2,9 %. Con el motor
-  anterior, que tomaba cada línea por un párrafo, eran el 43,2 % y el 8,0 %,
-  sobre los 287 textos de entonces.
-
-## Calibración
-
-El detector estadístico nunca compara un texto con un umbral fijo: lo
-compara con **textos humanos de su mismo género y su mismo tramo de
-longitud**. Esos textos están medidos de antemano, y el paquete RadiografIA
-trae, en `cabecera.calibracion`, sus percentiles (p1, p5, p50, p95 y p99)
-para cada una de las trece métricas y para el total del propio paquete,
-en seis géneros y tres tramos (100-299, 300-599 y 600 palabras o más).
-
-El total se recalculó en el 5.6 con las trece reglas estadísticas dentro,
-cada una comparada con las celdas de su métrica que trae el paquete. En el
-6.1, cuando el motor pasó a leer los párrafos como CommonMark, se midió todo
-otra vez, en dos vueltas: la segunda, para que el total se calculara con las
-celdas nuevas ya dentro del paquete.
-
-### Cómo se reproduce
-
-Las herramientas están en
-[`motor/herramientas/calibrar/`](motor/herramientas/calibrar/), y se
-ejecutan a mano desde `motor/`:
-
-1. **Cada corpus, con su descargador**: `descargar-noticia.ts`,
-   `descargar-administrativo.ts`, `descargar-narrativa-clasica.ts`,
-   `descargar-academico.ts` y `descargar-opinion.ts`. Cada uno lee la
-   licencia en origen, respeta el `robots.txt` y la pausa de cada sitio, y
-   no pasa de 30 minutos de descarga. Los textos van a `motor/corpus/`,
-   que no se versiona; el manifiesto no lleva texto. Los del BOE y los de
-   Gutenberg dejan una línea en blanco entre párrafo y párrafo, uno por
-   cada `<p>` del original. El CSIC trae una frase por línea y no conserva
-   los párrafos: su manifiesto lo declara, y que el motor una esas líneas es
-   lo correcto.
-2. **`node herramientas/calibrar/regenerar-textos.ts administrativo`** (y
-   `narrativa-clasica`), desde el 6.1: vuelve a sacar los mismos documentos
-   de la copia de los originales que guarda el descargador en
-   `motor/corpus/<género>/fuente/`, sin red y sin volver a muestrear, con
-   la línea en blanco entre párrafos. Para si falta un original o si un
-   texto cambia en algo más que los espacios y los saltos.
-3. **`node herramientas/calibrar/calibrar.ts <género>`**: mide cada documento
-   con el motor de hoy (el mismo segmentador y las mismas métricas que
-   medirán tu texto) y escribe en [`data/calibracion/`](data/calibracion/)
-   las celdas, las omitidas, los disparos de cada regla por tramo y las
-   notas, más el manifiesto: id, huella sha256, tramo y reparto de cada
-   documento, sin texto.
-4. **`construir-general.ts`** y después `calibrar.ts general`, para la mezcla.
-5. **`inyectar-calibracion.ts`**: vuelca las celdas de los seis ficheros en
-   el paquete. Solo las celdas: las notas se quedan en `data/calibracion/`.
-6. **`validar.ts`**: analiza con el paquete los textos de validación y
-   escribe [`validacion.json`](data/calibracion/validacion.json) (abajo,
-   [«Validación»](#validación)).
-
-Las reglas son siempre las mismas:
-
-- **Semilla** `radiografia-calibracion-2026`. Con ella, la huella sha256 de
-  cada id decide la muestra y el reparto: el 80 % va a calibración, y el
-  20 % a validación, con la que se midieron los falsos positivos en el 5.6.
-  Sin generador aleatorio: se reproduce igual.
-- **Percentiles de tipo 7** de Hyndman y Fan (el de R por defecto), los
-  mismos que calcula el motor.
-- **Mínimo 100 documentos de calibración por celda.** Una celda que no llega
-  no se rellena: se declara omitida y el motor dice «sin calibración» en ese
-  género y tramo.
-- **Cada fichero lleva el commit del motor** con que se midió. Si cambian el
-  segmentador o el silabeo, se vuelve a medir, como en el 6.1.
-
-### Los seis géneros
-
-Mediana (p50) de cuatro de las catorce claves, sacada de los ficheros de
-`data/calibracion/` al escribir esto:
-
-| género | tramo | n (calibración) | frases por 100 palabras | MATTR-50 | nominalizaciones por 1.000 | total RadiografIA |
-|---|---|---|---|---|---|---|
-| `noticia` | 100-299 | 357 | 3,60 | 0,802 | 36,0 | 0,0 |
-|  | 300-599 | 354 | 3,18 | 0,799 | 38,4 | 2,4 |
-|  | 600+ | 109 | 2,80 | 0,800 | 39,3 | 3,0 |
-| `administrativo` | 100-299 | 155 | 7,09 | 0,731 | 91,6 | 0,0 |
-|  | 300-599 | 100 | 4,84 | 0,748 | 71,6 | 0,0 |
-|  | 600+ | 110 | 4,12 | 0,739 | 87,4 | 1,0 |
-| `narrativa-clasica` | 100-299 | 65 (sin celda) | — | — | — | — |
-|  | 300-599 | 124 | 5,78 | 0,814 | 18,2 | 10,2 |
-|  | 600+ | 895 | 5,24 | 0,820 | 20,0 | 15,9 |
-| `academico` | 100-299 | 99 (sin celda) | — | — | — | — |
-|  | 300-599 | 100 | 3,05 | 0,798 | 48,7 | 5,1 |
-|  | 600+ | 101 | 3,02 | 0,795 | 53,8 | 5,5 |
-| `opinion` | 100-299 | 739 | 2,66 | 0,821 | 20,8 | 0,0 |
-|  | 300-599 | 1663 | 3,02 | 0,818 | 23,9 | 3,0 |
-|  | 600+ | 726 | 2,95 | 0,816 | 27,8 | 4,0 |
-| `general` | 100-299 | 465 | 3,63 | 0,795 | 38,5 | 0,0 |
-|  | 300-599 | 500 | 3,59 | 0,799 | 34,7 | 1,9 |
-|  | 600+ | 505 | 3,36 | 0,802 | 38,1 | 3,9 |
-
-Celdas publicadas: 42 por género (14 claves × 3 tramos) en noticia,
-administrativo, opinión y general; en narrativa clásica y en académico, 28,
-con las 14 de 100-299 omitidas. En total van al paquete 224 celdas.
-
-- **`noticia`**: [UD Spanish-AnCora](https://github.com/UniversalDependencies/UD_Spanish-AnCora)
-  r2.18, noticias de la agencia EFE y de El Periódico del año 2000, sin el
-  subcorpus Cast3LB.
-- **`administrativo`**: el BOE de 2000 a 2021, con disposiciones generales,
-  resoluciones y anuncios.
-- **`narrativa-clasica`**: capítulos de novelas y cuentos de [Project
-  Gutenberg](https://www.gutenberg.org) de autores muertos en 1945 o antes,
-  con un máximo de 5 capítulos por libro y tramo. Fuera traducciones,
-  crítica, obras en diálogo y lo que no es narración.
-- **`academico`**: el [CSIC Spanish
-  Corpus](https://doi.org/10.5281/zenodo.7313126), artículos de las revistas
-  del CSIC, leído por rangos de bytes sin bajarlo entero.
-- **`opinion`**: críticas de cine de usuarios de MuchoCine (hacia 2005-2008).
-  Por eso en el selector se llama «Opinión (críticas de cine)».
-- **`general`**, el género por defecto: por tramo, los géneros que tienen ese
-  tramo calibrado y el mismo número de documentos de cada uno, elegidos por
-  huella. En 100-299 entran noticia, administrativo y opinión, 155 de cada
-  uno; en 300-599, 5 × 100; en 600+, 5 × 101.
-
-### Lo que no está
-
-- **Corporativo o de marketing**: no hay un corpus abierto con licencia que
-  lo permita. Ese género no existe y la interfaz dirá «sin calibración».
-- **Narrativa clásica de 100 a 299 palabras**: quedaron 65 capítulos de
-  calibración, menos de 100. No se subió el tope por libro para llenar la
-  celda, porque se habría concentrado en tres libros.
-- **Académico de 100 a 299 palabras**: desde el 6.1 quedan 99 documentos de
-  calibración, uno menos del mínimo. En un artículo, una cita partida en dos
-  líneas deja la segunda empezando por «129) », y el motor anterior la
-  contaba como viñeta. Con los párrafos de CommonMark es prosa, y el
-  artículo gana palabras y pasa a 300-599. No se ajustó nada. Ampliar la
-  muestra por huella, con la misma semilla, queda para la v1.1.
-- **Wikipedia**: la investigación la proponía para «general»; la mezcla
-  lleva solo los cinco géneros calibrados.
-
-### Advertencias
-
-- **Narrativa clásica es anterior a 1946**: arrastra un sesgo de época
-  (siglos XVI a XX, sobre todo XIX) y no representa la narrativa
-  contemporánea. La raya de diálogo, norma en español, hace saltar
-  `pf-raya-densidad` en 813 de 895 capítulos de 600+.
-- **Administrativo mezcla tres subgéneros** con percentiles conjuntos, con
-  un tope del 60 % por subgénero en cada tramo. No es la proporción natural
-  del BOE; el subgénero de cada documento queda en el manifiesto, para
-  recalibrar por subgénero más adelante.
-- **Académico lleva OCR**: hay artículos escaneados con errores como
-  «informaci6n». Está medido por unidad en el manifiesto, sin filtrar: 24 de
-  361 unidades tienen una marca o más por cada 1.000 palabras, y quitarlas
-  apenas mueve los percentiles. En 100-299 y 300-599 casi todo son fragmentos de frases
-  completas de artículos más largos.
-- **Opinión, solo cifras**: la licencia CC BY 2.1 ES la declaran los
-  curadores del corpus y no está verificada en origen. No se publica ninguna
-  muestra.
-- **El total RadiografIA depende del género.** En 600+, su mediana va de
-  1,0 en administrativo a 15,9 en narrativa clásica. Por eso el medidor
-  compara cada texto con los de su género y su longitud (abajo,
-  [«Escala»](#escala)), y no con una cifra fija.
-- **Frases en prensa**: AnCora da 28,56 palabras por frase en su anotación
-  manual, entre 2,8 y 3,6 frases por 100 palabras. Coincide con la
-  investigación (Schaaff et al., 2023: unas 27 palabras por frase).
-- **Segmentador**: el del motor no parte las frases igual que la anotación
-  de AnCora en 129 de 1025 documentos (93 con más frases, 36 con menos).
-  Las medianas casi coinciden: 3,57 frente a 3,52 en 100-299, 3,19 frente a
-  3,16 en 300-599 y 2,85 frente a 2,88 en 600+. Medido otra vez con el motor
-  del 6.1, sale igual.
-
-Las licencias de cada corpus, citadas literalmente, están en
-[`data/calibracion/LICENSE-CORPUS.md`](data/calibracion/LICENSE-CORPUS.md).
-
-## Validación
-
-Las reglas estadísticas se comprueban con los textos humanos que **no** se
-usaron para calibrar: el 20 % de cada corpus, apartado por huella antes de
-medir nada. La cifra es la **tasa de falsos positivos (FPR)**: la
-proporción de esos textos en los que saltan dos o más reglas estadísticas
-que puntúan. El plan pide que no pase del 5 %. La mide
-[`validar.ts`](motor/herramientas/calibrar/validar.ts), que deja el
-resultado, sin texto, en
-[`data/calibracion/validacion.json`](data/calibracion/validacion.json).
-
-**Se juzga por género**, con sus tres tramos juntos. En las celdas más
-pequeñas, de 19 a 32 textos de validación, uno o dos textos ya pasan del
-5 % (1 de 19 es el 5,3 %, y 2 de 32, el 6,3 %): celda a celda, el criterio
-sería «ninguno» o «uno». Es una decisión propia, firmada por Antonio en la
-parada 2 del 5.6. Las celdas se enseñan igual, una a una.
-
-| género | textos | FPR | intervalo de Wilson al 95 % | al menos una regla |
-|---|---|---|---|---|
-| `general` | 341 | 2,9 % (10) | 1,6 % a 5,3 % | 14,4 % |
-| `noticia` | 205 | 2,4 % (5) | 1,0 % a 5,6 % | 15,1 % |
-| `administrativo` | 98 | **5,1 % (5)** | 2,2 % a 11,4 % | 19,4 % |
-| `narrativa-clasica` | 274 | 2,2 % (6) | 1,0 % a 4,7 % | 13,1 % |
-| `academico` | 43 | 2,3 % (1) | 0,4 % a 12,1 % | 32,6 % |
-| `opinion` | 742 | 1,1 % (8) | 0,5 % a 2,1 % | 12,9 % |
-
-En conjunto, 35 de 1.703 textos: el 2,1 %. El intervalo es el de Wilson
-(1927), con la fórmula del manual de estadística de NIST/SEMATECH
-([§ 7.2.4.1](https://www.itl.nist.gov/div898/handbook/prc/section2/prc241.htm)):
-el rango de proporciones que la muestra no permite descartar. El de
-general, noticia y académico también incluye el 5 %: la muestra tampoco
-demuestra que estén por debajo. Los de narrativa clásica y opinión quedan
-enteros por debajo.
-
-**Revalidado en el 6.1**, con el motor nuevo de párrafos y la misma
-muestra: ningún género sube. Bajan narrativa clásica (del 2,9 % al 2,2 %)
-y académico (del 3,3 % al 2,3 %), que pierde los 18 textos de 100 a 299
-palabras porque ese tramo se quedó sin celda. General pasa de 287 a 341
-textos porque cambió su mezcla (arriba, [«Los seis
-géneros»](#los-seis-géneros)). Administrativo sigue igual, con los mismos
-cinco textos.
-
-**Revalidado en el 6.4**, después de ampliar las listas de dos ausencias:
-D3, sin marcadores epistémicos, y D4, sin automenciones (abajo, [«Qué se
-ajustó y por qué»](#qué-se-ajustó-y-por-qué)).
-
-- **La FPR no cambia en ningún género:** D3 y D4 no son reglas
-  estadísticas.
-- **Administrativo** sigue igual, con los mismos cinco textos.
-- **Cambia el total en opinión y académico.** Por eso se recalculó su celda
-  de calibración y la tabla por celda de abajo lleva las cifras nuevas.
-
-**Administrativo queda en 5,1 % (5 de 98) y se acepta con declaración.**
-Lo decidió Antonio el 01/10/2026, y para este género modifica el criterio
-del plan. Los motivos:
-
-- el criterio se cumple en los otros cinco géneros y en el conjunto;
-- con 98 textos, el intervalo de Wilson va del 2,2 % al 11,4 % e incluye el
-  5 %: la muestra no distingue 5,1 % de 5 %;
-- cuatro de los cinco textos son el falso positivo de formato ya declarado
-  en las fichas: tablas del BOE pasadas a texto y un formulario de párrafos
-  numerados. El quinto repite una fórmula legal, como declara la ficha de
-  `est-repeticion-de-secuencias`;
-- no se excluyó ningún texto ni se cambió nada después de ver la
-  validación.
-
-Que el motor trate las tablas pasadas a texto como no-prosa queda para la
-v1.1, con esos cinco textos como casos de prueba (sus ids, en
-`validacion.json` y en la nota de
-[`administrativo.json`](data/calibracion/administrativo.json)).
-
-Por celda (el total, en puntos: su mediana y su p95 en validación frente a
-la celda de calibración):
-
-| género | tramo | textos | FPR | al menos una regla | total p50: validación / calibración | total p95: validación / calibración |
-|---|---|---|---|---|---|---|
-| `general` | 100-299 | 126 | 0,8 % (1) | 7,9 % | 0,0 / 0,0 | 13,0 / 14,1 |
-|  | 300-599 | 120 | 4,2 % (5) | 16,7 % | 3,0 / 1,9 | 27,9 / 32,2 |
-|  | 600+ | 95 | 4,2 % (4) | 20,0 % | 4,0 / 3,9 | 24,0 / 30,4 |
-| `noticia` | 100-299 | 86 | 1,2 % (1) | 5,8 % | 0,0 / 0,0 | 27,2 / 16,4 |
-|  | 300-599 | 98 | 3,1 % (3) | 21,4 % | 3,0 / 2,4 | 20,1 / 17,6 |
-|  | 600+ | 21 | 4,8 % (1) | 23,8 % | 2,3 / 3,0 | 13,3 / 13,7 |
-| `administrativo` | 100-299 | 42 | 4,8 % (2) | 19,0 % | 0,0 / 0,0 | 5,9 / 3,0 |
-|  | 300-599 | 24 | 0,0 % (0) | 16,7 % | 0,0 / 0,0 | 3,0 / 4,7 |
-|  | 600+ | 32 | 9,4 % (3) | 21,9 % | 2,5 / 1,0 | 6,4 / 6,9 |
-| `narrativa-clasica` | 100-299 | 19 (sin celda) | — | — | — | — |
-|  | 300-599 | 30 | 6,7 % (2) | 20,0 % | 7,8 / 10,2 | 53,3 / 74,6 |
-|  | 600+ | 244 | 1,6 % (4) | 12,3 % | 14,5 / 15,9 | 51,2 / 48,5 |
-| `academico` | 100-299 | 18 (sin celda) | — | — | — | — |
-|  | 300-599 | 24 | 4,2 % (1) | 41,7 % | 6,7 / 5,1 | 14,2 / 21,0 |
-|  | 600+ | 19 | 0,0 % (0) | 21,1 % | 5,4 / 5,4 | 11,1 / 13,6 |
-| `opinion` | 100-299 | 178 | 0,6 % (1) | 12,4 % | 0,0 / 0,0 | 21,6 / 19,4 |
-|  | 300-599 | 383 | 0,8 % (3) | 9,9 % | 2,0 / 2,0 | 15,3 / 15,1 |
-|  | 600+ | 181 | 2,2 % (4) | 19,9 % | 4,4 / 3,8 | 11,0 / 12,1 |
-
-### Qué se ajustó y por qué
-
-La primera validación, en el 5.6, con las siete reglas cortando en el p95
-(o el p5), dio un **7,7 %** en conjunto (128 de 1.667), y 13 de las 17
-celdas pasaban
-del 5 %. Por género: general 8,4 %, noticia 7,3 %, administrativo 13,3 %,
-narrativa clásica 10,2 %, académico 13,1 % y opinión 5,4 %. Con siete
-reglas independientes, cada una en el 5 %, lo esperable era un 4,4 %. El
-exceso venía, sobre todo, de reglas que miden casi lo mismo:
-`est-frases-cortas` y `est-pocas-comas` cuentan los mismos puntos, y los
-signos de la puntuación secundaria son parte de los de la puntuación.
-
-Lo que se cambió, firmado por Antonio en la parada 2 y escrito en la ficha
-de cada regla:
-
-- **Al p99 o el p1** (1 de cada 100): `est-pocas-comas` y
-  `est-poca-puntuacion`, porque dependen de otra regla;
-  `est-ritmo-uniforme`, `est-nominalizacion` y
-  `est-repeticion-de-secuencias`, porque están medidas en inglés.
-- **Se quedan en el p95 o el p5** las dos medidas en español que no
-  dependen de otra: `est-frases-cortas` y `est-poca-puntuacion-secundaria`.
-- **Nada más**: ni pesos ni direcciones, y ninguna regla estadística se
-  limita a unos géneros.
-
-Las tablas pasadas a texto, los párrafos numerados y los títulos sin punto
-quedan declarados como falso positivo conocido en las fichas de frases
-cortas, pocas comas, poca puntuación y poca puntuación secundaria. En la
-validación del 5.6, siete reglas de otras familias saltaban en más del
-25 % de los textos humanos de algún género, por ejemplo la raya en la
-narrativa (92,3 %) o la falta de marcadores de opinión en lo académico
-(47,5 %). En la del 6.1 son nueve. Lo académico se valida ahora solo
-desde 300 palabras, donde las ausencias sí se juzgan, y sube: la falta de
-marcadores de opinión llegó al 67,4 %. Pasan también del 25 %
-`lex-no-solo-sino` (32,6 %) y `lex-importancia` (30,2 %), las dos en lo
-académico. Las fichas de esas nueve reglas llevan las cifras de la
-revalidación del 6.1 (02/10/2026), con su fecha. En la v1 no se ajustan.
-El detalle, regla a regla y celda a celda, está en `validacion.json`.
-
-**La ampliación 6.4** (02/10/2026, firmada por Antonio) no ajusta ningún
-umbral: completa dos listas que se habían quedado cortas. Los textos de
-ejemplo lo destaparon.
-
-- **D3, sin marcadores epistémicos.** La lista solo llevaba «me parece» de
-  «parecer», y una sola forma de cada verbo. Ahora lleva la primera persona
-  de creer, pensar, suponer, opinar y considerar que en cuatro tiempos, y
-  «parecer» con «me» o «nos». Los lemas son los de Herbold et al. 2023.
-- **D4, sin automenciones.** No contaba «me» ni «nos». Ahora sí: son
-  siempre de primera persona, y Tang y John (1999) los cuentan entre las
-  automenciones.
-
-Son reglas de ausencia, así que disparan menos. En los textos apartados:
-
-| regla | académico (300 palabras o más) | opinión |
-|---|---|---|
-| D3 | 67,4 % → 58,1 % | 36,9 % → 32,5 % |
-| D4 | 53,5 % → 39,5 % | 23,7 % → 6,5 % |
-
-Las fichas de D3 y D4 llevan ya las cifras del 6.4.
-
-**Límites del método.** Hay una sola validación, con la misma muestra
-medida dos veces: antes de los ajustes y después. Los ajustes se
-propusieron con lo que se veía en los textos de calibración, pero su
-efecto en la validación se enseñó, simulado, antes de firmarlos. La
-decisión sobre administrativo se tomó viendo la validación. La
-revalidación del 6.1 midió la misma muestra una tercera vez, con el motor
-nuevo, y después no se cambió nada. La del 6.4 la midió una cuarta vez.
-Las listas de D3 y D4 se fijaron con sondas y fuente. Su efecto en estos
-textos se enseñó en la parada, antes de firmarlas, y después no se cambió
-nada. Con eso, el 20 % apartado ya no es una
-muestra que nadie haya mirado: para una comprobación limpia hace falta
-otra muestra.
-
-## Escala
-
-El medidor no da veredicto ni tiene tope. Dice **dónde cae el total del
-texto respecto a los textos humanos de su mismo género y tramo**, con las
-celdas de `_total-radiografia` (arriba, [«Calibración»](#calibración)).
-Hay cuatro bandas:
-
-| banda | el total del texto |
-|---|---|
-| por debajo de la mediana | es menor que el de la mitad de los textos humanos de su celda |
-| entre la mediana y el p95 | está entre la mediana y el p95, los dos incluidos: lo habitual |
-| por encima del p95 | supera el p95 y llega como mucho al p99 |
-| por encima del p99 | supera el p99 |
-
-La calcula `bandaHumana()`
-([`motor/src/banda.ts`](motor/src/banda.ts)), y `analizar()` la devuelve
-en el resultado de cada paquete, con los percentiles de referencia (p5,
-p50, p95 y p99) y el número de textos de la celda. La pantalla la dice en
-texto claro: «Tu texto queda por encima del p95 de los textos humanos del
-género “Noticia” de 300 a 599 palabras», con su total y los percentiles.
-
-- **Sin banda.** Un paquete sin clave `_total-*` en su calibración, como
-  «Español correcto», no tiene banda. Si el género no tiene celda para esa
-  longitud, o el texto es insuficiente, la banda es «sin calibración», con
-  el motivo.
-- **Los bordes** son decisión propia: «por encima» es estrictamente por
-  encima, como en las reglas estadísticas, y la mediana y el p95 caen
-  «entre la mediana y el p95».
-- ⚠️ **Mediana 0.** En cinco celdas, la mitad de los textos humanos no da
-  ninguna señal y la mediana del total es 0: los cuatro géneros con celda
-  de 100 a 299 palabras y administrativo de 300 a 599. Ahí, un texto sin
-  ninguna señal cae «entre la mediana y el p95», porque está justo en la
-  mediana. Por eso la pantalla, con un total de 0, dice «sin señales» y no
-  da la banda.
-
-## Cómo está pensado
-
-- **Astro estático, sin backend.** Todo corre en el navegador.
-- **La CSP, lo primero de cada página.** Astro escribe el `<meta>` de la
-  política al final del `<head>`, y lo que la página pusiera antes (una
-  precarga de fuentes, un icono) quedaría fuera. Una integración de
-  [`web/astro.config.mjs`](web/astro.config.mjs) lo recoloca al terminar el
-  build, justo detrás de `<meta charset>`, sin tocar su contenido; un juez
-  comprueba el sitio y que el contenido es el que emitió Astro. Desde la
-  publicación (11.2), la CSP va también por cabecera, idéntica, en el
-  `.htaccess`; el `<meta>` se queda, y la integración con él.
-- **Párrafos como en CommonMark.** Una línea en blanco separa dos párrafos
-  y un salto de línea simple no (especificación CommonMark 0.31.2, § 4.8 y
-  § 6.8). Así, un texto cortado a mano (un correo, un PDF copiado, un
-  Markdown a 76 columnas como este README) se lee con sus párrafos.
-  Viñetas, encabezados, tablas, código y separadores se reconocen por la
-  línea. Las posiciones de cada señal siguen siendo las del texto original.
-- **La excepción web**, decisión propia: un salto simple tras «.», «!»,
-  «?», «…», «»» o una comilla de cierre, seguido de una línea que empieza
-  por mayúscula, «¿», «¡», «—», «« o una comilla, abre párrafo. Un cuadro
-  de texto web separa los párrafos con un solo salto, y sin la excepción
-  los juntaría. Su **coste**, declarado: en un texto cortado a mano, si el
-  corte cae justo tras un punto y antes de una mayúscula, parte un párrafo
-  que no lo era.
-  - Los 341 textos humanos de validación de «general», cortados a 76
-    columnas: 320 (el 93,8 %) dan las mismas frases que sin cortar. Las 21
-    diferencias tienen cuatro causas, listadas una a una en
-    [`motor/src/texto-cortado.spec.ts`](motor/src/texto-cortado.spec.ts):
-    ítems numerados, filas de tabla y rayas de AnCora que el corte parte, y
-    la excepción a media frase.
-  - En el corpus académico, que trae una frase por línea, la excepción
-    parte el 90,6 % de los saltos entre líneas de prosa.
-  - Las reglas que miran el principio o el final de un párrafo lo notan:
-    el cierre de plantilla no ve «En conclusión» si el último párrafo se
-    parte. Lo dice su ficha.
-- **Seis familias de reglas**: léxico, sintaxis, puntuación y formato,
-  estadística, discurso y **canal** (Markdown residual, Unicode invisible,
-  emojis: artefactos de copiar desde un asistente). Canal es
-  **informativa**: se señala y se explica, pero no suma al medidor. Cada
-  familia sale de la investigación con fuentes de
-  [`docs/investigacion/`](docs/investigacion/), hecha antes de escribir su
-  primera regla.
-- **Dos paquetes incluidos**: RadiografIA y **«español correcto»**, siete
-  avisos de norma RAE (calcos y traducción, no estilo IA), cada uno con su
-  casilla; y los **paquetes propios** que cargue cada uno, que se combinan
-  con ellos sin salir del navegador.
-- **Tres tipos de detector**: patrón, estructural, estadístico.
-- **Ficha por regla**: id, nombre y frase en claro (opcionales en el
-  esquema), familia,
-  detector y sus parámetros, peso (que puede ser **negativo**: un atenuante
-  humano resta), severidad, si es **informativa**, explicación, sugerencia,
-  excepciones, **fuentes**, **origen de la lista** («inventario propio…»
-  cuando lo es), **nivel de evidencia** (medido en español, medido en
-  inglés, anecdótico, sin fuente o norma) y ejemplos positivos y negativos.
-  Los ejemplos son la documentación y son los tests: cada positivo tiene que
-  disparar la regla y cada negativo no. El esquema está en
-  [`motor/esquema/`](motor/esquema/).
-- **Catálogo público** con una página por regla.
-  - En los ejemplos de cada ficha, el tramo que señala la regla va marcado
-    con el estilo de su familia, como en el analizador. Lo calcula el motor
-    antes de construir la web: `web/scripts/tramos-de-ejemplos.ts` corre en
-    `predev` y `prebuild`, y su salida
-    (`web/src/catalogo/tramos-de-ejemplos.json`) no se versiona.
-  - **Por qué ese script importa `motor/src/` por su ruta** (`texto.ts` y
-    `analisis.ts`): las funciones que necesita no están en los `exports` del
-    motor. Vale porque es un script del build de la web y corre en Node. Al
-    navegador no llega nada de él: la ficha no lleva JavaScript.
-  - Marcan tramo 35 reglas. Las otras 15 no tienen tramo que marcar: son
-    las que miran el texto entero, las de ausencia y las de género.
-- **Informe PDF** desde la propia página.
-- **Las reglas se editan en Git.** No hay CMS.
-
-## Hoja de ruta
-
-El plan completo, con sus casillas, está en
-[`PLAN-RADIOGRAFIA.md`](PLAN-RADIOGRAFIA.md). El estado, en
-[`RADIOGRAFIA-ESTADO.md`](RADIOGRAFIA-ESTADO.md). Los fallos reales, en
-[`docs/BITACORA.md`](docs/BITACORA.md), escritos en caliente.
+| «medido en español» | un estudio lo mide en textos en español | hasta 3 | 10 |
+| «medido en inglés» | un estudio lo mide en inglés, y la regla lo traslada al español | hasta 2 | 19 |
+| «anecdótico» | lo citan guías u observaciones, sin una medida | hasta 1 | 14 |
+| «norma» | lo dice la norma de la RAE; es el nivel de Español correcto, que cuenta avisos de norma y no estilo de IA | 1 | 7 |
+
+El esquema admite además «sin fuente», para paquetes de terceros; en
+RadiografIA lo prohíbe un juez. La familia canal y las reglas estadísticas
+de contexto son informativas: se enseñan y no suman. Y hay reglas que
+restan, porque señalan rasgos humanos, como «recuerdo que» o «véase la
+tabla 2».
+
+**Cómo se calibran las estadísticas.** No buscan palabras: miden el texto
+entero con una métrica y comparan la cifra con los percentiles (p1, p5,
+p50, p95 y p99) de textos de personas de su mismo género y su mismo tramo
+de longitud (100-299, 300-599 y 600 palabras o más). Cada celda tiene al
+menos 100 textos de calibración; si no llega, no se rellena, y el análisis
+lo dice. El 80 % de cada corpus calibra, y el 20 %, apartado por huella
+antes de medir nada, valida: de ahí sale la tasa de falsos positivos de
+arriba. Todo, con cómo se reproduce, en
+[`docs/CALIBRACION.md`](docs/CALIBRACION.md).
+
+Las fichas, una por regla, están en el
+[catálogo](https://radiografia.antonioblanquez.es/reglas/): explicación,
+sugerencia, excepciones, fuentes enlazadas y ejemplos.
+
+---
+
+## Accesibilidad y diseño
+
+- **Medida, no supuesta**, en el
+  [acta de contraste y accesibilidad](docs/acta-contraste-y-accesibilidad.md),
+  con Chrome y sus jueces:
+  - el contraste de cada par de colores y de todo el texto que se ve (el
+    texto, al menos 4,5:1: WCAG 2.2, criterio 1.4.3);
+  - el daltonismo, simulado (Machado, Oliveira y Fernandes, 2009);
+  - los 320 px sin scroll horizontal (1.4.10);
+  - lo que se pulsa: 44 × 44 px en el móvil (2.5.5) y 24 × 24 en
+    escritorio (2.5.8);
+  - el árbol de accesibilidad.
+
+  El acta dice también lo que no se ha medido: un lector de pantalla de
+  verdad, el PDF descargado, el zoom al 200 % y el alto contraste de
+  Windows.
+- **El diseño** está en el [DISEÑO](DISEÑO-RADIOGRAFIA.md). Su referente de
+  forma es Hemingway Editor: el texto limpio en medio y la explicación
+  solo cuando se toca. Cada familia se marca con un fondo suave tipo
+  rotulador, una línea con su estilo y una sigla. El fondo es lo que se
+  ve; la línea y la sigla son lo que distingue, también con daltonismo y
+  en papel. La web calca el modelo de Figma Make, y un juez lo compara
+  pieza a pieza (±1 px).
+
+---
+
+## Estado y nevera
+
+✅ **Hoy, 06/10/2026:** la v1 está publicada en
+[radiografia.antonioblanquez.es](https://radiografia.antonioblanquez.es) y
+verificada desde fuera con los jueces de producción. Queda pendiente el
+CDN de Hostinger: hasta que se propague su desactivación, reescribe los
+iconos PNG y sirve desde su caché el JS con el tipo de antes
+([censo, § 15](docs/CENSO-PRE-DESPLIEGUE.md#15--la-publicación-112-06102026-la-variante-elegida)).
+
+**Los puntos del plan**, con la fecha en que se cerraron
+([`PLAN-RADIOGRAFIA.md`](PLAN-RADIOGRAFIA.md)):
+
+- 29/09: 1, los cimientos; 2, la investigación de las familias; 3, el
+  esquema del paquete y de la ficha.
+- 30/09: 4, el motor.
+- 01/10: 5, el paquete RadiografIA, calibrado y validado.
+- 02/10: 6, la pantalla; 7, el catálogo de reglas; 8, el cargador de
+  paquetes.
+- 03/10: 9, el informe, y su ampliación 9.2, el lenguaje de calle.
+- 05/10: la ampliación 9.3, el PDF descargado en el navegador, y 10, el
+  diseño.
+- 06/10: 11.1, el censo pre-despliegue. Ese día se publicó la web (11.2).
+
+**Lo que queda del punto 11:** este README (11.4), la release v1.0.0 con su
+etiqueta (11.5) y la ficha del proyecto en el portafolio (11.6).
+
+**La nevera**, lo que se apartó para la v1.1 con su fecha, no se copia
+aquí: está en el
+[PLAN, «Fuera de la v1»](PLAN-RADIOGRAFIA.md#fuera-de-la-v1-fase-2--no-se-toca-sin-abrir-el-plan)
+y en el [ESTADO, «Nevera»](RADIOGRAFIA-ESTADO.md#nevera).
+
+---
 
 ## Licencia y créditos
 
-Código y paquetes de reglas: **[Apache 2.0](LICENSE)** · © 2026
-**Antonio Blánquez Cabeza** — [antonioblanquez.es](https://antonioblanquez.es)
+Código y paquetes de reglas: **[Apache 2.0](LICENSE)** · © 2026 **Antonio
+Blánquez Cabeza** — [antonioblanquez.es](https://antonioblanquez.es)
 
-Las dependencias de terceros van una por una, con su licencia, en
-[`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md).
+Lo ajeno conserva su licencia, una por una, en
+**[`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md)**. En la web, en la
+página
+**[«Créditos y licencias»](https://radiografia.antonioblanquez.es/creditos/)**,
+enlazada desde el pie de cada página.
 
-Las fuentes de cada regla (estudios, guías, corpus) se citan en su ficha y
-en el catálogo.
-
-**En la web**, la página «Créditos y licencias» (`/creditos/`, desde el
-11.1), enlazada desde el pie de cada página, lleva lo ajeno que usa:
-
-- los corpus de los textos de personas, con la atribución que pide cada
-  licencia, y la cita del BOE, literal, con el enlace a su sede;
-- las fuentes tipográficas (OFL);
-- el código que llega al navegador: Ajv, silabea, pdfmake, la función de
-  precarga de Vite y el runtime de Rolldown;
-- las listas de frecuencia (CC BY-SA), que no llegan a la web;
-- el enlace a este NOTICES.
-
-El aviso de licencia de cada pieza de código ajeno viaja dentro del propio
-JavaScript, y un juez lo busca en `dist/`
-([`web/jueces/construccion.spec.ts`](web/jueces/construccion.spec.ts)).
-
-### Datos de terceros
-
-Los datos ajenos **no están bajo la Apache 2.0**: viven en [`data/`](data/),
-una carpeta por conjunto, cada una con su licencia y su atribución al lado.
-
-- [`data/frecuencias/`](data/frecuencias/): las 20.000 formas más frecuentes
-  del español, de **wordfreq** (Robyn Speer), bajo **CC BY-SA 4.0**
-  ([atribución](data/frecuencias/LICENSE-CC-BY-SA-4.0.md)).
-- [`data/referencia/`](data/referencia/): 100 + 100 frases de **UD
-  Spanish-AnCora** (Universal Dependencies) con sus etiquetas gramaticales,
-  bajo **CC BY 4.0** ([atribución](data/referencia/LICENSE-CC-BY-4.0.md)).
-  Sirven para medir, no viajan al navegador.
-- [`data/calibracion/`](data/calibracion/): los percentiles de los seis
-  géneros (arriba, [«Calibración»](#calibración)) y el manifiesto de cada corpus, **sin
-  texto**. Cada uno lleva la licencia de su corpus: CC BY 4.0 (AnCora, CSIC),
-  art. 13 LPI y licencia tipo del BOE, dominio público (Project Gutenberg) y
-  CC BY 2.1 ES declarada por terceros (MuchoCine)
-  ([licencias y atribución](data/calibracion/LICENSE-CORPUS.md)).
-
-El detalle, en la § 2 de [`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md).
-Y hay un fichero de código ajeno copiado tal cual, el silabeador
-**silabea** (MIT), con su licencia en cabecera, que desde el 11.1 viaja
-también en el JS publicado: § 1.5 del mismo documento.
+- **El código que viaja al navegador**: Ajv, silabea, pdfmake (con las
+  piezas que empaqueta), la función de precarga de Vite y el runtime de
+  Rolldown. El aviso de licencia de cada uno va dentro del propio
+  JavaScript, y un juez lo busca en `dist/`.
+- **Las fuentes tipográficas**: Literata y Atkinson Hyperlegible Next, con
+  la OFL 1.1.
+- **Los corpus de la calibración**, de los que solo quedan cifras: UD
+  Spanish-AnCora y el CSIC Spanish Corpus (CC BY 4.0), el BOE (art. 13 de
+  la Ley de Propiedad Intelectual y la licencia tipo del BOE), Project
+  Gutenberg (dominio público) y MuchoCine (CC BY 2.1 ES, declarada por
+  terceros). Sus licencias y su atribución, citadas tal cual, en
+  [`data/calibracion/LICENSE-CORPUS.md`](data/calibracion/LICENSE-CORPUS.md).
+- **Los datos de [`data/`](data/)** no van bajo la Apache 2.0: cada carpeta
+  lleva su licencia al lado. Las listas de frecuencia de wordfreq
+  ([`data/frecuencias/`](data/frecuencias/), CC BY-SA 4.0) y las frases de
+  AnCora ([`data/referencia/`](data/referencia/), CC BY 4.0) sirven para
+  medir y no llegan a la web.
+- **Las fuentes de cada regla**, estudios, guías y corpus, se citan en su
+  ficha del catálogo.

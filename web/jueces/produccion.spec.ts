@@ -20,7 +20,8 @@
  *
  * Con URL_PRODUCCION, los demás jueces de Chrome también van contra el sitio publicado (chrome.ts, abrirConTestigos): la
  * red (navegador.spec.ts), la CSP, los 320 px (pulsacion.spec.ts y los de cada página), la página que no existe y la
- * fidelidad al modelo con el mismo medidas-modelo.json (fidelidad.spec.ts). La orden, en el README («Despliegue»).
+ * fidelidad al modelo con el mismo medidas-modelo.json (fidelidad.spec.ts). La orden, en docs/DESPLIEGUE.md («Cómo se
+ * verifica desde fuera»).
  *
  * [DOC] https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/X-Content-Type-Options — nosniff: «Blocks a
  *    request if the request destination is of type style and the MIME type is not text/css, or of type script and the

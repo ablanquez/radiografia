@@ -706,7 +706,7 @@ Clon limpio de `40dd211`: tipos limpios, motor 909/899, web 281/281.
 
 ### 14.5 · `dist/` antes y después
 
-Los tres, construidos en clon con `npm run build`: el de después, en `8a1d7d8`, con todos los arreglos de código de los veinte; y el último, con el del 21, en el clon de trabajo con los ficheros de `40dd211` byte a byte (el mismo `dist/` en dos builds). Lo que viaja en cada página, medido en Chrome, en el README («Lo que viaja al navegador»).
+Los tres, construidos en clon con `npm run build`: el de después, en `8a1d7d8`, con todos los arreglos de código de los veinte; y el último, con el del 21, en el clon de trabajo con los ficheros de `40dd211` byte a byte (el mismo `dist/` en dos builds). Lo que viaja en cada página, medido en Chrome, en `docs/DESPLIEGUE.md` («Lo que viaja al navegador»; hasta el 11.4, en el README).
 
 | | antes (`4b8f9f2`) | después (`8a1d7d8`) | con el 21 (`40dd211`) |
 |---|---:|---:|---:|
@@ -731,7 +731,7 @@ Lo que cambia, y por qué hallazgo:
 
 ## 15 · La publicación (11.2, 06/10/2026): la variante elegida
 
-Antonio firmó el 06/10, con la documentación del panel de Hostinger delante, la **variante A** del § 9.3 y la CSP por cabecera del § 9.4, con los cambios de abajo. Lo hace `npm run publicar`, y el README lo cuenta en «Despliegue». Commits: `13674a2` (la página que no existe), `c667183` (la publicación) y `4ac5838` (los jueces de producción).
+Antonio firmó el 06/10, con la documentación del panel de Hostinger delante, la **variante A** del § 9.3 y la CSP por cabecera del § 9.4, con los cambios de abajo. Lo hace `npm run publicar`, y lo cuenta `docs/DESPLIEGUE.md` en «Despliegue» (hasta el 11.4, el README). Commits: `13674a2` (la página que no existe), `c667183` (la publicación) y `4ac5838` (los jueces de producción).
 
 **Cómo llega `dist/` al servidor (§ 9.5).** Por una rama huérfana, `publicacion`, que lleva en su raíz el contenido de `web/dist/` y el `.htaccess`, y nada más. El panel la despliega con su app de GitHub en el directorio del subdominio, sin build. Nada del resto del repositorio llega al servidor.
 
