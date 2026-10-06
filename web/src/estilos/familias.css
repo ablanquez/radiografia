@@ -145,7 +145,7 @@
 .tramo > .capa,
 .muestra {
   background-color: var(--tinte);
-  border-radius: 2px;
+  border-radius: var(--radio-tramo);
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
@@ -166,7 +166,7 @@
 
 .tramo {
   padding: 0 2px;
-  border-radius: 2px;
+  border-radius: var(--radio-tramo);
   cursor: pointer;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;

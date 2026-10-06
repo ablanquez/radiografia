@@ -30,6 +30,14 @@ la web real es `web/` (Astro). Esto es la fuente del calco (10.4).
   de Ortotipografía (Machado 2009, el juez de contraste); viene del DISEÑO,
   no del prototipo, y `guidelines.md`, lo que leyó Make, sigue con el de
   entonces.
+  **Cambio del 06/10** (11.1, hallazgo 9 del censo pre-despliegue, firmado
+  por Antonio): fuera `espacio.rejilla` (8 px, «Rejilla base») y
+  `espacio.paso` (4 px, «Unidad de espaciado de Tailwind»), que eran
+  informativos y nada consumía. No tenían destino: los 8 y 4 px que se
+  usan son `espacio.8` y `espacio.4`, y la descripción del grupo sigue
+  diciendo de dónde salen. `radio.tramo` (2 px), que existía para el tramo
+  y `familias.css` escribía a mano, ya se usa. Quedan 110 tokens; lo
+  vigila `web/jueces/tokens.spec.ts` (5).
 - `medidas-modelo.json` — las medidas del prototipo publicado (fuente,
   tamaño, interlineado, colores calculados, bordes, radios, rellenos y
   cajas de cada pieza, en sus tres tamaños), tomadas por CDP con

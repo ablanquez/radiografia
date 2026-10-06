@@ -11,6 +11,12 @@
  *      construidas llevan todos los tokens.
  *   4. Ningún color suelto en web/src fuera de tokens.css: ni hex, ni rgb(),
  *      ni hsl(), ni un nombre de color como valor en el CSS.
+ *   5. Desde el 11.1 (hallazgo 9 del censo pre-despliegue, firmado por
+ *      Antonio): cada token de los grupos radio y espacio, que solo usa el
+ *      CSS (ningún TS los lee), tiene su var() en web/src; y ningún
+ *      border-radius de web/src/estilos va a mano: o un var(--radio-…), o 0.
+ *      Los dos radios del tramo iban a 2px habiendo --radio-tramo, y
+ *      espacio.rejilla y espacio.paso, informativos, no los usaba nada.
  *
  * [DOC] https://www.designtokens.org/tr/2025.10/format/ — un token es un
  *    objeto con $value (§ 5.1); los grupos son los demás objetos.
@@ -46,7 +52,7 @@ describe('los tokens de diseño en CSS', () => {
     const hoja = propiedades(hojaDeTokens(json));
     const esperados = rutas(json).map((r) => nombreCss(r));
     assert.deepEqual([...hoja.keys()].sort(), [...esperados].sort(), 'las custom properties frente a los tokens del JSON');
-    assert.equal(hoja.size, 112, 'tokens.json tiene 112 tokens desde la ampliación del 04/10');
+    assert.equal(hoja.size, 110, 'tokens.json tiene 110 tokens: 112 desde la ampliación del 04/10, menos espacio.rejilla y espacio.paso desde el 11.1');
     // Los colores opacos, con el hex que dice el propio JSON.
     const colores = json['color'] as Record<string, Nodo>;
     for (const [nombre, token] of Object.entries(colores)) {
@@ -98,6 +104,26 @@ describe('los tokens de diseño en CSS', () => {
       const css = [html, ...enlazadas].join('\n');
       assert.deepEqual(nombres.filter((n) => !css.includes(`${n}:`)), [], `${pagina}: tokens que no llegan`);
     }
+  });
+
+  test('5 · cada token de radio y de espacio, con su var() en web/src; ningún border-radius a mano', () => {
+    const json = leerJson();
+    const css = readdirSync(SRC, { recursive: true, encoding: 'utf8' })
+      .map((f) => f.replaceAll('\\', '/'))
+      .filter((f) => /\.(css|astro|ts)$/.test(f) && f !== 'estilos/tokens.css')
+      .map((f) => ({ f, texto: readFileSync(new URL(f, SRC), 'utf8') }));
+    const todo = css.map((x) => x.texto).join('\n');
+    const nombres = rutas(json)
+      .filter((r) => r[0] === 'radio' || r[0] === 'espacio')
+      .map((r) => nombreCss(r));
+    assert.ok(nombres.length > 10, `${nombres.length} tokens de radio y espacio`);
+    assert.deepEqual(nombres.filter((n) => !todo.includes(`var(${n})`)), [], 'tokens de radio y espacio sin su var() en web/src');
+    const aMano = css
+      .filter(({ f }) => f.endsWith('.css'))
+      .flatMap(({ f, texto }) => [...texto.matchAll(/border-radius:\s*([^;]+);/g)].map((m) => [f, m[1]!.trim()] as const))
+      .filter(([, valor]) => valor !== '0' && !/var\(--radio-/.test(valor))
+      .map(([f, valor]) => `${f}: ${valor}`);
+    assert.deepEqual(aMano, [], 'radios a mano en web/src/estilos');
   });
 
   test('4 · ningún color suelto en web/src fuera de tokens.css', () => {
