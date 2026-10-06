@@ -65,7 +65,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import * as textos from '../src/textos.ts';
 import { NEGRITA_DEL_PAPEL } from '../src/estilos/recursos.ts';
-import { abrirPreview, construir, paquetesIncluidos, puertoLibre } from './apoyo.ts';
+import { abrirPreview, construir, paquetesIncluidos, puertoLibre, URL_PRODUCCION } from './apoyo.ts';
 
 const RUTAS = [
   'C:/Program Files/Google/Chrome/Application/chrome.exe',
@@ -143,10 +143,10 @@ export function sinLasDelResultado(despues: readonly Peticion[], url: string): P
   });
 }
 
-/** Una página de la web abierta en Chrome sobre astro preview, con lo que vieron los testigos antes y después de la marca. */
+/** Una página de la web abierta en Chrome sobre astro preview (o el sitio publicado), con lo que vieron los testigos antes y después de la marca. */
 export interface PaginaConTestigos {
   pestana: Pestana;
-  /** La dirección de astro preview, con la barra final. */
+  /** La dirección de astro preview (o, en el modo producción, la del sitio publicado), con la barra final. */
   url: string;
   /** Las peticiones de la carga inicial, hasta la marca. */
   carga: Peticion[];
@@ -188,10 +188,12 @@ export async function abrirAnalizadorConTestigos(): Promise<AnalizadorConTestigo
  * Lo mismo con cualquier página de la web (desde el 10.4, Tanda 3: el
  * catálogo y las fichas): su ruta, sin barra delante, y la expresión que dice
  * que ya está lista.
+ * Desde el 11.2, en el modo producción del arnés (URL_PRODUCCION, apoyo.ts), la
+ * página se pide al sitio publicado: sin build ni preview, y con su dirección
+ * como `url` y como origen de los testigos.
  */
 export async function abrirConTestigos(ruta: string, lista: string, que: string): Promise<PaginaConTestigos> {
-  construir();
-  const preview = await abrirPreview();
+  const preview = URL_PRODUCCION === undefined ? (construir(), await abrirPreview()) : { url: URL_PRODUCCION, cerrar: (): void => {} };
   let pestana: Pestana | undefined;
   try {
     pestana = await abrirChrome();

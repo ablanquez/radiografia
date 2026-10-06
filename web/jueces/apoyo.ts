@@ -42,6 +42,23 @@ import { fileURLToPath } from 'node:url';
 import type { Paquete } from '@radiografia/motor/navegador';
 import { FICHEROS } from '../src/pantalla/cargar.ts';
 
+/**
+ * El modo producción del arnés (encargo 11.2; decidido por Antonio el 06/10: verificar desde fuera): con la variable
+ * URL_PRODUCCION (la raíz del sitio publicado, https://radiografia.antonioblanquez.es), los jueces que abren páginas en
+ * Chrome (chrome.ts, abrirConTestigos) las piden ahí en vez de a un astro preview del dist/ local, y se activan los
+ * jueces de producción (produccion.spec.ts). Sin ella, todo como siempre, y los de producción se omiten con aviso. Tiene
+ * que ser la raíz, por http o https, y se guarda con su barra final, como la del preview.
+ */
+export const URL_PRODUCCION: string | undefined = (() => {
+  const valor = process.env['URL_PRODUCCION'];
+  if (valor === undefined || valor === '') return undefined;
+  const url = new URL(valor);
+  if (!['http:', 'https:'].includes(url.protocol) || url.pathname !== '/' || url.search !== '' || url.hash !== '') {
+    throw new Error(`URL_PRODUCCION tiene que ser la raíz de un sitio, por http o https, y es «${valor}»`);
+  }
+  return url.href;
+})();
+
 export const WEB = fileURLToPath(new URL('..', import.meta.url));
 export const DIST = new URL('../dist/', import.meta.url);
 export const PAQUETES = new URL('../../paquetes/', import.meta.url);
