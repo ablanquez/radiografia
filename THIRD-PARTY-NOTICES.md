@@ -221,6 +221,12 @@ la cabecera, el resto es el original.
   `motor/fixtures/referencia/silabas-referencia.json`). Falla en los prefijos `sub-`
   (`subrayar`, `sublunar`) y en `tungsteno`.
 - Empaquetado para navegador sin minificar: **16.215 bytes** (esbuild, 29/09, antes de copiarlo).
+- **Su aviso viaja en el JS del analizador** (11.1, hallazgo 1 del censo pre-despliegue). La
+  cabecera es un comentario `/*`, que el minificado de Vite quita: hasta el 06/10, el código de
+  silabea viajaba sin su aviso. Al empaquetar, [`web/astro.config.mjs`](web/astro.config.mjs)
+  (`avisoDeSilabea`) la convierte en comentario legal `/*!`, sin tocar el fichero, y
+  `comments.legal` la conserva. Lo vigila el juez 11 de
+  [`web/jueces/construccion.spec.ts`](web/jueces/construccion.spec.ts).
 
 ### 1.6 · Las que no son MIT
 

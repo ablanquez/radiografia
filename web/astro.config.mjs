@@ -51,6 +51,16 @@
  *    [DOC] https://vite.dev/guide/api-plugin#universal-hooks — transform:
  *    «Can be used to transform individual modules».
  *
+ * vite.plugins: avisoDeSilabea — desde el 11.1 (hallazgo 1 del censo
+ *    pre-despliegue, firmado por Antonio: vía a, sin tocar motor/src).
+ *    motor/src/terceros/silabea.cjs lleva en cabecera el LICENSE de silabea
+ *    (MIT) en un comentario «/*», que el minificado quita: su código viajaba
+ *    en el JS del analizador sin su aviso. Al empaquetarlo, esa misma
+ *    cabecera pasa a comentario legal «/*!» y comments.legal (arriba) la
+ *    conserva; el fichero no cambia (su huella, en THIRD-PARTY-NOTICES § 1.5,
+ *    la vigila motor/src/notices.spec.ts). Si la cabecera no está, el build
+ *    para. Lo vigila el juez 11 de jueces/construccion.spec.ts.
+ *
  * security.csp — la Content-Security-Policy de las páginas publicadas
  *    (encargo 8.1, b; firmada en la parada 1): connect-src 'self' (ningún
  *    fetch, XHR, WebSocket ni sendBeacon a otro origen) y form-action 'self'
@@ -117,6 +127,17 @@ const cspPrimero = {
 };
 
 /** @type {import('vite').Plugin} */
+const avisoDeSilabea = {
+  name: 'radiografia-aviso-de-silabea',
+  transform(codigo, id) {
+    if (!/[\\/]motor[\\/]src[\\/]terceros[\\/]silabea\.cjs$/.test(id)) return null;
+    const cabecera = /^\/\*(?=\r?\n \* silabea 1\.0\.0 )/;
+    if (!cabecera.test(codigo)) throw new Error('motor/src/terceros/silabea.cjs no empieza por su cabecera: su aviso MIT no viajaría');
+    return { code: codigo.replace(cabecera, '/*!'), map: null };
+  },
+};
+
+/** @type {import('vite').Plugin} */
 const avisosDePdfmake = {
   name: 'radiografia-avisos-de-pdfmake',
   transform(codigo, id) {
@@ -131,7 +152,7 @@ export default defineConfig({
   integrations: [cspPrimero],
   security: { csp: { directives: ["connect-src 'self'", "form-action 'self'"] } },
   vite: {
-    plugins: [avisosDePdfmake],
+    plugins: [avisoDeSilabea, avisosDePdfmake],
     optimizeDeps: { include: ['@radiografia/motor/navegador'] },
     build: { rolldownOptions: { output: { comments: { legal: true } } } },
   },

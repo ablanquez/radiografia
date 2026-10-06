@@ -48,6 +48,12 @@
  *      scripts/avisos-de-pdfmake.ts y lo pone astro.config.mjs), y
  *      THIRD-PARTY-NOTICES § 1.8 tiene una fila por pieza, con su versión y su
  *      licencia, y ninguna más. Ningún otro JS de dist/ lleva pdfmake.
+ *  11. Desde el 11.1 (hallazgo 1 del censo pre-despliegue, firmado por
+ *      Antonio: vía a), el JS de dist/ que lleva silabea lleva entero su
+ *      aviso MIT: el LICENSE que copia la cabecera de
+ *      motor/src/terceros/silabea.cjs (THIRD-PARTY-NOTICES § 1.5). Esa
+ *      cabecera es un comentario «/*» y el minificado la quitaba: el código de
+ *      silabea viajaba sin su aviso (docs/CENSO-PRE-DESPLIEGUE.md, § 10).
  *
  * El build, memorizado y con la telemetría apagada, y astro preview son los
  * de apoyo.ts (los comparte con textos-web.spec.ts y catalogo.spec.ts).
@@ -82,6 +88,18 @@ function jsDeDist(): { ruta: string; texto: string }[] {
 function licenciaDeAjv(): string {
   const desdeElMotor = createRequire(new URL('../../motor/package.json', import.meta.url));
   return readFileSync(desdeElMotor.resolve('ajv/LICENSE'), 'utf8').replace(/\r\n/g, '\n').trim();
+}
+
+/** Un texto línea a línea, sin la sangría, sin el « * » de las líneas de un comentario y sin espacios al final. */
+function sinMarcasDeComentario(texto: string): string {
+  return texto.replace(/\r\n/g, '\n').replace(/^[ \t]*\*?[ \t]?/gm, '').replace(/[ \t]+$/gm, '').trim();
+}
+
+/** El LICENSE de silabea, tal como lo copia la cabecera de motor/src/terceros/silabea.cjs (NOTICES § 1.5). */
+function licenciaDeSilabea(): string {
+  const fuente = readFileSync(new URL('../../motor/src/terceros/silabea.cjs', import.meta.url), 'utf8');
+  const cabecera = /^\/\*([\s\S]*?)\*\//.exec(fuente)?.[1] ?? '';
+  return sinMarcasDeComentario(cabecera.split('texto íntegro de su fichero LICENSE:')[1] ?? '');
 }
 
 describe('la web construida', () => {
@@ -153,6 +171,21 @@ describe('la web construida', () => {
     assert.ok(seccion !== '', 'el NOTICES no tiene § 1.8');
     const filas = [...seccion.matchAll(/^\| `([^`]+)` \| ([^|]+?) \| ([^|]+?) \|/gm)].map((m) => `${m[1]} ${m[2]!.trim()} ${m[3]!.trim()}`);
     assert.deepEqual(filas.sort(), paquetes.map((x) => `${x.paquete} ${x.version} ${x.licencia}`).sort(), 'las filas de § 1.8 frente a paquetes.json');
+  });
+
+  test('11 · el JS de dist/ que lleva silabea lleva entero su aviso MIT, el de la cabecera de motor/src/terceros/silabea.cjs', () => {
+    construir();
+    const licencia = licenciaDeSilabea();
+    assert.match(
+      licencia,
+      /^MIT License\n\nCopyright \(c\) 2018 Nicolás Cofré Méndez \(of the original library\)\nCopyright \(c\) 2018 Javier Arce \(of the node package and its tests\)\n\nPermission is hereby granted, /,
+      'la cabecera de silabea.cjs no lleva el LICENSE que se copió el 29/09',
+    );
+    assert.match(licencia, /\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software\.\n/);
+    // silabea, por un nombre de su código que la minificación no cambia: el método que exporta.
+    const conSilabea = jsDeDist().filter(({ texto }) => texto.includes('getSilabas'));
+    assert.ok(conSilabea.length > 0, 'ningún JS de dist/ lleva silabea');
+    for (const { ruta, texto } of conSilabea) assert.ok(sinMarcasDeComentario(texto).includes(licencia), `${ruta} no lleva el aviso MIT de silabea entero`);
   });
 
   test('7 · dist/ejemplos/ lleva los dos textos de ejemplo y los dos paquetes de prueba, byte a byte los de public/ejemplos/, en UTF-8 sin BOM y con \\n', async () => {
