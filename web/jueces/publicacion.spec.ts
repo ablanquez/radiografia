@@ -8,7 +8,7 @@
  *      CSP que la directiva no admitiría tal cual.
  *   3. La plantilla dice lo que firmó Antonio: cada grupo de caché con su Cache-Control; la CSP, nosniff y
  *      Referrer-Policy en todas las respuestas; HSTS de un año solo por https; la página que no existe; /.git fuera; los
- *      cuatro tipos; y ninguna regla de reescritura ni redirección a https.
+ *      cinco tipos, el del JS text/javascript; y ninguna regla de reescritura ni redirección a https.
  *   4. Cada fichero de un dist/ como el de verdad cae en un grupo de caché y en uno solo, con el Cache-Control firmado;
  *      una extensión sin grupo hace parar, y un JS sin la huella en el nombre, también.
  *   5. La rama: huérfana la primera vez, con exactamente los ficheros de dist/ (ni docs, ni jueces), byte a byte, también
@@ -163,6 +163,7 @@ describe('la publicación: el .htaccess y la rama publicacion, con un dist/ de p
       'AddType font/woff .woff',
       'AddType application/manifest+json .webmanifest',
       'AddType image/svg+xml .svg',
+      'AddType text/javascript .js',
       `Header always set Content-Security-Policy "${CSP}"`,
       'Header always set X-Content-Type-Options "nosniff"',
       'Header always set Referrer-Policy "strict-origin-when-cross-origin"',

@@ -7,7 +7,9 @@
  *   1. Cada fichero de dist/ responde 200, sin redirección, con su contenido (el de dist/, byte a byte) y las cabeceras
  *      de su grupo: el Cache-Control del .htaccess; la CSP, igual a la del <meta>; nosniff; Referrer-Policy; HSTS de un
  *      año por https (por http, ninguno: env=HTTPS); y su Content-Type: los de woff2, woff, webmanifest, svg y json, y,
- *      porque nosniff no deja pasar otro, el del HTML, el JS y el CSS.
+ *      porque nosniff no deja pasar otro, el del HTML, el JS y el CSS. El del JS, text/javascript y ningún otro
+ *      (decisión de Antonio del 06/10): el servidor lo daba como application/x-javascript, que la RFC 9239 da por
+ *      obsoleto, y que lo cambie es cosa del .htaccess.
  *   2. Cada página, en su dirección (la carpeta, sin index.html), responde 200 con la CSP por cabecera igual a su <meta>.
  *   3. /no-existe/ y /reglas/no-existe/x/ responden 404 con la página que no existe y las cabeceras de todas.
  *   4. /.git/HEAD, /.git/config, /.git y /.htaccess no se sirven: 403 o 404.
@@ -23,6 +25,8 @@
  * [DOC] https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/X-Content-Type-Options — nosniff: «Blocks a
  *    request if the request destination is of type style and the MIME type is not text/css, or of type script and the
  *    MIME type is not a JavaScript MIME type».
+ * [DOC] https://www.rfc-editor.org/rfc/rfc9239 — § 2: «The most widely supported media type in use is text/javascript;
+ *    all others are considered historical and obsolete aliases of text/javascript».
  * [DOC] https://fetch.spec.whatwg.org/#concept-request-redirect-mode — redirect «manual»: la respuesta de una
  *    redirección llega tal cual, sin seguirla.
  * [DOC] https://chromedevtools.github.io/devtools-protocol/tot/Log/ — Log.enable y Log.entryAdded (source, level, text);
@@ -81,7 +85,7 @@ function tipoDe(ruta: string): RegExp | null {
     svg: /^image\/svg\+xml$/,
     json: /^application\/json$/,
     html: /^text\/html$/,
-    js: /^(text|application)\/javascript$/,
+    js: /^text\/javascript$/,
     css: /^text\/css$/,
   };
   return tipos[ruta.split('.').at(-1)!] ?? null;

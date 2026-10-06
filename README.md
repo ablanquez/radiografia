@@ -492,7 +492,10 @@ Además:
 
 - `ErrorDocument 404 /404.html`: la página que no existe, con el código 404.
 - Todo lo que empieza por `/.git` da 404.
-- Los tipos de `.woff2`, `.woff`, `.webmanifest` y `.svg`.
+- Los tipos de `.woff2`, `.woff`, `.webmanifest` y `.svg`, y el del JS:
+  `text/javascript`, el que pide la
+  [RFC 9239](https://www.rfc-editor.org/rfc/rfc9239). El servidor lo daba
+  como `application/x-javascript`, que la RFC da por obsoleto.
 - Ninguna regla de reescritura: cada ruta es una carpeta con su
   `index.html`. La redirección de http a https la hace el panel, con
   «Forzar HTTPS».
@@ -514,8 +517,8 @@ Con la variable, los jueces de producción
 ([`web/jueces/produccion.spec.ts`](web/jueces/produccion.spec.ts))
 comprueban:
 
-- que cada fichero de `dist/` responde 200, con su contenido y las
-  cabeceras de su grupo;
+- que cada fichero de `dist/` responde 200, con su contenido, las
+  cabeceras de su grupo y su tipo (el del JS, `text/javascript`);
 - que cada página lleva la CSP por cabecera igual a su `<meta>`;
 - que `/no-existe/` da 404 con la página que no existe;
 - que `/.git` y `/.htaccess` no se sirven;

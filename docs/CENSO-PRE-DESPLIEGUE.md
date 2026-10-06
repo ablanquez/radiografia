@@ -747,7 +747,7 @@ Antonio firmó el 06/10, con la documentación del panel de Hostinger delante, l
   - HSTS de un año, solo por https (`env=HTTPS`), sin `includeSubDomains` ni `preload`;
   - `ErrorDocument 404 /404.html`, con la página que no existe (`web/src/pages/404.astro`, textos de Antonio);
   - todo lo que empieza por `/.git` da 404;
-  - el tipo de `.svg`, junto a los tres del § 9.3.
+  - el tipo de `.svg`, junto a los tres del § 9.3; y, desde la medida del 06/10, el de `.js`, `text/javascript` (abajo).
 - **Sin reescritura.** Cada ruta es una carpeta con su `index.html`. La redirección de http a https la hace el panel («Forzar HTTPS»).
 - **`mod_expires`, no.** La caché la pone `Cache-Control`, con `mod_headers`.
 
@@ -762,7 +762,7 @@ Antonio firmó el 06/10, con la documentación del panel de Hostinger delante, l
 - **Cabeceras que pone el servidor:** un `Expires` de una semana en el CSS, el JS, las fuentes, el SVG y el favicon. Donde va `max-age` manda `Cache-Control`; en los `no-cache`, la revalidación. Y la compresión: Brotli.
 - **http a https: CONSTA.** `/`, `/reglas/` y `/creditos/` dan 301 a la misma dirección por https.
 
-**Lo que falla en producción** (el juez 1 de producción, 25 discrepancias en 87 ficheros; los otros 302 jueces de la suite, en verde contra producción). **Pendiente de la decisión de Antonio, sin tocar nada:**
+**Lo que falla en producción** (el juez 1 de producción, 25 discrepancias en 87 ficheros; los otros 302 jueces de la suite, en verde contra producción), **y lo que decidió Antonio el 06/10:**
 
 1. **El CDN reescribe los cuatro PNG** (`icon-192.png`, `icon-512.png`, `icon-512-maskable.png` y `apple-touch-icon.png`). En la rama son los nuestros (`icon-192.png`, 2.423 bytes). Desde el CDN:
    - a quien no pide WebP le da otro PNG, del mismo tamaño en píxeles, con los fragmentos `eXIf` y `pHYs` añadidos (2.665 bytes);
@@ -770,7 +770,16 @@ Antonio firmó el 06/10, con la documentación del panel de Hostinger delante, l
    - en los dos casos, sin la CSP, `nosniff`, `Referrer-Policy` ni HSTS, y con `access-control-allow-origin: *`.
 
    Los píxeles que miran los jueces del icono en Chrome cuadran; los bytes y las huellas de `PROCEDENCIA.md`, no.
+
+   **Decisión:** Antonio desactivó el CDN automático del subdominio en hPanel (Rendimiento → CDN → «Desactivar el CDN automático»; estado «Inactivo»). Según la documentación del panel, tarda hasta 24-48 h en propagarse. El juez no cambia: sigue exigiendo en los cuatro PNG los bytes de `PROCEDENCIA.md` y nuestras cabeceras.
+
+   **Medido el 06/10 a las 15:39 (+02:00), antes de tocar nada: el CDN sigue en medio.** Todas las respuestas llevan `server: hcdn` y `x-hcdn-cache-status`, y los cuatro PNG siguen reescritos (`icon-192.png`: 2.665 bytes, o WebP de 1.502 a Chrome, frente a los 2.423 de la rama).
 2. **El JS sale como `application/x-javascript`** (los cinco de `_astro/`). Es un tipo JavaScript para el navegador, y `nosniff` no lo bloquea (WHATWG MIME Sniffing, § 4.6, «JavaScript MIME type»), y la web funciona. Pero la RFC 9239 lo da por obsoleto: «current implementations should use text/javascript». El juez esperaba `text/javascript` o `application/javascript`.
+
+   **Decisión:** `AddType text/javascript .js` en la plantilla, con la cita de la RFC 9239. Su § 2: «The most widely supported media type in use is text/javascript; all others are considered historical and obsolete aliases of text/javascript». Su § 6 pone `application/javascript` y `application/x-javascript` entre los obsoletos.
+   - El juez de producción exige ahora `text/javascript` y ningún otro.
+   - El de la plantilla (test 3 de `web/jueces/publicacion.spec.ts`) exige la línea.
+   - Contra la publicación `d3ae331`, el de producción da rojo en los cinco JS («application/x-javascript»). El verde, al medir la próxima publicación.
 
 Lo demás, contra producción y en verde:
 
