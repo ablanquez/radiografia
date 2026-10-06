@@ -17,6 +17,7 @@
  */
 import { ejemploNoCargado } from '../textos.ts';
 import { conBarraFinal } from './cargar.ts';
+import { motivoDelFallo } from './fallo.ts';
 
 export const GENERO_DE_LOS_EJEMPLOS = 'opinion';
 
@@ -37,6 +38,6 @@ export async function cargarEjemplo(base: string, ejemplo: Ejemplo, pedir: (url:
     if (!respuesta.ok) return { texto: null, problema: ejemploNoCargado(url, `HTTP ${respuesta.status}`) };
     return { texto: await respuesta.text(), problema: null };
   } catch (fallo) {
-    return { texto: null, problema: ejemploNoCargado(url, (fallo as Error).message) };
+    return { texto: null, problema: ejemploNoCargado(url, motivoDelFallo(fallo)) };
   }
 }

@@ -35,6 +35,7 @@
  */
 import type { Paquete, ResultadoDeValidacion } from '@radiografia/motor/navegador';
 import * as textos from '../textos.ts';
+import { motivoDelFallo } from './fallo.ts';
 
 /** El tamaño máximo de un paquete propio, en MB de 1.024 × 1.024 bytes [PROPIO, firmado en la parada 1]. */
 export const LIMITE_EN_MB = 2;
@@ -71,7 +72,7 @@ export async function leerPaquetePropio(
   try {
     dato = JSON.parse(await fichero.text());
   } catch (fallo) {
-    return rechazo(textos.noSeCargaPorJson(fichero.name), [textos.elNavegadorDice((fallo as Error).message)]);
+    return rechazo(textos.noSeCargaPorJson(fichero.name), [textos.elNavegadorDice(motivoDelFallo(fallo))]);
   }
   const { valido, errores } = validar(dato);
   if (!valido) return rechazo(textos.noSeCargaPorEsquema(fichero.name), errores.map((e) => e.texto));

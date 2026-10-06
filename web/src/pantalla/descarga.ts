@@ -22,6 +22,7 @@
  */
 import * as textos from '../textos.ts';
 import { conBarraFinal } from './cargar.ts';
+import { motivoDelFallo } from './fallo.ts';
 import { informeEnDatos, type Analisis } from './modelo-informe.ts';
 
 /** El estado de un botón: su línea, con un texto o vacía y oculta. */
@@ -52,7 +53,7 @@ export function engancharDescarga(boton: HTMLButtonElement, estado: HTMLElement,
       const { descargarElInforme } = await import('./generar-pdf.ts');
       await descargarElInforme(informeEnDatos(a), conBarraFinal(a.base));
     } catch (fallo) {
-      decir(estado, textos.informeNoPreparado(fallo instanceof Error ? fallo.message : String(fallo)));
+      decir(estado, textos.informeNoPreparado(motivoDelFallo(fallo)));
     } finally {
       boton.textContent = nombre;
       boton.disabled = !activo();

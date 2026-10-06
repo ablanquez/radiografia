@@ -18,6 +18,7 @@
  */
 import type { Paquete, ResultadoDeValidacion } from '@radiografia/motor/navegador';
 import { noSeCargo } from '../textos.ts';
+import { motivoDelFallo } from './fallo.ts';
 
 /** Los dos paquetes incluidos, en el orden en que se analizan: RadiografIA y Español correcto. */
 export const FICHEROS = ['radiografia.json', 'espanol-correcto.json'] as const;
@@ -56,7 +57,7 @@ export async function cargarPaquetes(
       }
       paquetes.push(dato as Paquete);
     } catch (fallo) {
-      problemas.push({ paquete: fichero, mensajes: [noSeCargo(url, (fallo as Error).message)] });
+      problemas.push({ paquete: fichero, mensajes: [noSeCargo(url, motivoDelFallo(fallo))] });
     }
   }
   return problemas.length === 0 ? { paquetes, problemas: [] } : { paquetes: null, problemas };

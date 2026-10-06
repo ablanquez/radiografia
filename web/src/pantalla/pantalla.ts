@@ -92,6 +92,7 @@ import { analizar, validarPaquete, type Paquete } from '@radiografia/motor/naveg
 import * as textos from '../textos.ts';
 import { cargarPaquetes } from './cargar.ts';
 import { cargarEjemplo, GENERO_DE_LOS_EJEMPLOS, type Ejemplo } from './ejemplos.ts';
+import { motivoDelFallo } from './fallo.ts';
 import { GENERO_POR_DEFECTO, generosDe, nombreDeGenero } from './generos.ts';
 import {
   indexar,
@@ -263,7 +264,7 @@ async function analizarYPintar(paquetes: readonly Paquete[], indice: Indice, voz
       medidor.querySelector<HTMLElement>('.pastilla > [tabindex]')?.focus();
     }
   } catch (fallo) {
-    pintarProblemas(problemas, [{ paquete: textos.EL_ANALISIS, mensajes: [(fallo as Error).message] }]);
+    pintarProblemas(problemas, [{ paquete: textos.EL_ANALISIS, mensajes: [motivoDelFallo(fallo)] }]);
   }
 }
 
