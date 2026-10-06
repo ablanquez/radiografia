@@ -13,8 +13,9 @@
 >
 > **Parada 2 (06/10/2026).** Antonio firmó los veinte hallazgos. Qué se hizo
 > con cada uno (arreglado en qué commit, declarado o a la nevera), el
-> hallazgo 21, que salió al arreglar, y `dist/` antes y después: § 14. El
-> resto se queda como se escribió sobre `4b8f9f2`.
+> hallazgo 21, que salió al arreglar y se arregló con la misma firma que el
+> 18, y `dist/` antes y después: § 14. El resto se queda como se escribió
+> sobre `4b8f9f2`.
 >
 > **De dónde sale el checklist.** El encargo remite a la sección «BLOQUE A ·
 > CÓDIGO — el checklist» de `GUIA-BUENAS-PRACTICAS.md`. Ese fichero no está
@@ -639,7 +640,7 @@ Cómo quedó cada uno tras la parada 2, en el § 14.1.
 
 ## 14 · La parada 2 (06/10/2026): lo firmado y lo hecho
 
-Antonio firmó los veinte hallazgos el 06/10. Este apartado dice qué se hizo con cada uno: commits atómicos en `main`, cada uno verificado en un clon limpio (tipos, motor, build y jueces de la web en Chrome) y sin push. El resto del censo se queda como se escribió sobre `4b8f9f2`.
+Antonio firmó los veinte hallazgos el 06/10 y, ese mismo día, después, el 21 (§ 14.4). Este apartado dice qué se hizo con cada uno: commits atómicos en `main`, cada uno verificado en un clon limpio (tipos, motor, build y jueces de la web en Chrome) y sin push. El resto del censo se queda como se escribió sobre `4b8f9f2`.
 
 ### 14.1 · El estado de cada hallazgo
 
@@ -665,7 +666,7 @@ Antonio firmó los veinte hallazgos el 06/10. Este apartado dice qué se hizo co
 | 18 | según lo que lleve su runtime | **arreglado**: su runtime es código de Rolldown (MIT), no generado del nuestro (va tal cual dentro del empaquetador: «export var __create = Object.create; …»). Su `LICENSE` va en cabecera de su trozo (`avisoDeRolldown`, por el módulo `\0rolldown/runtime.js`), con una línea en el NOTICES § 1.1 y otra en la página de créditos | `6c8f2fd` | `construccion.spec.ts` (13) |
 | 19 | arreglar | **arreglado**: `predev` y `prebuild` llaman a `npm run preparar`, la cadena definida una vez; los `engines` de cada `package.json` son convención de npm y se quedan | `3f9feeb` | `paquete.spec.ts` (2) |
 | 20 | nevera | **nevera** (§ 14.3) | — | — |
-| 21 | — (nuevo, § 14.4) | **sin firmar** | — | — |
+| 21 | el mismo trato que el 18 (nuevo, § 14.4) | **arreglado**: la función de precarga de Vite es código de Vite (MIT) tal cual. La parte MIT de su `LICENSE.md` («Vite core license») va en cabecera del trozo que la lleva (`avisoDeVite`, por el módulo `\0vite/preload-helper.js`), con una línea en el NOTICES § 1.1 y otra en la página de créditos; la entrada de la bitácora, cerrada | `40dd211` (y `79ff94d`, la bitácora) | `construccion.spec.ts` (15), rojo antes del verde |
 
 ### 14.2 · Lo declarado, con su porqué
 
@@ -683,31 +684,32 @@ Antonio firmó los veinte hallazgos el 06/10. Este apartado dice qué se hizo co
 - **15** · El tope del texto pegado: medir cuánto aguanta la pestaña y poner un tope con su mensaje en `textos.ts`.
 - **20** · El autor, la licencia y el idioma de un paquete, en pantalla (la línea del paquete propio y su ficha completa).
 
-### 14.4 · Hallazgo 21, nuevo y sin firmar: la función de precarga de Vite viaja sin aviso
+### 14.4 · Hallazgo 21, nuevo: la función de precarga de Vite viajaba sin aviso
 
 **Qué es.** Desde el 9.3, el JS del analizador lleva la función `preload` del núcleo de Vite 8.3.2 (MIT, © VoidZero Inc. and Vite contributors; `node_modules/vite/dist/node/chunks/node.js`). Vite la mete al empaquetar el `import()` del trozo de pdfmake (`web/src/pantalla/descarga.ts`): `__vite__mapDeps`, la precarga con `<link rel="modulepreload">` y el evento `vite:preloadError`. Su aviso no viaja.
 
 **Lo que guardó silencio.** El § 10 y el § 11.1 de este censo dieron por completa la lista de lo que viaja. El NOTICES § 1.1 decía que «el JS no lleva código de Vite ni de Astro». Entrada en la bitácora, abierta antes de arreglar nada (`e04c83b`). Se vio al preparar el 18, buscando en cada JS de `dist/` otro código del empaquetador.
 
-**Propuesta (sin hacer, a la espera de firma):** el mismo trato que el 18:
+**Firma (06/10):** el mismo trato que el 18. **Hecho en `40dd211`**, sin tocar `motor/src` ni `paquetes/`:
 
-- la parte de Vite de su `LICENSE.md` (la cabecera MIT, sin la lista de lo que Vite lleva empaquetado), como comentario legal en el trozo que lleva la función;
-- una línea en el NOTICES y en la página de créditos;
-- un juez en `construccion.spec.ts` que la busque por `vite:preloadError`.
+- `avisoDeVite`, en `web/astro.config.mjs`, pone en cabecera del trozo cuyo `moduleIds` lleva `\0vite/preload-helper.js` (el módulo con el que Vite escribe la función; visto en un build en ese trozo y en ningún otro) la parte «Vite core license» del `LICENSE.md` de vite, como comentario legal. Detrás de esa parte van las licencias de lo que Vite lleva empaquetado, y la función no lleva nada de eso. Si la parte no está, el build para;
+- el juez 15 de `construccion.spec.ts`: el único trozo con `vite:preloadError` lleva entera esa parte. Rojo antes del verde («…index.astro_astro_type_script_index_0_lang.D372zeZt.js no lleva entero el aviso MIT de Vite») y tres contrapruebas en rojo;
+- el NOTICES § 1.1 (su aviso viaja), la obra «Vite» en la página de créditos y el README;
+- la entrada de la bitácora, cerrada en `79ff94d`, con la causa: lo que viaja se miraba por las piezas con nombre, y el código que el empaquetador escribe por su cuenta no lo nombraba nadie.
 
-Coste: acotado. No toca `motor/src` ni `paquetes/`.
+Clon limpio de `40dd211`: tipos limpios, motor 909/899, web 281/281.
 
 ### 14.5 · `dist/` antes y después
 
-Los dos, construidos en clon con `npm run build`; el de después, en `8a1d7d8`, con todos los arreglos de código. Lo que viaja en cada página, medido en Chrome, en el README («Lo que viaja al navegador»).
+Los tres, construidos en clon con `npm run build`: el de después, en `8a1d7d8`, con todos los arreglos de código de los veinte; y el último, con el del 21, en el clon de trabajo con los ficheros de `40dd211` byte a byte (el mismo `dist/` en dos builds). Lo que viaja en cada página, medido en Chrome, en el README («Lo que viaja al navegador»).
 
-| | antes (`4b8f9f2`) | después (`8a1d7d8`) |
-|---|---:|---:|
-| ficheros | 85 | 86 |
-| páginas HTML | 52 | 53 |
-| bytes | 2.604.718 | 2.627.894 (+23.176) |
-| el analizador al cargar: 15 peticiones, bytes | 699.354 | 703.220 |
-| ídem, con gzip | 249.866 | 252.083 |
+| | antes (`4b8f9f2`) | después (`8a1d7d8`) | con el 21 (`40dd211`) |
+|---|---:|---:|---:|
+| ficheros | 85 | 86 | 86 |
+| páginas HTML | 52 | 53 | 53 |
+| bytes | 2.604.718 | 2.627.894 (+23.176) | 2.629.658 (+1.764) |
+| el analizador al cargar: 15 peticiones, bytes | 699.354 | 703.220 | 704.369 |
+| ídem, con gzip | 249.866 | 252.083 | 252.159 |
 
 Lo que cambia, y por qué hallazgo:
 
@@ -718,6 +720,7 @@ Lo que cambia, y por qué hallazgo:
 - **El CSS del catálogo** (antes `pintar.*.css`, 7.391 bytes; ahora `Catalogo.*.css`, 8.377) lleva también los estilos de la página de créditos (2). **El CSS común** (`hoja.*.css`) pasa de 12.981 a 13.174: el pie con su enlace (2).
 - **Las cadenas** (`textos.*.js`), de 10.435 a 10.531 bytes: las nuevas que usa el JS (2 y 8).
 - **El trozo de pdfmake, de 1.093.577 a 1.093.403 bytes**: lleva `tokens.json` dentro (16), ahora sin los dos tokens (9).
+- **Con el 21**: el JS del analizador, de 158.521 a 159.670 bytes (el aviso MIT de Vite), y `creditos/index.html`, de 14.469 a 15.084 (la obra «Vite»): entre los dos, los 1.764 bytes de más de `dist/`.
 
 ---
 
