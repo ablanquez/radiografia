@@ -751,12 +751,34 @@ Antonio firmó el 06/10, con la documentación del panel de Hostinger delante, l
 - **Sin reescritura.** Cada ruta es una carpeta con su `index.html`. La redirección de http a https la hace el panel («Forzar HTTPS»).
 - **`mod_expires`, no.** La caché la pone `Cache-Control`, con `mod_headers`.
 
-**NO CONSTA, y lo miran los jueces de producción** (`web/jueces/produccion.spec.ts`, con `URL_PRODUCCION`):
+**Lo que no constaba, medido desde fuera el 06/10.** Con los jueces de producción (`web/jueces/produccion.spec.ts`, con `URL_PRODUCCION=https://radiografia.antonioblanquez.es`), sobre la publicación `d3ae331` (de `main` `1e19715`). Antonio la publicó desde hPanel Git en `public_html`, con el SSL activo y la redirección a https. La web llega a través del CDN de Hostinger (`server: hcdn`).
 
-- que LiteSpeed rellene la variable `HTTPS` (`env=HTTPS`); su documentación oficial da el ejemplo de HSTS sin ella;
-- que cumpla `RedirectMatch`, `AddType` y `FilesMatch` en el `.htaccess`: la documentación oficial no los lista uno a uno;
-- si el despliegue deja una carpeta `.git` en el directorio;
-- si el servidor añade cabeceras propias que dupliquen las nuestras.
+- **`FilesMatch` y `Header set Cache-Control`: CONSTA.** Cada grupo lleva el suyo: el JS y el CSS, `public, max-age=31536000, immutable`; las fuentes, `public, max-age=604800`; lo demás, `no-cache`.
+- **`Header always set`: CONSTA.** La CSP, `nosniff` y `Referrer-Policy` van en todas las respuestas, también en el 404, salvo en los PNG (abajo). La CSP por cabecera es idéntica al `<meta>` en las 53 páginas y en la 404.
+- **`ErrorDocument 404`: CONSTA.** `/no-existe/` y `/reglas/no-existe/x/` dan 404 con `dist/404.html`.
+- **`env=HTTPS`: CONSTA** que HSTS (`max-age=31536000`) va en las respuestas por https. Por http no se puede ver: el panel redirige antes, con un 301 sin HSTS.
+- **`AddType`: CONSTA el resultado** (`font/woff2`, `font/woff`, `application/manifest+json`, `image/svg+xml`; y `application/json` en los JSON). Si lo pone nuestra línea o el servidor no se distingue sin quitarla.
+- **`RedirectMatch`: NO CONSTA.** Hostinger da 403 a todo lo que cuelga de `/.git/`, exista o no, y a `/.htaccess`, antes del `.htaccess` y sin sus cabeceras. Ninguna otra dirección distingue la regla de un simple «no existe». Si el despliegue deja una carpeta `.git`: sigue sin constar, y no se sirve.
+- **Cabeceras que pone el servidor:** un `Expires` de una semana en el CSS, el JS, las fuentes, el SVG y el favicon. Donde va `max-age` manda `Cache-Control`; en los `no-cache`, la revalidación. Y la compresión: Brotli.
+- **http a https: CONSTA.** `/`, `/reglas/` y `/creditos/` dan 301 a la misma dirección por https.
+
+**Lo que falla en producción** (el juez 1 de producción, 25 discrepancias en 87 ficheros; los otros 302 jueces de la suite, en verde contra producción). **Pendiente de la decisión de Antonio, sin tocar nada:**
+
+1. **El CDN reescribe los cuatro PNG** (`icon-192.png`, `icon-512.png`, `icon-512-maskable.png` y `apple-touch-icon.png`). En la rama son los nuestros (`icon-192.png`, 2.423 bytes). Desde el CDN:
+   - a quien no pide WebP le da otro PNG, del mismo tamaño en píxeles, con los fragmentos `eXIf` y `pHYs` añadidos (2.665 bytes);
+   - a Chrome le da **WebP** en la misma dirección (`content-type: image/webp`, 1.502 bytes);
+   - en los dos casos, sin la CSP, `nosniff`, `Referrer-Policy` ni HSTS, y con `access-control-allow-origin: *`.
+
+   Los píxeles que miran los jueces del icono en Chrome cuadran; los bytes y las huellas de `PROCEDENCIA.md`, no.
+2. **El JS sale como `application/x-javascript`** (los cinco de `_astro/`). Es un tipo JavaScript para el navegador, y `nosniff` no lo bloquea (WHATWG MIME Sniffing, § 4.6, «JavaScript MIME type»), y la web funciona. Pero la RFC 9239 lo da por obsoleto: «current implementations should use text/javascript». El juez esperaba `text/javascript` o `application/javascript`.
+
+Lo demás, contra producción y en verde:
+
+- la red sin nada fuera del origen;
+- ni violaciones de la CSP ni errores en la consola;
+- el PDF descargado (`RadiografIA.pdf`, `%PDF-`);
+- los 320 px, el tamaño de lo que se pulsa y el árbol de accesibilidad;
+- la fidelidad al modelo, con el mismo `medidas-modelo.json`.
 
 **El build.**
 
