@@ -1,0 +1,358 @@
+{
+  "$schema": "https://raw.githubusercontent.com/ablanquez/radiografia/main/motor/esquema/paquete.schema.json",
+  "cabecera": {
+    "nombre": "Español correcto",
+    "version": "0.1.0",
+    "idioma": "es",
+    "descripcion": "Siete avisos de norma de la RAE y la ASALE que suelen delatar un calco o una traducción del inglés: pasiva perifrástica con agente, posesivo en lugar del artículo, puntuación dentro de las comillas, mayúscula en cada palabra de un título, meses y días con mayúscula, coma de millares y símbolo de moneda antepuesto. No mide estilo de IA: cuenta avisos de norma por cada 1.000 palabras. Cada regla cita la sección de la Ortografía o de la Nueva gramática que la respalda.",
+    "autor": "Antonio Blánquez Cabeza",
+    "licencia": "Apache-2.0",
+    "familias": [
+      {
+        "id": "gramatica",
+        "nombre": "Gramática",
+        "informativa": false
+      },
+      {
+        "id": "ortotipografia",
+        "nombre": "Ortotipografía",
+        "informativa": false
+      }
+    ]
+  },
+  "reglas": [
+    {
+      "id": "gram-pasiva-perifrastica",
+      "nombre": "Pasiva perifrástica con agente",
+      "enClaro": "Pasiva con «ser» y quien lo hace, como «fue redactado por el comité», donde suena mejor la activa.",
+      "familia": "gramatica",
+      "detector": "patrón",
+      "parametros": {
+        "regex": "(?<!\\p{L})(fue|fueron|es|son|ha sido|han sido|ser[aá]|ser[aá]n|est[aá] siendo) \\p{L}+(ad[oa]s?|id[oa]s?|t[oa]s?|ch[oa]s?)(?= por (el|la|los|las|un|una|unos|unas|su|sus|este|esta|estos|estas|dicho|dicha) )",
+        "flags": "iu",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": true,
+          "tildes": false
+        }
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Una pasiva con «ser» y participio seguida de un agente con determinante («fue redactado por el comité»), donde el español suele preferir la activa o la pasiva con «se». La pasiva perifrástica es correcta, pero la Nueva gramática observa que «las pasivas reflejas son más frecuentes que las perifrásticas tanto en la lengua oral como en la escrita» (§ 41.11l), y la traducción automática del inglés prefiere la perifrástica (Martín de Santa Olalla y Rico 2025). Es un aviso de norma, no de estilo: este paquete cuenta avisos por cada 1.000 palabras y no mide si un texto lo escribió una máquina.",
+      "sugerencia": "Con agente, pásala a activa: «El comité redactó el informe». Sin agente, usa «se»: «Se redactó el informe». Con un agente definido, la pasiva con «se» suena forzada (Nueva gramática, § 41.11h).",
+      "excepciones": [
+        "No es un error: la pasiva perifrástica es gramatical; el aviso es de frecuencia.",
+        "Solo avisa con el agente pegado al participio y con determinante («por el», «por su», «por dicho»…): «fue acusado hace unos días por…» no dispara.",
+        "Busca el participio por su terminación (-ado, -ido, -to, -cho): un adjetivo seguido de «por» causal también entra. «Es conocido por su honradez» o «son distintos por su origen» disparan."
+      ],
+      "fuente": [
+        {
+          "titulo": "RAE y ASALE, Nueva gramática de la lengua española, § 41.11h y § 41.11l, la pasiva refleja (leída en web.archive.org, captura del 31/03/2025: rae.es no deja leerla a un programa)",
+          "url": "https://www.rae.es/gram%C3%A1tica/sintaxis/la-pasiva-refleja-i-caracter%C3%ADsticas-fundamentales"
+        },
+        {
+          "titulo": "Martín de Santa Olalla y Rico (2025), Hermēneus 27: la traducción automática neuronal del inglés «prefiere la pasiva a la pasiva refleja o el posesivo frente al artículo definido» (sintaxis.md § 6)",
+          "url": "https://revistas.uva.es/index.php/hermeneus/en/article/download/8363/7380"
+        }
+      ],
+      "origenLista": "formas de «ser», terminaciones de participio y determinantes del agente [PROPIO], a partir de sintaxis.md § 6 (el calco de la traducción automática lleva agente)",
+      "nivelEvidencia": "norma",
+      "ejemplos": {
+        "positivos": [
+          "El informe fue redactado por el comité.",
+          "El edificio será inaugurado por el alcalde.",
+          "Es conocido por su honradez."
+        ],
+        "negativos": [
+          "La puerta fue cerrada.",
+          "Se redactó el informe.",
+          "Es alto por naturaleza."
+        ]
+      }
+    },
+    {
+      "id": "gram-posesivo-por-articulo",
+      "nombre": "Posesivo en lugar de artículo",
+      "enClaro": "Posesivo donde va el artículo, como «levantó su mano» en vez de «levantó la mano».",
+      "familia": "gramatica",
+      "detector": "patrón",
+      "parametros": {
+        "regex": "(?<!\\p{L})(levant[oó]|lav[oó]|cerr[oó]|abri[oó]|mov[ií][oó]|sacudi[oó]|frot[oó]|se puso|se quit[oó]|met[ií][oó]|gir[oó]) (su|sus|mi|mis|tu|tus) (mano|manos|cabeza|ojos|pierna|piernas|brazo|brazos|pelo|cara|abrigo|chaqueta|sombrero|gafas|zapatos)(?!\\p{L})",
+        "flags": "iu",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": true,
+          "tildes": false
+        }
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Un posesivo delante de una parte del cuerpo o de una prenda, con verbos como levantar, abrir, cerrar o quitarse («levantó su mano», «se quitó su chaqueta»). La Nueva gramática explica que en español se usa el artículo cuando la oración ya dice quién es el poseedor y el nombre designa algo constitutivo de él, «como en Carlota levantó la mano» (§ 14.7f), sobre todo con verbos de movimiento natural, y también con los objetos de la esfera personal («Olvidé el paraguas», § 14.7j). La traducción automática del inglés prefiere el posesivo (Martín de Santa Olalla y Rico 2025). Es un aviso de norma, no de estilo: este paquete cuenta avisos por cada 1.000 palabras y no mide si un texto lo escribió una máquina.",
+      "sugerencia": "Usa el artículo: «Levantó la mano», «Se quitó la chaqueta».",
+      "excepciones": [
+        "El posesivo hace falta si el poseedor es otro o hay que deshacer una ambigüedad: «Le cogió su mano, no la de su hermano».",
+        "Con un adjetivo delante del nombre, el posesivo es normal y no dispara: «Levantó sus grandes ojos».",
+        "«lavó» y «frotó» no son verbos de movimiento natural: la Nueva gramática avisa de que con ellos el artículo puede designar algo externo («Lavó la cabeza», § 14.7g). Están en la lista [PROPIO], y la regla no distingue ese matiz.",
+        "Solo los verbos y los nombres de la lista: «Perdió su cartera» no dispara."
+      ],
+      "fuente": [
+        {
+          "titulo": "RAE y ASALE, Nueva gramática de la lengua española, § 14.7f, § 14.7g y § 14.7j, el artículo determinado con valor de posesivo (leída en web.archive.org, captura del 09/05/2024: rae.es no deja leerla a un programa)",
+          "url": "https://www.rae.es/gram%C3%A1tica/sintaxis/relaciones-de-inclusi%C3%B3n-y-pertenencia-el-art%C3%ADculo-determinado-con-valor-de-posesivo"
+        },
+        {
+          "titulo": "Martín de Santa Olalla y Rico (2025), Hermēneus 27: la traducción automática neuronal del inglés «prefiere la pasiva a la pasiva refleja o el posesivo frente al artículo definido» (sintaxis.md § 6)",
+          "url": "https://revistas.uva.es/index.php/hermeneus/en/article/download/8363/7380"
+        }
+      ],
+      "origenLista": "verbos y sustantivos [PROPIO], a partir del ejemplo de sintaxis.md § 6 («levantó su mano») y de los de la Nueva gramática § 14.7f y § 14.7j",
+      "nivelEvidencia": "norma",
+      "ejemplos": {
+        "positivos": [
+          "Levantó su mano.",
+          "Se quitó su chaqueta al entrar.",
+          "Cerró sus ojos y respiró hondo."
+        ],
+        "negativos": [
+          "Levantó la mano.",
+          "Perdió su cartera.",
+          "Levantó sus grandes ojos."
+        ]
+      }
+    },
+    {
+      "id": "orto-punto-dentro-de-comillas",
+      "nombre": "Puntuación dentro de las comillas",
+      "enClaro": "El punto o la coma dentro de las comillas de cierre, a la inglesa: «hola.» en vez de «hola».",
+      "familia": "ortotipografia",
+      "detector": "patrón",
+      "parametros": {
+        "regex": "[.,;:][»\"”](?!\\p{L})",
+        "flags": "iu",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": true,
+          "tildes": false
+        }
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Un punto, una coma, un punto y coma o dos puntos delante de las comillas de cierre («dijo «hola.»»), como se hace en inglés. La Ortografía (2010, cap. III, § 3.4.8.3a): «Los delimitadores principales (punto, coma, punto y coma, y dos puntos) se escriben siempre después de las comillas de cierre». Es un aviso de norma, no de estilo: este paquete cuenta avisos por cada 1.000 palabras y no mide si un texto lo escribió una máquina.",
+      "sugerencia": "Pasa el signo detrás de las comillas: «hola».",
+      "excepciones": [
+        "Una abreviatura al final de la cita conserva su punto: «…, etc.» dispara aunque esté bien escrito.",
+        "Solo mira la prosa: las citas dentro de tablas o viñetas no cuentan."
+      ],
+      "fuente": [
+        {
+          "titulo": "RAE y ASALE, Ortografía de la lengua española (2010), cap. III, § 3.4.8.3a, las comillas y otros signos (leída en web.archive.org, captura del 01/08/2025: rae.es no deja leerla a un programa)",
+          "url": "https://www.rae.es/ortograf%C3%ADa/concurrencia-con-otros-signos-5"
+        }
+      ],
+      "origenLista": null,
+      "nivelEvidencia": "norma",
+      "ejemplos": {
+        "positivos": [
+          "Dijo «hola.» y se fue.",
+          "Dijo \"hola,\" pero no entró.",
+          "Lo llamó “el mejor año de su vida.”"
+        ],
+        "negativos": [
+          "Dijo «hola». Y se fue.",
+          "«¿Dónde vas?». Nadie contestó.",
+          "Dijo «hola», pero no entró."
+        ]
+      }
+    },
+    {
+      "id": "orto-mayuscula-en-cada-palabra-de-titulo",
+      "nombre": "Mayúscula en cada palabra del título",
+      "enClaro": "Títulos con mayúscula en cada palabra, a la inglesa, como «Guía Completa Para Empezar».",
+      "familia": "ortotipografia",
+      "detector": "estructural",
+      "parametros": {
+        "posicion": "inicio-parrafo",
+        "regex": "(#{1,6} )?(\\p{Lu}\\p{Ll}+ (de |del |la |el |y |en |a |para |con )?){3,}\\p{Lu}\\p{Ll}+",
+        "flags": "u",
+        "sobreNoProsa": true
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Un título o un encabezado con mayúscula inicial en cada palabra («Guía Completa Para Mejorar Tu Productividad»), a la inglesa. La Ortografía (2010, cap. IV) dice que en los títulos de las subdivisiones de libros y documentos «solo se escribe con mayúscula inicial la primera palabra, además de aquellas otras que la requieran por su naturaleza» (§ 4.2.4.8.1.3), y lo mismo en los títulos de las obras (§ 4.2.4.8.1.1.1). Mira el principio de cada párrafo y de cada encabezado. Es un aviso de norma, no de estilo: este paquete cuenta avisos por cada 1.000 palabras y no mide si un texto lo escribió una máquina.",
+      "sugerencia": "Deja la mayúscula en la primera palabra y en los nombres propios: «Guía completa para mejorar tu productividad».",
+      "excepciones": [
+        "Nombres propios largos, instituciones y organismos, que llevan mayúscula en cada palabra significativa: «Ministerio de Asuntos Exteriores y Cooperación» dispara aunque esté bien escrito, también al principio de una frase.",
+        "Con tres palabras no dispara: «Real Academia Española» queda fuera, pero también un título a la inglesa de tres palabras.",
+        "Títulos en inglés citados tal cual.",
+        "Texto cortado a mano (encargo 6.1: párrafos según CommonMark): si una línea acaba en punto y la siguiente empieza por mayúscula, el motor abre ahí un párrafo (excepción web), y la regla puede dispararse en ese principio de línea con un nombre largo de institución. Y un título sin punto seguido de su texto en la línea siguiente queda en el mismo párrafo, al principio: se sigue viendo."
+      ],
+      "fuente": [
+        {
+          "titulo": "RAE y ASALE, Ortografía de la lengua española (2010), cap. IV, § 4.2.4.8.1.1.1 (títulos de obras) y § 4.2.4.8.1.3 (subdivisiones de libros y documentos) (leída en web.archive.org, captura del 18/07/2025: rae.es no deja leerla a un programa)",
+          "url": "https://www.rae.es/ortograf%C3%ADa/denominaciones-relacionadas-con-la-actividad-intelectual-o-cultural-del-hombre"
+        }
+      ],
+      "origenLista": "[PROPIO]: cuatro palabras seguidas o más con inicial mayúscula al principio de un párrafo o de un encabezado; pueden ir en minúscula entre ellas de, del, la, el, y, en, a, para y con",
+      "nivelEvidencia": "norma",
+      "ejemplos": {
+        "positivos": [
+          "Guía Completa Para Mejorar Tu Productividad",
+          "## Los Cinco Pilares Del Éxito Empresarial",
+          "Ministerio de Asuntos Exteriores y Cooperación"
+        ],
+        "negativos": [
+          "Guía completa para mejorar tu productividad",
+          "Real Academia Española",
+          "## Los cinco pilares del éxito empresarial"
+        ]
+      }
+    },
+    {
+      "id": "orto-mes-o-dia-con-mayuscula",
+      "nombre": "Mes o día con mayúscula",
+      "enClaro": "Meses y días de la semana con mayúscula dentro de la frase, como «el Lunes 3 de Marzo».",
+      "familia": "ortotipografia",
+      "detector": "patrón",
+      "parametros": {
+        "regex": "(?<=[^.!?¿¡:\\n]\\s)(Enero|Febrero|Marzo|Abril|Mayo|Junio|Julio|Agosto|Septiembre|Setiembre|Octubre|Noviembre|Diciembre|Lunes|Martes|Mi[eé]rcoles|Jueves|Viernes|S[aá]bados?|Domingos?)(?!\\p{L})",
+        "flags": "u",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": false,
+          "tildes": false
+        }
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Un mes o un día de la semana con mayúscula dentro de la frase («el Lunes 3 de Marzo»), como en inglés. La Ortografía (2010, cap. IV, § 4.2.4.10.1): los días de la semana, los meses y las estaciones «deben escribirse con minúscula, ya que se consideran nombres comunes». No mira el principio de la frase, donde la mayúscula es obligada, ni lo que va detrás de dos puntos [PROPIO]. Es un aviso de norma, no de estilo: este paquete cuenta avisos por cada 1.000 palabras y no mide si un texto lo escribió una máquina.",
+      "sugerencia": "Escríbelo con minúscula: «el lunes 3 de marzo».",
+      "excepciones": [
+        "Expresiones que la Ortografía escribe con mayúscula por ser nombres propios: festividades, fechas históricas, lugares e instituciones («Viernes Santo», «plaza del Dos de Mayo», «hospital Doce de Octubre»). Disparan aunque estén bien escritas.",
+        "Nombres de persona que coinciden con un mes o un día: «Conocí a Mayo en 2019» dispara."
+      ],
+      "fuente": [
+        {
+          "titulo": "RAE y ASALE, Ortografía de la lengua española (2010), cap. IV, § 4.2.4.10.1, días de la semana, meses y estaciones (leída en web.archive.org, captura del 23/12/2025: rae.es no deja leerla a un programa)",
+          "url": "https://www.rae.es/ortograf%C3%ADa/referencias-temporales-cronol%C3%B3gicas-o-hist%C3%B3ricas"
+        }
+      ],
+      "origenLista": "los doce meses (con la variante «setiembre») y los siete días de la semana, sábado y domingo también en plural",
+      "nivelEvidencia": "norma",
+      "ejemplos": {
+        "positivos": [
+          "Nos vemos el Lunes 3 de Marzo.",
+          "La reunión es el próximo Viernes.",
+          "Conocí a Mayo en 2019."
+        ],
+        "negativos": [
+          "Nos vemos el lunes 3 de marzo.",
+          "Marzo empezó lluvioso.",
+          "Fecha: Lunes 3 de marzo."
+        ]
+      }
+    },
+    {
+      "id": "orto-cifras-a-la-inglesa",
+      "nombre": "Millares separados con coma",
+      "enClaro": "Una coma para separar los millares, como «1,500», que en español se lee como decimal.",
+      "familia": "ortotipografia",
+      "detector": "patrón",
+      "parametros": {
+        "regex": "(?<![\\d.,])\\d{1,3}(,\\d{3})+(?!\\d)",
+        "flags": "iu",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": true,
+          "tildes": false
+        }
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Una coma para separar los millares («1,500 dólares»), como en inglés. La Ortografía (2010, cap. VIII, § 2.2.1.1): «No deben utilizarse ni el punto ni la coma para separar los grupos de tres dígitos en la parte entera de un número. Para ello solo se admite hoy el uso de un pequeño espacio en blanco». El punto decimal («3.14») no se avisa: la Ortografía admite el punto y la coma como separador decimal, y «se recomienda el uso del punto» (§ 2.2.1.2.1). Es un aviso de norma, no de estilo: este paquete cuenta avisos por cada 1.000 palabras y no mide si un texto lo escribió una máquina.",
+      "sugerencia": "Separa los millares con un espacio, o no los separes si son cuatro cifras: «1500 dólares», «12 345 678 habitantes».",
+      "excepciones": [
+        "«1,500» es ambiguo: en español puede ser un decimal con tres cifras («1,500 kg», kilo y medio), y la regla lo avisa igual.",
+        "La coma de millares es la costumbre de los países que usan el punto decimal (México, Centroamérica, Puerto Rico…; Ortografía, § 2.2.1.2.1).",
+        "La Ortografía tampoco admite el punto de millares («1.500»), pero no es un calco del inglés y esta regla no lo avisa.",
+        "Una cifra con un punto o una coma justo delante no cuenta, para no partir un decimal a la española como «1.234,567» [PROPIO]."
+      ],
+      "fuente": [
+        {
+          "titulo": "RAE y ASALE, Ortografía de la lengua española (2010), cap. VIII, § 2.2.1.1, el separador de millares (leída en web.archive.org, captura del 16/03/2025: rae.es no deja leerla a un programa)",
+          "url": "https://www.rae.es/ortograf%C3%ADa/los-n%C3%BAmeros-enteros-y-el-separador-de-millares"
+        },
+        {
+          "titulo": "RAE y ASALE, Ortografía de la lengua española (2010), cap. VIII, § 2.2.1.2.1, el separador decimal: se admiten los dos y «se recomienda el uso del punto» (leída en web.archive.org, captura del 10/06/2026: rae.es no deja leerla a un programa)",
+          "url": "https://www.rae.es/ortograf%C3%ADa/los-n%C3%BAmeros-decimales-y-el-separador-decimal"
+        }
+      ],
+      "origenLista": null,
+      "nivelEvidencia": "norma",
+      "ejemplos": {
+        "positivos": [
+          "Costó 1,500 dólares.",
+          "La ciudad tiene 12,345,678 habitantes.",
+          "Pesa 1,500 kg."
+        ],
+        "negativos": [
+          "Costó 1.500 euros.",
+          "Pesa 1,5 kg.",
+          "Mide 3.14 metros.",
+          "Actualiza el programa a la versión 5.1."
+        ]
+      }
+    },
+    {
+      "id": "orto-moneda-antepuesta",
+      "nombre": "Símbolo de moneda antepuesto",
+      "enClaro": "El símbolo de la moneda delante de la cifra, como «$100», en vez de detrás: «100 $».",
+      "familia": "ortotipografia",
+      "detector": "patrón",
+      "parametros": {
+        "regex": "[$€£¥]\\s?\\d(?:[\\d.,]*\\d)?",
+        "flags": "iu",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": true,
+          "tildes": false
+        }
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "El símbolo de la moneda delante de la cifra («$100», «€50»). La Ortografía (2010, cap. V, § 4.4g): «Los símbolos monetarios no alfabetizables se escriben en España preferentemente pospuestos y con blanco de separación, como es normal en el resto de los símbolos: 3 £, 50 $». Es un aviso de norma, no de estilo: este paquete cuenta avisos por cada 1.000 palabras y no mide si un texto lo escribió una máquina.",
+      "sugerencia": "Escribe el símbolo detrás y con un espacio («100 $», «50 €»), o el código de tres letras («USD 100»).",
+      "excepciones": [
+        "En América, «por influjo anglosajón», estos símbolos «suelen aparecer antepuestos y sin blanco de separación» (misma sección): el aviso sigue la norma de España.",
+        "El híbrido «US$» también dispara, y la Ortografía tampoco lo tiene por adecuado."
+      ],
+      "fuente": [
+        {
+          "titulo": "RAE y ASALE, Ortografía de la lengua española (2010), cap. V, § 4.4g, los símbolos monetarios (leída en web.archive.org, captura del 18/07/2025: rae.es no deja leerla a un programa)",
+          "url": "https://www.rae.es/ortograf%C3%ADa/ortograf%C3%ADa-y-otras-normas-de-escritura-1"
+        }
+      ],
+      "origenLista": "los símbolos no alfabetizables $, €, £ y ¥ [PROPIO]",
+      "nivelEvidencia": "norma",
+      "ejemplos": {
+        "positivos": [
+          "Cuesta $100.",
+          "Cuesta €100.",
+          "El billete vale £ 20.",
+          "Cuesta $1.500,00."
+        ],
+        "negativos": [
+          "Cuesta 100 €.",
+          "Cuesta 100 $.",
+          "Cuesta USD 100."
+        ]
+      }
+    }
+  ]
+}

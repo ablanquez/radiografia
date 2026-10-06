@@ -1,0 +1,143 @@
+{
+  "$schema": "https://raw.githubusercontent.com/ablanquez/radiografia/main/motor/esquema/paquete.schema.json",
+  "cabecera": {
+    "nombre": "Paquete de prueba",
+    "version": "1.0.0",
+    "idioma": "es",
+    "descripcion": "Tres reglas de ejemplo para probar el cargador de paquetes propios de RadiografIA: una de patrón («a nivel de»), una estructural (pregunta sin signo de apertura) y una informativa (okey u OK), con la norma del Diccionario panhispánico de dudas. Sirve de modelo para escribir un paquete propio; no mide estilo de IA.",
+    "autor": "Antonio Blánquez Cabeza",
+    "licencia": "Apache-2.0",
+    "familias": [
+      {
+        "id": "pruebas",
+        "nombre": "Pruebas",
+        "informativa": false
+      }
+    ]
+  },
+  "reglas": [
+    {
+      "id": "prueba-a-nivel-de",
+      "nombre": "A nivel de",
+      "familia": "pruebas",
+      "detector": "patrón",
+      "parametros": {
+        "regex": "(?<!\\p{L})a nivel de(?!\\p{L})",
+        "flags": "iu",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": true,
+          "tildes": false
+        }
+      },
+      "peso": "uno",
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "La locución «a nivel de» es correcta cuando «nivel» conserva la idea de altura o de categoría («relaciones a nivel de embajada»), pero el Diccionario panhispánico de dudas («nivel», 1) dice que la lengua cuidada la rechaza cuando se usa con los sentidos de 'con respecto a', 'en el ámbito de', 'entre' o, simplemente, 'en'. La regla no distingue el sentido: señala todas, y quien escribe decide. Es una regla de ejemplo del paquete de prueba del cargador: no mide estilo de IA.",
+      "sugerencia": "Si «nivel» no indica altura ni categoría, di lo que quieres decir: «en», «en el ámbito de», «con respecto a» o «entre». «A nivel de empresa» suele ser «en la empresa».",
+      "excepciones": [
+        "Los usos en los que «nivel» conserva la idea de altura o de categoría, que el DPD admite: «relaciones a nivel de embajada», «a nivel de calle». La regla dispara igual."
+      ],
+      "fuente": [
+        {
+          "titulo": "RAE y ASALE, Diccionario panhispánico de dudas, 2.ª edición (versión provisional), «nivel», 1 (leído en web.archive.org, captura del 11/08/2024: rae.es no deja leerlo a un programa)",
+          "url": "https://www.rae.es/dpd/nivel"
+        }
+      ],
+      "origenLista": null,
+      "nivelEvidencia": "norma",
+      "ejemplos": {
+        "positivos": [
+          "Lo hablaremos a nivel de empresa.",
+          "A nivel de salud, el año fue bueno."
+        ],
+        "negativos": [
+          "Lo hablaremos en la empresa.",
+          "La casa está al nivel del mar."
+        ]
+      }
+    },
+    {
+      "id": "prueba-pregunta-sin-apertura",
+      "nombre": "Pregunta sin signo de apertura",
+      "familia": "pruebas",
+      "detector": "estructural",
+      "parametros": {
+        "posicion": "inicio-frase",
+        "regex": "[^¿?]+\\?",
+        "flags": "u"
+      },
+      "peso": 1,
+      "severidad": "baja",
+      "informativa": false,
+      "explicacion": "Una frase con el signo de cierre de interrogación (?) y sin el de apertura (¿) antes: «Qué hora es?». El Diccionario panhispánico de dudas («signos de interrogación y exclamación», 2.1): «Los signos de apertura (¿, ¡) son característicos del español y no deben suprimirse por imitación de otras lenguas en las que únicamente se coloca el signo de cierre». Mira cada frase desde su principio hasta el primer signo de cierre. Es una regla de ejemplo del paquete de prueba del cargador: no mide estilo de IA.",
+      "sugerencia": "Abre la pregunta con «¿» donde empieza la entonación interrogativa: «¿Qué hora es?», «Hoy es tu cumpleaños, ¿no?».",
+      "excepciones": [
+        "El signo de cierre entre paréntesis para expresar duda o ironía, que el DPD admite (4.1): «Tendría gracia (?) que hubiera perdido las llaves».",
+        "Una pregunta abierta con el signo de exclamación (4.2): «¡Cómo te has atrevido?».",
+        "Las fechas dudosas con solo el signo de cierre (4.4): «(1576?-1636)».",
+        "Un signo de interrogación dentro de una dirección web."
+      ],
+      "fuente": [
+        {
+          "titulo": "RAE y ASALE, Diccionario panhispánico de dudas, 2.ª edición (versión provisional), «signos de interrogación y exclamación», 2.1 y 4 (leído en web.archive.org, captura del 09/08/2025: rae.es no deja leerlo a un programa)",
+          "url": "https://www.rae.es/dpd/signos%20de%20interrogaci%C3%B3n%20y%20exclamaci%C3%B3n"
+        }
+      ],
+      "origenLista": null,
+      "nivelEvidencia": "norma",
+      "ejemplos": {
+        "positivos": [
+          "Qué hora es?",
+          "Y tú qué opinas?"
+        ],
+        "negativos": [
+          "¿Qué hora es?",
+          "Hoy es tu cumpleaños, ¿no?"
+        ]
+      }
+    },
+    {
+      "id": "prueba-okey",
+      "nombre": "Okey u OK",
+      "familia": "pruebas",
+      "detector": "patrón",
+      "parametros": {
+        "regex": "(?<!\\p{L})(okey|ok|oká)(?!\\p{L})",
+        "flags": "iu",
+        "ambito": "frase",
+        "normalizar": {
+          "minusculas": true,
+          "tildes": false
+        }
+      },
+      "peso": 0,
+      "severidad": "baja",
+      "informativa": true,
+      "explicacion": "La voz «okey», tomada del inglés, y la sigla OK de la que procede. El Diccionario panhispánico de dudas («okey») la recoge como interjección de asentimiento («Okey, hablamos mañana»), como sustantivo («dar el okey») y como adverbio («todo marcha okey»), y la variante «oká» en algunos países de América. No es un error: la regla es informativa, se señala y no suma, para que quien escribe decida si encaja en su registro. Es una regla de ejemplo del paquete de prueba del cargador: no mide estilo de IA.",
+      "sugerencia": "En un registro formal, «de acuerdo», «conforme», «bien» o «la aprobación» dicen lo mismo; en uno coloquial, puede quedarse.",
+      "excepciones": [
+        "Nombres propios y marcas con OK, como «OK Go».",
+        "OK como abreviatura de Oklahoma en una dirección de Estados Unidos."
+      ],
+      "fuente": [
+        {
+          "titulo": "RAE y ASALE, Diccionario panhispánico de dudas, 2.ª edición, «okey» (leído en web.archive.org, captura del 27/02/2026: rae.es no deja leerlo a un programa)",
+          "url": "https://www.rae.es/dpd/okey"
+        }
+      ],
+      "origenLista": "[PROPIO]: las tres formas que recoge el DPD: «okey», la sigla OK y «oká»",
+      "nivelEvidencia": "norma",
+      "ejemplos": {
+        "positivos": [
+          "Okey, hablamos mañana.",
+          "Está todo OK."
+        ],
+        "negativos": [
+          "De acuerdo, hablamos mañana.",
+          "Viajó a Okinawa."
+        ]
+      }
+    }
+  ]
+}

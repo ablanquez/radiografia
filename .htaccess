@@ -1,0 +1,99 @@
+# El .htaccess de RadiografIA en radiografia.antonioblanquez.es (encargo 11.2; decisiones de Antonio del 06/10).
+#
+# NO SE EDITA A MANO: lo escribe `npm run publicar` (web/scripts/publicar.ts) en dist/, desde esta plantilla
+# (web/publicacion/.htaccess.plantilla), con la CSP tomada del <meta> que la integración cspPrimero deja en cada página:
+# una sola fuente, y la cabecera y el <meta> son la misma política. Viaja en la raíz de la rama `publicacion`, que el
+# panel de Hostinger despliega en el directorio del subdominio.
+#
+# El servidor de Hostinger es LiteSpeed, que lee el .htaccess como Apache.
+# [DOC] https://www.litespeedtech.com/products/litespeed-web-server/features/feature-explanations — «LiteSpeed Web
+#    Server is compatible with all Apache core modules, including mod_rewrite, mod_security, mod_include, and
+#    mod_cache»; «LiteSpeed Web Server reads .htaccess files automatically».
+# [DOC] https://docs.litespeedtech.com/lsws/security/ — HSTS en el .htaccess con «Header always set
+#    Strict-Transport-Security "max-age=31536000"».
+# Lo que la doc oficial de LiteSpeed no dice directiva a directiva (env=HTTPS, RedirectMatch, AddType, FilesMatch):
+#    NO CONSTA que lo cumpla. [PROPIO] Por eso no se da por bueno el fichero sino la respuesta: lo comprueban desde
+#    fuera los jueces de producción (web/jueces/produccion.spec.ts, con URL_PRODUCCION).
+#
+# Sin reglas de reescritura: cada ruta es una carpeta con su index.html. La redirección de http a https la hace el
+# panel («Forzar HTTPS», que activa Antonio), no este fichero.
+# [DOC] https://docs.hostinger.com/websites/ssl — «Once SSL is active, redirect HTTP traffic to HTTPS»: «In the SSL
+#    panel, enable Force HTTPS».
+
+# La página que no existe (dist/404.html; firmada por Antonio el 06/10). Con una ruta local, el servidor la sirve sin
+# redirigir y la respuesta conserva el código 404.
+# [DOC] https://httpd.apache.org/docs/2.4/mod/core.html#errordocument — «URLs can begin with a slash (/) for local
+#    web-paths (relative to the DocumentRoot)»; con una URL de fuera, en cambio, «the client will not receive the
+#    original error status code, but instead will receive a redirect status code».
+ErrorDocument 404 /404.html
+
+# Si el despliegue deja una carpeta .git en el directorio (la doc de Hostinger no lo dice: NO CONSTA), no se sirve:
+# todo lo que empieza por /.git da 404 (decisión de Antonio del 06/10).
+# [DOC] https://httpd.apache.org/docs/2.4/mod/mod_alias.html#redirectmatch — «Sends an external redirect based on a
+#    regular expression match of the current URL»; y, de Redirect: «If the status is not between 300 and 399, the URL
+#    argument must be omitted».
+RedirectMatch 404 ^/\.git
+
+# Los tipos que no todos los servidores traen (decisión de Antonio). Donde ya los traiga, no cambia nada.
+# [DOC] https://httpd.apache.org/docs/2.4/mod/mod_mime.html#addtype — «Maps the given filename extensions onto the
+#    specified content type».
+AddType font/woff2 .woff2
+AddType font/woff .woff
+AddType application/manifest+json .webmanifest
+AddType image/svg+xml .svg
+
+# Las cabeceras de todas las respuestas, con «always»: también en el 404 de la página que no existe, que el servidor
+# sirve por una redirección interna.
+# [DOC] https://httpd.apache.org/docs/2.4/mod/mod_headers.html#header — con «always», «the headers contained in the
+#    latter are added to the response even on error, and persisted across internal redirects (for example,
+#    ErrorDocument handlers)».
+#
+# La CSP, por cabecera ADEMÁS del <meta> e idéntica a él (decisión de Antonio). Con las dos, el navegador aplica las
+#    dos, y una política de más solo puede restringir: si fueran distintas, mandaría la más estricta. Por eso salen de
+#    la misma fuente, `npm run publicar` para si las páginas no llevan todas la misma, y el juez de producción compara
+#    la cabecera con el <meta> de cada página.
+# [DOC] https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy — «The CSP
+#    mechanism allows multiple policies being specified for a resource, including via the Content-Security-Policy
+#    header, the Content-Security-Policy-Report-Only header and a <meta> element»; «Adding additional policies can
+#    only further restrict the capabilities of the protected resource».
+Header always set Content-Security-Policy "connect-src 'self';form-action 'self'; script-src 'self' 'sha256-BF0290pkb3jxQsE7z00xR8Imp8X34FLC88L0lkMnrGw=' 'sha256-QzWFZi+FLIx23tnm9SBU4aEgx4x8DsuASP07mfqol/c=' 'sha256-0chmwFk0zaA528yFfGV7J9ppIpdfTPPULncDF3WG7Zs=' 'sha256-eIXWvAmxkr251LJZkjniEK5LcPF3NkapbJepohwYRIc=' 'sha256-Q2BPg90ZMplYY+FSdApNErhpWafg2hcRRbndmvxuL/Q='; style-src 'self' 'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=';"
+# [DOC] https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/X-Content-Type-Options — nosniff: «It also
+#    prevents MIME type sniffing for all other response types, causing the browser to use the declared Content-Type
+#    without examining the response content».
+Header always set X-Content-Type-Options "nosniff"
+# [DOC] https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Referrer-Policy —
+#    strict-origin-when-cross-origin: «For cross-origin requests send the origin (only) when the protocol security
+#    level stays same (HTTPS→HTTPS). Don't send the Referer header to less secure destinations (HTTPS→HTTP)».
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+# HSTS solo en las respuestas por https (decisión de Antonio), un año (firmado el 06/10), sin includeSubDomains ni
+#    preload. Que LiteSpeed rellene la variable HTTPS: NO CONSTA en su doc; lo mira el juez de producción.
+# [DOC] https://httpd.apache.org/docs/2.4/mod/mod_headers.html#header — env=varname: «The directive is applied if and
+#    only if the environment variable varname exists».
+# [DOC] https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Strict-Transport-Security — max-age: «The
+#    time, in seconds, that the browser should remember that a host is only to be accessed using HTTPS»; y por http:
+#    «Browsers ignore the header if sent over HTTP».
+Header always set Strict-Transport-Security "max-age=31536000" env=HTTPS
+
+# La caché, por grupos de ficheros (decisión de Antonio; docs/CENSO-PRE-DESPLIEGUE.md, § 9.3). Cada extensión está en
+# un solo grupo, y `npm run publicar` para si algún fichero de dist/ no cae en uno y solo uno.
+# [DOC] https://httpd.apache.org/docs/2.4/mod/core.html#filesmatch — limita lo que lleva dentro «by filename, just as
+#    the <Files> directive does. However, it accepts a regular expression».
+# [DOC] https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Cache-Control — «When you use a
+#    cache-busting pattern for resources and apply them to a long max-age, you can also add immutable to avoid
+#    revalidation»; no-cache: «the response can be stored in caches, but the response must be validated with the
+#    origin server before each reuse».
+#
+# El JS y el CSS: todos van en _astro/ con la huella de su contenido en el nombre (nombre.XXXXXXXX.js), y si cambian,
+#    cambia el nombre; `npm run publicar` para si alguno no la lleva. Un año, inmutables.
+<FilesMatch "\.(js|css)$">
+  Header set Cache-Control "public, max-age=31536000, immutable"
+</FilesMatch>
+# Las fuentes, woff2 de la web y woff del PDF, sin huella en el nombre: una semana (hallazgo 5 del censo).
+<FilesMatch "\.(woff2|woff)$">
+  Header set Cache-Control "public, max-age=604800"
+</FilesMatch>
+# El HTML, los paquetes y los ejemplos, el manifiesto, los iconos y el favicon, y las licencias de las fuentes: se
+#    guardan, pero se revalidan cada vez.
+<FilesMatch "\.(html|json|txt|webmanifest|svg|png|ico)$">
+  Header set Cache-Control "no-cache"
+</FilesMatch>
