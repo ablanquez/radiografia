@@ -4,7 +4,10 @@
  *   1. `npm run build` termina, con su prebuild (el standalone del motor y la
  *      copia de los paquetes a public/), y deja dist/index.html.
  *   2. dist/index.html lleva el botón «Pon tu texto a contraluz», la nota
- *      de autoría y lang="es".
+ *      de autoría y lang="es". Desde el 11.1 (hallazgo 8 del censo
+ *      pre-despliegue), el botón sale de textos.ts y los dos avisos que lo
+ *      citan (PAQUETES_CAMBIADOS y SIN_INFORME) lo dicen tal cual; y en el
+ *      juez 8, la línea de quién es cada texto, también.
  *   3. Ningún JS de dist/ lleva el código de Ajv ni de Node: ni «Ajv2020»,
  *      ni «new Ajv», ni «addKeyword», ni «node:», y toda aparición de
  *      «ajv/dist» es ajv/dist/runtime/ucs2length, la función que el standalone
@@ -124,6 +127,9 @@ describe('la web construida', () => {
     assert.match(html, /<html lang="es"/, 'sin lang="es"');
     assert.ok(html.includes(BOTON), `sin «${BOTON}»`);
     assert.ok(html.includes(NOTA), `sin «${NOTA}»`);
+    // Desde el 11.1 (hallazgo 8): el botón sale de textos.ts, y los dos avisos que lo citan, de esa misma constante.
+    assert.equal(textos.PON_TU_TEXTO_A_CONTRALUZ, BOTON, 'el botón de la identidad, en textos.ts');
+    assert.deepEqual([textos.PAQUETES_CAMBIADOS, textos.SIN_INFORME].filter((aviso) => !aviso.includes(`«${BOTON}»`)), [], 'avisos que no citan el botón');
   });
 
   test('3 · ningún JS de dist/ lleva el código de Ajv ni de Node', () => {
@@ -246,6 +252,7 @@ describe('la web construida', () => {
       assert.match(html, new RegExp(`<button [^>]*type="button"[^>]*>${etiqueta}</button>`), `sin el botón «${etiqueta}» (type="button")`);
     }
     assert.ok(html.includes(PROCEDENCIA), `sin «${PROCEDENCIA}»`);
+    assert.equal(textos.PROCEDENCIA_DE_LOS_EJEMPLOS, PROCEDENCIA, 'de quién es cada texto, en textos.ts (11.1, hallazgo 8)');
   });
 
   test("9 · cada página de dist/ lleva la CSP con connect-src 'self' y form-action 'self', justo detrás de <meta charset> y con el contenido que emitió Astro", () => {

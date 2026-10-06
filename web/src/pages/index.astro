@@ -75,6 +75,10 @@
  *    navegador (pantalla/descarga.ts), y cada uno lleva detrás su línea de
  *    estado (role="status", oculta mientras está vacía) para decir por qué no
  *    hay PDF. El papel, con Ctrl+P o el menú Imprimir.
+ * Los textos (desde el 11.1, hallazgo 8 del censo pre-despliegue, firmado por
+ *    Antonio): todos de textos.ts, también los que esta página escribía a
+ *    mano; en el HTML solo queda el nombre, RadiografIA, que es identidad.
+ *    Lo vigila el juez de los textos (jueces/textos-web.spec.ts).
  * La hoja de impresión (encargo 9.1, b; firmada en la parada 1): el informe
  *    es esta misma página en papel, sin librerías. Hasta la Tanda 3 del 10.4,
  *    en este <style>; desde la Tanda 4 (DISEÑO §6.5 y el modelo), en
@@ -89,6 +93,8 @@ import { ICONO_DE_CABECERA } from '../estilos/recursos.ts';
 import {
   ANALIZAR_OTRO_TEXTO,
   AQUI_VERAS_EL_RESULTADO,
+  CARGANDO_LOS_PAQUETES,
+  CARGAR_UN_PAQUETE_PROPIO,
   CATALOGO,
   CATALOGO_CORTO,
   DESCARGAR_INFORME,
@@ -98,12 +104,17 @@ import {
   SECCIONES_DEL_RESULTADO,
   EDITAR_EL_TEXTO,
   NOTA_DE_AUTORIA,
+  PAQUETES,
   PLACEHOLDER_DEL_TEXTO,
+  PON_TU_TEXTO_A_CONTRALUZ,
+  PROCEDENCIA_DE_LOS_EJEMPLOS,
   RESULTADO,
+  SE_QUEDA_EN_TU_NAVEGADOR,
   SIN_INFORME,
   TEXTO_DE_IA,
   TEXTO_HUMANO,
   TIPO_DE_TEXTO,
+  TU_TEXTO,
   TU_TEXTO_ANALIZADO,
 } from '../textos.ts';
 import Cabecera from '../componentes/Cabecera.astro';
@@ -135,12 +146,12 @@ const icono = `${conBarraFinal(import.meta.env.BASE_URL)}${ICONO_DE_CABECERA}`;
   <body>
     <Cabecera enlace={{ href: catalogo, texto: CATALOGO, corto: CATALOGO_CORTO }} nombreEnH1 />
     <main class="analizador">
-      <section id="columna-texto" class="columna-texto" aria-label="Tu texto">
+      <section id="columna-texto" class="columna-texto" aria-label={TU_TEXTO}>
         <form id="formulario" class="formulario">
-          <p id="estado" class="secundario" role="status">Cargando los paquetes de reglas…</p>
+          <p id="estado" class="secundario" role="status">{CARGANDO_LOS_PAQUETES}</p>
           <div id="problemas" class="problemas" role="alert" hidden></div>
           <div class="campo">
-            <label for="texto">Tu texto</label>
+            <label for="texto">{TU_TEXTO}</label>
             <textarea id="texto" rows="12" placeholder={PLACEHOLDER_DEL_TEXTO}></textarea>
             <p id="aviso-insuficiente" class="aviso-insuficiente" hidden>
               <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 7v6M12 16.5v.5" stroke-linecap="round"></path></svg>
@@ -152,7 +163,7 @@ const icono = `${conBarraFinal(import.meta.env.BASE_URL)}${ICONO_DE_CABECERA}`;
               <button id="ejemplo-humano" class="chip" type="button" disabled>{TEXTO_HUMANO}</button>
               <button id="ejemplo-ia" class="chip" type="button" disabled>{TEXTO_DE_IA}</button>
             </div>
-            <p class="procedencia secundario">El texto humano lo escribió Antonio; el de IA lo generó Claude Opus 5.5, sin instrucciones de estilo.</p>
+            <p class="procedencia secundario">{PROCEDENCIA_DE_LOS_EJEMPLOS}</p>
             <p id="estado-ejemplo" role="status"></p>
           </div>
           <div class="campo">
@@ -160,29 +171,29 @@ const icono = `${conBarraFinal(import.meta.env.BASE_URL)}${ICONO_DE_CABECERA}`;
             <select id="genero" disabled></select>
           </div>
           <div class="acciones-formulario">
-            <button id="analizar" class="boton-principal" type="submit" disabled>Pon tu texto a contraluz</button>
+            <button id="analizar" class="boton-principal" type="submit" disabled>{PON_TU_TEXTO_A_CONTRALUZ}</button>
             <button id="informe" type="button" disabled>{DESCARGAR_INFORME}</button>
             <p id="estado-informe" class="estado-descarga" role="status" hidden></p>
           </div>
           <p id="aviso-paquetes" role="status"></p>
           <details id="paquetes" class="paquetes">
-            <summary id="resumen-paquetes">Paquetes</summary>
+            <summary id="resumen-paquetes">{PAQUETES}</summary>
             <fieldset aria-labelledby="resumen-paquetes">
               <div id="incluidos"></div>
               <div class="cargador">
                 <input id="paquete-propio" class="fichero" type="file" accept="application/json,.json" disabled />
-                <label for="paquete-propio" class="boton-fichero">Cargar un paquete propio (JSON)</label>
+                <label for="paquete-propio" class="boton-fichero">{CARGAR_UN_PAQUETE_PROPIO}</label>
               </div>
               <ul id="propios" hidden></ul>
               <p id="estado-propio" role="status"></p>
               <div id="errores-propio" class="problemas" role="alert" hidden></div>
-              <p class="aviso-propio secundario">Se queda en tu navegador: no se sube a ningún sitio. No se guarda: al recargar la página, desaparece.</p>
+              <p class="aviso-propio secundario">{SE_QUEDA_EN_TU_NAVEGADOR}</p>
             </fieldset>
           </details>
         </form>
         <div id="plegado" class="plegado" hidden>
           <div class="plegado-cabeza">
-            <span class="plegado-etiqueta">Tu texto</span>
+            <span class="plegado-etiqueta">{TU_TEXTO}</span>
             <button id="editar" class="boton-enlace" type="button">{EDITAR_EL_TEXTO}</button>
           </div>
           <div class="texto-plegado"><p id="texto-plegado"></p></div>

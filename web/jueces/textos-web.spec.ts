@@ -20,7 +20,9 @@
  * viene de los paquetes y lo que dice el motor (textos.ts).
  *
  * Desde el 11.1 (hallazgo 2 del censo pre-despliegue), un segundo juez: todo
- * lo que se lee en el <main> de la página de créditos sale de textos.ts.
+ * lo que se lee en el <main> de la página de créditos sale de textos.ts. Y
+ * (hallazgo 8) un tercero: todo lo que se lee en dist/index.html sale de
+ * textos.ts, salvo el nombre, RadiografIA, que es identidad.
  *
  * Con 100 palabras de prosa o más se analiza con analizar(); hoy pasan de 300.
  * [PROPIO] Si bajaran de 100, el juez falla en vez de pasar: el motor no
@@ -39,6 +41,8 @@ import { construir, decodificar, DIST, motorDelNavegador, paquetesIncluidos } fr
 
 const GENERO = 'general';
 const MINIMO = 100;
+/** El nombre de la web, que es identidad y va escrito en el HTML (CLAUDE.md). */
+const NOMBRE = 'RadiografIA';
 
 /** Las reglas de RadiografIA que puntúan en los textos de la web, y por qué no se cambia la frase. */
 const DECLARADAS: Readonly<Record<string, string>> = {
@@ -197,5 +201,20 @@ describe('los textos de la web, por los dos paquetes', () => {
     const leidos = textosDelHtml(main);
     assert.ok(leidos.length > 20, `${leidos.length} textos en la página de créditos`);
     assert.deepEqual(leidos.filter((t) => !deTextos.has(t)), [], 'textos de la página de créditos que no salen de textos.ts');
+  });
+
+  // Desde el 11.1 (hallazgo 8 del censo pre-despliegue): el analizador tampoco escribe a mano ningún texto; solo el
+  // nombre, que es identidad (CLAUDE.md).
+  test('el analizador: todo lo que se lee en dist/index.html (su título, su texto, sus aria-label y su placeholder) sale de textos.ts, salvo el nombre', () => {
+    construir();
+    const html = readFileSync(new URL('index.html', DIST), 'utf8');
+    const cuerpo = /<body[^>]*>([\s\S]*)<\/body>/.exec(html)?.[1] ?? '';
+    assert.ok(cuerpo !== '', 'dist/index.html sin <body>');
+    const titulo = decodificar(/<title>([^<]*)<\/title>/.exec(html)?.[1] ?? '');
+    const nombres = [...cuerpo.matchAll(/\saria-label="([^"]*)"/g)].map((m) => decodificar(m[1]!));
+    const leidos = [titulo, ...textosDelHtml(cuerpo), ...nombres];
+    assert.ok(leidos.length > 20, `${leidos.length} textos en el analizador`);
+    const deTextos = new Set(textosDelScript());
+    assert.deepEqual(leidos.filter((t) => t !== NOMBRE && !deTextos.has(t)), [], 'textos del analizador que no salen de textos.ts');
   });
 });

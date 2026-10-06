@@ -5,19 +5,34 @@
  * texto visible de dist/index.html. Las que llevan datos son funciones, y el
  * juez las llama con datos de muestra.
  *
- * Lo escrito en index.astro (título, eslogan, etiquetas, botones, nota) va en
- * el HTML, y el juez lo lee de dist/index.html. Tampoco están aquí, porque no
- * son textos de la web: lo que viene de los paquetes (nombres de familia y de
- * paquete, descripción, fichas) y lo que dice el motor (motivo, aviso, bandas,
- * unidad, motivos de las no aplicadas y de las sin calibración).
+ * Desde el 11.1 (hallazgo 8 del censo pre-despliegue, firmado por Antonio),
+ * también lo que index.astro escribía a mano en su HTML, tal cual; allí solo
+ * queda el nombre, RadiografIA, que es identidad. El juez de los textos mira
+ * que todo lo que se lee en dist/index.html salga de aquí. No están aquí,
+ * porque no son textos de la web: lo que viene de los paquetes (nombres de
+ * familia y de paquete, descripción, fichas) y lo que dice el motor (motivo,
+ * aviso, bandas, unidad, motivos de las no aplicadas y de las sin
+ * calibración).
  *
  * Las páginas del catálogo (encargo 7.1, b) sacan de aquí TODA su interfaz,
  * también lo que escriben en su HTML: el juez no lee su HTML, porque lleva el
  * contenido de las fichas, que menciona las formas que las reglas buscan.
  */
 
+// Lo que index.astro escribía a mano (11.1, hallazgo 8), tal cual: el nombre de la columna del texto (también la
+// etiqueta del cuadro y la del cuadro plegado), el estado mientras cargan los paquetes, de quién es cada ejemplo, el
+// botón de la identidad, el resumen del bloque de paquetes, el botón del paquete propio y su aviso.
+export const TU_TEXTO = 'Tu texto';
+export const CARGANDO_LOS_PAQUETES = 'Cargando los paquetes de reglas…';
+export const PROCEDENCIA_DE_LOS_EJEMPLOS = 'El texto humano lo escribió Antonio; el de IA lo generó Claude Opus 5.5, sin instrucciones de estilo.';
+/** El botón de la identidad (CLAUDE.md: no se reescribe); lo citan PAQUETES_CAMBIADOS y SIN_INFORME. */
+export const PON_TU_TEXTO_A_CONTRALUZ = 'Pon tu texto a contraluz';
+export const PAQUETES = 'Paquetes';
+export const CARGAR_UN_PAQUETE_PROPIO = 'Cargar un paquete propio (JSON)';
+export const SE_QUEDA_EN_TU_NAVEGADOR = 'Se queda en tu navegador: no se sube a ningún sitio. No se guarda: al recargar la página, desaparece.';
+
 // La carga de los paquetes (pantalla.ts, cargar.ts).
-export const SIN_PAQUETES = 'No se puede analizar: falta algún paquete de reglas.';
+export const SIN_PAQUETES ='No se puede analizar: falta algún paquete de reglas.';
 export const paquetesCargados = (nombres: readonly string[]): string => `Paquetes cargados y validados: ${nombres.join(' y ')}.`;
 export const PROBLEMAS_DE_CARGA = 'No se han podido cargar los paquetes de reglas, y sin ellos no se analiza nada:';
 export const noSeCargo = (url: string, motivo: string): string => `no se pudo cargar ${url}: ${motivo}`;
@@ -46,7 +61,7 @@ export const QUITAR = 'Quitar';
 /** El nombre accesible del botón «Quitar» de cada paquete propio: «Quitar» y el paquete. */
 export const quitarPaquete = (nombre: string): string => `Quitar «${nombre}»`;
 export const SIN_PAQUETES_ACTIVOS = 'Marca al menos un paquete o carga uno propio para analizar.';
-export const PAQUETES_CAMBIADOS = 'Los paquetes han cambiado: vuelve a pulsar «Pon tu texto a contraluz».';
+export const PAQUETES_CAMBIADOS = `Los paquetes han cambiado: vuelve a pulsar «${PON_TU_TEXTO_A_CONTRALUZ}».`;
 export const SIN_ESCALA = 'Ningún paquete activo se compara con textos de personas: mira el resumen y el desglose.';
 
 // El informe para imprimir (encargo 9.1, b; firmado en la parada 1): el botón, la cabecera, la lista de señales, la
@@ -77,7 +92,7 @@ export const senalDelTextoEntero = (dice: string | null): string => (dice === nu
 export const REGLA_PROPIA_SIN_FICHA = 'Regla de un paquete propio: sin página en el catálogo.';
 export const CLAVE_DE_SIGLAS = 'En el texto, detrás de cada subrayado, va entre corchetes la sigla de su familia.';
 export const NOTA_DE_AUTORIA = 'RadiografIA analiza estilo; no demuestra autoría.';
-export const SIN_INFORME = 'No hay análisis que imprimir: pega un texto y pulsa «Pon tu texto a contraluz».';
+export const SIN_INFORME = `No hay análisis que imprimir: pega un texto y pulsa «${PON_TU_TEXTO_A_CONTRALUZ}».`;
 // La descarga del PDF (encargo 9.3; firmados por Antonio en la parada previa): el botón mientras se prepara, el motivo si
 // falla y, con texto insuficiente, por qué no hay PDF.
 export const PREPARANDO_EL_INFORME = 'Preparando el informe…';
