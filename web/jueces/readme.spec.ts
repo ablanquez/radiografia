@@ -39,7 +39,12 @@ import { construir, DIST, EJEMPLOS_PUBLICOS, ENTORNO, motorDelNavegador, PAQUETE
 import { ficherosDe } from '../publicacion/publicacion.ts';
 
 const RAIZ = new URL('../../', import.meta.url);
-const leer = (ruta: string): string => readFileSync(new URL(ruta, RAIZ), 'utf8');
+/**
+ * Un fichero del repositorio, con sus saltos en \n. El checkout de Windows (core.autocrlf=true) saca los .md en CRLF, y
+ * las expresiones de aquí buscan «\n» (docs/BITACORA.md, 2026-10-06: el bloque JSON no se encontraba en un README en
+ * CRLF, y el juez había dado verde con los ficheros copiados en LF).
+ */
+const leer = (ruta: string): string => readFileSync(new URL(ruta, RAIZ), 'utf8').replace(/\r\n/g, '\n');
 const README = 'README.md';
 /** Los documentos que salieron del README en el 11.4 (decisión de Antonio del 06/10). */
 const SALIDOS_DEL_README = ['docs/ARRANQUE-LOCAL.md', 'docs/DESPLIEGUE.md', 'docs/WEB.md', 'docs/CALIBRACION.md', 'docs/CRONICA-DE-CONSTRUCCION.md'];
