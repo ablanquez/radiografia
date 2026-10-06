@@ -11,9 +11,24 @@
 #    mod_cache»; «LiteSpeed Web Server reads .htaccess files automatically».
 # [DOC] https://docs.litespeedtech.com/lsws/security/ — HSTS en el .htaccess con «Header always set
 #    Strict-Transport-Security "max-age=31536000"».
-# Lo que la doc oficial de LiteSpeed no dice directiva a directiva (env=HTTPS, RedirectMatch, AddType, FilesMatch):
-#    NO CONSTA que lo cumpla. [PROPIO] Por eso no se da por bueno el fichero sino la respuesta: lo comprueban desde
-#    fuera los jueces de producción (web/jueces/produccion.spec.ts, con URL_PRODUCCION).
+# Lo que la doc oficial de LiteSpeed no dice directiva a directiva (env=HTTPS, RedirectMatch, AddType, FilesMatch) no
+#    constaba. [PROPIO] Por eso no se da por bueno el fichero sino la respuesta: lo comprueban desde fuera los jueces de
+#    producción (web/jueces/produccion.spec.ts, con URL_PRODUCCION). Medido el 06/10 sobre la publicación d3ae331 (de
+#    main 1e19715), que llega a través del CDN de Hostinger («server: hcdn»):
+#    · FilesMatch con Header set Cache-Control: CONSTA. Cada grupo lleva el suyo.
+#    · Header always set: CONSTA. Las cabeceras van también en el 404 de la página que no existe.
+#    · ErrorDocument 404: CONSTA. /no-existe/ y /reglas/no-existe/x/ dan 404 con dist/404.html.
+#    · env=HTTPS: CONSTA que HSTS va en las respuestas por https. Por http no se puede ver: el panel redirige antes, con
+#      un 301 sin HSTS.
+#    · AddType: CONSTA el resultado (font/woff2, font/woff, application/manifest+json, image/svg+xml). Si lo pone esta
+#      línea o el servidor no se distingue sin quitarla.
+#    · RedirectMatch: NO CONSTA. Hostinger da 403 a todo lo que cuelga de /.git/ y a /.htaccess antes de llegar aquí,
+#      sin las cabeceras de este fichero, y no hay otra dirección en la que se note.
+#    · Lo que no cumple, y no por una directiva: el CDN reescribe los cuatro PNG (otro PNG, con los fragmentos eXIf y
+#      pHYs; o WebP, si lo acepta el navegador) y los sirve sin la CSP, nosniff, Referrer-Policy ni HSTS. Antonio
+#      desactivó el CDN automático el 06/10; según la documentación del panel, tarda hasta 24-48 h en propagarse.
+#    · El JS salía como application/x-javascript: por eso va el AddType de .js (abajo).
+#    Lo que decidió Antonio, y lo medido después, en docs/CENSO-PRE-DESPLIEGUE.md, § 15.
 #
 # Sin reglas de reescritura: cada ruta es una carpeta con su index.html. La redirección de http a https la hace el
 # panel («Forzar HTTPS», que activa Antonio), no este fichero.
@@ -28,7 +43,8 @@
 ErrorDocument 404 /404.html
 
 # Si el despliegue deja una carpeta .git en el directorio (la doc de Hostinger no lo dice: NO CONSTA), no se sirve:
-# todo lo que empieza por /.git da 404 (decisión de Antonio del 06/10).
+# todo lo que empieza por /.git da 404 (decisión de Antonio del 06/10). Medido el 06/10: Hostinger ya da 403 a todo lo
+# que cuelga de /.git/, exista o no, antes de esta línea; si la carpeta está, sigue sin constar.
 # [DOC] https://httpd.apache.org/docs/2.4/mod/mod_alias.html#redirectmatch — «Sends an external redirect based on a
 #    regular expression match of the current URL»; y, de Redirect: «If the status is not between 300 and 399, the URL
 #    argument must be omitted».
@@ -41,6 +57,12 @@ AddType font/woff2 .woff2
 AddType font/woff .woff
 AddType application/manifest+json .webmanifest
 AddType image/svg+xml .svg
+# El JS, como text/javascript (decisión de Antonio del 06/10). Medido el 06/10, el servidor lo daba como
+#    application/x-javascript: el navegador lo acepta, también con nosniff, pero la RFC 9239 lo da por obsoleto.
+# [DOC] https://www.rfc-editor.org/rfc/rfc9239 — § 2: «The most widely supported media type in use is text/javascript;
+#    all others are considered historical and obsolete aliases of text/javascript»; § 6: entre «the media types that
+#    are obsolete», «application/javascript» y «application/x-javascript».
+AddType text/javascript .js
 
 # Las cabeceras de todas las respuestas, con «always»: también en el 404 de la página que no existe, que el servidor
 # sirve por una redirección interna.
@@ -66,7 +88,8 @@ Header always set X-Content-Type-Options "nosniff"
 #    level stays same (HTTPS→HTTPS). Don't send the Referer header to less secure destinations (HTTPS→HTTP)».
 Header always set Referrer-Policy "strict-origin-when-cross-origin"
 # HSTS solo en las respuestas por https (decisión de Antonio), un año (firmado el 06/10), sin includeSubDomains ni
-#    preload. Que LiteSpeed rellene la variable HTTPS: NO CONSTA en su doc; lo mira el juez de producción.
+#    preload. Que LiteSpeed rellene la variable HTTPS no constaba en su doc; medido el 06/10, CONSTA: HSTS va en las
+#    respuestas por https (arriba).
 # [DOC] https://httpd.apache.org/docs/2.4/mod/mod_headers.html#header — env=varname: «The directive is applied if and
 #    only if the environment variable varname exists».
 # [DOC] https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Strict-Transport-Security — max-age: «The
