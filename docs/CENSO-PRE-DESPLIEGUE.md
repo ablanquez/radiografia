@@ -11,6 +11,11 @@
 > es este fichero. Es un **registro histórico**: se lee con su fecha delante,
 > y si el código cambia después se escribe otro.
 >
+> **Parada 2 (06/10/2026).** Antonio firmó los veinte hallazgos. Qué se hizo
+> con cada uno (arreglado en qué commit, declarado o a la nevera), el
+> hallazgo 21, que salió al arreglar, y `dist/` antes y después: § 14. El
+> resto se queda como se escribió sobre `4b8f9f2`.
+>
 > **De dónde sale el checklist.** El encargo remite a la sección «BLOQUE A ·
 > CÓDIGO — el checklist» de `GUIA-BUENAS-PRACTICAS.md`. Ese fichero no está
 > en disco: **NO CONSTA**.
@@ -566,6 +571,8 @@ Si el despliegue de Hostinger fuera un `git pull` de la raíz del repositorio en
 
 ## 12 · La tabla de hallazgos
 
+Cómo quedó cada uno tras la parada 2, en el § 14.1.
+
 **Leyenda:**
 
 - **Gravedad:** 🔴 rompe o miente; 🟠 deuda real; 🔵 cosmético.
@@ -627,6 +634,90 @@ Si el despliegue de Hostinger fuera un `git pull` de la raíz del repositorio en
 - **`motor/src`**, salvo autorización expresa para el 1b, el 7b, el 10 o el 14.
 - **Los textos de identidad de `index.astro`:** se mueven, no se reescriben.
 - **Los ficheros grandes y cohesivos del § 8.**
+
+---
+
+## 14 · La parada 2 (06/10/2026): lo firmado y lo hecho
+
+Antonio firmó los veinte hallazgos el 06/10. Este apartado dice qué se hizo con cada uno: commits atómicos en `main`, cada uno verificado en un clon limpio (tipos, motor, build y jueces de la web en Chrome) y sin push. El resto del censo se queda como se escribió sobre `4b8f9f2`.
+
+### 14.1 · El estado de cada hallazgo
+
+| Nº | Firma | Estado | Commit | Su juez |
+|---|---|---|---|---|
+| 1 | arreglar, vía (a) | **arreglado**: la cabecera de `silabea.cjs` pasa a comentario legal al empaquetar (`avisoDeSilabea`, `astro.config.mjs`), sin tocar `motor/src` | `ead3506` | `construccion.spec.ts` (11), rojo antes del verde |
+| 2 | arreglar | **arreglado**: la página «Créditos y licencias», `/creditos/`, enlazada desde el pie de cada página y, en «Ver el detalle», debajo de la comparación con los textos de personas | `634792b`, `1e30eaf` | `construccion.spec.ts` (12), `textos-web.spec.ts`, `creditos-pantalla.spec.ts`, `pulsacion.spec.ts`, `arbol-accesible.spec.ts` (7), `cabecera.spec.ts`, `fidelidad.spec.ts` y `pantalla.spec.ts` (6) |
+| 3 | declarar, y a la nevera | **declarado** (§ 14.2) y **nevera** (§ 14.3) | — | — |
+| 4 | parada de Hostinger | **preparado, sin tocar**: las dos variantes de caché y CSP del § 9.3 y el § 9.4 | — | — |
+| 5 | parada de Hostinger | **preparado, sin tocar**: por defecto, caché de una semana para las fuentes, sin código (§ 9.3, variante A). Si en esa parada se decide larga, los nombres se versionan en esa tanda | — | — |
+| 6 | quitar del repositorio | **arreglado**: fuera del índice e ignorado; la copia local se queda en `docs/figma/` para el calco; sigue en la historia de git | `62101bd` | `repositorio.spec.ts` |
+| 7 | juez | **arreglado**: un juez ata las nueve cadenas de `textos.ts` a `MINIMO` y `COMPLETO` de `motor/src/umbral.ts` (leídos de su fichero) y el 600 a lo que hace `tramoDeCalibracion`, sin tocar el motor. Dio verde a la primera, porque ataba valores ya correctos: cuatro contrapruebas en rojo. Los tres mensajes del motor, declarados (§ 14.2) | `9aeaf6f` | `umbrales.spec.ts` |
+| 8 | arreglar | **arreglado**: los siete textos, a `textos.ts` tal cual; en el HTML solo queda el nombre, que es identidad; `PAQUETES_CAMBIADOS` y `SIN_INFORME` citan el botón desde su constante | `2b8b99f` | `textos-web.spec.ts`, `construccion.spec.ts` (2 y 8) |
+| 9 | arreglar | **arreglado**: los dos radios del tramo, a `var(--radio-tramo)`; `espacio.rejilla` y `espacio.paso`, fuera de `tokens.json` (informativos, sin destino: los 8 y 4 px en uso son `espacio.8` y `espacio.4`), con su nota en el README de figma; 110 tokens | `533446b` | `tokens.spec.ts` (5) |
+| 10 | declarar | **declarado** (§ 14.2) | — | — |
+| 11 | nevera | **nevera** (§ 14.3) | — | — |
+| 12 | arreglar | **arreglado**: `vite` 8.3.2 en las `devDependencies` de `web`, la versión que ya instalaba `astro`; el lock solo cambia en esa línea (`npm ci` lo acepta); el NOTICES, al día (el guardián dio rojo con el NOTICES viejo y 11/11 con el nuevo) | `8f2aa78` | `paquete.spec.ts` (1) y el guardián del NOTICES |
+| 13 | declarar | **declarado** (§ 14.2) | — | — |
+| 14 | arreglar los 4 de `web/`; declarar el del motor | **arreglado** en `web/`: una sola guarda, `motivoDelFallo` (`web/src/pantalla/fallo.ts`), en los cuatro catch y en el de `descarga.ts`; **declarado** el del motor (§ 14.2) | `603837d` | `fallos.spec.ts` |
+| 15 | nevera | **nevera** (§ 14.3) | — | — |
+| 16 | declarar | **declarado** (§ 14.2); el cabo del 6.2 se cierra como declarado | — | — |
+| 17 | arreglar | **arreglado**: el NOTICES § 1.1 (en presente, y el trozo de pdfmake medido hoy: unos 363 KB con gzip, no 359), § 2.2 (wordfreq no viaja) y § 2.3 (en `634792b`); el comentario de `astro.config.mjs` (una integración); el README, al día en `e3fdd23` (los tamaños, en el § 14.5) | `8a1d7d8` (y `634792b`, `e3fdd23`) | `construccion.spec.ts` (14): el tamaño del trozo de pdfmake que dicen el NOTICES y el README, atado a `dist/` |
+| 18 | según lo que lleve su runtime | **arreglado**: su runtime es código de Rolldown (MIT), no generado del nuestro (va tal cual dentro del empaquetador: «export var __create = Object.create; …»). Su `LICENSE` va en cabecera de su trozo (`avisoDeRolldown`, por el módulo `\0rolldown/runtime.js`), con una línea en el NOTICES § 1.1 y otra en la página de créditos | `6c8f2fd` | `construccion.spec.ts` (13) |
+| 19 | arreglar | **arreglado**: `predev` y `prebuild` llaman a `npm run preparar`, la cadena definida una vez; los `engines` de cada `package.json` son convención de npm y se quedan | `3f9feeb` | `paquete.spec.ts` (2) |
+| 20 | nevera | **nevera** (§ 14.3) | — | — |
+| 21 | — (nuevo, § 14.4) | **sin firmar** | — | — |
+
+### 14.2 · Lo declarado, con su porqué
+
+- **3 · Los 53 KB con gzip de campos que el analizador no enseña** (`ejemplos`, `excepciones`, `fuente` y `origenLista` de los paquetes incluidos). Los paquetes se validan enteros al cargar, con el mismo esquema que un paquete propio: servir uno «ligero» cambiaría el contrato (o se deja de validar lo incluido, o hace falta un esquema de navegador). Se queda así en la v1, y la decisión va a la nevera.
+- **7 · Los tres mensajes del motor que repiten 100 y 300** (`banda.ts:55`, `detector-estadistico.ts:73`, `validacion.ts:228`). Son de `motor/src` y se quedan como están. Las nueve cadenas de la web sí quedan atadas (`umbrales.spec.ts`).
+- **10 · Los 57 exports sin consumidor fuera de su fichero** (13 valores y 44 tipos). Se usan dentro de su fichero: lo que sobra es la palabra `export`, y quitarla no cambia lo que hace la web. Los tres de `motor/src` (`recuento.ts` ×2 y `generar-validador.ts`) no se tocan.
+- **13 · Las 20 búsquedas `?? ''` en el índice.** El invariante: el índice se hace con los mismos paquetes que se analizan, así que cada familia, sigla y clase que se busca está. Lo vigilan `familias.spec.ts` (cada familia con su token y sus siglas, las del DISEÑO), `contraste.spec.ts` (el color de cada `.fam-*`) y el juez de fidelidad (las siglas y las clases pintadas). Si el invariante se rompiera, saldría una sigla o una clase vacía, y esos jueces la verían en Chrome.
+- **14 · El catch de `motor/src/validacion.ts:350`.** Es del motor y se queda como está. Solo envuelve `new RegExp(regex, flags)` con la expresión y las banderas de una regla, que el esquema ya ha dado por cadenas: lo que lanza si no compilan es un `SyntaxError` (ECMA-262, RegExpInitialize), que es un `Error`.
+- **16 · `tokens.json` entero dentro del trozo de pdfmake (8 KB de descripciones, solo al descargar) y los `$comment` del validador standalone (189 bytes con gzip).** El ahorro no paga el código que haría falta. El cabo del 6.2 sobre los `$comment` queda cerrado como declarado.
+
+### 14.3 · La nevera (v1.1)
+
+- **3** · Un paquete «de navegador» más ligero para los incluidos, sin cambiar el contrato de los propios (§ 14.2).
+- **11** · La fecha civil local, en vez de la UTC, en las nueve herramientas de calibración y en `web/scripts/medir-modelo.ts`.
+- **15** · El tope del texto pegado: medir cuánto aguanta la pestaña y poner un tope con su mensaje en `textos.ts`.
+- **20** · El autor, la licencia y el idioma de un paquete, en pantalla (la línea del paquete propio y su ficha completa).
+
+### 14.4 · Hallazgo 21, nuevo y sin firmar: la función de precarga de Vite viaja sin aviso
+
+**Qué es.** Desde el 9.3, el JS del analizador lleva la función `preload` del núcleo de Vite 8.3.2 (MIT, © VoidZero Inc. and Vite contributors; `node_modules/vite/dist/node/chunks/node.js`). Vite la mete al empaquetar el `import()` del trozo de pdfmake (`web/src/pantalla/descarga.ts`): `__vite__mapDeps`, la precarga con `<link rel="modulepreload">` y el evento `vite:preloadError`. Su aviso no viaja.
+
+**Lo que guardó silencio.** El § 10 y el § 11.1 de este censo dieron por completa la lista de lo que viaja. El NOTICES § 1.1 decía que «el JS no lleva código de Vite ni de Astro». Entrada en la bitácora, abierta antes de arreglar nada (`e04c83b`). Se vio al preparar el 18, buscando en cada JS de `dist/` otro código del empaquetador.
+
+**Propuesta (sin hacer, a la espera de firma):** el mismo trato que el 18:
+
+- la parte de Vite de su `LICENSE.md` (la cabecera MIT, sin la lista de lo que Vite lleva empaquetado), como comentario legal en el trozo que lleva la función;
+- una línea en el NOTICES y en la página de créditos;
+- un juez en `construccion.spec.ts` que la busque por `vite:preloadError`.
+
+Coste: acotado. No toca `motor/src` ni `paquetes/`.
+
+### 14.5 · `dist/` antes y después
+
+Los dos, construidos en clon con `npm run build`; el de después, en `8a1d7d8`, con todos los arreglos de código. Lo que viaja en cada página, medido en Chrome, en el README («Lo que viaja al navegador»).
+
+| | antes (`4b8f9f2`) | después (`8a1d7d8`) |
+|---|---:|---:|
+| ficheros | 85 | 86 |
+| páginas HTML | 52 | 53 |
+| bytes | 2.604.718 | 2.627.894 (+23.176) |
+| el analizador al cargar: 15 peticiones, bytes | 699.354 | 703.220 |
+| ídem, con gzip | 249.866 | 252.083 |
+
+Lo que cambia, y por qué hallazgo:
+
+- **`creditos/index.html`, nuevo**: 14.469 bytes (2).
+- **Cada una de las otras 52 páginas, 79 bytes más**: el enlace a los créditos en el pie (2).
+- **El JS del analizador, de 156.330 a 158.521 bytes**: casi todo, el aviso MIT de silabea (1), 1.927 bytes; el resto, la línea de los créditos en «Ver el detalle» (2) y la guarda de los fallos (14).
+- **El runtime de Rolldown, de 589 a 1.898 bytes**: su `LICENSE` (18).
+- **El CSS del catálogo** (antes `pintar.*.css`, 7.391 bytes; ahora `Catalogo.*.css`, 8.377) lleva también los estilos de la página de créditos (2). **El CSS común** (`hoja.*.css`) pasa de 12.981 a 13.174: el pie con su enlace (2).
+- **Las cadenas** (`textos.*.js`), de 10.435 a 10.531 bytes: las nuevas que usa el JS (2 y 8).
+- **El trozo de pdfmake, de 1.093.577 a 1.093.403 bytes**: lleva `tokens.json` dentro (16), ahora sin los dos tokens (9).
 
 ---
 
