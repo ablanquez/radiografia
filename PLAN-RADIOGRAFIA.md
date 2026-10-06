@@ -1,8 +1,8 @@
 # PLAN — 005 RadiografIA
 
-Estado a 05/10/2026: **FIRMADO por Antonio el 29/09/2026**, publicado en
+Estado a 06/10/2026: **FIRMADO por Antonio el 29/09/2026**, publicado en
 `73ef265`. **PUNTOS 1, 2 y 3 CERRADOS el 29/09; 4 el 30/09; 5 el 01/10; 6,
-7 y 8 el 02/10; 9 y 9.2 el 03/10; 9.3 y 10 el 05/10.** Se tacha lo hecho y
+7 y 8 el 02/10; 9 y 9.2 el 03/10; 9.3 y 10 el 05/10; 11.1 el 06/10.** Se tacha lo hecho y
 lo nuevo se añade en su punto, y solo por decisión de Antonio.
 
 Origen: BRAINSTORMING (1), 28-29/09/2026, y las decisiones de Antonio
@@ -103,6 +103,15 @@ La v1 entrega, y solo entrega, esto:
   5; lo que queda fuera es publicar cifras de acierto en detección.)
 - **Positividad / emoción (D12)**: ningún léxico de emociones en español
   con licencia compatible verificada (29/09). Nevera.
+- **Nevera de la v1.1** (lo que fue saliendo y se apartó con fecha): metas
+  humanas para las reglas de patrón; lemas restantes de Herbold en D3;
+  académico de 100-299 palabras; tablas del BOE; protecciones para
+  paquetes propios (Worker, UTF-8); Highlight API; modo oscuro; del censo
+  del 06/10: paquetes «ligeros» para el analizador (53 KB de ejemplos,
+  excepciones y fuentes que no enseña), fecha civil en herramientas y
+  medir-modelo.ts, tope del texto pegado con mensaje, autor, licencia e
+  idioma del paquete en pantalla; del acta: lector de pantalla real,
+  accesibilidad del PDF, zoom 200 %, forced-colors.
 
 ## Reglas que cruzan todo el plan
 
@@ -839,9 +848,16 @@ checklist fija, en escritorio y a 390 px, sin capturas (derechos), en
 
 ## 11 — Despliegue y cierre
 
-- [ ] **Censo pre-despliegue** (`docs/CENSO-PRE-DESPLIEGUE.md`, bloque A
+- [x] **Censo pre-despliegue** (`docs/CENSO-PRE-DESPLIEGUE.md`, bloque A
       de la guía): dependencias muertas fuera, huérfanos podados,
-      cabeceras de caché, notices al día
+      cabeceras de caché, notices al día (06/10: 21 hallazgos; 13
+      arreglados — aviso MIT de silabea y de Vite dentro del JS, página
+      /creditos/ con la atribución de los corpus y la cita del BOE, zip del
+      modelo fuera del repo, umbrales y textos atados, vite declarado,
+      catch con guarda, docs al día—; 4 declarados; 3 a la nevera; caché y
+      CSP por cabecera preparadas en dos variantes para la parada de
+      Hostinger; build reproducible byte a byte; web 281/281; 13
+      bitácoras cerradas)
 - [ ] **Parlamento con la doc del panel de Hostinger** antes de tocar
       nada: hosting compartido para estático; si hay auto-deploy desde
       GitHub para estático o se sube el `dist` NO CONSTA hoy — se resuelve
