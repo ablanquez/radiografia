@@ -4,9 +4,9 @@ La licencia Apache 2.0 cubre **el código y los paquetes de reglas** de Radiogra
 lo ajeno**, que conserva sus propias condiciones. Aquí está, una por una, con lo que sabemos y lo
 que no.
 
-> ℹ️ **Estado a 05/10/2026.** Lo ajeno es software, datos y dos fuentes tipográficas. Software (§ 1): **ocho**
+> ℹ️ **Estado a 06/10/2026.** Lo ajeno es software, datos y dos fuentes tipográficas. Software (§ 1): **nueve**
 > dependencias declaradas en los dos workspaces, [`motor/package.json`](motor/package.json) y
-> [`web/package.json`](web/package.json) —tres de ejecución y cinco de desarrollo—, el árbol que
+> [`web/package.json`](web/package.json) —tres de ejecución y seis de desarrollo—, el árbol que
 > arrastran, **un fichero de código ajeno incorporado** al repositorio (§ 1.5) y lo que va dentro de
 > pdfmake, que viaja al navegador al pulsar «Descargar informe» (§ 1.8). Datos (§ 2):
 > las carpetas de [`data/`](data/), **aparte del código Apache 2.0**, cada una con su licencia
@@ -93,26 +93,28 @@ No se distribuyen: no viajan al navegador. Se listan igualmente, una a una.
 | `@tsconfig/node24` | 24.0.5 | MIT | (motor) La base de `tsconfig` para Node 24 |
 | `@tsconfig/node-ts` | 23.6.4 | MIT | (motor) La base de `tsconfig` para ejecutar TypeScript con borrado de tipos |
 | `esbuild` | 0.28.2 | MIT | (motor) Empaqueta el validador standalone en un solo fichero sin dependencias (`npm run generar`). Su binario, en § 1.4 |
+| `vite` | 8.3.2 | MIT | (web) El empaquetador con el que construye `astro` (y Rolldown, el suyo, dentro). `astro.config.mjs` nombra su tipo de plugin: hasta el 06/10 llegaba de rebote, con `astro`, y desde el 11.1 (hallazgo 12 del censo pre-despliegue) se declara, fijada exacta en la versión que ya instalaba `astro` (el lock solo cambia en esa línea). Lo vigila `web/jueces/paquete.spec.ts` |
 
 `@types/node` pasó de 24.19.0 a 24.19.1 el 02/10/2026, al regenerar el lock en la raíz (encargo
 6.2): es un parche de tipos dentro del rango `^24.19.0` que declaran los dos workspaces.
 
-**Mirado una a una:** el `LICENSE` de cada una de las ocho declaradas, abierto en
+**Mirado una a una:** el `LICENSE` de cada una de las nueve declaradas, abierto en
 `node_modules/`, dice lo mismo que su campo `license`: MIT (Evgeny Poberezkin) en `ajv`; Apache
 License 2.0 en `typescript`; MIT (Microsoft Corporation) en `@types/node` y en las dos bases de
 `@tsconfig`; MIT (Evan Wallace) en el `LICENSE.md` de `esbuild` (29/09/2026); MIT (Fred K.
 Schott) en `astro` (02/10/2026); MIT (bpampuch, 2014-2015, y liborm85, 2016-2026) en `pdfmake`
-(05/10/2026).
+(05/10/2026); MIT (VoidZero Inc. and Vite contributors) en la cabecera del `LICENSE.md` de `vite`,
+que detrás lista las licencias de lo que Vite lleva empaquetado (06/10/2026).
 
 ### 1.3 · El árbol transitivo — existe, y no se lista aquí
 
-Las ocho declaradas arrastran **trescientas once** dependencias transitivas en el lock. No se
+Las nueve declaradas arrastran **trescientas diez** dependencias transitivas en el lock. No se
 enumeran una a una aquí: la lista que manda es [`package-lock.json`](package-lock.json), el de la
 raíz, versionado precisamente para eso (desde el encargo 6.2 hay uno solo, para los dos
 workspaces). Cada entrada trae su versión, su origen y su licencia. No cuentan la raíz, las
 carpetas de los workspaces ni sus enlaces en `node_modules/`.
 
-⚠️ **De esas trescientas once, en esta máquina se instalan doscientas once.** El resto son
+⚠️ **De esas trescientas diez, en esta máquina se instalan doscientas diez.** El resto son
 opcionales que npm **solo instala en el sistema que les toca**:
 
 - **91 binarios de otros sistemas**: 25 de esbuild, 14 de Rolldown, 13 de sharp y 10 de su
@@ -139,11 +141,11 @@ npm ls --all                    # el árbol entero
 ```
 
 **El reparto de licencias del árbol transitivo, leído del `package-lock.json` de la raíz el
-05/10/2026:**
+06/10/2026:**
 
 | Licencia | Paquetes |
 |---|---|
-| MIT | 239 |
+| MIT | 238 |
 | Apache-2.0 | 17 |
 | MPL-2.0 | 12 |
 | LGPL-3.0-or-later | 10 |
@@ -158,7 +160,7 @@ npm ls --all                    # el árbol entero
 | 0BSD | 1 |
 | (MIT AND Zlib) | 1 |
 | sin campo `license` (`png-js`: su `LICENSE` es MIT) | 1 |
-| **Total** | **311** |
+| **Total** | **310** |
 
 ⚠️ **Dos licencias que no son permisivas, y por qué no obligan aquí.** Las dos llegan con
 `astro` y son **herramientas de build: no se distribuyen ni viajan al navegador** (el JS de la
@@ -244,14 +246,14 @@ la cabecera, el resto es el original.
 
 ### 1.7 · Resumen de compatibilidad
 
-**Las ocho declaradas son MIT o Apache-2.0**, y el código incorporado, MIT: permisivas, sin
+**Las nueve declaradas son MIT o Apache-2.0**, y el código incorporado, MIT: permisivas, sin
 copyleft, compatibles con la Apache 2.0 de este proyecto sin condición añadida. Lo que va dentro
 de pdfmake (§ 1.8) es MIT salvo lo de § 1.6: BlueOak, Apache-2.0, Zlib, BSD-3-Clause, ISC, 0BSD
 y dominio público, todas permisivas, y todas viajan con su texto. El árbol entero, en § 1.3.
 Nada bloquea.
 
 > **Y lo que este documento no garantiza:** el reparto de § 1.3 sale del campo `license` que
-> cada paquete declara en el `package-lock.json`. **Las ocho declaradas sí se han abierto una a
+> cada paquete declara en el `package-lock.json`. **Las nueve declaradas sí se han abierto una a
 > una.** De las transitivas instaladas se miró la primera línea de cada `LICENSE` el 29/09 y
 > coincide con su campo; `@esbuild/win32-x64` no trae `LICENSE` (§ 1.4); de los veinticinco
 > binarios de esbuild que no se instalan aquí solo consta lo que dice el lock. El texto entero de
