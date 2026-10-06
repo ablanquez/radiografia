@@ -14,6 +14,26 @@
 
 ---
 
+## [2026-10-06] 🔴 ABIERTA — El JS del analizador lleva código de Vite (su función de precarga) sin aviso de licencia, y el censo y el NOTICES dicen que lo que viaja está completo
+
+**Categoría:** licencias de terceros (empaquetado del navegador)
+**Síntoma:** desde el 9.3 (el `import()` de pdfmake), Vite 8.3.2 mete en el JS del analizador su función `preload` (`node_modules/vite/dist/node/chunks/node.js`, MIT, © VoidZero Inc. and Vite contributors): `__vite__mapDeps`, `modulepreload` y el evento `vite:preloadError`. Ningún aviso de Vite viaja en `dist/`.
+**⭐ Qué dio verde mientras el fallo estaba vivo:** el censo pre-despliegue (`377fcbe`), que da por completa la lista de lo que viaja. Su § 10 solo nombra Ajv, silabea, pdfmake, el trozo de Rolldown, las fuentes, los percentiles y los iconos, y su § 11.1 dice, tal cual: «Cada aviso de licencia que viaja tiene un juez que lo busca en `dist/`: Ajv, pdfmake y las fuentes. El hallazgo 1 es justo el que no lo tenía.» Y THIRD-PARTY-NOTICES § 1.1 (`4b8f9f2`, línea 65): «(02/10/2026), el JS no lleva código de Vite ni de Astro.» Medido el 06/10 sobre el `dist/` de `4b8f9f2` (scratchpad `c110/dist-a`):
+```
+index.astro_astro_type_script_index_0_lang.0uYdAJsu.js: modulepreload=2 relList=1 vitePreload=4 preload_error=1
+generar-pdf.BMivLRrr.js: modulepreload=0 relList=0 vitePreload=0 preload_error=0
+$ grep -o "vite:preloadError" …0uYdAJsu.js
+vite:preloadError
+```
+**Cómo se cazó:** instrumento (al preparar el hallazgo 18 del censo, el trozo de Rolldown, se buscó en cada JS de `dist/` otro código del empaquetador)
+**Causa raíz:** ⏳ PENDIENTE
+**Arreglo aplicado:** ⏳ PENDIENTE
+**Commit:** ⏳ PENDIENTE
+**Ley que sale de aquí:** SIN LEY TODAVÍA
+**Traza:** `web/src/pantalla/descarga.ts` (`import()` del trozo de pdfmake); `dist/_astro/index.astro_astro_type_script_index_0_lang.*.js`; `docs/CENSO-PRE-DESPLIEGUE.md` § 10 y § 11.1; `THIRD-PARTY-NOTICES.md` § 1.1.
+
+---
+
 ## [2026-10-05] ✅ CERRADA — En el papel, el anexo de las señales («¿Por qué lo miramos?» y las de contexto) no lleva el aire de 14 pt que le da su regla; ningún juez lo ve
 
 **Categoría:** jueces web / impresión
