@@ -757,7 +757,7 @@ Antonio firmó el 06/10, con la documentación del panel de Hostinger delante, l
 - **`Header always set`: CONSTA.** La CSP, `nosniff` y `Referrer-Policy` van en todas las respuestas, también en el 404, salvo en los PNG (abajo). La CSP por cabecera es idéntica al `<meta>` en las 53 páginas y en la 404.
 - **`ErrorDocument 404`: CONSTA.** `/no-existe/` y `/reglas/no-existe/x/` dan 404 con `dist/404.html`.
 - **`env=HTTPS`: CONSTA** que HSTS (`max-age=31536000`) va en las respuestas por https. Por http no se puede ver: el panel redirige antes, con un 301 sin HSTS.
-- **`AddType`: CONSTA el resultado** (`font/woff2`, `font/woff`, `application/manifest+json`, `image/svg+xml`; y `application/json` en los JSON). Si lo pone nuestra línea o el servidor no se distingue sin quitarla.
+- **`AddType`: CONSTA el resultado** (`font/woff2`, `font/woff`, `application/manifest+json`, `image/svg+xml`; y `application/json` en los JSON). Si lo pone nuestra línea o el servidor no se distingue sin quitarla. En el de `.js`, sí: lo pone nuestra línea (abajo, la publicación `995674f`).
 - **`RedirectMatch`: NO CONSTA.** Hostinger da 403 a todo lo que cuelga de `/.git/`, exista o no, y a `/.htaccess`, antes del `.htaccess` y sin sus cabeceras. Ninguna otra dirección distingue la regla de un simple «no existe». Si el despliegue deja una carpeta `.git`: sigue sin constar, y no se sirve.
 - **Cabeceras que pone el servidor:** un `Expires` de una semana en el CSS, el JS, las fuentes, el SVG y el favicon. Donde va `max-age` manda `Cache-Control`; en los `no-cache`, la revalidación. Y la compresión: Brotli.
 - **http a https: CONSTA.** `/`, `/reglas/` y `/creditos/` dan 301 a la misma dirección por https.
@@ -788,6 +788,31 @@ Lo demás, contra producción y en verde:
 - el PDF descargado (`RadiografIA.pdf`, `%PDF-`);
 - los 320 px, el tamaño de lo que se pulsa y el árbol de accesibilidad;
 - la fidelidad al modelo, con el mismo `medidas-modelo.json`.
+
+**La publicación `995674f` (de `main` `41c359f`, con el `AddType` de `.js`), medida desde fuera el 06/10 entre las 16:07 y las 16:16 (+02:00).** La suite en modo producción: 302 de 303. El único rojo es el juez 1 de producción, con 25 discrepancias, todas del CDN. **PARA:** se vuelve a medir cuando el CDN haya soltado el sitio (la documentación del panel dice 24-48 h). El juez no cambia.
+
+- **El CDN sigue en medio.** `server: hcdn` en todo: los 87 ficheros, las tres redirecciones, la que no existe y las rutas con punto. `x-hcdn-cache-status`, por grupo:
+  - el HTML, los JSON, los txt y el manifiesto: `DYNAMIC`;
+  - el JS y el CSS: `MISS`, también en las variantes que el CDN guarda con `Age` (abajo);
+  - las fuentes: `HIT` (8 de 9, pedidas con `br, gzip`) o `MISS`;
+  - los SVG, el favicon y los PNG: `MISS`.
+- **`AddType` de `.js`: CONSTA que lo pone nuestra línea.** Cada respuesta que el CDN trae del origen (`MISS`, sin `Age`, con el `Last-Modified` del despliegue nuevo, 14:02:57 GMT) llega como `text/javascript`. Antes, el servidor daba `application/x-javascript`.
+- **El CDN guarda el JS viejo, una variante por `Accept-Encoding`** (`Vary: Accept-Encoding`). Las que tenía guardadas siguen con `application/x-javascript`, con un `Age` de 1.910 a 3.769 s y el `Last-Modified` de la publicación anterior (13:10:54 GMT).
+  - La petición del juez, el `fetch` de Node con sus cabeceras por defecto, cae en ellas: los cinco JS, en rojo.
+  - Con `gzip, deflate` o `identity`, los cinco salen ya como `text/javascript`.
+  - Con `br`, que es lo que pide Chrome, solo `generar-pdf`.
+
+  Llevan `max-age=31536000, immutable`. Cuánto los guarda el CDN NO CONSTA.
+- **Los cuatro PNG, como antes.** Otro PNG (`icon-192.png`: 2.665 bytes frente a 2.423) o WebP a Chrome, sin la CSP, `nosniff`, `Referrer-Policy` ni HSTS.
+- **Lo demás, en verde contra producción:**
+  - las cabeceras de cada grupo y los demás tipos;
+  - la CSP por cabecera, igual al `<meta>` en las 53 páginas y en la 404;
+  - http a https (301) en `/`, `/reglas/` y `/creditos/`;
+  - `/no-existe/` y `/reglas/no-existe/x/`, en 404 con la nuestra;
+  - `/.git/HEAD`, `/.git/config`, `/.git` y `/.htaccess`, en 403;
+  - la red sin nada fuera del origen, y ni violaciones de la CSP ni errores en la consola;
+  - el PDF descargado;
+  - los 320 px, el tamaño de lo que se pulsa, el árbol de accesibilidad y la fidelidad al modelo.
 
 **El build.**
 
