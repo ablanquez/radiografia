@@ -91,11 +91,11 @@
 import type { Paquete, Resultado } from '@radiografia/motor/navegador';
 import * as textos from '../textos.ts';
 import type { ProblemaDeCarga } from './cargar.ts';
-import { parametrosEnLlano, urlDeRegla } from '../catalogo/catalogo.ts';
+import { parametrosEnLlano, urlDeLosCreditos, urlDeRegla } from '../catalogo/catalogo.ts';
 import { enOrden } from '../orden.ts';
 import { nombreDeRegla } from './humanizar.ts';
 import { repartirSiglas } from './informe.ts';
-import { detalleDelPaquete, etiquetaDelPaquete, loQueMasPesa, palabrasDelTexto, resumenDelPaquete, type Voz } from './lectura.ts';
+import { comparacionDelPaquete, detalleDelPaquete, etiquetaDelPaquete, loQueMasPesa, palabrasDelTexto, resumenDelPaquete, type Voz } from './lectura.ts';
 import { cabeceraEnDatos, claveEnDatos, desgloseDelPaquete, senalesEnDatos, type ApartadoDelDesglose, type SenalEnDatos } from './modelo-informe.ts';
 import { partirEnTramos } from './tramos.ts';
 import { capasVisibles, claseDeFamilia } from './familias.ts';
@@ -773,7 +773,18 @@ export function pintarDesglose(
     detalle.append(el('summary', textos.VER_EL_DETALLE));
     if (r.banda !== null) {
       const cifras = el('div', undefined, 'cifras');
-      cifras.append(...detalleDelPaquete(resultado, r, nombreDelGenero).map((linea) => el('p', linea)));
+      // Desde el 11.1 (hallazgo 2 del censo pre-despliegue, firmado por Antonio), debajo de la comparación con los textos
+      // de personas, de dónde salen: la página de créditos. Solo en un paquete incluido: los de uno propio son suyos.
+      const comparacion = indice.propios.has(r.paquete) ? null : comparacionDelPaquete(resultado, r);
+      for (const linea of detalleDelPaquete(resultado, r, nombreDelGenero)) {
+        cifras.append(el('p', linea));
+        if (linea !== comparacion) continue;
+        const enlace = el('a', textos.CREDITOS_Y_LICENCIAS);
+        enlace.href = urlDeLosCreditos(base);
+        const corpus = el('p', undefined, 'corpus');
+        corpus.append(`${textos.CORPUS_EN} `, enlace);
+        cifras.append(corpus);
+      }
       detalle.append(cifras);
     }
     const [reglas, avisos] = desgloseDe(r, cabecera);

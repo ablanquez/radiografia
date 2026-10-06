@@ -26,6 +26,14 @@
  *   5. La red: después de la carga inicial, nada más que lo que se pide a
  *      propósito al pintar un resultado (desde el 9.3, punto 8: la negrita
  *      del papel, una vez; chrome.ts, AL_PINTAR_UN_RESULTADO).
+ *   6. Desde el 11.1 (hallazgo 2 del censo pre-despliegue, firmado por
+ *      Antonio): en «Ver el detalle», justo debajo de la comparación con los
+ *      textos de personas, «Textos de personas: corpus en Créditos y
+ *      licencias», con el enlace a /creditos/, una sola vez; sin comparación
+ *      (narrativa clásica con 150 palabras: no hay textos de personas de esa
+ *      longitud), sin la línea. Un paquete propio con escala no la lleva (sus
+ *      textos de referencia son suyos: pintar.ts, indice.propios), pero no hay
+ *      paquete de prueba con escala, y eso NO CONSTA en Chrome.
  *
  * [DOC] https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/innerText
  *    — «represents the rendered text content of a node and its descendants»;
@@ -38,7 +46,8 @@ import { after, describe, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import * as textos from '../src/textos.ts';
-import { etiquetaDelPaquete, loQueMasPesa, resumenDelPaquete } from '../src/pantalla/lectura.ts';
+import { urlDeLosCreditos } from '../src/catalogo/catalogo.ts';
+import { comparacionDelPaquete, etiquetaDelPaquete, loQueMasPesa, resumenDelPaquete } from '../src/pantalla/lectura.ts';
 import { indexar } from '../src/pantalla/pintar.ts';
 import { EJEMPLOS_PUBLICOS, motorDelNavegador, paquetesIncluidos, TEXTO_DE_COMBINACION_REAL } from './apoyo.ts';
 import { abrirAnalizadorConTestigos, sinLasDelResultado, type AnalizadorConTestigos, type Pestana } from './chrome.ts';
@@ -171,5 +180,43 @@ describe('el lenguaje de calle en Chrome, sobre astro preview', () => {
     t.diagnostic(`después de la marca (${despues.length}): ${despues.length === 0 ? 'ninguna' : despues.map((x) => `${x.tipo} ${x.url}`).join(' · ')}`);
     assert.deepEqual(sinLasDelResultado(despues, url), []);
     assert.deepEqual(await sesion!.violaciones(), []);
+  });
+
+  test('6 · en «Ver el detalle», debajo de la comparación con los textos de personas, de dónde salen, con el enlace a los créditos; sin comparación, no', async () => {
+    await arrancar();
+    const { analizar } = await motorDelNavegador();
+    const analizarCon = async (texto: string, genero: string): Promise<string | null> => {
+      await p().evaluar(`(() => {
+        document.getElementById('resultado').hidden = true;
+        document.getElementById('texto').value = ${JSON.stringify(texto)};
+        document.getElementById('genero').value = ${JSON.stringify(genero)};
+        document.getElementById('analizar').click();
+      })()`);
+      await p().hasta(`!document.getElementById('resultado').hidden`, 'el resultado');
+      const r = analizar(texto, paquetesIncluidos(), { genero });
+      return comparacionDelPaquete(r, r.paquetes[0]!);
+    };
+    const lineas = (): Promise<{ texto: string; enlace: [string | null, string] | null }[]> =>
+      p().evaluar(`[...document.querySelectorAll('#desglose .cifras > p')].map((x) => {
+        const a = x.querySelector('a');
+        return { texto: x.textContent, enlace: a === null ? null : [a.getAttribute('href'), a.textContent] };
+      })`);
+    const comparacion = await analizarCon(TEXTO_DE_COMBINACION_REAL, 'general');
+    assert.ok(comparacion !== null, 'combinacion-real, en «General», se compara con textos de personas');
+    const con = await lineas();
+    const i = con.findIndex((x) => x.texto === comparacion);
+    assert.ok(i >= 0, `la comparación, en «Ver el detalle»: ${con.map((x) => x.texto).join(' | ')}`);
+    assert.deepEqual(
+      con[i + 1],
+      { texto: `${textos.CORPUS_EN} ${textos.CREDITOS_Y_LICENCIAS}`, enlace: [urlDeLosCreditos('/'), textos.CREDITOS_Y_LICENCIAS] },
+      'debajo de la comparación, de dónde salen los textos de personas',
+    );
+    assert.equal(con.filter((x) => x.enlace !== null).length, 1, 'una sola vez');
+    // Narrativa clásica no tiene textos de personas de 100 a 299 palabras: «No hay…», sin comparación y sin la línea.
+    const corto = /^\s*(?:\S+\s+){149}\S+/u.exec(readFileSync(new URL('antonio.txt', EJEMPLOS_PUBLICOS), 'utf8'))![0];
+    assert.equal(await analizarCon(corto, 'narrativa-clasica'), null, 'narrativa clásica, con 150 palabras, sin textos de personas con los que comparar');
+    const sin = await lineas();
+    assert.ok(sin.length > 0, 'las cifras de «Ver el detalle»');
+    assert.deepEqual(sin.filter((x) => x.enlace !== null || x.texto.startsWith(textos.CORPUS_EN)), [], 'sin comparación, sin la línea de los créditos');
   });
 });

@@ -12,7 +12,9 @@
  *     banda y el aviso debajo. Un paquete propio con escala habla de sus
  *     señales: pocas (por debajo de la mediana o dentro de lo normal),
  *     bastantes o muchas.
- *   · detalleDelPaquete: las cifras, para el «Ver el detalle» plegado.
+ *   · detalleDelPaquete: las cifras, para el «Ver el detalle» plegado; y
+ *     comparacionDelPaquete, la línea de la comparación con los textos de
+ *     personas, debajo de la cual pintar.ts dice de dónde salen (11.1).
  *   · resumenDelPaquete: «Lo que más pesa:» con las tres reglas que más suman
  *     (los empates, en el orden del desglose: orden.ts) y su cola, y «Empieza
  *     por:» con la sugerencia de la primera (firmado, E). La meta solo existe
@@ -107,18 +109,22 @@ export function etiquetaDelPaquete(resultado: Resultado, r: ResultadoDePaquete, 
   return { etiqueta, frase, aviso };
 }
 
+/** Con qué textos de personas se compara un paquete con escala; null sin escala o sin textos de personas para este texto. */
+export function comparacionDelPaquete(resultado: Resultado, r: ResultadoDePaquete): string | null {
+  if (r.banda === null || r.banda.banda === 'sin calibración') return null;
+  const g = generoEnCalle(resultado.genero);
+  const b = r.banda;
+  return textos.comparadoCon(entero.format(b.n), g.plural, tramoEnPalabras(resultado), g.escritos, cifra(b.p50), cifra(b.p95), cifra(b.p99));
+}
+
 /** Las cifras de un paquete con escala: su total y con qué textos de personas se compara (también van en la cabecera del informe). */
 export function cifrasDelPaquete(resultado: Resultado, r: ResultadoDePaquete): string[] {
   const g = generoEnCalle(resultado.genero);
-  const tramo = tramoEnPalabras(resultado);
   const lineas: string[] = [];
   if (r.puntuacion.total !== null) lineas.push(textos.tuTotal(cifra(r.puntuacion.total)));
-  if (r.banda !== null && r.banda.banda !== 'sin calibración') {
-    const b = r.banda;
-    lineas.push(textos.comparadoCon(entero.format(b.n), g.plural, tramo, g.escritos, cifra(b.p50), cifra(b.p95), cifra(b.p99)));
-  } else if (r.banda !== null) {
-    lineas.push(textos.sinTextosDePersonas(g.plural, tramo, g.escritos));
-  }
+  const comparacion = comparacionDelPaquete(resultado, r);
+  if (comparacion !== null) lineas.push(comparacion);
+  else if (r.banda !== null) lineas.push(textos.sinTextosDePersonas(g.plural, tramoEnPalabras(resultado), g.escritos));
   return lineas;
 }
 
