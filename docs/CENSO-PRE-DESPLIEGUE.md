@@ -761,10 +761,10 @@ Antonio firmó el 06/10, con la documentación del panel de Hostinger delante, l
 **El build.**
 
 - El de `87c80b4` en un clon limpio es idéntico, fichero a fichero, al del clon de trabajo: 86 ficheros.
-- Con la página que no existe: 87 ficheros, 54 páginas, 2.632.266 bytes.
+- Con la página que no existe: 87 ficheros, 54 páginas, 2.632.266 bytes; y con `eol=lf` (abajo), 2.626.823: los dos paquetes y las dos licencias, sin sus CR.
 - `npm run publicar` construye dos veces y para si los dos `dist/` no son iguales.
 
-**Los finales de línea.** El checkout de Windows deja en CRLF cuatro ficheros de texto de `dist/`: los dos paquetes y los dos `OFL.txt`. Git, con `core.autocrlf=true` (el de esta máquina), los pasaría a LF al guardarlos en la rama. El script da a git `core.autocrlf=false` y compara el árbol del commit con `dist/`, byte a byte. En el repositorio están en LF; `.gitattributes` les deja el final de línea a la máquina, al revés que a los ejemplos, los SVG y el manifiesto (`eol=lf`). Desde otro sistema saldrían con LF: el mismo contenido, otros bytes. Fijarlo es cambiar la web, y no entra en el 11.2: queda propuesto.
+**Los finales de línea.** El checkout de Windows deja en CRLF cuatro ficheros de texto de `dist/`: los dos paquetes y los dos `OFL.txt`. Git, con `core.autocrlf=true` (el de esta máquina), los pasaría a LF al guardarlos en la rama. El script da a git `core.autocrlf=false` y compara el árbol del commit con `dist/`, byte a byte. En el repositorio están en LF; `.gitattributes` les deja el final de línea a la máquina, al revés que a los ejemplos, los SVG y el manifiesto (`eol=lf`). Desde otro sistema saldrían con LF: el mismo contenido, otros bytes. **Firmado por Antonio el 06/10 y hecho:** `.gitattributes` les fija `eol=lf` (`paquetes/*.json` y `web/public/fuentes/*/OFL.txt`), y ya salen en LF de cualquier checkout. `git add --renormalize` no cambia nada: en el repositorio ya estaban así. Lo vigila el juez 8 de `web/jueces/publicacion.spec.ts`: desde un checkout con `core.autocrlf=true`, ningún fichero de texto de `paquetes/` ni de `web/public/` sale con CRLF. En `dist/`, solo los 13 binarios llevan el byte CR. El script sigue dando a git `core.autocrlf=false`.
 
 ---
 

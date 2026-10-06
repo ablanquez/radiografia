@@ -10,10 +10,11 @@
  *     tocar el árbol de trabajo ni la rama en la que se está.
  *
  * Lo que se publica tiene que ser, byte a byte, lo que se probó. git, con core.autocrlf=true (el de esta máquina),
- * pasaría a LF los ficheros de texto con CRLF al añadirlos, y dist/ los lleva: los dos paquetes y las dos licencias de
- * las fuentes, que el checkout de Windows deja en CRLF (visto el 06/10 en el dist/ de 87c80b4). Por eso cada orden de git
- * va con core.autocrlf=false, y al final se compara el árbol del commit con dist/, fichero a fichero, por su id de git
- * sin filtros.
+ * pasaría a LF los ficheros de texto con CRLF al añadirlos. dist/ los llevaba: los dos paquetes y las dos licencias de
+ * las fuentes, que el checkout de Windows dejaba en CRLF (visto el 06/10 en el dist/ de 87c80b4), hasta que
+ * .gitattributes les fijó eol=lf (firmado por Antonio el 06/10; lo vigila el juez 8 de jueces/publicacion.spec.ts). Por
+ * si vuelve a llegar alguno, cada orden de git va con core.autocrlf=false, y al final se compara el árbol del commit con
+ * dist/, fichero a fichero, por su id de git sin filtros.
  * [DOC] https://git-scm.com/docs/gitattributes — «If the text attribute is unspecified, Git uses the core.autocrlf
  *    configuration variable to determine if the file should be converted»; con text=auto, «If it is text and the file
  *    was not already in Git with CRLF endings, line endings are converted on checkin».

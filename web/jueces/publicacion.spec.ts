@@ -17,7 +17,15 @@
  *      y la lista de worktrees, sin tocar.
  *   6. Un dist/ con un mapa de fuente (.map), o sin el .htaccess, no se publica, y la rama se queda como estaba.
  *   7. El mensaje del commit lleva el hash de main del que sale y la fecha.
+ *   8. Desde el 11.2 (firmado por Antonio el 06/10: eol=lf), desde un checkout con core.autocrlf=true, el de Windows,
+ *      ningún fichero de texto de los que llegan a dist/ (los de paquetes/ y web/public/ que no son binarios) sale con
+ *      CRLF: ni los dos paquetes ni las dos OFL.txt, que hasta entonces salían así. Y esos cuatro, tal cual salen del
+ *      checkout, llegan a la rama en LF. Lo mira con lo que haría el checkout, con el .gitattributes del árbol de trabajo
+ *      (git cat-file --filters), sin clonar.
  *
+ * [DOC] https://git-scm.com/docs/git-cat-file — --filters: «Show the content as converted by the filters configured in
+ *    the current working tree for the given <path> (i.e. smudge filters, end-of-line conversion, etc)».
+ * [DOC] https://git-scm.com/docs/git-check-attr — --stdin: «Read pathnames from the standard input, one per line».
  * [DOC] https://nodejs.org/api/test.html — node:test.
  */
 import { after, describe, test } from 'node:test';
@@ -26,6 +34,7 @@ import { execFileSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import {
   actualizarRama,
   cspDeLaWeb,
@@ -40,6 +49,8 @@ import {
 } from '../publicacion/publicacion.ts';
 
 const PLANTILLA = readFileSync(new URL('../publicacion/.htaccess.plantilla', import.meta.url), 'utf8');
+/** La raíz del repositorio en el que corre el juez (el árbol de trabajo o un clon). */
+const RAIZ_DEL_REPO = fileURLToPath(new URL('../../', import.meta.url));
 const CSP = "connect-src 'self';form-action 'self'; script-src 'self' 'sha256-BF0290pkb3jxQsE7z00xR8Imp8X34FLC88L0lkMnrGw='; style-src 'self' 'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=';";
 const META = (csp: string): string => `<meta http-equiv="content-security-policy" content="${csp}">`;
 const PAGINA = (meta: string): string => `<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">${meta}<title>x</title></head><body></body></html>`;
@@ -217,5 +228,33 @@ describe('la publicación: el .htaccess y la rama publicacion, con un dist/ de p
     const fecha = new Date(2026, 9, 6, 18, 42, 5);
     const mensaje = mensajeDeLaPublicacion('87c80b46648c31d43bed61dced84959f9221fa0e', fecha);
     assert.match(mensaje, /de main 87c80b46648c31d43bed61dced84959f9221fa0e, del 2026-10-06 18:42:05 [+-]\d{4}$/);
+  });
+
+  test('8 · desde un checkout con core.autocrlf=true, lo de texto que llega a dist/ sale en LF, también los dos paquetes y las dos OFL.txt, y así llega a la rama', () => {
+    /** Un fichero del repositorio como lo dejaría un checkout de Windows (core.autocrlf=true), con el .gitattributes del árbol de trabajo. */
+    const delCheckout = (ruta: string): Buffer => execFileSync('git', ['-c', 'core.autocrlf=true', 'cat-file', '--filters', `HEAD:${ruta}`], { cwd: RAIZ_DEL_REPO });
+    const rutas = g(RAIZ_DEL_REPO, 'ls-files', '--', 'paquetes', 'web/public').split('\n').filter((r) => r !== '');
+    const binarios = new Set(
+      execFileSync('git', ['check-attr', '--stdin', 'binary'], { cwd: RAIZ_DEL_REPO, input: `${rutas.join('\n')}\n`, encoding: 'utf8' })
+        .split('\n')
+        .filter((l) => l.endsWith(': binary: set'))
+        .map((l) => l.slice(0, -': binary: set'.length)),
+    );
+    const deTexto = rutas.filter((r) => !binarios.has(r));
+    const CUATRO = {
+      'paquetes/radiografia.json': 'paquetes/radiografia.json',
+      'paquetes/espanol-correcto.json': 'paquetes/espanol-correcto.json',
+      'web/public/fuentes/literata/OFL.txt': 'fuentes/literata/OFL.txt',
+      'web/public/fuentes/atkinson-hyperlegible-next/OFL.txt': 'fuentes/atkinson-hyperlegible-next/OFL.txt',
+    };
+    for (const ruta of Object.keys(CUATRO)) assert.ok(deTexto.includes(ruta), `${ruta}, entre los de texto`);
+    assert.ok(binarios.size > 0 && deTexto.length > Object.keys(CUATRO).length, `${deTexto.length} de texto y ${binarios.size} binarios`);
+    assert.deepEqual(deTexto.filter((r) => delCheckout(r).includes(13)), [], 'ficheros de texto que el checkout de Windows dejaría en CRLF');
+
+    const repo = repositorioDePrueba();
+    const enDist = Object.fromEntries(Object.entries(CUATRO).map(([ruta, destino]) => [destino, delCheckout(ruta)]));
+    const commit = actualizarRama(repo, escribirDist({ ...ficherosDePrueba(CSP), ...enDist }), 'los cuatro, del checkout');
+    assert.ok(commit !== null);
+    assert.deepEqual(Object.values(CUATRO).filter((d) => execFileSync('git', ['cat-file', 'blob', `${commit}:${d}`], { cwd: repo }).includes(13)), [], 'en la rama, con CRLF');
   });
 });

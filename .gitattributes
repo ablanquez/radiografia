@@ -28,3 +28,13 @@ web/public/ejemplos/*.json text eol=lf
 docs/figma/icono/*.svg text eol=lf
 web/public/*.svg text eol=lf
 web/public/site.webmanifest text eol=lf
+
+# Los dos paquetes incluidos, que se copian a dist/paquetes/, y las licencias
+# de las fuentes, que van a dist/fuentes/ (encargo 11.2; firmado por Antonio el
+# 06/10): con saltos \n, como lo demás de texto que se publica. Sin estas
+# líneas, un checkout de Windows los dejaba en CRLF y se publicaban así: el
+# mismo contenido con otros bytes según la máquina que publicara. En el
+# repositorio ya estaban en LF (git add --renormalize no cambia nada). Lo
+# vigila el juez 8 de web/jueces/publicacion.spec.ts.
+paquetes/*.json text eol=lf
+web/public/fuentes/*/OFL.txt text eol=lf

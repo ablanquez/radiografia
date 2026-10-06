@@ -360,10 +360,10 @@ en el despliegue (punto 11). Las fuentes ya van comprimidas.
 | Literata 400 (woff2) | 43.696 | — |
 | Literata 400 itálica (woff2) | 44.212 | — |
 | Atkinson Hyperlegible Next, de 400 a 700 (woff2) | 25.920 | — |
-| `paquetes/radiografia.json` (con su calibración, los nombres y las frases en claro de las reglas) | 352.239 | 76.955 |
-| `paquetes/espanol-correcto.json` | 21.976 | 6.066 |
+| `paquetes/radiografia.json` (con su calibración, los nombres y las frases en claro de las reglas) | 347.340 | 76.863 |
+| `paquetes/espanol-correcto.json` | 21.618 | 6.049 |
 | el icono de la cabecera, los dos del navegador y el manifiesto | 3.637 | 3.127 |
-| **en total** | **704.369** | **252.159** |
+| **en total** | **699.112** | **252.050** |
 
 **Después, solo si hace falta:**
 
@@ -403,7 +403,7 @@ las fichas, los créditos y la que no existe no llevan JS), y lo suyo:
 | **en total, la que no existe** (10 peticiones, en `/no-existe/`) | **141.624** | **122.724** |
 
 `dist/` entero: 54 páginas HTML (el analizador, el índice, 50 fichas, los
-créditos y la que no existe), 87 ficheros y 2.632.266 bytes. Casi la mitad (1.256.123) es el trozo de pdfmake
+créditos y la que no existe), 87 ficheros y 2.626.823 bytes. Casi la mitad (1.256.123) es el trozo de pdfmake
 y las fuentes del PDF, que solo se piden al descargar. Cada página lleva la
 CSP.
 
@@ -462,10 +462,13 @@ publicación es un commit encima del anterior, con el hash de `main` del que
 sale y la fecha.
 
 Los ficheros van byte a byte como salen del build, también los finales de
-línea. El checkout de Windows deja en CRLF los dos paquetes y las dos
-licencias de las fuentes, y git, con `core.autocrlf=true` (el de esta
-máquina), los pasaría a LF al guardarlos. Por eso el script le da a git
-`core.autocrlf=false`.
+línea: el script le da a git `core.autocrlf=false`, porque con el `true` de
+esta máquina git cambiaría los de un fichero de texto que llegara en CRLF.
+Ya no llega ninguno. [`.gitattributes`](.gitattributes) fija `eol=lf` a todo
+lo de texto que se publica, y desde el 11.2 también a los dos paquetes y a
+las licencias de las fuentes, que el checkout de Windows dejaba en CRLF. Así,
+`dist/` sale con los mismos bytes en cualquier máquina. Lo vigila el juez 8
+de [`web/jueces/publicacion.spec.ts`](web/jueces/publicacion.spec.ts).
 
 ### El `.htaccess`
 
