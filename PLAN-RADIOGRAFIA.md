@@ -858,15 +858,27 @@ checklist fija, en escritorio y a 390 px, sin capturas (derechos), en
       CSP por cabecera preparadas en dos variantes para la parada de
       Hostinger; build reproducible byte a byte; web 281/281; 13
       bitácoras cerradas)
-- [ ] **Parlamento con la doc del panel de Hostinger** antes de tocar
+- [x] **Parlamento con la doc del panel de Hostinger** antes de tocar
       nada: hosting compartido para estático; si hay auto-deploy desde
       GitHub para estático o se sube el `dist` NO CONSTA hoy — se resuelve
-      con la doc y los precedentes de la casa, no de memoria
+      con la doc y los precedentes de la casa, no de memoria (06/10: hPanel
+      despliega una rama de GitHub en un directorio sin ejecutar builds →
+      rama huérfana `publicacion` con dist/ + .htaccess generada por
+      `npm run publicar`; LiteSpeed respeta .htaccess; «Añadir web» con el
+      dominio completo, como Linaje; CDN automático desactivado)
 - [ ] Publicado en el subdominio que Antonio decida (decidido el 05/10:
       **radiografia.antonioblanquez.es**); verificado desde
-      fuera con el ojo delante
-- [ ] README final: qué hace, qué no demuestra, cómo escribir un paquete
-      propio, enlace al catálogo
+      fuera con el ojo delante (06/10: publicado y visto por Antonio en PC,
+      iPhone e iPad con datos móviles; jueces de producción 302/303: solo
+      falla el CDN de Hostinger en propagación —PNG reescritos y JS
+      cacheado con el tipo viejo—; se remide cuando el CDN suelte el sitio)
+- [x] README final: qué hace, qué no demuestra, cómo escribir un paquete
+      propio, enlace al catálogo (06/10: README de portada con la forma de
+      Linaje, ZetaBus y Desplázame, logo y cinco capturas de producción; el
+      detalle movido tal cual a docs/WEB.md, CALIBRACION.md,
+      ARRANQUE-LOCAL.md, DESPLIEGUE.md y CRONICA-DE-CONSTRUCCION.md; juez
+      del README: secciones, enlaces, cifras y el paquete de ejemplo; 14
+      bitácoras cerradas)
 - [ ] Release v1.0.0 y reposo
 - [ ] Ficha del proyecto en el portafolio y en LinkedIn. **PUNTO 11
       CERRADO — v1 EN PRODUCCIÓN**
