@@ -449,11 +449,11 @@ sugerencia, excepciones, fuentes enlazadas y ejemplos.
 
 ## Estado y nevera
 
-✅ **Hoy, 06/10/2026:** la v1 está publicada en
+✅ **Hoy, 07/10/2026:** la v1 está publicada en
 [radiografia.antonioblanquez.es](https://radiografia.antonioblanquez.es) y
-verificada desde fuera con los jueces de producción. Queda pendiente el
-CDN de Hostinger: hasta que se propague su desactivación, reescribe los
-iconos PNG y sirve desde su caché el JS con el tipo de antes
+verificada desde fuera, con los jueces de producción en verde el 07/10. El
+CDN de Hostinger quedó desactivado por completo para este subdominio,
+porque reescribía los iconos
 ([censo, § 15](docs/CENSO-PRE-DESPLIEGUE.md#15--la-publicación-112-06102026-la-variante-elegida)).
 
 **Los puntos del plan**, con la fecha en que se cerraron

@@ -9,7 +9,8 @@ Hasta el 06/10/2026 este texto estaba en el README. En el encargo 11.4 se
 trasladó aquí tal cual. Solo cambiaron los enlaces; delante de los que
 ahora llevan a otro documento, «abajo» por «en»; «ni este README», por «ni
 el README»; y «Lo que viaja al navegador», que era un apartado de «Cómo
-ejecutar», es aquí una sección.
+ejecutar», es aquí una sección. Desde entonces, es aquí donde se pone al
+día.
 
 ---
 
@@ -30,8 +31,11 @@ Un paquete propio no se pide: se lee del fichero, en el navegador (en
 
 Medido el 06/10/2026 en Chrome sobre el build (`astro preview`), petición por
 petición. La columna «con gzip» es cada fichero comprimido con el gzip de
-Node a su nivel por defecto; lo que comprima el servidor de verdad se verá
-en el despliegue (punto 11). Las fuentes ya van comprimidas.
+Node a su nivel por defecto. El servidor publicado, LiteSpeed, comprime con
+Brotli a quien lo pide (medido el 07/10/2026, con `accept-encoding: br,
+gzip`): el HTML, el JS, el CSS, los JSON, los txt, los SVG y el
+manifiesto. Las fuentes, que ya van comprimidas, los PNG y el favicon
+salen tal cual.
 
 **El analizador, al cargar:** 15 peticiones.
 
@@ -156,6 +160,17 @@ las licencias de las fuentes, que el checkout de Windows dejaba en CRLF. Así,
 `dist/` sale con los mismos bytes en cualquier máquina. Lo vigila el juez 8
 de [`web/jueces/publicacion.spec.ts`](../web/jueces/publicacion.spec.ts).
 
+**El CDN de Hostinger tiene que estar desactivado por completo** para este
+subdominio. Reescribe los PNG (otro PNG, o WebP si el navegador lo acepta,
+sin la CSP ni las demás cabeceras) y guarda el JS con el tipo que tuviera.
+El interruptor del panel, en Rendimiento → CDN, no bastó: dejó la
+optimización de imágenes activada y el CDN sin modo de bypass. Lo cerró
+Kodee, el asistente de Hostinger, el 07/10/2026. «Vaciar caché» está en la
+página principal del sitio en hPanel, no en la sección CDN. Se nota que ya
+no está porque las respuestas llevan `server: LiteSpeed` y ninguna lleva
+`x-hcdn-cache-status`. Lo medido, en el
+[censo, § 15](CENSO-PRE-DESPLIEGUE.md#15--la-publicación-112-06102026-la-variante-elegida).
+
 ### El `.htaccess`
 
 | ficheros | Cache-Control |
@@ -215,14 +230,16 @@ comprueban:
 
 Además, los demás jueces de Chrome piden las páginas al sitio publicado en
 vez de a `astro preview`: la red, la CSP, los 320 px, el tamaño de lo que
-se pulsa y la fidelidad al modelo. Sin la variable, los de producción se
-omiten con un aviso.
+se pulsa y la fidelidad al modelo. Sin la variable, los de producción y el
+de las URL públicas del README se omiten con un aviso.
 
 Y, a ojo, Antonio en el PC, el iPhone y el iPad, con datos móviles.
 
 Lo que la documentación oficial de LiteSpeed no dice directiva a directiva
 (`env=HTTPS`, `RedirectMatch`, `AddType`, `FilesMatch`) se midió desde
-fuera con esos jueces el 06/10/2026: lo que cumple y lo que no, en el
+fuera con esos jueces el 06/10/2026, todavía a través del CDN de Hostinger.
+La medida con el CDN fuera es la del 07/10/2026, con todos los jueces en
+verde. Lo que cumple y lo que no, en el
 [censo, § 15](CENSO-PRE-DESPLIEGUE.md#15--la-publicación-112-06102026-la-variante-elegida).
 
 ### Qué no se sube

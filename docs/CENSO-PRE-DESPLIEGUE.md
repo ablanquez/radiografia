@@ -18,7 +18,8 @@
 > sobre `4b8f9f2`.
 >
 > **Publicación (11.2, 06/10/2026).** La variante elegida para el servidor,
-> frente a las del § 9: § 15.
+> frente a las del § 9, y lo medido desde fuera en producción el 06/10 y el
+> 07/10/2026: § 15.
 >
 > **De dónde sale el checklist.** El encargo remite a la sección «BLOQUE A ·
 > CÓDIGO — el checklist» de `GUIA-BUENAS-PRACTICAS.md`. Ese fichero no está
@@ -813,6 +814,18 @@ Lo demás, contra producción y en verde:
   - la red sin nada fuera del origen, y ni violaciones de la CSP ni errores en la consola;
   - el PDF descargado;
   - los 320 px, el tamaño de lo que se pulsa, el árbol de accesibilidad y la fidelidad al modelo.
+
+**La misma publicación `995674f`, medida desde fuera el 07/10, con el CDN de Hostinger desactivado por completo.** La suite en modo producción (`npm test` en `web/` con `URL_PRODUCCION`, desde `main` `efcc230`, que sobre `41c359f` solo cambia documentos (el README, `docs/`, el PLAN y el DISEÑO), jueces y comentarios de `web/src`: nada que viaje en `dist/`): **308 tests, 308 pasan, 0 fallan y 0 omitidos.** El juez 1 de producción, en verde: los 87 ficheros, con el contenido del `dist/` de `efcc230` byte a byte y las cabeceras de su grupo. **El PARA queda cerrado.** El juez no cambió.
+
+- **Lo que pasó, con su hora (+02:00):**
+  - 10:16, 19 h después de desactivar el CDN automático en hPanel: todo seguía con `server: hcdn`. `/icon-192.png`, 2.665 bytes y sin CSP; `/_astro/textos.BiHG9_Y9.js`, `application/x-javascript`, `HIT`, `Age` 68.375.
+  - 10:22: Antonio pulsó «Vaciar caché», que está en la página principal del sitio en hPanel, no en la sección CDN. Medido a las 10:24: el JS pasa a `text/javascript` (`HIT`, `Age` 24: la copia vieja, purgada); el PNG sigue reescrito (2.665 bytes, `server: hcdn`, sin CSP).
+  - 10:26: Kodee, el asistente de Hostinger, consultado por Antonio, dijo tal cual: «La configuración aún muestra optimización de imágenes activada y el CDN no está en modo de bypass». Aplicó «la desactivación completa» y confirmó que el CDN «ya no está habilitado para este subdominio».
+  - 10:27, medido a mano desde Chrome (`fetch` con `cache: 'no-store'`): `/`, `/icon-192.png` y `/_astro/textos.BiHG9_Y9.js`, con `server: LiteSpeed` y sin `x-hcdn-cache-status` ni `age`.
+- **Fichero a fichero, de 10:33 a 10:41:** los 87 de la rama `publicacion` responden con `server: LiteSpeed`, sin `x-hcdn-cache-status`, con el cuerpo de la rama y con la CSP, `nosniff`, `Referrer-Policy` y HSTS.
+- **Los cuatro PNG vuelven a ser los nuestros**, byte a byte y con las huellas de `docs/figma/icono/PROCEDENCIA.md`: `icon-192.png`, 2.423 bytes; `icon-512.png`, 6.546; `icon-512-maskable.png`, 2.260; `apple-touch-icon.png`, 950. También con el `Accept` de Chrome: ni otro PNG ni WebP. Llevan `no-cache`, la CSP, `nosniff`, `Referrer-Policy` y HSTS.
+- **Los cinco JS**, `text/javascript`, con `public, max-age=31536000, immutable`.
+- **La causa**, en los términos de Kodee: el interruptor del panel (Rendimiento → CDN) dejó el CDN sin modo de bypass y con la optimización de imágenes activada. Lo que la documentación del panel daba por una propagación de 24-48 h no era propagación.
 
 **El build.**
 

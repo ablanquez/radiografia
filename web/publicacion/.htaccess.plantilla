@@ -14,7 +14,7 @@
 # Lo que la doc oficial de LiteSpeed no dice directiva a directiva (env=HTTPS, RedirectMatch, AddType, FilesMatch) no
 #    constaba. [PROPIO] Por eso no se da por bueno el fichero sino la respuesta: lo comprueban desde fuera los jueces de
 #    producción (web/jueces/produccion.spec.ts, con URL_PRODUCCION). Medido el 06/10 sobre la publicación d3ae331 (de
-#    main 1e19715), que llega a través del CDN de Hostinger («server: hcdn»):
+#    main 1e19715), que llegaba a través del CDN de Hostinger («server: hcdn»; así, hasta el 07/10):
 #    · FilesMatch con Header set Cache-Control: CONSTA. Cada grupo lleva el suyo.
 #    · Header always set: CONSTA. Las cabeceras van también en el 404 de la página que no existe.
 #    · ErrorDocument 404: CONSTA. /no-existe/ y /reglas/no-existe/x/ dan 404 con dist/404.html.
@@ -24,9 +24,12 @@
 #      línea o el servidor no se distingue sin quitarla.
 #    · RedirectMatch: NO CONSTA. Hostinger da 403 a todo lo que cuelga de /.git/ y a /.htaccess antes de llegar aquí,
 #      sin las cabeceras de este fichero, y no hay otra dirección en la que se note.
-#    · Lo que no cumple, y no por una directiva: el CDN reescribe los cuatro PNG (otro PNG, con los fragmentos eXIf y
-#      pHYs; o WebP, si lo acepta el navegador) y los sirve sin la CSP, nosniff, Referrer-Policy ni HSTS. Antonio
-#      desactivó el CDN automático el 06/10; según la documentación del panel, tarda hasta 24-48 h en propagarse.
+#    · Lo que no cumplía, y no por una directiva: el CDN reescribía los cuatro PNG (otro PNG, con los fragmentos eXIf y
+#      pHYs; o WebP, si lo aceptaba el navegador) y los servía sin la CSP, nosniff, Referrer-Policy ni HSTS. Antonio
+#      desactivó el CDN automático el 06/10, y la documentación del panel daba hasta 24-48 h para que se propagara.
+#      Medido el 07/10: no era propagación. El interruptor del panel había dejado el CDN sin modo de bypass y con la
+#      optimización de imágenes activada; Kodee, el asistente de Hostinger, lo desactivó por completo, y todo responde
+#      con «server: LiteSpeed»: los PNG, los nuestros, con todas las cabeceras (docs/CENSO-PRE-DESPLIEGUE.md, § 15).
 #    · El JS salía como application/x-javascript: por eso va el AddType de .js (abajo).
 #    Lo que decidió Antonio, y lo medido después, en docs/CENSO-PRE-DESPLIEGUE.md, § 15.
 #
