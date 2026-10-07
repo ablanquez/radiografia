@@ -1,8 +1,9 @@
 # PLAN — 005 RadiografIA
 
-Estado a 06/10/2026: **FIRMADO por Antonio el 29/09/2026**, publicado en
+Estado a 07/10/2026: **FIRMADO por Antonio el 29/09/2026**, publicado en
 `73ef265`. **PUNTOS 1, 2 y 3 CERRADOS el 29/09; 4 el 30/09; 5 el 01/10; 6,
-7 y 8 el 02/10; 9 y 9.2 el 03/10; 9.3 y 10 el 05/10; 11.1 el 06/10.** Se tacha lo hecho y
+7 y 8 el 02/10; 9 y 9.2 el 03/10; 9.3 y 10 el 05/10; 11.1 el 06/10; la web,
+publicada el 06/10 y verificada desde fuera el 07/10.** Se tacha lo hecho y
 lo nuevo se añade en su punto, y solo por decisión de Antonio.
 
 Origen: BRAINSTORMING (1), 28-29/09/2026, y las decisiones de Antonio
@@ -865,13 +866,17 @@ checklist fija, en escritorio y a 390 px, sin capturas (derechos), en
       despliega una rama de GitHub en un directorio sin ejecutar builds →
       rama huérfana `publicacion` con dist/ + .htaccess generada por
       `npm run publicar`; LiteSpeed respeta .htaccess; «Añadir web» con el
-      dominio completo, como Linaje; CDN automático desactivado)
-- [ ] Publicado en el subdominio que Antonio decida (decidido el 05/10:
+      dominio completo, como Linaje; CDN desactivado en el panel el 06/10
+      y por completo, vía Kodee, el 07/10)
+- [x] Publicado en el subdominio que Antonio decida (decidido el 05/10:
       **radiografia.antonioblanquez.es**); verificado desde
       fuera con el ojo delante (06/10: publicado y visto por Antonio en PC,
       iPhone e iPad con datos móviles; jueces de producción 302/303: solo
-      falla el CDN de Hostinger en propagación —PNG reescritos y JS
-      cacheado con el tipo viejo—; se remide cuando el CDN suelte el sitio)
+      fallaba el CDN de Hostinger —PNG reescritos y JS cacheado con el tipo
+      viejo—. 07/10: el interruptor del panel no bastaba —sin bypass y con
+      la optimización de imágenes activa—, Kodee desactivó el CDN por
+      completo; producción 308/308 sin omitidos, el `dist/` de `main` byte
+      a byte, PNG con las huellas de PROCEDENCIA; censo § 15)
 - [x] README final: qué hace, qué no demuestra, cómo escribir un paquete
       propio, enlace al catálogo (06/10: README de portada con la forma de
       Linaje, ZetaBus y Desplázame, logo y cinco capturas de producción; el
