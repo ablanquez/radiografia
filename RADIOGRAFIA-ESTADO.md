@@ -5,19 +5,18 @@ El ejecutor reporta descubrimientos; no toca este fichero.
 
 ---
 
-## ESTADO ACTUAL — 5 de octubre de 2026
+## ESTADO ACTUAL — 7 de octubre de 2026
 
-**⭐ PUNTOS 1-10 CERRADOS (29/09-05/10). LA V1 ESTÁ TERMINADA; FALTA
-PUBLICARLA (11).** La web es el modelo de Figma: fuentes autoalojadas
-(Literata + Atkinson, subconjuntos), tokens DTCG → CSS, analizador en tres
-tamaños con pastilla, tarjetas, familias con ojo, tramos tipo rotulador,
-tarjeta anclada y hoja inferior, catálogo y fichas, informe en papel
-calcado al marco A4 y **descarga directa del PDF** con pdfmake (también en
-iPhone e iPad); acta de contraste y accesibilidad con simulador de
-daltonismo. **npm test raíz: motor 909 (899 verde en clon, 5 saltados, 5
-todo) + web 258/258** (Chrome necesario); tipos limpios. 12 bitácoras,
-todas cerradas. 74 commits locales pendientes de push al cerrar este
-punto. **Siguiente: punto 11, despliegue en Hostinger y release 1.0.0.**
+**⭐ PUNTOS 1-10 CERRADOS (29/09-05/10). LA V1.0.0 ESTÁ EN PRODUCCIÓN:
+https://radiografia.antonioblanquez.es, publicada el 06/10, verificada
+desde fuera el 07/10 (308/308, sin CDN) y etiquetada `v1.0.0` el 07/10,
+con su Release en GitHub y `CHANGELOG.md`.** Del punto 11 están cerrados el
+censo, el parlamento con Hostinger, la publicación verificada, el README y
+la release; **queda la ficha del portafolio y de LinkedIn (11.6)**, que
+cierra el punto. `npm test` raíz: motor 909 (899 verde, 5 saltados, 5
+todo) + web 308 (301 verde y 7 omitidos sin `URL_PRODUCCION`; 308/308 con
+ella); tipos limpios. 14 bitácoras, todas cerradas. `publicacion` =
+`97b6165` (de `main` `6f28a5f`), desplegada.
 
 ## 1 · Identidad
 
@@ -62,8 +61,15 @@ punto. **Siguiente: punto 11, despliegue en Hostinger y release 1.0.0.**
   aparte del código Apache, con atribución y ficha en NOTICES. Los corpus
   de calibración NO entran en el repo (`motor/corpus/`, ignorado): solo
   herramienta, manifiestos sin texto y percentiles (`data/calibracion/`).
-- Despliegue en Hostinger compartido; el cómo, NO CONSTA hasta el
-  parlamento con la doc del panel (punto 11).
+- **Despliegue (firme desde el 06/10)**: Hostinger compartido, LiteSpeed.
+  hPanel Git despliega la rama huérfana `publicacion` (solo `web/dist/` +
+  `.htaccess`, generada por `npm run publicar`) en `public_html` del
+  subdominio, con auto-deploy y sin build en el servidor. El `.htaccess`
+  lleva la CSP por cabecera (idéntica al `<meta>`), nosniff,
+  Referrer-Policy, HSTS por https, la caché por grupos y la 404. **El CDN
+  de Hostinger, desactivado por completo** (reescribía los PNG y pisaba las
+  cabeceras; el interruptor del panel no bastó, lo cerró Kodee el 07/10).
+  El cómo, en `docs/DESPLIEGUE.md` y en el censo § 15.
 
 ## 3 · Las reglas del proyecto
 
@@ -75,8 +81,10 @@ antes del verde, push = despliegue, bitácora por la skill
 ## 4 · El plan
 
 `PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1, 2 y 3 (29/09), 4 (30/09),
-5 (01/10), 6, 7 y 8 (02/10), 9 y 9.2 (03/10), 9.3 y 10 (05/10). Abierto:
-el 11.
+5 (01/10), 6, 7 y 8 (02/10), 9 y 9.2 (03/10), 9.3 y 10 (05/10). Del 11:
+censo, parlamento con Hostinger y README (06/10); publicado y verificado
+desde fuera, y release v1.0.0 (07/10). Abierta: la ficha del portafolio y
+de LinkedIn, que cierra el 11.
 
 ## 5 · Decisiones
 
@@ -462,21 +470,99 @@ el 11.
   CDP si Chrome cae. Bitácoras 7-12: hoja estrecha tras abrir en
   escritorio, dos cuelgues del arnés, el PDF perdía su final al imprimir
   desde escritorio, la sección 5 partida, el anexo sin aire.
+- 06/10 — **Decisiones del censo pre-despliegue (11.1)**: 21 hallazgos
+  firmados uno a uno; 13 arreglados (avisos MIT de silabea, Rolldown y
+  Vite dentro del JS; página `/creditos/` con la atribución de los corpus
+  y la cita del BOE; zip del modelo fuera del índice; umbrales y textos
+  atados por juez; vite declarado; guarda única de los catch; tokens sin
+  destino fuera), 4 declarados (paquetes enteros al navegador, mensajes
+  del motor, exports sin consumidor externo, tokens.json dentro del
+  chunk), 3 a la nevera (fecha civil, tope del texto, autor/licencia/
+  idioma en pantalla; el paquete «ligero», declarado y en la nevera) y 1
+  nuevo, el 21 (la precarga de Vite sin aviso; bitácora 13). Detalle en
+  `docs/CENSO-PRE-DESPLIEGUE.md` § 14.
+- 06/10 — **Decisiones del parlamento con Hostinger (11.2)**: rama
+  huérfana `publicacion` con `web/dist/` + `.htaccess`, generada por
+  `npm run publicar` (exige `main` = `origin/main`, clon temporal con la
+  suite, doble build idéntico, CSP del `<meta>` a la cabecera, worktree
+  aparte; el push lo da Antonio); variante A de caché (JS y CSS un año
+  immutable, fuentes una semana, lo demás no-cache); HSTS un año solo por
+  https, sin includeSubDomains; `ErrorDocument 404 /404.html` con página
+  propia (textos de Antonio); `/.git` a 404; `AddType text/javascript .js`
+  (RFC 9239; LiteSpeed daba `application/x-javascript`); `.gitattributes`
+  con `eol=lf` para los paquetes y las OFL. Web creada en hPanel con
+  «Crear un sitio web → PHP/HTML → vacío», como Linaje (no el panel
+  «Subdominios»); app de GitHub con repos seleccionados y sin permiso de
+  escritura. Jueces de producción (`produccion.spec.ts`, con
+  `URL_PRODUCCION`) y de la publicación (`publicacion.spec.ts`).
+- 06/10 — **Publicación**: `995674f` (de `main` `41c359f`), vista por
+  Antonio en PC, iPhone e iPad con datos móviles. Producción 302/303: el
+  CDN de Hostinger reescribía los cuatro PNG (otro PNG, o WebP a Chrome,
+  sin la CSP ni las demás cabeceras) y servía el JS cacheado con el tipo
+  viejo. Decisión: CDN desactivado en el panel; el juez no cambia; se
+  remide cuando suelte el sitio.
+- 06/10 — **README final (11.4)**: portada con la forma de Linaje,
+  ZetaBus y Desplázame (logo, cinco capturas de producción, «Qué hace»,
+  «Qué no demuestra», «Cómo está hecho», «Cómo ejecutarlo y probarlo»,
+  «Cómo escribir un paquete propio», «Reglas y evidencia», «Accesibilidad
+  y diseño», «Estado y nevera», «Licencia y créditos»); el detalle movido
+  tal cual a `docs/WEB.md`, `CALIBRACION.md`, `ARRANQUE-LOCAL.md`,
+  `DESPLIEGUE.md` y `CRONICA-DE-CONSTRUCCION.md`; juez del README
+  (`readme.spec.ts`: secciones, enlaces y anclas, cifras, el paquete de
+  ejemplo y, con la variable, las URL públicas). Bitácora 14: el juez leía
+  el README en CRLF.
+- 07/10 — **El CDN**: 19 h después de desactivarlo todo seguía con
+  `server: hcdn`. «Vaciar caché» (en la página principal del sitio en
+  hPanel, no en la sección CDN) solo purgó el JS viejo. Kodee: el
+  interruptor había dejado el CDN «sin modo de bypass y con la
+  optimización de imágenes activada»; aplicó la desactivación completa y
+  en un minuto todo salió `server: LiteSpeed`. Producción 308/308 (la
+  cifra subió de 303 con los cinco tests del juez del README). **Doctrina
+  que sale**: «Desactivar el CDN automático» en hPanel no basta; hay que
+  pedir la desactivación completa (bypass e imágenes) y mirar `server`
+  desde fuera.
+- 07/10 — **Release v1.0.0 (11.5)**: los dos paquetes a 1.0.0 (decisión
+  del 30/09), raíz y lock a 1.0.0, workspaces privados en 0.0.0 (como
+  Desplázame); `CHANGELOG.md` en Keep a Changelog con la entrada 1.0.0
+  firmada por Antonio (12:08) y la Release de GitHub con ese cuerpo
+  («RadiografIA 1.0.0», sin pre-release); etiqueta anotada `v1.0.0` sobre
+  `6f28a5f`, el commit de `main` del que salió la publicación `97b6165`;
+  republicada y remedida antes de etiquetar (308/308 a las 15:15). El juez
+  2 de fichas se puso rojo al subir la versión (la huella de cada ficha
+  lleva «Paquete» con su versión): referencia retomada en commit propio
+  (`3fcbff2`, que registra el hash del build), sin reescribir el de las
+  versiones, que queda en rojo en la historia a propósito; la versión
+  también vivía en esas huellas y el censo § 3 no lo decía (añadido con
+  fecha). Las cinco capturas del README, retomadas de la 1.0.0 en
+  producción: solo cambia `ficha.png`; las otras cuatro salieron byte a
+  byte iguales. Sin bitácora: ningún verde falso.
 
 ## 6 · Cabos abiertos
 
 - Del 10.4: el árbol de trabajo tiene `node_modules` ilegible (EPERM en
   node_modules/astro tras el apagón del 04/10; ni borrar ni renombrar como
-  administrador; chkdsk pendiente): Claude Code trabaja en
-  F:\_clones-005\trabajo y sirve el 4400 desde F:\_clones-005\servidor;
-  los clones se borran cuando el árbol esté sano. Huecos del acta: lector
-  de pantalla real (NVDA / VoiceOver), accesibilidad del PDF descargado,
-  zoom 200 % y espaciado de texto, forced-colors, estados hover,
-  pulsación en tableta. El tokens.json viaja entero dentro del chunk de
-  pdfmake (6,7 KB de descripciones). guidelines.md de Make conserva el
-  verde antiguo de Puntuación (es lo que leyó Make). Para el 11: la CSP
-  puede pasar a cabecera HTTP y sobraría la integración; Hostinger no
-  ejecuta el CLI (Desplázame versiona dist).
+  administrador; `chkdsk F: /f` pendiente de programar): Claude Code
+  trabaja en `F:\_clones-005\trabajo`; `F:\_clones-005\` y
+  `F:\_basura-005\` se borran cuando el árbol esté sano. VS Code marca
+  `web/tsconfig.json` por esa causa, no por el repo. Huecos del acta:
+  lector de pantalla real (NVDA / VoiceOver), accesibilidad del PDF
+  descargado, zoom 200 % y espaciado de texto, forced-colors, estados
+  hover, pulsación en tableta (los cuatro primeros, en la nevera del
+  plan). guidelines.md de Make conserva el verde antiguo de Puntuación (es
+  lo que leyó Make). El tokens.json dentro del chunk de pdfmake: declarado
+  en el censo (16). La CSP por cabecera: HECHA en el 11.2, idéntica al
+  `<meta>`, que se queda (la integración `cspPrimero` sigue haciendo falta
+  para él).
+- Del 11 (07/10): el commit `96655a6` (versiones a 1.0.0) está en rojo en
+  la historia a propósito (juez 2 de fichas; el JSON de huellas lleva el
+  hash del build, por eso no se reescribió). La redirección http → https
+  la hace el panel; la plantilla, DESPLIEGUE y el juez la citan por la doc
+  de Hostinger («Forzar HTTPS»), pero en el hPanel de Antonio ese
+  interruptor no aparece y la redirección vino activa con el SSL (medido:
+  301 en `/`, `/reglas/` y `/creditos/`). La página 1 del PDF cambia con
+  la versión (98.718 → 98.751 bytes); ninguna captura la mira.
+  `docs/ejemplos.md` sigue diciendo «RadiografIA 0.1.0 … a 02/10/2026»
+  como registro fechado, y su tabla la vigila un juez en verde.
 - De la 9.2: motor/src cambió también en validar.spec.ts y
   standalone.spec.ts (recuento exacto de fixtures, 42 → 44): inevitable;
   las reglas propias sin `enClaro` no la enseñan (el paquete de prueba no
@@ -491,9 +577,10 @@ el 11.
   dice): declarado.
 - Del 8.1: npm test necesita Chrome (o CHROME); sin él falla, no se
   salta. El juez de ejemplos del motor lee un fichero de web/
-  (acoplamiento declarado). El meta CSP va detrás del <link rel=icon
-  data:> (admitido y declarado). Nombre repetido con dos mensajes según
-  el otro sea incluido o propio.
+  (acoplamiento declarado). El `<meta>` de la CSP va detrás de `<meta
+  charset>` desde el 10.4 (integración `cspPrimero`), y desde el 11.2 la
+  misma política va también por cabecera. Nombre repetido con dos
+  mensajes según el otro sea incluido o propio.
 - Del 7.1: zona sin juez: ningún juez comprueba que cada palabra clave
   de los esquemas tenga mensaje en castellano (maxLength se coló; maxItems
   caería igual); las plantillas .astro no las revisa tsc (sin astro
@@ -518,15 +605,15 @@ el 11.
 - Para el punto 10 (diseño): los apuntes están escritos en el propio
   punto 10 del plan (filtros en columnas, panel junto al tramo, Highlight
   API, `.gitattributes` para fuentes).
-- Para el punto 11: el panel de Hostinger no ejecuta el CLI (Desplázame
-  versiona app/dist); con Astro, prever versionar o subir web/dist.
+- Para el punto 11: RESUELTO en el 11.2 (el panel no ejecuta el CLI → la
+  rama `publicacion` lleva `web/dist/`).
 - Para quien repita la prueba manual: leer un .txt desde PowerShell con
   `Get-Content -Encoding UTF8 -Raw` antes de `Set-Clipboard`; sin ello las
   tildes y las comillas llegan rotas y el análisis cambia (02/10: 356
   palabras y 17,04 en vez de 325 y 47,08). Anotado en el README (6.3).
 - Del 6.2: al navegador viajan 122 KB de JS (con el standalone y el
-  aviso MIT) y 357 KB de JSON; queda valorar quitar los `$comment` del
-  standalone en build. Con \r\n la copia de trabajo lleva dos espacios
+  aviso MIT) y 357 KB de JSON; los `$comment` del standalone (189 bytes
+  con gzip) se quedan: declarado en el censo (hallazgo 16). Con \r\n la copia de trabajo lleva dos espacios
   donde el salto y una regex con un espacio literal no casa ahí; el
   textarea normaliza a \n, así que no aparece en la pantalla (declarado).
 - Del 6.1: la excepción web parte el párrafo en texto cortado cuando una
@@ -612,10 +699,8 @@ el 11.
 - `estadistica.md` §2 decía que wordfreq incluye SUBTLEX-ESP: el README de
   wordfreq no lo lista (solo US, UK, CH, DE, NL). Corregido a NO CONSTA el
   29/09.
-- `.gitattributes` con `*.woff2 -text` (y hermanos) ANTES de que entre la
-  primera fuente autoalojada en el punto 10 — herencia de la nº40 de
-  Desplazame. Propuesto el 29/09 como casilla del punto 10; Antonio aún
-  no ha dicho si entra en el plan.
+- `.gitattributes`: HECHO en el 10.4 y el 11.2 (`binary` para woff2, png e
+  ico; `eol=lf` para SVG, manifiesto, ejemplos, paquetes y OFL).
 - Fuentes no leídas enteras (pendientes para la v1.1 o cuando una ficha
   lo exija): PDF de Pham 2026 (cifras por categoría; leído en 5.3), PUCP-
   Metrix, Berber Sardinha 2024, `license.txt` de SUBTLEX-ESP.
@@ -658,3 +743,5 @@ el 11.
 - Relanzar cada familia con el módulo cuando cambien las generaciones de
   modelos: las cinco investigaciones tienen fecha de caducidad (los
   «humanizers» borran primero los rasgos más citados).
+- **Del punto 11 (06-07/10)**: nada nuevo aquí; la nevera de la v1.1 está
+  reunida en el plan («Fuera de la v1»: lo del censo y lo del acta).
