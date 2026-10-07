@@ -884,6 +884,11 @@ checklist fija, en escritorio y a 390 px, sin capturas (derechos), en
       ARRANQUE-LOCAL.md, DESPLIEGUE.md y CRONICA-DE-CONSTRUCCION.md; juez
       del README: secciones, enlaces, cifras y el paquete de ejemplo; 14
       bitácoras cerradas)
-- [ ] Release v1.0.0 y reposo
+- [ ] Release v1.0.0 y reposo (decidido el 07/10: `CHANGELOG.md` en
+      formato Keep a Changelog con la entrada 1.0.0 firmada por Antonio,
+      como en Desplázame, y la Release de GitHub con esa entrada como
+      cuerpo; los dos paquetes a 1.0.0 —decisión del 30/09—, la raíz y el
+      lock a 1.0.0, los workspaces privados se quedan en 0.0.0; se
+      republica y se remide producción antes de etiquetar)
 - [ ] Ficha del proyecto en el portafolio y en LinkedIn. **PUNTO 11
       CERRADO — v1 EN PRODUCCIÓN**
