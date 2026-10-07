@@ -139,7 +139,7 @@
   </tr>
 </table>
 
-Las cinco son de la web publicada, del 06/10/2026. Cómo se hicieron, en
+Las cinco son de la web publicada, del 07/10/2026. Cómo se hicieron, en
 [`docs/capturas/PROCEDENCIA.md`](docs/capturas/PROCEDENCIA.md).
 
 ---
