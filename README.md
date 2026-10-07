@@ -6,7 +6,7 @@
 
 **A contraluz se nota todo.**
 
-[![Versión](https://img.shields.io/badge/versi%C3%B3n-1.0.0-332288)](#estado-y-nevera)
+[![Versión](https://img.shields.io/badge/versi%C3%B3n-1.0.0-332288)](CHANGELOG.md)
 [![Licencia](https://img.shields.io/badge/licencia-Apache%202.0-64748B)](LICENSE)
 [![Astro](https://img.shields.io/badge/Astro-7-BC52EE)](https://astro.build/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6)](https://www.typescriptlang.org/)
@@ -205,6 +205,7 @@ docs/       la investigación, el detalle de la web, la calibración, el desplie
 - [`PLAN-RADIOGRAFIA.md`](PLAN-RADIOGRAFIA.md) y
   [`RADIOGRAFIA-ESTADO.md`](RADIOGRAFIA-ESTADO.md): el plan por puntos y el
   estado.
+- [`CHANGELOG.md`](CHANGELOG.md): lo que cambia en cada versión.
 - [`docs/BITACORA.md`](docs/BITACORA.md): los fallos reales, con lo que
   daba verde mientras estaban vivos.
 - [`docs/CRONICA-DE-CONSTRUCCION.md`](docs/CRONICA-DE-CONSTRUCCION.md): la
@@ -470,8 +471,9 @@ porque reescribía los iconos
   diseño.
 - 06/10: 11.1, el censo pre-despliegue. Ese día se publicó la web (11.2).
 
-**Lo que queda del punto 11:** la release v1.0.0 (11.5) y la ficha del
-portafolio (11.6).
+**La v1.0.0** se etiquetó el 07/10/2026 ([CHANGELOG](CHANGELOG.md)).
+**Lo que queda del punto 11:** la ficha del portafolio y de LinkedIn
+(11.6).
 
 **La nevera**, lo que se apartó para la v1.1 con su fecha, no se copia
 aquí: está en el
