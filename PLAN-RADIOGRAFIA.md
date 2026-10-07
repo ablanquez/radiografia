@@ -3,7 +3,8 @@
 Estado a 07/10/2026: **FIRMADO por Antonio el 29/09/2026**, publicado en
 `73ef265`. **PUNTOS 1, 2 y 3 CERRADOS el 29/09; 4 el 30/09; 5 el 01/10; 6,
 7 y 8 el 02/10; 9 y 9.2 el 03/10; 9.3 y 10 el 05/10; 11.1 el 06/10; la web,
-publicada el 06/10 y verificada desde fuera el 07/10.** Se tacha lo hecho y
+publicada el 06/10 y verificada desde fuera el 07/10; la release v1.0.0 el
+07/10.** Se tacha lo hecho y
 lo nuevo se añade en su punto, y solo por decisión de Antonio.
 
 Origen: BRAINSTORMING (1), 28-29/09/2026, y las decisiones de Antonio
@@ -884,11 +885,17 @@ checklist fija, en escritorio y a 390 px, sin capturas (derechos), en
       ARRANQUE-LOCAL.md, DESPLIEGUE.md y CRONICA-DE-CONSTRUCCION.md; juez
       del README: secciones, enlaces, cifras y el paquete de ejemplo; 14
       bitácoras cerradas)
-- [ ] Release v1.0.0 y reposo (decidido el 07/10: `CHANGELOG.md` en
+- [x] Release v1.0.0 y reposo (decidido el 07/10: `CHANGELOG.md` en
       formato Keep a Changelog con la entrada 1.0.0 firmada por Antonio,
       como en Desplázame, y la Release de GitHub con esa entrada como
       cuerpo; los dos paquetes a 1.0.0 —decisión del 30/09—, la raíz y el
       lock a 1.0.0, los workspaces privados se quedan en 0.0.0; se
-      republica y se remide producción antes de etiquetar)
+      republica y se remide producción antes de etiquetar. HECHO el 07/10:
+      CHANGELOG firmado a las 12:08; publicación `97b6165` de `main`
+      `6f28a5f`, 308/308 desde fuera a las 15:15; etiqueta anotada
+      `v1.0.0` sobre `6f28a5f` y Release «RadiografIA 1.0.0» publicada a
+      las 16:25; el juez de las fichas cazó la versión en sus huellas y la
+      referencia se retomó; las cinco capturas del README, de la 1.0.0 en
+      producción; reposo: ESTADO al día)
 - [ ] Ficha del proyecto en el portafolio y en LinkedIn. **PUNTO 11
       CERRADO — v1 EN PRODUCCIÓN**
