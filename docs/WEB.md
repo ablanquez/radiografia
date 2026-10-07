@@ -394,7 +394,7 @@ Recoge:
 
 En [`paquetes/`](../paquetes/):
 
-- **RadiografIA 0.1.0** ([`radiografia.json`](../paquetes/radiografia.json)):
+- **RadiografIA 1.0.0** ([`radiografia.json`](../paquetes/radiografia.json)):
   trae las seis familias:
   - **léxico**: once reglas. Las cuatro de más peso están medidas en
     español (Juzek, 2026): los verbos de énfasis (destacar, subrayar…),
@@ -438,7 +438,7 @@ En [`paquetes/`](../paquetes/):
   estadística usa una métrica del motor, dice en su ficha dónde corta y no
   se limita a unos géneros, y que ninguna expresión regular usa `\b` ni
   `\w`, que en JavaScript no reconocen las letras con tilde ni la eñe.
-- **Español correcto 0.1.0**
+- **Español correcto 1.0.0**
   ([`espanol-correcto.json`](../paquetes/espanol-correcto.json)): siete avisos
   de norma de la RAE que suelen delatar un calco del inglés o una
   traducción. **No mide estilo de IA**: cuenta avisos de norma por cada

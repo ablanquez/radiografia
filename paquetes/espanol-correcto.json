@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/ablanquez/radiografia/main/motor/esquema/paquete.schema.json",
   "cabecera": {
     "nombre": "Español correcto",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "idioma": "es",
     "descripcion": "Siete avisos de norma de la RAE y la ASALE que suelen delatar un calco o una traducción del inglés: pasiva perifrástica con agente, posesivo en lugar del artículo, puntuación dentro de las comillas, mayúscula en cada palabra de un título, meses y días con mayúscula, coma de millares y símbolo de moneda antepuesto. No mide estilo de IA: cuenta avisos de norma por cada 1.000 palabras. Cada regla cita la sección de la Ortografía o de la Nueva gramática que la respalda.",
     "autor": "Antonio Blánquez Cabeza",
