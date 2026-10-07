@@ -18,13 +18,14 @@
  * severidad, el nivel de evidencia y el paquete, como pareja de <dt> y <dd>
  * (la etiqueta puede llevar dos puntos detrás). La huella de una ficha es el
  * SHA-256 de la lista de sus piezas, cada una con su valor si está y «FALTA»
- * si no. La de antes del calco está en huellas-de-las-fichas.json, tomada del
+ * si no. La de referencia está en huellas-de-las-fichas.json, tomada del
  * build de la web en el commit que dice el fichero; se vuelve a tomar
  * (HUELLAS_DE_LAS_FICHAS=escribir) solo si cambia el contenido de un paquete,
- * nunca por el aspecto.
+ * nunca por el aspecto. Desde la release (07/10, encargo 11.5), la referencia
+ * son las fichas con los paquetes en 1.0.0.
  *
  *   1. Ninguna ficha deja fuera una pieza de su contenido.
- *   2. La huella de cada ficha es la de antes del calco, y hay una por regla.
+ *   2. La huella de cada ficha es la de referencia, y hay una por regla.
  *
  * [DOC] https://nodejs.org/api/crypto.html#cryptocreatehashalgorithm-options
  *    — createHash('sha256').
@@ -138,13 +139,13 @@ describe('las fichas, con el mismo contenido antes y después del calco', () => 
     assert.deepEqual(faltan, []);
   });
 
-  test('2 · la huella de cada ficha es la de antes del calco, y hay una por regla', () => {
+  test('2 · la huella de cada ficha es la de referencia, y hay una por regla', () => {
     construir();
     const ahora = Object.fromEntries(entradas().map((e) => [e.regla.id, huella(piezasDeLaFicha(fichaConstruida(e.regla.id), e))]));
     if (process.env['HUELLAS_DE_LAS_FICHAS'] === 'escribir') {
       const commit = execSync('git rev-parse --short HEAD', { cwd: WEB, encoding: 'utf8' }).trim();
       const json = {
-        $descripcion: `Las huellas del contenido de cada ficha (jueces/fichas.spec.ts), tomadas del build de la web en ${commit}, antes del calco de la Tanda 3 (encargo 10.4). Se vuelven a tomar solo si cambia el contenido de un paquete.`,
+        $descripcion: `Las huellas del contenido de cada ficha (jueces/fichas.spec.ts), tomadas del build de la web en ${commit}, con los paquetes en 1.0.0 (release del 07/10, encargo 11.5). Se vuelven a tomar solo si cambia el contenido de un paquete, nunca por el aspecto.`,
         commit,
         huellas: ahora,
       };
@@ -155,7 +156,7 @@ describe('las fichas, con el mismo contenido antes y después del calco', () => 
     assert.deepEqual(
       Object.keys(ahora).filter((id) => antes[id] !== ahora[id]),
       [],
-      'fichas cuya huella no es la de antes del calco',
+      'fichas cuya huella no es la de referencia',
     );
   });
 });
