@@ -827,6 +827,11 @@ Lo demás, contra producción y en verde:
 - **Los cinco JS**, `text/javascript`, con `public, max-age=31536000, immutable`.
 - **La causa**, en los términos de Kodee: el interruptor del panel (Rendimiento → CDN) dejó el CDN sin modo de bypass y con la optimización de imágenes activada. Lo que la documentación del panel daba por una propagación de 24-48 h no era propagación.
 
+**La publicación `97b6165` (de `main` `6f28a5f`, la v1.0.0), medida desde fuera el 07/10 a las 15:15 (+02:00).** La suite en modo producción (`npm test` en `web/` con `URL_PRODUCCION`, desde `main` `6f28a5f`, de 15:15 a 15:21): **308 tests, 308 pasan, 0 fallan y 0 omitidos.** El juez 1 de producción, en verde: los 87 ficheros son byte a byte el `dist/` de `6f28a5f`, con las cabeceras de su grupo.
+
+- **La versión, a mano a las 15:21:** `/paquetes/radiografia.json` (347.340 bytes) y `/paquetes/espanol-correcto.json` (21.618) responden 200 con `"version": "1.0.0"` y el sha256 del inventario de `npm run publicar`, con `server: LiteSpeed` y sin ninguna cabecera `x-hcdn-*`. La ficha `/reglas/disc-cierre-de-plantilla/` dice «1.0.0» y no «0.1.0».
+- **Lo que cambió frente a `995674f`:** 53 de los 88 ficheros de la rama. Las 50 fichas y los dos paquetes, solo «0.1.0» por «1.0.0»; el `.htaccess`, solo comentarios (11 líneas, ninguna directiva). Los otros 35 —el JS, el CSS, el resto del HTML, las fuentes, los iconos, el manifiesto, los ejemplos y las licencias—, los mismos.
+
 **El build.**
 
 - El de `87c80b4` en un clon limpio es idéntico, fichero a fichero, al del clon de trabajo: 86 ficheros.
