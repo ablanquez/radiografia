@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/ablanquez/radiografia/main/motor/esquema/paquete.schema.json",
   "cabecera": {
     "nombre": "RadiografIA",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "idioma": "es",
     "descripcion": "Reglas que señalan en un texto en español los rasgos de estilo que la investigación asocia a los textos generados con modelos de lenguaje. Cada regla dice de dónde sale y con qué nivel de evidencia. Analiza estilo; no demuestra autoría.",
     "autor": "Antonio Blánquez Cabeza",
