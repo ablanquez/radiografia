@@ -7,16 +7,18 @@ El ejecutor reporta descubrimientos; no toca este fichero.
 
 ## ESTADO ACTUAL — 7 de octubre de 2026
 
-**⭐ PUNTOS 1-10 CERRADOS (29/09-05/10). LA V1.0.0 ESTÁ EN PRODUCCIÓN:
+**⭐ PROYECTO CERRADO EL 07/10/2026: LOS 11 PUNTOS DEL PLAN, CERRADOS
+(29/09-07/10). LA V1.0.0 ESTÁ EN PRODUCCIÓN:
 https://radiografia.antonioblanquez.es, publicada el 06/10, verificada
-desde fuera el 07/10 (308/308, sin CDN) y etiquetada `v1.0.0` el 07/10,
-con su Release en GitHub y `CHANGELOG.md`.** Del punto 11 están cerrados el
-censo, el parlamento con Hostinger, la publicación verificada, el README y
-la release; **queda la ficha del portafolio y de LinkedIn (11.6)**, que
-cierra el punto. `npm test` raíz: motor 909 (899 verde, 5 saltados, 5
-todo) + web 308 (301 verde y 7 omitidos sin `URL_PRODUCCION`; 308/308 con
-ella); tipos limpios. 14 bitácoras, todas cerradas. `publicacion` =
-`97b6165` (de `main` `6f28a5f`), desplegada.
+desde fuera el 07/10 (308/308, sin CDN), etiquetada `v1.0.0` el 07/10 con
+su Release en GitHub y `CHANGELOG.md`, y con su ficha en
+antonioblanquez.es, en el perfil de GitHub y en LinkedIn (11.6, desde la
+conversación AJUSTES (1)).** `npm test` raíz: motor 909 (899 verde, 5
+saltados, 5 todo) + web 308 (301 verde y 7 omitidos sin `URL_PRODUCCION`;
+308/308 con ella); tipos limpios. 14 bitácoras, todas cerradas.
+`publicacion` = `97b6165` (de `main` `6f28a5f`), desplegada. Lo que
+sobrevive al cierre, sin reloj: los cabos del § 6 (el árbol de trabajo con
+EPERM, los huecos del acta) y la nevera de la v1.1, reunida en el plan.
 
 ## 1 · Identidad
 
@@ -83,8 +85,8 @@ antes del verde, push = despliegue, bitácora por la skill
 `PLAN-RADIOGRAFIA.md`, 11 puntos. Cerrados: 1, 2 y 3 (29/09), 4 (30/09),
 5 (01/10), 6, 7 y 8 (02/10), 9 y 9.2 (03/10), 9.3 y 10 (05/10). Del 11:
 censo, parlamento con Hostinger y README (06/10); publicado y verificado
-desde fuera, y release v1.0.0 (07/10). Abierta: la ficha del portafolio y
-de LinkedIn, que cierra el 11.
+desde fuera, release v1.0.0 y ficha en los escaparates (07/10). **Los 11,
+cerrados. Nada abierto.**
 
 ## 5 · Decisiones
 
@@ -536,6 +538,17 @@ de LinkedIn, que cierra el 11.
   fecha). Las cinco capturas del README, retomadas de la 1.0.0 en
   producción: solo cambia `ficha.png`; las otras cuatro salieron byte a
   byte iguales. Sin bitácora: ningún verde falso.
+- 07/10 — **Ficha en los escaparates (11.6), desde la conversación AJUSTES
+  (1)**: en antonioblanquez.es, tarjeta de RadiografIA la primera de
+  cuatro (criterio: recencia), con el icono (c) servido desde el repo, la
+  frase sacada del README («Pon tu texto a contraluz: señala los rasgos de
+  estilo que los asistentes de IA dejan más que las personas. 50 reglas
+  con sus fuentes, 6 géneros calibrados; nada sale del navegador») y los
+  enlaces «En vivo» y «Código»; rejilla a 2 × 2; subtítulo y meta a
+  «cuatro productos en producción». En GitHub: README del perfil con la
+  misma tarjeta y su bitácora, About del repo con esa frase, website y
+  topics (astro, deteccion, estilo, ia, spanish, typescript). LinkedIn,
+  por Antonio. **PUNTO 11 CERRADO. PROYECTO CERRADO.**
 
 ## 6 · Cabos abiertos
 

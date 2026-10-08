@@ -3,8 +3,9 @@
 Estado a 07/10/2026: **FIRMADO por Antonio el 29/09/2026**, publicado en
 `73ef265`. **PUNTOS 1, 2 y 3 CERRADOS el 29/09; 4 el 30/09; 5 el 01/10; 6,
 7 y 8 el 02/10; 9 y 9.2 el 03/10; 9.3 y 10 el 05/10; 11.1 el 06/10; la web,
-publicada el 06/10 y verificada desde fuera el 07/10; la release v1.0.0 el
-07/10.** Se tacha lo hecho y
+publicada el 06/10 y verificada desde fuera el 07/10; la release v1.0.0 y
+la ficha el 07/10. PUNTO 11 CERRADO: PROYECTO CERRADO el 07/10/2026.** Se
+tacha lo hecho y
 lo nuevo se añade en su punto, y solo por decisión de Antonio.
 
 Origen: BRAINSTORMING (1), 28-29/09/2026, y las decisiones de Antonio
@@ -897,5 +898,10 @@ checklist fija, en escritorio y a 390 px, sin capturas (derechos), en
       las 16:25; el juez de las fichas cazó la versión en sus huellas y la
       referencia se retomó; las cinco capturas del README, de la 1.0.0 en
       producción; reposo: ESTADO al día)
-- [ ] Ficha del proyecto en el portafolio y en LinkedIn. **PUNTO 11
-      CERRADO — v1 EN PRODUCCIÓN**
+- [x] Ficha del proyecto en el portafolio y en LinkedIn (07/10, desde la
+      conversación AJUSTES (1): tarjeta de RadiografIA, la primera de
+      cuatro, en antonioblanquez.es con el icono (c), la frase del README
+      y los enlaces «En vivo» y «Código»; README del perfil de GitHub a
+      «cuatro productos en producción» con su bitácora; About, website y
+      topics del repo; LinkedIn, por Antonio). **PUNTO 11 CERRADO (07/10)
+      — v1.0.0 EN PRODUCCIÓN. PROYECTO CERRADO.**
