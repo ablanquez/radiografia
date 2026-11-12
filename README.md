@@ -13,7 +13,7 @@
 [![Sin backend](https://img.shields.io/badge/backend-ninguno-64748B)](#cómo-está-hecho)
 [![En línea](https://img.shields.io/badge/en%20l%C3%ADnea-radiografia.antonioblanquez.es-16A34A)](https://radiografia.antonioblanquez.es)
 
-**50 reglas · 2 paquetes · 6 géneros calibrados · 54 páginas · nada sale del navegador**
+**50 reglas · 2 paquetes · 6 géneros calibrados · 54 páginas · el texto no sale del navegador**
 
 </div>
 
@@ -57,7 +57,8 @@
    también en el iPhone y en el iPad.
 5. **Todo corre en tu navegador.** El servidor solo sirve ficheros: no hay
    backend que analice, ni cuentas, ni cookies. Ni el texto ni los
-   paquetes que cargues salen de él.
+   paquetes que cargues salen de él. Las visitas se cuentan con Umami, que
+   no usa cookies ni guarda la IP, y no recibe el texto.
 
 <div align="center">
 <img src="docs/capturas/analizador.png" width="92%" alt="El analizador en el ordenador: arriba a la derecha, «Texto con muchos rasgos de Asistente IA» y su frase; debajo, lo que más pesa y las familias; a la izquierda, el texto con sus tramos subrayados por familia">

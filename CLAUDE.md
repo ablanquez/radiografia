@@ -59,7 +59,9 @@ documento manda.
   y ejemplos positivos y negativos. Los ejemplos son los tests.
 - **Validación con esquema** al cargar un paquete; el error dice qué regla
   y qué campo fallan.
-- **Nada sale del navegador**: ni el texto ni los paquetes que se cargan.
+- **El texto no sale del navegador**, ni los paquetes que se cargan. Desde el
+  12/11/2026 (decisión de Antonio), lo único que se pide fuera es el recuento
+  de visitas de Umami, y solo en radiografia.antonioblanquez.es.
 - **Despliegue:** Hostinger, hosting compartido para estático. El cómo se
   parlamenta con la doc del panel cuando llegue el punto 11.
 

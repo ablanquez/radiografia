@@ -19,6 +19,14 @@
  *    href="data:,">` del 6.2, que solo evitaba que Chrome pidiera un
  *    /favicon.ico que no existía.
  *
+ * El recuento de visitas (12/11/2026, Umami, decisión de Antonio): el cargador
+ * de abajo inserta el guion de Umami SOLO si la página se sirve desde
+ * radiografia.antonioblanquez.es. En `astro dev`, en `astro preview` y en los
+ * jueces no pide nada a nadie, y el juez de red lo sigue viendo así. Umami
+ * recibe la visita (la página, de dónde llegas, el idioma, la pantalla), no el
+ * texto: el texto no sale del navegador. Sin cookies, y con «No rastrear» no
+ * envía nada. La CSP abre sus dos orígenes en astro.config.mjs.
+ *
  * La negrita del papel, Literata 600, no se precarga (desde el 9.3; de la
  * Tanda 4 bis al 9.3, el analizador la precargaba con `papel`): la pide el
  * analizador al pintar un resultado (estilos/recursos.ts, NEGRITA_DEL_PAPEL).
@@ -31,3 +39,15 @@ const base = conBarraFinal(import.meta.env.BASE_URL);
 
 {FUENTES_PRECARGADAS.map((ruta) => <link rel="preload" href={`${base}${ruta}`} as="font" type="font/woff2" crossorigin />)}
 {ENLACES_DE_ICONO.map(({ href, ...resto }) => <link {...resto} href={`${base}${href}`} />)}
+
+<script>
+  if (location.hostname === 'radiografia.antonioblanquez.es') {
+    const umami = document.createElement('script');
+    umami.src = 'https://cloud.umami.is/script.js';
+    umami.async = true;
+    umami.dataset['websiteId'] = 'dcdda923-afe1-4a21-b6b1-0135b9968f8e';
+    umami.dataset['domains'] = 'radiografia.antonioblanquez.es';
+    umami.dataset['doNotTrack'] = 'true';
+    document.head.append(umami);
+  }
+</script>

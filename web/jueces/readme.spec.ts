@@ -181,7 +181,7 @@ describe('el README', () => {
     const reglas = radiografia!.reglas.length + correcto!.reglas.length;
     const generos = Object.keys(radiografia!.cabecera.calibracion!['_total-radiografia']!).length;
 
-    const cifras = /\*\*(\d+) reglas · (\d+) paquetes · (\d+) géneros calibrados · (\d+) páginas · nada sale del navegador\*\*/.exec(texto);
+    const cifras = /\*\*(\d+) reglas · (\d+) paquetes · (\d+) géneros calibrados · (\d+) páginas · el texto no sale del navegador\*\*/.exec(texto);
     assert.ok(cifras !== null, 'la línea de cifras de la cabecera');
     assert.deepEqual(cifras!.slice(1).map(numero), [reglas, 2, generos, paginas], 'reglas, paquetes, géneros y páginas');
     assert.deepEqual(

@@ -101,9 +101,10 @@
  *
  * security.csp — la Content-Security-Policy de las páginas publicadas
  *    (encargo 8.1, b; firmada en la parada 1): connect-src 'self' (ningún
- *    fetch, XHR, WebSocket ni sendBeacon a otro origen) y form-action 'self'
- *    (ningún formulario envía a otro sitio). Es el guardia de «nada sale del
- *    navegador»; la prueba es el juez de red de jueces/navegador.spec.ts, y
+ *    fetch, XHR, WebSocket ni sendBeacon a otro origen; desde el 12/11, salvo
+ *    el envío de la visita a Umami, abajo) y form-action 'self'
+ *    (ningún formulario envía a otro sitio). Es el guardia de «el texto no sale
+ *    del navegador»; la prueba es el juez de red de jueces/navegador.spec.ts, y
  *    el juez 9 de construccion.spec.ts mira que cada página la lleve.
  *    [DOC] https://docs.astro.build/en/reference/configuration-reference/#securitycsp
  *    — «Added in: astro@6.0.0»; «When enabled, Astro will add a <meta>
@@ -122,6 +123,17 @@
  *    Visto en la parada 1 en un clon (build, preview y dev en Chrome): la
  *    página analiza, pinta y filtra igual, y un fetch a otro origen queda
  *    bloqueado. En el punto 11 se valora pasarla a cabecera del servidor.
+ *    Desde el 12/11/2026 (Umami, decisión de Antonio): connect-src admite
+ *    además https://gateway.umami.is, adonde el guion envía la visita, y
+ *    script-src (scriptDirective.resources) https://cloud.umami.is, de donde
+ *    se carga. Esos dos orígenes y ninguno más: el texto que se pega sigue sin
+ *    poder salir hacia ningún otro sitio. El guion lo inserta el cargador de
+ *    componentes/Recursos.astro, y solo en radiografia.antonioblanquez.es.
+ *    [DOC] node_modules/astro/dist/types/public/config.d.ts,
+ *    security.csp.scriptDirective.resources — «A list of valid sources for
+ *    the `script-src` directives to override Astro's default sources. This
+ *    will not include `'self'` by default, and must be included in this list
+ *    if you wish to keep it.»
  *
  * integrations: cspPrimero — Astro escribe ese <meta> al final del <head>,
  *    detrás de lo que escribe la página, y la precarga de fuentes y los
@@ -224,7 +236,12 @@ const avisosDePdfmake = {
 
 export default defineConfig({
   integrations: [cspPrimero],
-  security: { csp: { directives: ["connect-src 'self'", "form-action 'self'"] } },
+  security: {
+    csp: {
+      directives: ["connect-src 'self' https://gateway.umami.is", "form-action 'self'"],
+      scriptDirective: { resources: ["'self'", 'https://cloud.umami.is'] },
+    },
+  },
   vite: {
     plugins: [avisoDeSilabea, avisoDeRolldown, avisoDeVite, avisosDePdfmake],
     optimizeDeps: { include: ['@radiografia/motor/navegador'] },

@@ -16,7 +16,12 @@ día.
 
 ## Lo que viaja al navegador
 
-Nada sale del navegador. Lo que la web pide es suyo, del mismo sitio:
+El texto no sale del navegador. Lo que la web pide es suyo, del mismo sitio,
+salvo el recuento de visitas (desde el 12/11/2026): en
+radiografia.antonioblanquez.es, y solo ahí, el guion de Umami
+(`cloud.umami.is`) y el envío de la visita (`gateway.umami.is`), que lleva la
+página, de dónde se llega, el idioma y la pantalla, y no el texto. En
+`astro preview` no se pide, y las cuentas de abajo no lo incluyen.
 
 - **al cargar**: su HTML, su JS y su CSS, las fuentes y los dos paquetes
   incluidos, que se validan al arrancar;

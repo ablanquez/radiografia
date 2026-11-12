@@ -32,7 +32,12 @@
  *      a, juez 4).
  *   9. Cada página HTML de dist/ lleva la CSP en su <meta http-equiv> con
  *      connect-src 'self' y form-action 'self' (encargo 8.1, b; firmado en la
- *      parada 1: web/astro.config.mjs, security.csp), y nada que pueda cargar
+ *      parada 1: web/astro.config.mjs, security.csp). Desde el 12/11/2026
+ *      (Umami, decisión de Antonio) connect-src admite además
+ *      https://gateway.umami.is, y script-src, https://cloud.umami.is: esos
+ *      dos orígenes y ninguno más. Y ninguna página lleva el guion de Umami
+ *      escrito en su HTML: lo inserta, solo en radiografia.antonioblanquez.es,
+ *      el cargador de componentes/Recursos.astro. Y nada que pueda cargar
  *      algo va antes de ella: ningún script, ningún estilo ni ningún enlace.
  *      [DOC] https://www.w3.org/TR/CSP3/ — «policies in meta elements are
  *      not applied to content which precedes them».
@@ -326,7 +331,7 @@ describe('la web construida', () => {
     assert.equal(textos.PROCEDENCIA_DE_LOS_EJEMPLOS, PROCEDENCIA, 'de quién es cada texto, en textos.ts (11.1, hallazgo 8)');
   });
 
-  test("9 · cada página de dist/ lleva la CSP con connect-src 'self' y form-action 'self', justo detrás de <meta charset> y con el contenido que emitió Astro", () => {
+  test("9 · cada página de dist/ lleva la CSP con connect-src 'self' (+ Umami) y form-action 'self', justo detrás de <meta charset> y con el contenido que emitió Astro", () => {
     const salida = construir();
     const paginas = readdirSync(DIST, { recursive: true, encoding: 'utf8' })
       .map((f) => f.replaceAll('\\', '/'))
@@ -342,13 +347,18 @@ describe('la web construida', () => {
       const meta = /<meta http-equiv="content-security-policy" content="([^"]*)">/i.exec(html);
       if (meta === null) return [`${pagina}: sin la CSP`];
       const directivas = decodificar(meta[1]!).split(';').map((d) => d.trim());
-      const faltan = ["connect-src 'self'", "form-action 'self'"].filter((d) => !directivas.includes(d));
+      const faltan = ["connect-src 'self' https://gateway.umami.is", "form-action 'self'"].filter((d) => !directivas.includes(d));
+      // script-src: lo que pone Astro ('self' y sus huellas) más el origen del guion de Umami, y ningún otro origen.
+      const script = directivas.find((d) => d.startsWith('script-src ')) ?? '';
+      const origenes = script.split(/\s+/).slice(1).filter((t) => !t.startsWith("'"));
+      const scriptMal = origenes.length === 1 && origenes[0] === 'https://cloud.umami.is' && script.includes("'self'") ? [] : [`${pagina}: script-src no es 'self' + https://cloud.umami.is: «${script}»`];
+      const escrito = /<script\b[^>]*\bsrc="https:\/\/cloud\.umami\.is/i.test(html) ? [`${pagina}: lleva el guion de Umami escrito en el HTML`] : [];
       const charset = /<meta charset="utf-8">/i.exec(html);
       const sitio = charset !== null && meta.index === charset.index + charset[0].length ? [] : [`${pagina}: la CSP no va justo detrás de <meta charset>`];
       // Lo que podría cargar algo antes de que la CSP aplique: un script, un estilo o un enlace.
       const antes = [...html.slice(0, meta.index).matchAll(/<script\b[^>]*>|<style\b[^>]*>|<link\b[^>]*>/gi)].map((m) => m[0]);
       const contenido = createHash('sha256').update(meta[1]!).digest('hex') === emitidas.get(pagina) ? [] : [`${pagina}: el contenido de la CSP no es el que emitió Astro`];
-      return [...faltan.map((d) => `${pagina}: sin «${d}»`), ...sitio, ...antes.map((etiqueta) => `${pagina}: ${etiqueta} va antes de la CSP, y la CSP no le aplica`), ...contenido];
+      return [...faltan.map((d) => `${pagina}: sin «${d}»`), ...scriptMal, ...escrito, ...sitio, ...antes.map((etiqueta) => `${pagina}: ${etiqueta} va antes de la CSP, y la CSP no le aplica`), ...contenido];
     });
     assert.deepEqual(mal, []);
   });

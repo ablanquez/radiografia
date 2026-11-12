@@ -16,7 +16,9 @@
  *   5. Por http, cada dirección redirige a la misma por https (lo hace el panel: «Forzar HTTPS»).
  *   6. En Chrome: el analizador carga, analiza y descarga el PDF; el catálogo, una ficha, los créditos y la que no existe
  *      se abren; y en todo el recorrido, ni una petición fuera del origen, ni una violación de la CSP (el evento ni el
- *      mensaje de la consola), ni una excepción, ni otro error en la consola que el 404 de la que no existe.
+ *      mensaje de la consola), ni una excepción, ni otro error en la consola que el 404 de la que no existe. Desde el
+ *      12/11/2026, salvo el recuento de visitas de Umami, que va aparte (chrome.ts, ORIGENES_DE_UMAMI) y aquí se exige:
+ *      el guion cargado y una visita enviada.
  *
  * Con URL_PRODUCCION, los demás jueces de Chrome también van contra el sitio publicado (chrome.ts, abrirConTestigos): la
  * red (navegador.spec.ts), la CSP, los 320 px (pulsacion.spec.ts y los de cada página), la página que no existe y la
@@ -217,6 +219,10 @@ describe('la web publicada, desde fuera', () => {
 
       const origen = new URL(url).origin;
       assert.deepEqual([...sesion.carga, ...sesion.despues].filter((x) => new URL(x.url).origin !== origen), [], 'peticiones fuera del origen');
+      // El recuento de visitas (Umami, 12/11/2026): aparte en los testigos (chrome.ts), y aquí se exige que exista: el
+      // guion cargado de cloud.umami.is y al menos una visita enviada a gateway.umami.is.
+      assert.ok(sesion.umami.some((x) => x.url === 'https://cloud.umami.is/script.js'), `el guion de Umami: ${sesion.umami.map((x) => x.url).join(' · ') || 'ninguna petición'}`);
+      assert.ok(sesion.umami.some((x) => x.url.startsWith('https://gateway.umami.is/')), `la visita enviada a Umami: ${sesion.umami.map((x) => x.url).join(' · ') || 'ninguna petición'}`);
       assert.deepEqual(violaciones, [], 'violaciones de la CSP');
       assert.deepEqual(consola.filter((l) => /Content.Security.Policy/i.test(l)), [], 'la CSP, en la consola');
       // El único error esperado: el 404 del documento de la que no existe, que Chrome anota como error de red.

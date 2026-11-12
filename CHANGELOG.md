@@ -5,6 +5,19 @@ Todo lo destacable que le pasa a RadiografIA se anota aquí.
 El formato es el de [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y las
 versiones, las de [SemVer](https://semver.org/lang/es/).
 
+## [Sin publicar]
+
+### Añadido
+
+- Recuento de visitas con Umami, sin cookies y con los datos en la Unión Europea, solo en
+  <https://radiografia.antonioblanquez.es>. Recibe la visita, no el texto: el texto sigue sin
+  salir del navegador. Si el navegador tiene activado «No rastrear», no envía nada.
+
+### Cambiado
+
+- «Nada sale del navegador» pasa a decir «el texto no sale del navegador», que es lo que sigue
+  siendo verdad con el recuento de visitas.
+
 ## [1.0.0] — 2026-10-07
 
 **RadiografIA analiza un texto en español y señala, regla a regla, los rasgos que, según sus

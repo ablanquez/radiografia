@@ -216,8 +216,8 @@ botones), que están en [`web/src/textos.ts`](../web/src/textos.ts).
 Tras analizar, el botón **«Descargar informe»** genera el informe en PDF en
 el navegador y lo descarga como «RadiografIA.pdf», sin pasar por el diálogo
 de imprimir (decisión del 05/10/2026: ese diálogo no sirve en el iPhone ni en
-el iPad). Funciona igual en el ordenador, la tableta y el móvil, y nada sale
-del navegador: el PDF lo hace [pdfmake](https://pdfmake.github.io/) en la
+el iPad). Funciona igual en el ordenador, la tableta y el móvil, y el informe
+no sale del navegador: el PDF lo hace [pdfmake](https://pdfmake.github.io/) en la
 propia página, con el último análisis pintado, y se descarga desde la
 memoria del navegador.
 
@@ -367,7 +367,7 @@ orden de mando.
    - **Dónde están.** Se sirven desde la propia web
      ([`web/public/fuentes/`](../web/public/fuentes/)), recortadas a los
      caracteres que se usan y fijadas en los pesos que hacen falta.
-   - **Por qué desde la propia web.** Así nada sale del navegador: ni la
+   - **Por qué desde la propia web.** Así las fuentes no se piden fuera: ni la
      dirección de quien la visita va a los servidores de Google Fonts (el
      LG München I lo condenó el 20/01/2022, 3 O 17493/20), ni la página
      depende de otro sitio. Recortadas pesan menos.

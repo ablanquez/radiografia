@@ -143,6 +143,12 @@ export function sinLasDelResultado(despues: readonly Peticion[], url: string): P
   });
 }
 
+/** Los dos orígenes del recuento de visitas: el guion se carga de uno y la visita se envía al otro (astro.config.mjs). */
+export const ORIGENES_DE_UMAMI: readonly string[] = ['https://cloud.umami.is', 'https://gateway.umami.is'];
+
+/** El único sitio donde el cargador de componentes/Recursos.astro inserta el guion de Umami. */
+const SITIO_CON_UMAMI = 'radiografia.antonioblanquez.es';
+
 /** Una página de la web abierta en Chrome sobre astro preview (o el sitio publicado), con lo que vieron los testigos antes y después de la marca. */
 export interface PaginaConTestigos {
   pestana: Pestana;
@@ -152,6 +158,12 @@ export interface PaginaConTestigos {
   carga: Peticion[];
   /** Las peticiones después de la marca: tiene que quedarse vacía. */
   despues: Peticion[];
+  /**
+   * Las del recuento de visitas (Umami, 12/11/2026), aparte: solo en el sitio publicado, y solo a sus dos orígenes
+   * (ORIGENES_DE_UMAMI). No entran en `carga` ni en `despues`, así que los jueces que piden «nada fuera del origen»
+   * siguen pidiéndolo para todo lo demás. En astro preview el cargador no pide nada y esta lista se queda vacía.
+   */
+  umami: Peticion[];
   /** Los intentos que bloqueó la CSP desde que nació el documento. */
   violaciones(): Promise<string[]>;
   cerrar(): Promise<void>;
@@ -199,6 +211,8 @@ export async function abrirConTestigos(ruta: string, lista: string, que: string)
     pestana = await abrirChrome();
     const carga: Peticion[] = [];
     const despues: Peticion[] = [];
+    const umami: Peticion[] = [];
+    const conUmami = new URL(preview.url).hostname === SITIO_CON_UMAMI;
     let marcada = false;
     const enVuelo = new Set<string>();
     let ultimo = Date.now();
@@ -206,7 +220,8 @@ export async function abrirConTestigos(ruta: string, lista: string, que: string)
       const lista = marcada ? despues : carga;
       if (metodo === 'Network.requestWillBeSent') {
         const { requestId, type, request } = datos as { requestId: string; type?: string; request: { url: string } };
-        lista.push({ tipo: type ?? '?', url: request.url });
+        const deUmami = conUmami && /^https?:/.test(request.url) && ORIGENES_DE_UMAMI.includes(new URL(request.url).origin);
+        (deUmami ? umami : lista).push({ tipo: type ?? '?', url: request.url });
         enVuelo.add(requestId);
         ultimo = Date.now();
       }
@@ -234,6 +249,7 @@ export async function abrirConTestigos(ruta: string, lista: string, que: string)
       url: preview.url,
       carga,
       despues,
+      umami,
       violaciones: () => abierta.evaluar<string[]>('window.__violaciones'),
       // El preview se cierra aunque cerrar Chrome falle: vivo, el proceso del fichero no sale (docs/BITACORA.md, 2026-10-05).
       cerrar: async () => {
